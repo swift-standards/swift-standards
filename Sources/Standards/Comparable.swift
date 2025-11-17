@@ -20,7 +20,6 @@ extension Comparable {
     /// 15.clamped(to: 0...10)  // 10
     /// (-5).clamped(to: 0...10) // 0
     /// ```
-    @inlinable
     public func clamped(to range: ClosedRange<Self>) -> Self {
         min(max(self, range.lowerBound), range.upperBound)
     }

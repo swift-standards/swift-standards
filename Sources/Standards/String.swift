@@ -110,77 +110,37 @@ extension StringProtocol {
 }
 
 extension String {
-    /// Line ending style for text normalization
-    public enum LineEnding: String, Sendable {
-        /// Unix style: \n
-        case lf = "\n"
-        /// Old Mac style: \r
-        case cr = "\r"
-        /// Windows/Network protocol style: \r\n (required by HTTP, Email)
-        case crlf = "\r\n"
-    }
-}
-
-extension String.LineEnding {
-    public static let lineFeed: Self = .lf
-    public static let carriageReturn: Self = .cr
-    public static let carriageReturnLineFeed: Self = .crlf
-}
-
-extension String {
-
-    /// Normalizes line endings to the specified style
+    /// Splits string into lines
     ///
-    /// Converts all line endings (\n, \r, \r\n) to the target format.
-    /// Useful for protocols like HTTP and Email that require CRLF.
+    /// Homomorphism respecting line structure.
+    /// Decomposes text into line-separated components.
+    ///
+    /// Category theory: List homomorphism decomposing concatenated structure
+    /// lines: String → [String] where concat ∘ lines ≈ id (modulo separators)
     ///
     /// Example:
     /// ```swift
-    /// let text = "line1\nline2\r\nline3"
-    /// text.normalized(to: .crlf)  // "line1\r\nline2\r\nline3"
+    /// "hello\nworld\ntest".lines  // ["hello", "world", "test"]
     /// ```
-    public func normalized(to lineEnding: LineEnding) -> String {
-        // Check if normalization is needed by examining bytes
-        let hasLF = utf8.contains(0x0A)  // \n
-        let hasCR = utf8.contains(0x0D)  // \r
+    public var lines: [String] {
+        split(whereSeparator: \.isNewline).map(String.init)
+    }
 
-        // Fast path: if already normalized, return self
-        if lineEnding == .crlf && !hasLF && !hasCR { return self }
-        if lineEnding == .lf && !hasCR { return self }
-        if lineEnding == .cr && !hasLF { return self }
-
-        let targetBytes = Array(lineEnding.rawValue.utf8)
-        var resultBytes = [UInt8]()
-        resultBytes.reserveCapacity(self.utf8.count)
-
-        var index = self.utf8.startIndex
-        while index < self.utf8.endIndex {
-            let byte = self.utf8[index]
-
-            if byte == 0x0D {  // \r
-                let next = self.utf8.index(after: index)
-                if next < self.utf8.endIndex && self.utf8[next] == 0x0A {  // \n
-                    // \r\n -> normalize
-                    resultBytes.append(contentsOf: targetBytes)
-                    index = self.utf8.index(after: next)
-                    continue
-                } else {
-                    // \r alone -> normalize
-                    resultBytes.append(contentsOf: targetBytes)
-                    index = next
-                    continue
-                }
-            } else if byte == 0x0A {  // \n
-                // \n alone -> normalize
-                resultBytes.append(contentsOf: targetBytes)
-                index = self.utf8.index(after: index)
-                continue
-            }
-
-            resultBytes.append(byte)
-            index = self.utf8.index(after: index)
-        }
-
-        return String(decoding: resultBytes, as: UTF8.self)
+    /// Splits string into words
+    ///
+    /// Tokenization via whitespace separation.
+    /// Decomposes text into word tokens.
+    ///
+    /// Category theory: List homomorphism via whitespace quotient
+    /// words: String → [String] factoring through String/~
+    ///
+    /// Example:
+    /// ```swift
+    /// "hello world test".words  // ["hello", "world", "test"]
+    /// ```
+    public var words: [String] {
+        split(whereSeparator: \.isWhitespace).map(String.init)
     }
 }
+
+// Line ending normalization has been moved to swift-incits-4-1986
