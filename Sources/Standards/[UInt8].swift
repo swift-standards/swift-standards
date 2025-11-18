@@ -360,6 +360,15 @@ extension [UInt8] {
         append(contentsOf: string.utf8)
     }
 
+    /// Appends a single byte
+    /// - Parameter value: The byte value to append
+    ///
+    /// This overload exists to avoid ambiguity with the generic FixedWidthInteger method.
+    /// For UInt8, we can append directly without endianness conversion.
+    public mutating func append(_ value: UInt8) {
+        append(contentsOf: CollectionOfOne(value))
+    }
+
     /// Appends an integer as bytes with specified endianness
     /// - Parameters:
     ///   - value: The integer value to append
