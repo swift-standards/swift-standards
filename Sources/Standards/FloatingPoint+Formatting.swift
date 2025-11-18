@@ -16,16 +16,16 @@ import Formatting
 /// Use static properties to access predefined formats:
 ///
 /// ```swift
-/// 0.75.formatted(FloatingPointFormat.percent)  // "75%"
-/// 3.14159.formatted(FloatingPointFormat.number)  // "3.14159"
-/// Float(0.5).formatted(FloatingPointFormat.percent)  // "50%"
+/// 0.75.formatted(.percent)  // "75%"
+/// 3.14159.formatted(.number)  // "3.14159"
+/// Float(0.5).formatted(.percent)  // "50%"
 /// ```
 ///
 /// Chain methods to configure the format:
 ///
 /// ```swift
-/// 0.75.formatted(FloatingPointFormat.percent.rounded())        // "75%"
-/// 0.755.formatted(FloatingPointFormat.percent.precision(2))    // "75.50%"
+/// 0.75.formatted(.percent.rounded())        // "75%"
+/// 0.755.formatted(.percent.precision(2))    // "75.50%"
 /// ```
 public struct FloatingPointFormat {
     let isPercent: Bool
@@ -118,8 +118,9 @@ extension FloatingPoint {
     /// Use this method with static format properties:
     ///
     /// ```swift
-    /// let result = 0.75.formatted(FloatingPointFormat.percent)
-    /// let result = Float(3.14159).formatted(FloatingPointFormat.number)
+    /// let result = 0.75.formatted(.percent)
+    /// let result = Float(3.14159).formatted(.number)
+    /// let result = 0.755.formatted(.percent.precision(2))
     /// ```
     ///
     /// - Parameter format: The floating point format to use.

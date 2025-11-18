@@ -15,17 +15,17 @@ import Formatting
 /// Use static properties to access predefined formats:
 ///
 /// ```swift
-/// 42.formatted(BinaryIntegerFormat.number)  // "42"
-/// 255.formatted(BinaryIntegerFormat.hex)    // "0xff"
-/// 42.formatted(BinaryIntegerFormat.binary)  // "0b101010"
-/// UInt8(255).formatted(BinaryIntegerFormat.octal)  // "0o377"
+/// 42.formatted(.number)  // "42"
+/// 255.formatted(.hex)    // "0xff"
+/// 42.formatted(.binary)  // "0b101010"
+/// UInt8(255).formatted(.octal)  // "0o377"
 /// ```
 ///
 /// Chain methods to configure the format:
 ///
 /// ```swift
-/// 42.formatted(BinaryIntegerFormat.number.sign(strategy: .always))  // "+42"
-/// 255.formatted(BinaryIntegerFormat.hex.uppercase())                // "0xFF"
+/// 42.formatted(.number.sign(strategy: .always))  // "+42"
+/// 255.formatted(.hex.uppercase())                // "0xFF"
 /// ```
 public struct BinaryIntegerFormat {
     let radix: Int
@@ -160,8 +160,9 @@ extension BinaryInteger {
     /// Use this method with static format properties:
     ///
     /// ```swift
-    /// let result = 42.formatted(BinaryIntegerFormat.number)
-    /// let result = UInt8(255).formatted(BinaryIntegerFormat.hex)
+    /// let result = 42.formatted(.number)
+    /// let result = UInt8(255).formatted(.hex)
+    /// let result = 255.formatted(.hex.uppercase())
     /// ```
     ///
     /// - Parameter format: The binary integer format to use.

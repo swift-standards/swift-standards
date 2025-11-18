@@ -13,9 +13,9 @@ import Formatting
 /// Use static properties to access predefined formats:
 ///
 /// ```swift
-/// 42.formatted(NumericFormat.decimal)    // "42"
-/// 3.14.formatted(NumericFormat.decimal)  // "3.14"
-/// UInt8(255).formatted(NumericFormat.decimal)  // "255"
+/// 42.formatted(.decimal)    // "42"
+/// 3.14.formatted(.decimal)  // "3.14"
+/// UInt8(255).formatted(.decimal)  // "255"
 /// ```
 ///
 /// For more advanced formatting, use category-specific formatters:
@@ -53,8 +53,8 @@ extension Numeric {
     /// Use this method with static format properties:
     ///
     /// ```swift
-    /// let result = 42.formatted(NumericFormat.decimal)
-    /// let result = 3.14.formatted(NumericFormat.decimal)
+    /// let result = 42.formatted(.decimal)
+    /// let result = 3.14.formatted(.decimal)
     /// ```
     ///
     /// - Parameter format: The numeric format to use.
