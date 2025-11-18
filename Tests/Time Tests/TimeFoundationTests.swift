@@ -73,10 +73,9 @@ struct TimeFoundationTests {
         #expect(time.second.value == components.second)
     }
 
-    @Test("Epoch Conversion - Known Dates vs Foundation")
-    func testEpochConversionKnownDates() throws {
-        // NOTE: Only testing dates from 1970 onwards due to epoch conversion limitation
-        let testDates: [(year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int)] = [
+    @Test(
+        "Epoch Conversion - Known dates vs Foundation",
+        arguments: [
             (2000, 1, 1, 0, 0, 0),  // Y2K
             (2024, 1, 15, 12, 30, 45),  // Random date
             (1999, 12, 31, 23, 59, 59),  // End of millennium
@@ -84,41 +83,44 @@ struct TimeFoundationTests {
             (2038, 1, 19, 3, 14, 7),  // Near 32-bit overflow
             (1980, 1, 6, 0, 0, 0),  // GPS epoch
         ]
+    )
+    func testEpochConversionKnownDates(
+        year: Int,
+        month: Int,
+        day: Int,
+        hour: Int,
+        minute: Int,
+        second: Int
+    ) throws {
+        let time = try Time(
+            year: year,
+            month: month,
+            day: day,
+            hour: hour,
+            minute: minute,
+            second: second
+        )
 
-        for testDate in testDates {
-            let time = try Time(
-                year: testDate.year,
-                month: testDate.month,
-                day: testDate.day,
-                hour: testDate.hour,
-                minute: testDate.minute,
-                second: testDate.second
+        // Get epoch seconds from our implementation
+        let ourSeconds = Time.Epoch.Conversion.secondsSinceEpoch(from: time)
+
+        // Get epoch seconds from Foundation
+        guard
+            let foundationDate = foundationDate(
+                year: year,
+                month: month,
+                day: day,
+                hour: hour,
+                minute: minute,
+                second: second
             )
-
-            // Get epoch seconds from our implementation
-            let ourSeconds = Time.Epoch.Conversion.secondsSinceEpoch(from: time)
-
-            // Get epoch seconds from Foundation
-            guard
-                let foundationDate = foundationDate(
-                    year: testDate.year,
-                    month: testDate.month,
-                    day: testDate.day,
-                    hour: testDate.hour,
-                    minute: testDate.minute,
-                    second: testDate.second
-                )
-            else {
-                Issue.record("Failed to create Foundation date for \(testDate)")
-                continue
-            }
-            let foundationSeconds = Int(foundationDate.timeIntervalSince1970)
-
-            #expect(
-                ourSeconds == foundationSeconds,
-                "Epoch seconds mismatch for \(testDate): ours=\(ourSeconds) foundation=\(foundationSeconds)"
-            )
+        else {
+            Issue.record("Failed to create Foundation date")
+            return
         }
+        let foundationSeconds = Int(foundationDate.timeIntervalSince1970)
+
+        #expect(ourSeconds == foundationSeconds)
     }
 
     // NOTE: Epoch conversion for dates before 1970 is not yet implemented
@@ -166,32 +168,27 @@ struct TimeFoundationTests {
     }
     */
 
-    @Test("Epoch Conversion - Century Boundaries")
-    func testEpochConversionCenturyBoundaries() throws {
-        // NOTE: Only testing dates from 1970 onwards due to epoch conversion limitation
-        let centuries: [(Int, Int, Int)] = [
+    @Test(
+        "Epoch Conversion - Century boundaries",
+        arguments: [
             (2000, 1, 1),
             (2100, 1, 1),
             (2200, 1, 1),
             (1999, 12, 31),
             (2099, 12, 31),
         ]
+    )
+    func testEpochConversionCenturyBoundaries(year: Int, month: Int, day: Int) throws {
+        let time = try Time(year: year, month: month, day: day, hour: 0, minute: 0, second: 0)
+        let ourSeconds = Time.Epoch.Conversion.secondsSinceEpoch(from: time)
 
-        for (year, month, day) in centuries {
-            let time = try Time(year: year, month: month, day: day, hour: 0, minute: 0, second: 0)
-            let ourSeconds = Time.Epoch.Conversion.secondsSinceEpoch(from: time)
-
-            guard let foundationDate = foundationDate(year: year, month: month, day: day) else {
-                Issue.record("Failed to create Foundation date for \(year)-\(month)-\(day)")
-                continue
-            }
-            let foundationSeconds = Int(foundationDate.timeIntervalSince1970)
-
-            #expect(
-                ourSeconds == foundationSeconds,
-                "Century boundary \(year)-\(month)-\(day): ours=\(ourSeconds) foundation=\(foundationSeconds)"
-            )
+        guard let foundationDate = foundationDate(year: year, month: month, day: day) else {
+            Issue.record("Failed to create Foundation date")
+            return
         }
+        let foundationSeconds = Int(foundationDate.timeIntervalSince1970)
+
+        #expect(ourSeconds == foundationSeconds)
     }
 
     @Test(
@@ -270,55 +267,53 @@ struct TimeFoundationTests {
 
     // MARK: - Weekday Tests
 
-    @Test("Weekday - Compare with Foundation")
-    func testWeekdayVsFoundation() throws {
-        let testDates: [(Int, Int, Int, Time.Weekday)] = [
+    @Test(
+        "Weekday - Known dates vs Foundation",
+        arguments: [
             // Known historical dates
-            (1776, 7, 4, .thursday),  // US Independence Day
-            (1969, 7, 20, .sunday),  // Moon landing
-            (2000, 1, 1, .saturday),  // Y2K
-            (2001, 9, 11, .tuesday),  // 9/11
-            (2024, 1, 1, .monday),  // New Year 2024
-
+            (1776, 7, 4, Time.Weekday.thursday),  // US Independence Day
+            (1969, 7, 20, Time.Weekday.sunday),  // Moon landing
+            (2000, 1, 1, Time.Weekday.saturday),  // Y2K
+            (2001, 9, 11, Time.Weekday.tuesday),  // 9/11
+            (2024, 1, 1, Time.Weekday.monday),  // New Year 2024
             // Month boundaries
-            (2024, 1, 31, .wednesday),
-            (2024, 2, 29, .thursday),  // Leap day
-            (2024, 3, 31, .sunday),
-            (2024, 12, 31, .tuesday),
-
+            (2024, 1, 31, Time.Weekday.wednesday),
+            (2024, 2, 29, Time.Weekday.thursday),  // Leap day
+            (2024, 3, 31, Time.Weekday.sunday),
+            (2024, 12, 31, Time.Weekday.tuesday),
             // Century boundaries
-            (1900, 1, 1, .monday),
-            (2000, 1, 1, .saturday),
-            (2100, 1, 1, .friday),
+            (1900, 1, 1, Time.Weekday.monday),
+            (2000, 1, 1, Time.Weekday.saturday),
+            (2100, 1, 1, Time.Weekday.friday),
         ]
+    )
+    func testWeekdayVsFoundation(
+        year: Int,
+        month: Int,
+        day: Int,
+        expectedWeekday: Time.Weekday
+    )
+        throws
+    {
+        let weekday = try Time.Weekday(year: year, month: month, day: day)
+        #expect(weekday == expectedWeekday)
 
-        for (year, month, day, expectedWeekday) in testDates {
-            let weekday = try Time.Weekday(year: year, month: month, day: day)
-            #expect(
-                weekday == expectedWeekday,
-                "Weekday mismatch for \(year)-\(month)-\(day)"
-            )
-
-            // Compare with Foundation (Foundation uses 1=Sunday, 2=Monday, etc.)
-            if let foundationWeekdayValue = foundationWeekday(year: year, month: month, day: day) {
-                // Convert Foundation weekday (1=Sunday) to our weekday
-                let foundationWeekdayEnum: Time.Weekday
-                switch foundationWeekdayValue {
-                case 1: foundationWeekdayEnum = .sunday
-                case 2: foundationWeekdayEnum = .monday
-                case 3: foundationWeekdayEnum = .tuesday
-                case 4: foundationWeekdayEnum = .wednesday
-                case 5: foundationWeekdayEnum = .thursday
-                case 6: foundationWeekdayEnum = .friday
-                case 7: foundationWeekdayEnum = .saturday
-                default: fatalError("Invalid Foundation weekday: \(foundationWeekdayValue)")
-                }
-
-                #expect(
-                    weekday == foundationWeekdayEnum,
-                    "Foundation mismatch for \(year)-\(month)-\(day): ours=\(weekday) foundation=\(foundationWeekdayEnum)"
-                )
+        // Compare with Foundation (Foundation uses 1=Sunday, 2=Monday, etc.)
+        if let foundationWeekdayValue = foundationWeekday(year: year, month: month, day: day) {
+            // Convert Foundation weekday (1=Sunday) to our weekday
+            let foundationWeekdayEnum: Time.Weekday
+            switch foundationWeekdayValue {
+            case 1: foundationWeekdayEnum = .sunday
+            case 2: foundationWeekdayEnum = .monday
+            case 3: foundationWeekdayEnum = .tuesday
+            case 4: foundationWeekdayEnum = .wednesday
+            case 5: foundationWeekdayEnum = .thursday
+            case 6: foundationWeekdayEnum = .friday
+            case 7: foundationWeekdayEnum = .saturday
+            default: fatalError("Invalid Foundation weekday: \(foundationWeekdayValue)")
             }
+
+            #expect(weekday == foundationWeekdayEnum)
         }
     }
 
@@ -359,9 +354,9 @@ struct TimeFoundationTests {
     }
 
     // NOTE: Weekday calculation works for dates before 1970, so we can test them
-    @Test("Weekday - Dates Before Epoch vs Foundation")
-    func testWeekdayBeforeEpochVsFoundation() throws {
-        let testDates: [(Int, Int, Int)] = [
+    @Test(
+        "Weekday - Dates before epoch vs Foundation",
+        arguments: [
             (1969, 12, 31),
             (1969, 1, 1),
             (1960, 1, 1),
@@ -370,72 +365,61 @@ struct TimeFoundationTests {
             (1920, 1, 1),
             (1900, 1, 1),
         ]
+    )
+    func testWeekdayBeforeEpochVsFoundation(year: Int, month: Int, day: Int) throws {
+        let weekday = try Time.Weekday(year: year, month: month, day: day)
 
-        for (year, month, day) in testDates {
-            let weekday = try Time.Weekday(year: year, month: month, day: day)
-
-            // Compare with Foundation
-            if let foundationWeekdayValue = foundationWeekday(year: year, month: month, day: day) {
-                let foundationWeekdayEnum: Time.Weekday
-                switch foundationWeekdayValue {
-                case 1: foundationWeekdayEnum = .sunday
-                case 2: foundationWeekdayEnum = .monday
-                case 3: foundationWeekdayEnum = .tuesday
-                case 4: foundationWeekdayEnum = .wednesday
-                case 5: foundationWeekdayEnum = .thursday
-                case 6: foundationWeekdayEnum = .friday
-                case 7: foundationWeekdayEnum = .saturday
-                default: fatalError("Invalid Foundation weekday: \(foundationWeekdayValue)")
-                }
-
-                #expect(
-                    weekday == foundationWeekdayEnum,
-                    "Weekday mismatch for \(year)-\(month)-\(day): ours=\(weekday) foundation=\(foundationWeekdayEnum)"
-                )
+        // Compare with Foundation
+        if let foundationWeekdayValue = foundationWeekday(year: year, month: month, day: day) {
+            let foundationWeekdayEnum: Time.Weekday
+            switch foundationWeekdayValue {
+            case 1: foundationWeekdayEnum = .sunday
+            case 2: foundationWeekdayEnum = .monday
+            case 3: foundationWeekdayEnum = .tuesday
+            case 4: foundationWeekdayEnum = .wednesday
+            case 5: foundationWeekdayEnum = .thursday
+            case 6: foundationWeekdayEnum = .friday
+            case 7: foundationWeekdayEnum = .saturday
+            default: fatalError("Invalid Foundation weekday: \(foundationWeekdayValue)")
             }
+
+            #expect(weekday == foundationWeekdayEnum)
         }
     }
 
     // MARK: - Leap Year Validation Against Foundation
 
-    @Test("Leap Year - Validate Against Foundation")
-    func testLeapYearVsFoundation() {
-        let testYears = [
+    @Test(
+        "Leap Year - Validate against Foundation",
+        arguments: [
             1900, 1904, 1996, 1997, 1998, 1999,
             2000, 2001, 2004, 2020, 2024, 2100, 2400,
         ]
+    )
+    func testLeapYearVsFoundation(year: Int) {
+        let ourResult = Time.Calendar.Gregorian.isLeapYear(Time.Year(year))
 
-        for year in testYears {
-            let ourResult = Time.Calendar.Gregorian.isLeapYear(Time.Year(year))
+        // Foundation check - properly validate Feb 29 exists AND doesn't roll over
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
 
-            // Foundation check - properly validate Feb 29 exists AND doesn't roll over
-            var calendar = Calendar(identifier: .gregorian)
-            calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        var components = DateComponents()
+        components.year = year
+        components.month = 2
+        components.day = 29
 
-            var components = DateComponents()
-            components.year = year
-            components.month = 2
-            components.day = 29
+        // Create date and verify it's actually Feb 29 (not rolled to Mar 1)
+        if let date = calendar.date(from: components) {
+            let resultComponents = calendar.dateComponents([.year, .month, .day], from: date)
+            let foundationResult =
+                resultComponents.year == year
+                && resultComponents.month == 2
+                && resultComponents.day == 29
 
-            // Create date and verify it's actually Feb 29 (not rolled to Mar 1)
-            if let date = calendar.date(from: components) {
-                let resultComponents = calendar.dateComponents([.year, .month, .day], from: date)
-                let foundationResult =
-                    resultComponents.year == year
-                    && resultComponents.month == 2
-                    && resultComponents.day == 29
-
-                #expect(
-                    ourResult == foundationResult,
-                    "Leap year mismatch for \(year): ours=\(ourResult) foundation=\(foundationResult)"
-                )
-            } else {
-                // If Foundation can't create the date at all, it's not a leap year
-                #expect(
-                    ourResult == false,
-                    "Leap year mismatch for \(year): ours=\(ourResult) foundation=false"
-                )
-            }
+            #expect(ourResult == foundationResult)
+        } else {
+            // If Foundation can't create the date at all, it's not a leap year
+            #expect(ourResult == false)
         }
     }
 }
