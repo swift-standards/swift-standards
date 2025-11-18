@@ -10,12 +10,6 @@ import PackageDescription
 
 let package = Package(
     name: "swift-standards",
-    platforms: [
-        .macOS(.v15),
-        .iOS(.v16),
-        .watchOS(.v9),
-        .tvOS(.v16)
-    ],
     products: [
         .library(
             name: "Standards",
@@ -26,13 +20,23 @@ let package = Package(
             targets: ["StandardsTestSupport"]
         )
     ],
+    dependencies: [
+        .package(path: "../../coenttb/swift-testing-performance"),
+        .package(path: "../../coenttb/swift-formatting")
+    ],
     targets: [
         .target(
-            name: "Standards"
+            name: "Standards",
+            dependencies: [
+                .product(name: "Formatting", package: "swift-formatting")
+            ]
         ),
         .target(
             name: "StandardsTestSupport",
-            dependencies: ["Standards"]
+            dependencies: [
+                "Standards",
+                .product(name: "TestingPerformance", package: "swift-testing-performance")
+            ]
         ),
         .testTarget(
             name: "Standards Tests",
