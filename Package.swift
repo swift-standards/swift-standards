@@ -16,6 +16,10 @@ let package = Package(
             targets: ["Standards"]
         ),
         .library(
+            name: "Time",
+            targets: ["Time"]
+        ),
+        .library(
             name: "StandardsTestSupport",
             targets: ["StandardsTestSupport"]
         )
@@ -32,6 +36,12 @@ let package = Package(
             ]
         ),
         .target(
+            name: "Time",
+            dependencies: [
+                "Standards"
+            ]
+        ),
+        .target(
             name: "StandardsTestSupport",
             dependencies: [
                 "Standards",
@@ -42,6 +52,13 @@ let package = Package(
             name: "Standards Tests",
             dependencies: [
                 "Standards",
+                "StandardsTestSupport"
+            ]
+        ),
+        .testTarget(
+            name: "Time Tests",
+            dependencies: [
+                "Time",
                 "StandardsTestSupport"
             ]
         )
