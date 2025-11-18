@@ -95,7 +95,7 @@ extension Float.Format.Style {
                 numericValue = numericValue.rounded()
             }
             if let precision = precisionDigits {
-                let multiplier = power(Float(10.0), precision)
+                let multiplier = Float(10.0).power(precision)
                 numericValue = (numericValue * multiplier).rounded() / multiplier
             }
             return "\(numericValue)"
@@ -110,7 +110,7 @@ extension Float.Format.Style {
                 return "\(Int(percentValue.rounded()))%"
             }
             if let precision = precisionDigits {
-                let multiplier = power(Float(10.0), precision)
+                let multiplier = Float(10.0).power(precision)
                 let rounded = (percentValue * multiplier).rounded() / multiplier
                 return "\(rounded)%"
             }
@@ -163,15 +163,4 @@ extension Float.Format {
     public func precision(_ digits: Int) -> Self {
         .init(style: style, shouldRound: shouldRound, precisionDigits: digits)
     }
-}
-
-// MARK: - Utilities
-
-private func power(_ base: Float, _ exponent: Int) -> Float {
-    guard exponent > 0 else { return 1.0 }
-    var result = base
-    for _ in 1..<exponent {
-        result *= base
-    }
-    return result
 }

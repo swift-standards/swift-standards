@@ -63,7 +63,7 @@ extension FloatingPointFormat {
         }
 
         if let precision = precisionDigits {
-            let multiplier = floatingPointPower(T(10), precision)
+            let multiplier = T(10).power(precision)
             workingValue = (workingValue * multiplier).rounded() / multiplier
         }
 
@@ -128,15 +128,4 @@ extension FloatingPoint {
     public func formatted(_ format: FloatingPointFormat) -> String {
         format.format(self)
     }
-}
-
-// MARK: - Utilities
-
-private func floatingPointPower<T: FloatingPoint>(_ base: T, _ exponent: Int) -> T {
-    guard exponent > 0 else { return T(1) }
-    var result = base
-    for _ in 1..<exponent {
-        result = result * base
-    }
-    return result
 }
