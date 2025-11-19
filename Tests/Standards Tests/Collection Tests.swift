@@ -108,6 +108,6 @@ struct `Collection Safe Subscript` {
         _ = array[safe: Int.max]
 
         // Test passes if we reach here without trapping
-        #expect(true)
+        #expect(Bool(true))
     }
 }
