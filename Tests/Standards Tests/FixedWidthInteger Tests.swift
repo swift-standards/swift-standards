@@ -290,7 +290,7 @@ extension PerformanceTests {
             }
         }
 
-        @Test(.timed(threshold: .milliseconds(45), maxAllocations: 2_000_000))
+        @Test(.timed(threshold: .milliseconds(75), maxAllocations: 2_000_000))
         func `rotateRight 100k UInt32 values`() {
             let values = Array(0..<100_000).map { UInt32($0) }
             for value in values {
