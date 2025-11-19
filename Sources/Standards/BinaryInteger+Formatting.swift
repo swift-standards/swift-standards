@@ -1,51 +1,47 @@
-import Formatting
-
 // MARK: - BinaryIntegerFormat
 
-/// A format for formatting any BinaryInteger value.
+/// A format for formatting BinaryInteger values.
 ///
 /// This categorical format works for all BinaryInteger types (Int, UInt, Int8, etc.).
-/// It provides operations specific to the BinaryInteger category:
-/// - Radix representations (hex, binary, octal)
-/// - Sign display strategies
+/// Provides decimal, binary, and octal representations.
 ///
-/// Note: This is a generic categorical formatter that operates across the BinaryInteger category.
-/// It does not conform to `Formatting` as it works with multiple input types, not a single FormatInput.
+/// For hexadecimal formatting, use RFC 4648:
+/// ```swift
+/// import RFC_4648
+/// String(hex: 255)  // "0xff"
+/// ```
 ///
 /// Use static properties to access predefined formats:
 ///
 /// ```swift
-/// 255.formatted(.hex)    // "0xff"
 /// 42.formatted(.binary)  // "0b101010"
-/// UInt8(255).formatted(.octal)  // "0o377"
+/// 63.formatted(.octal)   // "0o77"
+/// 42.formatted(.decimal) // "42"
 /// ```
 ///
 /// Chain methods to configure the format:
 ///
 /// ```swift
-/// 255.formatted(.hex.uppercase())                // "0xFF"
 /// 42.formatted(.binary.sign(strategy: .always))  // "+0b101010"
+/// 5.formatted(.decimal.zeroPadded(width: 3))     // "005"
 /// ```
 public struct BinaryIntegerFormat {
     let radix: Int
     let prefix: String
     public let signStrategy: SignDisplayStrategy
-    public let isUppercase: Bool
     public let minWidth: Int?
 
-    private init(radix: Int, prefix: String, signStrategy: SignDisplayStrategy, isUppercase: Bool, minWidth: Int? = nil) {
+    private init(radix: Int, prefix: String, signStrategy: SignDisplayStrategy, minWidth: Int? = nil) {
         self.radix = radix
         self.prefix = prefix
         self.signStrategy = signStrategy
-        self.isUppercase = isUppercase
         self.minWidth = minWidth
     }
 
-    public init(signStrategy: SignDisplayStrategy = .automatic, isUppercase: Bool = false, minWidth: Int? = nil) {
+    public init(signStrategy: SignDisplayStrategy = .automatic, minWidth: Int? = nil) {
         self.radix = 10
         self.prefix = ""
         self.signStrategy = signStrategy
-        self.isUppercase = isUppercase
         self.minWidth = minWidth
     }
 }
@@ -90,10 +86,6 @@ extension BinaryIntegerFormat {
         let absValue = value.magnitude
         var digits = String(absValue, radix: radix)
 
-        if isUppercase {
-            digits = digits.uppercased()
-        }
-
         // Apply zero-padding if minWidth is specified
         if let minWidth = minWidth {
             let padding = max(0, minWidth - digits.count)
@@ -118,22 +110,19 @@ extension BinaryIntegerFormat {
 extension BinaryIntegerFormat {
     /// Formats the binary integer as decimal (base 10).
     public static var decimal: Self {
-        .init(radix: 10, prefix: "", signStrategy: .automatic, isUppercase: false, minWidth: nil)
+        .init(radix: 10, prefix: "", signStrategy: .automatic, minWidth: nil)
     }
 
-    /// Formats the binary integer as hexadecimal.
-    public static var hex: Self {
-        .init(radix: 16, prefix: "0x", signStrategy: .automatic, isUppercase: false, minWidth: nil)
-    }
-
-    /// Formats the binary integer as binary.
+    /// Formats the binary integer as binary (base 2).
+    /// Binary is not defined by any RFC - this is a general-purpose formatter.
     public static var binary: Self {
-        .init(radix: 2, prefix: "0b", signStrategy: .automatic, isUppercase: false, minWidth: nil)
+        .init(radix: 2, prefix: "0b", signStrategy: .automatic, minWidth: nil)
     }
 
-    /// Formats the binary integer as octal.
+    /// Formats the binary integer as octal (base 8).
+    /// Octal is not defined by any RFC - this is a general-purpose formatter.
     public static var octal: Self {
-        .init(radix: 8, prefix: "0o", signStrategy: .automatic, isUppercase: false, minWidth: nil)
+        .init(radix: 8, prefix: "0o", signStrategy: .automatic, minWidth: nil)
     }
 }
 
@@ -147,16 +136,7 @@ extension BinaryIntegerFormat {
     /// (-42).formatted(BinaryIntegerFormat.decimal.sign(strategy: .always))  // "-42"
     /// ```
     public func sign(strategy: SignDisplayStrategy) -> Self {
-        .init(radix: radix, prefix: prefix, signStrategy: strategy, isUppercase: isUppercase, minWidth: minWidth)
-    }
-
-    /// Formats hex letters as uppercase.
-    ///
-    /// ```swift
-    /// 255.formatted(BinaryIntegerFormat.hex.uppercase())  // "0xFF"
-    /// ```
-    public func uppercase() -> Self {
-        .init(radix: radix, prefix: prefix, signStrategy: signStrategy, isUppercase: true, minWidth: minWidth)
+        .init(radix: radix, prefix: prefix, signStrategy: strategy, minWidth: minWidth)
     }
 
     /// Pads the number with leading zeros to reach the specified width.
@@ -166,7 +146,7 @@ extension BinaryIntegerFormat {
     /// 42.formatted(.decimal.zeroPadded(width: 4))  // "0042"
     /// ```
     public func zeroPadded(width: Int) -> Self {
-        .init(radix: radix, prefix: prefix, signStrategy: signStrategy, isUppercase: isUppercase, minWidth: width)
+        .init(radix: radix, prefix: prefix, signStrategy: signStrategy, minWidth: width)
     }
 }
 
@@ -178,9 +158,15 @@ extension BinaryInteger {
     /// Use this method with static format properties:
     ///
     /// ```swift
-    /// let result = UInt8(255).formatted(.hex)      // "0xff"
     /// let result = 42.formatted(.binary)           // "0b101010"
-    /// let result = 255.formatted(.hex.uppercase()) // "0xFF"
+    /// let result = 63.formatted(.octal)            // "0o77"
+    /// let result = 42.formatted(.decimal)          // "42"
+    /// ```
+    ///
+    /// For hexadecimal, use RFC 4648:
+    /// ```swift
+    /// import RFC_4648
+    /// let result = String(hex: 255)  // "0xff"
     /// ```
     ///
     /// - Parameter format: The binary integer format to use.

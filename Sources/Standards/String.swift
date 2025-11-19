@@ -4,8 +4,6 @@
 // Pure Swift string manipulation utilities
 
 // String trimming has been moved to swift-incits-4-1986
-// Hex encoding has been moved to swift-rfc-4648
-// Percent encoding has been moved to swift-rfc-3986
 
 extension String {
     /// Case-insensitive string wrapper for use as dictionary keys and comparisons

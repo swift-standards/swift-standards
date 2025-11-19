@@ -20,23 +20,29 @@ let package = Package(
             targets: ["Time"]
         ),
         .library(
+            name: "Locale",
+            targets: ["Locale"]
+        ),
+        .library(
             name: "StandardsTestSupport",
             targets: ["StandardsTestSupport"]
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/coenttb/swift-testing-performance", from: "0.1.0"),
-        .package(url: "https://github.com/coenttb/swift-formatting", from: "0.1.0")
+        .package(url: "https://github.com/coenttb/swift-testing-performance", from: "0.1.0")
     ],
     targets: [
         .target(
-            name: "Standards",
-            dependencies: [
-                .product(name: "Formatting", package: "swift-formatting")
-            ]
+            name: "Standards"
         ),
         .target(
             name: "Time",
+            dependencies: [
+                "Standards"
+            ]
+        ),
+        .target(
+            name: "Locale",
             dependencies: [
                 "Standards"
             ]
@@ -59,6 +65,13 @@ let package = Package(
             name: "Time Tests",
             dependencies: [
                 "Time",
+                "StandardsTestSupport"
+            ]
+        ),
+        .testTarget(
+            name: "Locale Tests",
+            dependencies: [
+                "Locale",
                 "StandardsTestSupport"
             ]
         )

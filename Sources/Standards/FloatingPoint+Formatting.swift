@@ -1,5 +1,3 @@
-import Formatting
-
 // MARK: - FloatingPointFormat
 
 /// A format for formatting any FloatingPoint value.

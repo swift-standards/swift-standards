@@ -4,28 +4,6 @@ import Standards
 @Suite("BinaryInteger+Formatting Tests")
 struct BinaryIntegerFormattingTests {
 
-    // MARK: - Hex Formatting
-
-    @Test("Hex formatting")
-    func hexFormatting() {
-        #expect(255.formatted(.hex) == "0xff")
-        #expect(0.formatted(.hex) == "0x0")
-        #expect(16.formatted(.hex) == "0x10")
-        #expect(UInt8(255).formatted(.hex) == "0xff")
-    }
-
-    @Test("Hex uppercase")
-    func hexUppercase() {
-        #expect(255.formatted(.hex.uppercase()) == "0xFF")
-        #expect(16.formatted(.hex.uppercase()) == "0x10")
-    }
-
-    @Test("Hex with sign strategy")
-    func hexWithSign() {
-        #expect(42.formatted(.hex.sign(strategy: .always)) == "+0x2a")
-        #expect((-42).formatted(.hex.sign(strategy: .always)) == "-0x2a")
-    }
-
     // MARK: - Binary Formatting
 
     @Test("Binary formatting")
@@ -58,16 +36,26 @@ struct BinaryIntegerFormattingTests {
         #expect((-8).formatted(.octal.sign(strategy: .always)) == "-0o10")
     }
 
-    // MARK: - Different Integer Types
+    // MARK: - Decimal Formatting
 
-    @Test("Different integer types")
-    func differentTypes() {
-        #expect(Int8(127).formatted(.hex) == "0x7f")
-        #expect(Int16(1000).formatted(.hex) == "0x3e8")
-        #expect(Int32(100000).formatted(.hex) == "0x186a0")
-        #expect(Int64(1000000).formatted(.hex) == "0xf4240")
-        #expect(UInt(255).formatted(.hex) == "0xff")
-        #expect(UInt16(65535).formatted(.hex) == "0xffff")
-        #expect(UInt32(4294967295).formatted(.hex) == "0xffffffff")
+    @Test("Decimal formatting")
+    func decimalFormatting() {
+        #expect(42.formatted(.decimal) == "42")
+        #expect(0.formatted(.decimal) == "0")
+        #expect((-42).formatted(.decimal) == "-42")
+    }
+
+    @Test("Decimal with sign strategy")
+    func decimalWithSign() {
+        #expect(42.formatted(.decimal.sign(strategy: .always)) == "+42")
+        #expect((-42).formatted(.decimal.sign(strategy: .always)) == "-42")
+        #expect(0.formatted(.decimal.sign(strategy: .always)) == "+0")
+    }
+
+    @Test("Decimal with zero padding")
+    func decimalWithPadding() {
+        #expect(5.formatted(.decimal.zeroPadded(width: 3)) == "005")
+        #expect(42.formatted(.decimal.zeroPadded(width: 4)) == "0042")
+        #expect(123.formatted(.decimal.zeroPadded(width: 2)) == "123")  // No truncation
     }
 }
