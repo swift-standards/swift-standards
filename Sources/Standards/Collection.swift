@@ -38,8 +38,8 @@ extension Collection {
     /// ```
     public subscript(safe range: Range<Index>) -> SubSequence? {
         guard range.lowerBound >= startIndex,
-              range.upperBound <= endIndex,
-              range.lowerBound <= range.upperBound
+            range.upperBound <= endIndex,
+            range.lowerBound <= range.upperBound
         else { return nil }
         return self[range]
     }

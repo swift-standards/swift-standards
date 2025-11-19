@@ -3,6 +3,8 @@
 //
 // Extensions for Swift standard library AutoreleasingUnsafeMutablePointer
 
-extension AutoreleasingUnsafeMutablePointer {
-    // Add utilities here
-}
+#if canImport(ObjectiveC)
+    extension AutoreleasingUnsafeMutablePointer {
+        // Add utilities here
+    }
+#endif

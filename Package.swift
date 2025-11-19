@@ -26,7 +26,7 @@ let package = Package(
         .library(
             name: "StandardsTestSupport",
             targets: ["StandardsTestSupport"]
-        )
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/coenttb/swift-testing-performance", from: "0.1.0")
@@ -51,30 +51,30 @@ let package = Package(
             name: "StandardsTestSupport",
             dependencies: [
                 "Standards",
-                .product(name: "TestingPerformance", package: "swift-testing-performance")
+                .product(name: "TestingPerformance", package: "swift-testing-performance"),
             ]
         ),
         .testTarget(
             name: "Standards Tests",
             dependencies: [
                 "Standards",
-                "StandardsTestSupport"
+                "StandardsTestSupport",
             ]
         ),
         .testTarget(
             name: "Time Tests",
             dependencies: [
                 "Time",
-                "StandardsTestSupport"
+                "StandardsTestSupport",
             ]
         ),
         .testTarget(
             name: "Locale Tests",
             dependencies: [
                 "Locale",
-                "StandardsTestSupport"
+                "StandardsTestSupport",
             ]
-        )
+        ),
     ]
 )
 
@@ -85,4 +85,3 @@ for target in package.targets {
     )
     target.swiftSettings = settings
 }
-

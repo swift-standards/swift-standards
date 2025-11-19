@@ -57,8 +57,8 @@ extension Array {
     /// ```
     public subscript(safe range: Range<Int>) -> ArraySlice<Element>? {
         guard range.lowerBound >= 0,
-              range.upperBound <= count,
-              range.lowerBound <= range.upperBound
+            range.upperBound <= count,
+            range.lowerBound <= range.upperBound
         else { return nil }
         return self[range]
     }
@@ -78,8 +78,8 @@ extension Array {
     /// ```
     public subscript(safe range: ClosedRange<Int>) -> ArraySlice<Element>? {
         guard range.lowerBound >= 0,
-              range.upperBound < count,
-              range.lowerBound <= range.upperBound
+            range.upperBound < count,
+            range.lowerBound <= range.upperBound
         else { return nil }
         return self[range]
     }

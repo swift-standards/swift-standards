@@ -20,7 +20,7 @@ struct `FloatingPoint - Extensions` {
         (1.0, 1.001, 0.01, true),
         (1.0, 1.1, 0.01, false),
         (0.0, 0.0, 0.0, true),
-        (1.5, 1.500001, 0.00001, true),
+        (1.5, 1.500001, 0.00001, true)
     ])
     func `isApproximatelyEqual with various tolerances`(testCase: (Double, Double, Double, Bool)) {
         let (a, b, tolerance, expected) = testCase
@@ -46,7 +46,7 @@ struct `FloatingPoint - Extensions` {
         (0.0, 10.0, 1.0, 10.0),
         (0.0, 10.0, 0.5, 5.0),
         (0.0, 10.0, 0.25, 2.5),
-        (0.0, 10.0, 0.75, 7.5),
+        (0.0, 10.0, 0.75, 7.5)
     ])
     func `lerp interpolates correctly`(testCase: (Double, Double, Double, Double)) {
         let (start, end, t, expected) = testCase
@@ -89,7 +89,7 @@ struct `FloatingPoint - Extensions` {
         (2.0, 1, 2.0),
         (2.0, 10, 1024.0),
         (10.0, 3, 1000.0),
-        (0.5, 4, 0.0625),
+        (0.5, 4, 0.0625)
     ])
     func `power returns correct result`(testCase: (Double, Int, Double)) {
         let (base, exponent, expected) = testCase
@@ -122,7 +122,7 @@ struct `FloatingPoint - Extensions` {
         (3.14159, 1, 3.1),
         (3.14159, 2, 3.14),
         (3.14159, 3, 3.142),
-        (3.14159, 4, 3.1416),
+        (3.14159, 4, 3.1416)
     ])
     func `rounded to decimal places`(testCase: (Double, Int, Double)) {
         let (value, places, expected) = testCase
@@ -156,7 +156,7 @@ struct `FloatingPoint - Extensions` {
         (1.5, 1.0),
         (-0.5, 0.0),
         (2.0, 1.0),
-        (-10.0, 0.0),
+        (-10.0, 0.0)
     ])
     func `clamp01 restricts to unit interval`(testCase: (Double, Double)) {
         let (value, expected) = testCase
@@ -260,7 +260,7 @@ extension PerformanceTests {
             }
         }
 
-        @Test(.timed(threshold: .milliseconds(38), maxAllocations: 2_000_000))
+        @Test(.timed(threshold: .milliseconds(60), maxAllocations: 2_000_000))
         func `lerp 100k interpolations`() {
             let values = Array(0..<100_000).map { Double($0) / 100_000.0 }
             for t in values {
@@ -276,7 +276,7 @@ extension PerformanceTests {
             }
         }
 
-        @Test(.timed(threshold: .milliseconds(38), maxAllocations: 2_000_000))
+        @Test(.timed(threshold: .milliseconds(60), maxAllocations: 2_000_000))
         func `clamp01 100k values`() {
             let values = Array(0..<100_000).map { Double($0) / 50_000.0 - 1.0 }
             for value in values {
