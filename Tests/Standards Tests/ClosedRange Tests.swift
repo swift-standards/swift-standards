@@ -19,7 +19,7 @@ struct `ClosedRange - Extensions` {
     @Test(arguments: [
         (0...4, 5...10),
         (0...5, 10...15),
-        (10...20, 0...4),
+        (10...20, 0...4)
     ])
     func `overlap with non-overlapping ranges returns nil`(
         ranges: (ClosedRange<Int>, ClosedRange<Int>)

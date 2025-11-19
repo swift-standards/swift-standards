@@ -18,7 +18,7 @@ struct `FixedWidthInteger - Extensions` {
         (0b11010011 as UInt8, 1, 0b10100111 as UInt8),
         (0b11010011 as UInt8, 2, 0b01001111 as UInt8),
         (0b11010011 as UInt8, 4, 0b00111101 as UInt8),
-        (0b10000000 as UInt8, 1, 0b00000001 as UInt8),
+        (0b10000000 as UInt8, 1, 0b00000001 as UInt8)
     ])
     func `rotateLeft shifts bits circularly`(testCase: (UInt8, Int, UInt8)) {
         let (value, count, expected) = testCase
@@ -65,7 +65,7 @@ struct `FixedWidthInteger - Extensions` {
         (0b11010011 as UInt8, 1, 0b11101001 as UInt8),
         (0b11010011 as UInt8, 2, 0b11110100 as UInt8),
         (0b11010011 as UInt8, 4, 0b00111101 as UInt8),
-        (0b00000001 as UInt8, 1, 0b10000000 as UInt8),
+        (0b00000001 as UInt8, 1, 0b10000000 as UInt8)
     ])
     func `rotateRight shifts bits circularly`(testCase: (UInt8, Int, UInt8)) {
         let (value, count, expected) = testCase
@@ -105,7 +105,7 @@ struct `FixedWidthInteger - Extensions` {
         (0b10000000 as UInt8, 0b00000001 as UInt8),
         (0b00000001 as UInt8, 0b10000000 as UInt8),
         (0b11111111 as UInt8, 0b11111111 as UInt8),
-        (0b00000000 as UInt8, 0b00000000 as UInt8),
+        (0b00000000 as UInt8, 0b00000000 as UInt8)
     ])
     func `reverseBits reverses bit order`(testCase: (UInt8, UInt8)) {
         let (value, expected) = testCase

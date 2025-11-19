@@ -81,7 +81,7 @@ struct `Time vs Foundation Comparison Tests` {
             (1999, 12, 31, 23, 59, 59),  // End of millennium
             (2020, 2, 29, 0, 0, 0),  // Leap day
             (2038, 1, 19, 3, 14, 7),  // Near 32-bit overflow
-            (1980, 1, 6, 0, 0, 0),  // GPS epoch
+            (1980, 1, 6, 0, 0, 0)  // GPS epoch
         ]
     )
     func testEpochConversionKnownDates(
@@ -175,7 +175,7 @@ struct `Time vs Foundation Comparison Tests` {
             (2100, 1, 1),
             (2200, 1, 1),
             (1999, 12, 31),
-            (2099, 12, 31),
+            (2099, 12, 31)
         ]
     )
     func testEpochConversionCenturyBoundaries(year: Int, month: Int, day: Int) throws {
@@ -199,7 +199,7 @@ struct `Time vs Foundation Comparison Tests` {
             1_000_000_000,  // 2001-09-09
             1_234_567_890,  // 2009-02-13
             1_700_000_000,  // 2023-11-14
-            2_147_483_647,  // Max 32-bit signed int (2038-01-19)
+            2_147_483_647  // Max 32-bit signed int (2038-01-19)
         ]
     )
     func testEpochRoundTripWithFoundation(seconds: Int) throws {
@@ -284,7 +284,7 @@ struct `Time vs Foundation Comparison Tests` {
             // Century boundaries
             (1900, 1, 1, Time.Weekday.monday),
             (2000, 1, 1, Time.Weekday.saturday),
-            (2100, 1, 1, Time.Weekday.friday),
+            (2100, 1, 1, Time.Weekday.friday)
         ]
     )
     func testWeekdayVsFoundation(
@@ -293,8 +293,7 @@ struct `Time vs Foundation Comparison Tests` {
         day: Int,
         expectedWeekday: Time.Weekday
     )
-        throws
-    {
+        throws {
         let weekday = try Time.Weekday(year: year, month: month, day: day)
         #expect(weekday == expectedWeekday)
 
@@ -363,7 +362,7 @@ struct `Time vs Foundation Comparison Tests` {
             (1950, 1, 1),
             (1945, 5, 8),  // VE Day
             (1920, 1, 1),
-            (1900, 1, 1),
+            (1900, 1, 1)
         ]
     )
     func testWeekdayBeforeEpochVsFoundation(year: Int, month: Int, day: Int) throws {
@@ -393,7 +392,7 @@ struct `Time vs Foundation Comparison Tests` {
         "Leap Year - Validate against Foundation",
         arguments: [
             1900, 1904, 1996, 1997, 1998, 1999,
-            2000, 2001, 2004, 2020, 2024, 2100, 2400,
+            2000, 2001, 2004, 2020, 2024, 2100, 2400
         ]
     )
     func testLeapYearVsFoundation(year: Int) {
