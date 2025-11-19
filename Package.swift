@@ -16,6 +16,10 @@ let package = Package(
             targets: ["Standards"]
         ),
         .library(
+            name: "Formatting",
+            targets: ["Formatting"]
+        ),
+        .library(
             name: "Time",
             targets: ["Time"]
         ),
@@ -34,6 +38,9 @@ let package = Package(
     targets: [
         .target(
             name: "Standards"
+        ),
+        .target(
+            name: "Formatting"
         ),
         .target(
             name: "Time",
