@@ -1,96 +1,69 @@
-# SwiftLint Configuration for swift-standards
-# Shared across all packages in the workspace
-# Optimized for library/framework development with Swift Testing
-
-# Disabled rules
 disabled_rules:
-  # Type inference & Swift idioms
-  - explicit_type_interface  # Type inference is idiomatic Swift
-  - explicit_init  # Prefer MyType() over MyType.init()
-  - extension_access_modifier  # Prefer access on members, not extensions
-  - explicit_acl  # Don't require `internal` everywhere
+  - line_length
+  - trailing_comma
+  - redundant_discardable_let
 
-  # Development flexibility
-  - todo  # TODOs are fine in development
-  - force_cast  # Sometimes needed in tests
-  - force_try  # Sometimes needed in tests
-
-  # Length restrictions (swift-format handles line length)
-  - line_length  # HTML attributes can be 300+ chars; swift-format handles this
-  - file_length  # Comprehensive test files are long
-
-  # Domain complexity
-  - cyclomatic_complexity  # Lookup tables and parsing logic have inherent complexity
-  - function_parameter_count  # Time/Date/RFC initializers legitimately need many parameters
-  - large_tuple  # Component tuples are acceptable for internal use
-
-  # Documentation patterns
-  - file_header  # No consistent pattern across packages
-  - missing_docs  # Documentation via code comments, not strictly required
-
-  # Swift Testing compatibility
-  - identifier_name  # Swift Testing uses backtick names with spaces
-  - type_name  # @Suite uses descriptive names with spaces
-
-  # False positives for our patterns
-  - optional_data_string_conversion  # False positive on [UInt8] -> String conversion
-  - for_where  # Not always clearer than for+if
-  - contains_over_first_not_nil  # False positives on custom firstIndex implementations
-  - sorted_imports  # Handled by swift-format's OrderedImports rule
-
-# Opt-in rules for code quality
 opt_in_rules:
-  # Bug prevention
-  - unused_optional_binding  # Catch unused let bindings
+  - explicit_init
+  - closure_spacing
+  - empty_count
+  - empty_string
+  - fatal_error_message
+  - first_where
+  - joined_default_parameter
+  - operator_usage_whitespace
+  - overridden_super_call
 
-  # Code quality & cleanliness
-  - implicit_optional_initialization  # Don't initialize optionals to nil (formerly redundant_optional_initialization)
-  - redundant_void_return  # Don't write -> Void
-  - empty_string  # Use .isEmpty not == ""
-  - vertical_whitespace  # Consistent spacing
-
-# Analyzer rules (require --analyze flag)
-analyzer_rules:
-  - unused_import  # Remove unnecessary imports
-
-  # Performance optimizations
-  - empty_count  # Use .isEmpty instead of .count == 0
-  - first_where  # Prefer first(where:) over filter().first
-  - last_where  # Prefer last(where:) over filter().last
-  - contains_over_range_nil_comparison  # Better performance
-  - sorted_first_last  # Prefer sorted().first/last
-
-  # Style consistency
-  - closure_spacing  # Consistent closure formatting
-  - operator_usage_whitespace  # Consistent operator spacing
-
-  # Safety
-  - array_init  # Safer array initialization
-  - fatal_error_message  # Require messages in fatalError
-  - legacy_random  # Use modern random APIs
-  - overridden_super_call  # Ensure super is called when needed
-
-# Paths
 included:
   - Sources
   - Tests
 
 excluded:
   - .build
-  - .swiftpm
+  - Carthage
+  - Pods
+  - fastlane
 
-# Rule configurations
-
-# Allow longer functions for complex performance logic
-function_body_length:
-  warning: 60
-  error: 100
-
-# Allow larger types for comprehensive test suites
+# Type body length settings
 type_body_length:
-  warning: 400
+  warning: 500
   error: 600
 
-# Nesting depth
-nesting:
-  type_level: 2
+# File length settings
+file_length:
+  warning: 800
+  error: 1000
+  ignore_comment_only_lines: true
+
+# Function body length settings
+function_body_length:
+  warning: 100
+  error: 120
+
+# Function parameter count
+function_parameter_count:
+  warning: 6
+  error: 8
+
+# Cyclomatic complexity
+cyclomatic_complexity:
+  warning: 15
+  error: 20
+
+# Identifier name settings
+identifier_name:
+  min_length:
+    warning: 2
+  max_length:
+    warning: 50
+    error: 60
+  excluded:
+    - id
+    - URL
+    - to
+    - db
+
+# Type name settings - allow RFC_XXXX pattern
+type_name:
+  allowed_symbols:
+    - "_"

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lineLength": 120,
+  "lineLength": 100,
   "indentation": {
     "spaces": 4
   },
@@ -8,7 +8,7 @@
   "maximumBlankLines": 1,
   "respectsExistingLineBreaks": true,
   "lineBreakBeforeControlFlowKeywords": false,
-  "lineBreakBeforeEachArgument": false,
+  "lineBreakBeforeEachArgument": true,
   "lineBreakBeforeEachGenericRequirement": false,
   "prioritizeKeepingFunctionOutputTogether": true,
   "indentConditionalCompilationBlocks": true,
@@ -19,7 +19,7 @@
   "rules": {
     "AllPublicDeclarationsHaveDocumentation": false,
     "AlwaysUseLowerCamelCase": true,
-    "AmbiguousTrailingClosureOverload": false,
+    "AmbiguousTrailingClosureOverload": true,
     "BeginDocumentationCommentWithOneLineSummary": false,
     "DoNotUseSemicolons": true,
     "DontRepeatTypeInStaticProperties": true,
