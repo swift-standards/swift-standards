@@ -1,69 +1,69 @@
 import Testing
 import Standards
 
-@Suite("FloatingPoint+Formatting Tests")
-struct FloatingPointFormattingTests {
+@Suite
+struct `FloatingPoint+Formatting Tests` {
 
     // MARK: - Percent Formatting
 
-    @Test("Double formatted as percent")
-    func doublePercent() {
+    @Test
+    func `Double formatted as percent`() {
         #expect(0.75.formatted(.percent) == "75.0%")
         #expect(0.5.formatted(.percent) == "50.0%")
         #expect(1.0.formatted(.percent) == "100.0%")
         #expect(0.0.formatted(.percent) == "0.0%")
     }
 
-    @Test("Float formatted as percent")
-    func floatPercent() {
+    @Test
+    func `Float formatted as percent`() {
         #expect(Float(0.75).formatted(.percent) == "75.0%")
         #expect(Float(0.5).formatted(.percent) == "50.0%")
         #expect(Float(1.0).formatted(.percent) == "100.0%")
     }
 
-    @Test("Percent with rounding")
-    func percentRounded() {
+    @Test
+    func `Percent with rounding`() {
         #expect(0.755.formatted(.percent.rounded()) == "76.0%")
         #expect(0.745.formatted(.percent.rounded()) == "75.0%")
         #expect(0.5.formatted(.percent.rounded()) == "50.0%")
     }
 
-    @Test("Percent with precision")
-    func percentPrecision() {
+    @Test
+    func `Percent with precision`() {
         #expect(0.755.formatted(.percent.precision(2)) == "75.5%")
         #expect(0.1234.formatted(.percent.precision(1)) == "12.3%")
         #expect(0.5.formatted(.percent.precision(2)) == "50.0%")
     }
 
-    @Test("Percent with rounding and precision")
-    func percentRoundedAndPrecision() {
+    @Test
+    func `Percent with rounding and precision`() {
         #expect(0.755.formatted(.percent.rounded().precision(2)) == "76.0%")
         #expect(0.745.formatted(.percent.rounded().precision(2)) == "75.0%")
     }
 
     // MARK: - Edge Cases
 
-    @Test("Very small values")
-    func verySmallValues() {
+    @Test
+    func `Very small values`() {
         #expect(0.0001.formatted(.percent) == "0.01%")
         #expect(0.00001.formatted(.percent) == "0.001%")
     }
 
-    @Test("Large values")
-    func largeValues() {
+    @Test
+    func `Large values`() {
         #expect(10.0.formatted(.percent) == "1000.0%")
         #expect(100.0.formatted(.percent) == "10000.0%")
     }
 
-    @Test("Zero values")
-    func zeroValues() {
+    @Test
+    func `Zero values`() {
         #expect(0.0.formatted(.percent) == "0.0%")
         #expect(0.0.formatted(.percent.rounded()) == "0.0%")
         #expect(0.0.formatted(.percent.precision(2)) == "0.0%")
     }
 
-    @Test("Negative values")
-    func negativeValues() {
+    @Test
+    func `Negative values`() {
         #expect((-0.5).formatted(.percent) == "-50.0%")
         #expect((-0.755).formatted(.percent.precision(2)) == "-75.5%")
         #expect((-0.25).formatted(.percent.rounded()) == "-25.0%")
@@ -71,13 +71,13 @@ struct FloatingPointFormattingTests {
 
     // MARK: - Float Specific
 
-    @Test("Float with precision")
-    func floatPrecision() {
+    @Test
+    func `Float with precision`() {
         #expect(Float(0.755).formatted(.percent.precision(2)) == "75.5%")
     }
 
-    @Test("Float with rounding")
-    func floatRounded() {
+    @Test
+    func `Float with rounding`() {
         #expect(Float(0.755).formatted(.percent.rounded()) == "76.0%")
     }
 }

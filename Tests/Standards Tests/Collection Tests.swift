@@ -6,29 +6,29 @@
 import Testing
 @testable import Standards
 
-@Suite("Collection Safe Subscript")
-struct CollectionSafeSubscriptTests {
+@Suite
+struct `Collection Safe Subscript` {
 
     // MARK: - Safe subscript with valid indices
 
-    @Test("Safe subscript returns element for valid index")
-    func safeSubscriptValidIndex() {
+    @Test
+    func `Safe subscript returns element for valid index`() {
         let array = [1, 2, 3, 4, 5]
         #expect(array[safe: 0] == 1)
         #expect(array[safe: 2] == 3)
         #expect(array[safe: 4] == 5)
     }
 
-    @Test("Safe subscript with string")
-    func safeSubscriptString() {
+    @Test
+    func `Safe subscript with string`() {
         let string = "Hello"
         let index = string.index(string.startIndex, offsetBy: 1)
         #expect(string[safe: index] == "e")
         #expect(string[safe: string.startIndex] == "H")
     }
 
-    @Test("Safe subscript with dictionary values")
-    func safeSubscriptDictionaryValues() {
+    @Test
+    func `Safe subscript with dictionary values`() {
         let dict = ["a": 1, "b": 2, "c": 3]
         let values = Array(dict.values.sorted())
         #expect(values[safe: 0] == 1)
@@ -38,22 +38,22 @@ struct CollectionSafeSubscriptTests {
 
     // MARK: - Safe subscript with invalid indices
 
-    @Test("Safe subscript returns nil for out of bounds positive index")
-    func safeSubscriptOutOfBoundsPositive() {
+    @Test
+    func `Safe subscript returns nil for out of bounds positive index`() {
         let array = [1, 2, 3]
         #expect(array[safe: 10] == nil)
         #expect(array[safe: 100] == nil)
     }
 
-    @Test("Safe subscript returns nil for negative index")
-    func safeSubscriptNegativeIndex() {
+    @Test
+    func `Safe subscript returns nil for negative index`() {
         let array = [1, 2, 3]
         #expect(array[safe: -1] == nil)
         #expect(array[safe: -10] == nil)
     }
 
-    @Test("Safe subscript on empty collection")
-    func safeSubscriptEmptyCollection() {
+    @Test
+    func `Safe subscript on empty collection`() {
         let empty: [Int] = []
         #expect(empty[safe: 0] == nil)
         #expect(empty[safe: 1] == nil)
@@ -61,8 +61,8 @@ struct CollectionSafeSubscriptTests {
 
     // MARK: - Different collection types
 
-    @Test("Safe subscript with ArraySlice")
-    func safeSubscriptArraySlice() {
+    @Test
+    func `Safe subscript with ArraySlice`() {
         let array = [1, 2, 3, 4, 5]
         let slice = array[1...3]  // [2, 3, 4]
         #expect(slice[safe: 1] == 2)
@@ -72,8 +72,8 @@ struct CollectionSafeSubscriptTests {
         #expect(slice[safe: 4] == nil)
     }
 
-    @Test("Safe subscript with ContiguousArray")
-    func safeSubscriptContiguousArray() {
+    @Test
+    func `Safe subscript with ContiguousArray`() {
         let array: ContiguousArray = [10, 20, 30]
         #expect(array[safe: 0] == 10)
         #expect(array[safe: 2] == 30)
@@ -82,8 +82,8 @@ struct CollectionSafeSubscriptTests {
 
     // MARK: - Category theory properties
 
-    @Test("Natural transformation preserves structure")
-    func naturalTransformationProperty() {
+    @Test
+    func `Natural transformation preserves structure`() {
         // η: Collection → Maybe where η(c)[i] = Some(c[i]) if valid, None otherwise
         let collection = [1, 2, 3]
 
@@ -97,8 +97,8 @@ struct CollectionSafeSubscriptTests {
         #expect(invalidResult == nil)
     }
 
-    @Test("Totality property - never traps")
-    func totalityProperty() {
+    @Test
+    func `Totality property - never traps`() {
         let array = [1, 2, 3]
 
         // These would trap with regular subscript, but return nil with safe subscript

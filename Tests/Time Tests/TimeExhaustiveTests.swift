@@ -8,8 +8,8 @@ import Testing
 
 @testable import Time
 
-@Suite("Time Exhaustive Tests")
-struct TimeExhaustiveTests {
+@Suite
+struct `Time Exhaustive Tests` {
 
     // MARK: - Leap Year Tests
 
@@ -71,8 +71,8 @@ struct TimeExhaustiveTests {
 
     // MARK: - Days in Month Tests
 
-    @Test("Days in Month - All Months in Leap Year")
-    func testDaysInMonthLeapYear() {
+    @Test
+    func `Days in Month - All Months in Leap Year`() {
         let year = Time.Year(2024)  // Leap year
         let expected = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
@@ -85,8 +85,8 @@ struct TimeExhaustiveTests {
         }
     }
 
-    @Test("Days in Month - All Months in Non-Leap Year")
-    func testDaysInMonthNonLeapYear() {
+    @Test
+    func `Days in Month - All Months in Non-Leap Year`() {
         let year = Time.Year(2023)  // Non-leap year
         let expected = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
@@ -122,8 +122,8 @@ struct TimeExhaustiveTests {
 
     // MARK: - Component Validation Tests
 
-    @Test("Month Validation - Boundary Cases")
-    func testMonthValidation() throws {
+    @Test
+    func `Month Validation - Boundary Cases`() throws {
         // Valid months
         for month in 1...12 {
             _ = try Time.Month(month)
@@ -144,8 +144,8 @@ struct TimeExhaustiveTests {
         }
     }
 
-    @Test("Day Validation - All Valid Days in Each Month")
-    func testDayValidationAllMonths() throws {
+    @Test
+    func `Day Validation - All Valid Days in Each Month`() throws {
         let year = Time.Year(2024)  // Leap year
 
         // January (31 days)
@@ -194,8 +194,8 @@ struct TimeExhaustiveTests {
         }
     }
 
-    @Test("Hour Validation - Boundary Cases")
-    func testHourValidation() throws {
+    @Test
+    func `Hour Validation - Boundary Cases`() throws {
         // Valid hours
         for hour in 0...23 {
             _ = try Time.Hour(hour)
@@ -213,8 +213,8 @@ struct TimeExhaustiveTests {
         }
     }
 
-    @Test("Minute Validation - Boundary Cases")
-    func testMinuteValidation() throws {
+    @Test
+    func `Minute Validation - Boundary Cases`() throws {
         // Valid minutes
         for minute in 0...59 {
             _ = try Time.Minute(minute)
@@ -232,8 +232,8 @@ struct TimeExhaustiveTests {
         }
     }
 
-    @Test("Second Validation - Boundary Cases Including Leap Second")
-    func testSecondValidation() throws {
+    @Test
+    func `Second Validation - Boundary Cases Including Leap Second`() throws {
         // Valid seconds (including leap second)
         for second in 0...60 {
             _ = try Time.Second(second)
@@ -251,8 +251,8 @@ struct TimeExhaustiveTests {
         }
     }
 
-    @Test("Sub-Second Validation - All Precision Levels")
-    func testSubSecondValidation() throws {
+    @Test
+    func `Sub-Second Validation - All Precision Levels`() throws {
         // Valid milliseconds, microseconds, nanoseconds
         for value in 0...999 {
             _ = try Time.Millisecond(value)
@@ -313,8 +313,8 @@ struct TimeExhaustiveTests {
         #expect(time.totalNanoseconds == expected)
     }
 
-    @Test("Total Nanoseconds - Boundary Cases")
-    func testTotalNanosecondsBoundaries() throws {
+    @Test
+    func `Total Nanoseconds - Boundary Cases`() throws {
         // Zero
         let zero = try Time(
             year: 2024,
@@ -346,8 +346,8 @@ struct TimeExhaustiveTests {
 
     // MARK: - Time Construction Tests
 
-    @Test("Time Construction - Invalid Date Combinations")
-    func testTimeConstructionInvalidDates() {
+    @Test
+    func `Time Construction - Invalid Date Combinations`() {
         // February 30 (never valid)
         #expect(throws: Time.Error.self) {
             try Time(year: 2024, month: 2, day: 30, hour: 0, minute: 0, second: 0)
@@ -379,8 +379,8 @@ struct TimeExhaustiveTests {
         }
     }
 
-    @Test("Time Construction - Valid Boundary Dates")
-    func testTimeConstructionValidBoundaries() throws {
+    @Test
+    func `Time Construction - Valid Boundary Dates`() throws {
         // February 29 in leap year
         _ = try Time(year: 2024, month: 2, day: 29, hour: 0, minute: 0, second: 0)
 

@@ -8,8 +8,8 @@ import Testing
 
 @testable import Time
 
-@Suite("Time vs Foundation Comparison Tests")
-struct TimeFoundationTests {
+@Suite
+struct `Time vs Foundation Comparison Tests` {
 
     // Helper to create Foundation Date from components
     private func foundationDate(
@@ -45,8 +45,8 @@ struct TimeFoundationTests {
 
     // MARK: - Epoch Conversion Tests
 
-    @Test("Epoch Conversion - Unix Epoch Zero")
-    func testUnixEpochZero() {
+    @Test
+    func `Epoch Conversion - Unix Epoch Zero`() {
         let time = Time(secondsSinceEpoch: 0)
 
         #expect(time.year.value == 1970)
@@ -126,8 +126,8 @@ struct TimeFoundationTests {
     // NOTE: Epoch conversion for dates before 1970 is not yet implemented
     // The yearAndDays algorithm currently only supports dates from 1970 onwards
     /*
-    @Test("Epoch Conversion - Negative Epochs (Before 1970)")
-    func testEpochConversionBeforeEpoch() throws {
+    @Test
+    func `Epoch Conversion - Negative Epochs (Before 1970)`() throws {
         let testDates: [(year: Int, month: Int, day: Int)] = [
             (1969, 12, 31),  // Day before epoch
             (1969, 1, 1),    // Start of 1969
@@ -228,8 +228,8 @@ struct TimeFoundationTests {
         #expect(time.second.value == components.second)
     }
 
-    @Test("Epoch Conversion - Every Day in 2024")
-    func testEpochConversionEveryDay2024() throws {
+    @Test
+    func `Epoch Conversion - Every Day in 2024`() throws {
         let year = 2024
         let daysInMonths = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
@@ -317,8 +317,8 @@ struct TimeFoundationTests {
         }
     }
 
-    @Test("Weekday - Every Day in 2024 vs Foundation")
-    func testWeekdayEveryDay2024VsFoundation() throws {
+    @Test
+    func `Weekday - Every Day in 2024 vs Foundation`() throws {
         let year = 2024
         let daysInMonths = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 

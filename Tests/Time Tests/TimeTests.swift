@@ -7,19 +7,19 @@ import Testing
 
 @testable import Time
 
-@Suite("Time Target Tests")
-struct TimeTests {
+@Suite
+struct `Time Target Tests` {
 
-    @Test("GregorianCalendar - Leap Year")
-    func testLeapYear() {
+    @Test
+    func `GregorianCalendar - Leap Year`() {
         #expect(Time.Calendar.Gregorian.isLeapYear(Time.Year(2000)) == true)  // Divisible by 400
         #expect(Time.Calendar.Gregorian.isLeapYear(Time.Year(2100)) == false)  // Divisible by 100, not 400
         #expect(Time.Calendar.Gregorian.isLeapYear(Time.Year(2024)) == true)  // Divisible by 4, not 100
         #expect(Time.Calendar.Gregorian.isLeapYear(Time.Year(2023)) == false)  // Not divisible by 4
     }
 
-    @Test("GregorianCalendar - Days in Month")
-    func testDaysInMonth() {
+    @Test
+    func `GregorianCalendar - Days in Month`() {
         #expect(
             Time.Calendar.Gregorian
                 .daysInMonth(Time.Year(2024), Time.Month(unchecked: 2)) == 29
@@ -36,8 +36,8 @@ struct TimeTests {
         )  // April
     }
 
-    @Test("Weekday - Calculate from Date")
-    func testWeekdayCalculation() throws {
+    @Test
+    func `Weekday - Calculate from Date`() throws {
         // January 1, 2024 is a Monday
         let monday = try Time.Weekday(year: 2024, month: 1, day: 1)
         #expect(monday == .monday)
@@ -51,16 +51,16 @@ struct TimeTests {
         #expect(monday2 == .monday)
     }
 
-    @Test("Weekday - All Cases")
-    func testWeekdayAllCases() {
+    @Test
+    func `Weekday - All Cases`() {
         let allCases = Time.Weekday.allCases
         #expect(allCases.count == 7)
         #expect(allCases.contains(.monday))
         #expect(allCases.contains(.sunday))
     }
 
-    @Test("Weekday - Known Dates")
-    func testWeekdayKnownDates() throws {
+    @Test
+    func `Weekday - Known Dates`() throws {
         // July 4, 1776 was a Thursday
         let independence = try Time.Weekday(year: 1776, month: 7, day: 4)
         #expect(independence == .thursday)
@@ -74,8 +74,8 @@ struct TimeTests {
         #expect(y2k == .saturday)
     }
 
-    @Test("Weekday - Invalid Date Throws")
-    func testWeekdayInvalidDate() {
+    @Test
+    func `Weekday - Invalid Date Throws`() {
         // Invalid month
         #expect(throws: Time.Weekday.Error.self) {
             try Time.Weekday(year: 2024, month: 13, day: 1)
@@ -92,8 +92,8 @@ struct TimeTests {
         }
     }
 
-    @Test("DateComponents - Validation")
-    func testDateComponentsValidation() throws {
+    @Test
+    func `DateComponents - Validation`() throws {
         // Valid components
         let valid = try Time(
             year: 2024,
@@ -171,8 +171,8 @@ struct TimeTests {
         #expect(leapSecond.second.value == 60)
     }
 
-    @Test("EpochConversion - Round Trip")
-    func testEpochConversionRoundTrip() throws {
+    @Test
+    func `EpochConversion - Round Trip`() throws {
         // Test Unix epoch itself (transformation: Int → DateComponents)
         let epoch = Time(secondsSinceEpoch: 0)
         #expect(epoch.year.value == 1970)
@@ -205,8 +205,8 @@ struct TimeTests {
         #expect(roundTrip.second.value == 0)
     }
 
-    @Test("Calendar - First-Class Value")
-    func testCalendarAsValue() {
+    @Test
+    func `Calendar - First-Class Value`() {
         // Test Gregorian calendar as a first-class value
         let gregorian = Time.Calendar.gregorian
 
@@ -219,8 +219,8 @@ struct TimeTests {
         #expect(gregorian.daysInMonth(Time.Year(2024), Time.Month(unchecked: 1)) == 31)
     }
 
-    @Test("Epoch - First-Class Value")
-    func testEpochAsValue() {
+    @Test
+    func `Epoch - First-Class Value`() {
         // Test epochs as first-class values
         let unix = Time.Epoch.unix
         let ntp = Time.Epoch.ntp

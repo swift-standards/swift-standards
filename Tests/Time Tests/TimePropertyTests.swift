@@ -8,8 +8,8 @@ import Testing
 
 @testable import Time
 
-@Suite("Time Property-Based Tests")
-struct TimePropertyTests {
+@Suite
+struct `Time Property-Based Tests` {
 
     // MARK: - Test Data Generation
 
@@ -291,8 +291,8 @@ struct TimePropertyTests {
 
     // MARK: - Exhaustive Range Tests
 
-    @Test("Property: Every day from 2020-2024 matches Foundation")
-    func testEveryDayRange2020To2024() throws {
+    @Test
+    func `Property: Every day from 2020-2024 matches Foundation`() throws {
         for year in 2020...2024 {
             let daysInMonths =
                 Time.Calendar.Gregorian.isLeapYear(Time.Year(year))
