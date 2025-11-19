@@ -1,4 +1,5 @@
 import Testing
+
 @testable import Standards
 
 @Suite
@@ -20,7 +21,9 @@ struct `ClosedRange - Extensions` {
         (0...5, 10...15),
         (10...20, 0...4)
     ])
-    func `overlap with non-overlapping ranges returns nil`(ranges: (ClosedRange<Int>, ClosedRange<Int>)) {
+    func `overlap with non-overlapping ranges returns nil`(
+        ranges: (ClosedRange<Int>, ClosedRange<Int>)
+    ) {
         let result = ranges.0.overlap(ranges.1)
         #expect(result == nil)
     }

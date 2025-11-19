@@ -52,7 +52,7 @@ extension FloatingPointFormat {
         var workingValue = value
 
         if isPercent {
-            workingValue = workingValue * T(100)
+            workingValue *= T(100)
         }
 
         if shouldRound {

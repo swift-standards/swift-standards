@@ -4,6 +4,7 @@
 // Tests for Comparable extensions
 
 import Testing
+
 @testable import Standards
 
 @Suite

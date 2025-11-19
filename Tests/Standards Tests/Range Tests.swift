@@ -1,4 +1,5 @@
 import Testing
+
 @testable import Standards
 
 @Suite
@@ -104,7 +105,9 @@ struct `Range - Extensions` {
         (0..<100, 50, (0..<50, 50..<100)),
         (10..<20, 15, (10..<15, 15..<20))
     ])
-    func `split at midpoint creates two ranges`(testCase: (Range<Int>, Int, (Range<Int>, Range<Int>))) {
+    func `split at midpoint creates two ranges`(
+        testCase: (Range<Int>, Int, (Range<Int>, Range<Int>))
+    ) {
         let (range, point, expected) = testCase
         let result = range.split(at: point)
 

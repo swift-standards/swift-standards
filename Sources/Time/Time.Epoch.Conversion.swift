@@ -90,8 +90,7 @@ extension Time.Epoch.Conversion {
     internal static func componentsRaw(
         fromSecondsSinceEpoch secondsSinceEpoch: Int
     )
-        -> (year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int)
-    {
+    -> (year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int) {
         let totalDays = secondsSinceEpoch / Time.Calendar.Gregorian.TimeConstants.secondsPerDay
         let secondsInDay = secondsSinceEpoch % Time.Calendar.Gregorian.TimeConstants.secondsPerDay
 
@@ -193,7 +192,7 @@ extension Time.Epoch.Conversion {
             let daysInYear =
                 Time.Calendar.Gregorian.isLeapYear(year)
                 ? Time.Calendar.Gregorian.TimeConstants
-                    .daysPerLeapYear : Time.Calendar.Gregorian.TimeConstants.daysPerCommonYear
+                .daysPerLeapYear : Time.Calendar.Gregorian.TimeConstants.daysPerCommonYear
             if remainingDays < daysInYear {
                 break
             }

@@ -1,6 +1,7 @@
-import Testing
-@testable import Standards
 import StandardsTestSupport
+import Testing
+
+@testable import Standards
 
 @Suite
 struct `FloatingPoint - Extensions` {
@@ -32,8 +33,10 @@ struct `FloatingPoint - Extensions` {
         let b = 1.0
         let tolerance = 0.0001
 
-        #expect(a.isApproximatelyEqual(to: b, tolerance: tolerance) ==
-                b.isApproximatelyEqual(to: a, tolerance: tolerance))
+        #expect(
+            a.isApproximatelyEqual(to: b, tolerance: tolerance)
+                == b.isApproximatelyEqual(to: a, tolerance: tolerance)
+        )
     }
 
     // MARK: - lerp(to:t:)
@@ -249,36 +252,36 @@ extension PerformanceTests {
     @Suite
     struct `FloatingPoint - Performance` {
 
-    @Test(.timed(threshold: .milliseconds(75), maxAllocations: 2_000_000))
-    func `isApproximatelyEqual 100k comparisons`() {
-        let values = Array(0..<100_000).map { Double($0) + 0.1 }
-        for (i, value) in values.enumerated() {
-            _ = value.isApproximatelyEqual(to: Double(i), tolerance: 0.2)
+        @Test(.timed(threshold: .milliseconds(75), maxAllocations: 2_000_000))
+        func `isApproximatelyEqual 100k comparisons`() {
+            let values = Array(0..<100_000).map { Double($0) + 0.1 }
+            for (i, value) in values.enumerated() {
+                _ = value.isApproximatelyEqual(to: Double(i), tolerance: 0.2)
+            }
         }
-    }
 
-    @Test(.timed(threshold: .milliseconds(38), maxAllocations: 2_000_000))
-    func `lerp 100k interpolations`() {
-        let values = Array(0..<100_000).map { Double($0) / 100_000.0 }
-        for t in values {
-            _ = 0.0.lerp(to: 100.0, t: t)
+        @Test(.timed(threshold: .milliseconds(38), maxAllocations: 2_000_000))
+        func `lerp 100k interpolations`() {
+            let values = Array(0..<100_000).map { Double($0) / 100_000.0 }
+            for t in values {
+                _ = 0.0.lerp(to: 100.0, t: t)
+            }
         }
-    }
 
-    @Test(.timed(threshold: .milliseconds(65), maxAllocations: 2_000_000))
-    func `rounded 100k values`() {
-        let values = Array(0..<100_000).map { Double($0) / 1000.0 }
-        for value in values {
-            _ = value.rounded(to: 2)
+        @Test(.timed(threshold: .milliseconds(65), maxAllocations: 2_000_000))
+        func `rounded 100k values`() {
+            let values = Array(0..<100_000).map { Double($0) / 1000.0 }
+            for value in values {
+                _ = value.rounded(to: 2)
+            }
         }
-    }
 
-    @Test(.timed(threshold: .milliseconds(38), maxAllocations: 2_000_000))
-    func `clamp01 100k values`() {
-        let values = Array(0..<100_000).map { Double($0) / 50_000.0 - 1.0 }
-        for value in values {
-            _ = value.clamp01()
+        @Test(.timed(threshold: .milliseconds(38), maxAllocations: 2_000_000))
+        func `clamp01 100k values`() {
+            let values = Array(0..<100_000).map { Double($0) / 50_000.0 - 1.0 }
+            for value in values {
+                _ = value.clamp01()
+            }
         }
-    }
     }
 }

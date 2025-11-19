@@ -31,7 +31,12 @@ public struct BinaryIntegerFormat {
     public let signStrategy: SignDisplayStrategy
     public let minWidth: Int?
 
-    private init(radix: Int, prefix: String, signStrategy: SignDisplayStrategy, minWidth: Int? = nil) {
+    private init(
+        radix: Int,
+        prefix: String,
+        signStrategy: SignDisplayStrategy,
+        minWidth: Int? = nil
+    ) {
         self.radix = radix
         self.prefix = prefix
         self.signStrategy = signStrategy

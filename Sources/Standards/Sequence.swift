@@ -84,7 +84,9 @@ extension Sequence where Element: Comparable {
     /// [5, 4, 3, 2, 1].isSorted(by: >)  // true (descending)
     /// ["a", "bb", "ccc"].isSorted(by: { $0.count < $1.count })  // true
     /// ```
-    public func isSorted(by areInIncreasingOrder: (Element, Element) throws -> Bool) rethrows -> Bool {
+    public func isSorted(
+        by areInIncreasingOrder: (Element, Element) throws -> Bool
+    ) rethrows -> Bool {
         var previous: Element?
 
         for element in self {

@@ -53,8 +53,9 @@ extension Time {
         /// ```
         public init(hours: Int, minutes: Int = 0) {
             let sign = hours < 0 ? -1 : 1
-            self.seconds = hours * Time.Calendar.Gregorian.TimeConstants.secondsPerHour +
-                          sign * minutes * Time.Calendar.Gregorian.TimeConstants.secondsPerMinute
+            self.seconds =
+                hours * Time.Calendar.Gregorian.TimeConstants.secondsPerHour + sign * minutes
+                * Time.Calendar.Gregorian.TimeConstants.secondsPerMinute
         }
 
         /// UTC timezone offset (zero offset)

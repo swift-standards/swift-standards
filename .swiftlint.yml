@@ -1,4 +1,4 @@
-# SwiftLint Configuration for MemoryAllocation
+# SwiftLint Configuration for swift-standards
 # Optimized for library/framework development
 
 # Disabled rules
@@ -13,12 +13,18 @@ disabled_rules:
   - line_length  # No line length restrictions
   - file_length  # No file length restrictions
   - cyclomatic_complexity  # Lookup tables and domain logic often have inherent complexity
+  - function_parameter_count  # Time/Date initializers legitimately need many parameters
+  - large_tuple  # Component tuples are acceptable for internal use
+  - file_header  # No consistent file header pattern across packages
+  - missing_docs  # Documentation is handled via code comments, not strictly required
+  - identifier_name  # Swift Testing uses backticks and descriptive names
+  - type_name  # Swift Testing @Suite uses descriptive names with spaces
+  - optional_data_string_conversion  # False positive on [UInt8] conversion
+  - for_where  # Not always clearer than for+if pattern
+  - contains_over_first_not_nil  # False positives on custom firstIndex implementations
 
 # Opt-in rules for library quality
 opt_in_rules:
-  # Documentation
-  - missing_docs  # Public APIs should be documented
-
   # Code quality
   - sorted_imports  # Keep imports organized
   - closure_spacing  # Consistent closure formatting
@@ -28,7 +34,6 @@ opt_in_rules:
   - last_where  # Performance optimization
 
   # Style
-  - file_header  # Consistent file headers
   - multiline_parameters  # Better formatted parameter lists
   - operator_usage_whitespace  # Consistent operator spacing
   - vertical_parameter_alignment_on_call  # Aligned parameters
@@ -58,49 +63,13 @@ function_body_length:
 
 # Allow larger types for comprehensive test suites
 type_body_length:
-  warning: 300
-  error: 500
+  warning: 400
+  error: 600
 
 # Nesting depth
 nesting:
   type_level: 2
 
-# Identifier naming
-identifier_name:
-  min_length: 1  # Allow single-letter names in closures
-  max_length:
-    warning: 50
-    error: 60
-  excluded:
-    - id
-    - p  # For percentiles
-    - p50
-    - p75
-    - p90
-    - p95
-    - p99
-
-# Type name
-type_name:
-  min_length: 3
-  max_length:
-    warning: 50
-    error: 60
-  excluded:
-    - T  # Generic type parameter
-    - _PerformanceTrait  # Private implementation detail with underscore prefix
-
-# Documentation requirements for public APIs
-missing_docs:
-  warning: public
-  excludes_extensions: true
-  excludes_inherited_types: true
-
-# File header pattern
-file_header:
-  required_pattern: |
-                    \/\/ .*\.swift
-                    \/\/ MemoryAllocation
 
 # Custom rules
 custom_rules:

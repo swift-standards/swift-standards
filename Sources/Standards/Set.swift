@@ -19,7 +19,9 @@ extension Set {
     /// let (evens, odds) = numbers.partition(where: { $0.isMultiple(of: 2) })
     /// // evens: [2, 4, 6], odds: [1, 3, 5]
     /// ```
-    public func partition(where predicate: (Element) -> Bool) -> (satisfying: Set<Element>, failing: Set<Element>) {
+    public func partition(
+        where predicate: (Element) -> Bool
+    ) -> (satisfying: Set<Element>, failing: Set<Element>) {
         var satisfying = Set<Element>()
         var failing = Set<Element>()
 

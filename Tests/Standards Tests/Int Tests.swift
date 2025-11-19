@@ -1,4 +1,5 @@
 import Testing
+
 @testable import Standards
 
 @Suite
@@ -14,7 +15,7 @@ struct `Int - Byte serialization` {
 
     @Test
     func `Little-endian encoding matches expected bytes`() {
-        let value: Int = 0x0102030405060708
+        let value: Int = 0x0102_0304_0506_0708
         let bytes = [UInt8](value, endianness: .little)
 
         #if arch(x86_64) || arch(arm64)
@@ -40,7 +41,7 @@ struct `Int - Byte serialization` {
 
     @Test
     func `Big-endian encoding matches expected bytes`() {
-        let value: Int = 0x0102030405060708
+        let value: Int = 0x0102_0304_0506_0708
         let bytes = [UInt8](value, endianness: .big)
 
         #if arch(x86_64) || arch(arm64)
@@ -70,11 +71,11 @@ struct `Int - Byte serialization` {
         let value = Int(bytes: bytes, endianness: .little)
 
         #if arch(x86_64) || arch(arm64)
-        #expect(value == 0x0807060504030201)
+        #expect(value == 0x0807_0605_0403_0201)
         #else
         // On 32-bit, only use first 4 bytes
         let value32 = Int(bytes: Array(bytes.prefix(4)), endianness: .littleEndian)
-        #expect(value32 == 0x04030201)
+        #expect(value32 == 0x0403_0201)
         #endif
     }
 
@@ -84,11 +85,11 @@ struct `Int - Byte serialization` {
         let value = Int(bytes: bytes, endianness: .big)
 
         #if arch(x86_64) || arch(arm64)
-        #expect(value == 0x0102030405060708)
+        #expect(value == 0x0102_0304_0506_0708)
         #else
         // On 32-bit, only use first 4 bytes
         let value32 = Int(bytes: Array(bytes.prefix(4)), endianness: .bigEndian)
-        #expect(value32 == 0x01020304)
+        #expect(value32 == 0x0102_0304)
         #endif
     }
 

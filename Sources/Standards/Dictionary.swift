@@ -18,7 +18,9 @@ extension Dictionary {
     /// let dict = [1: "one", 2: "two"]
     /// dict.mapKeys { "key\($0)" }  // ["key1": "one", "key2": "two"]
     /// ```
-    public func mapKeys<NewKey: Hashable>(_ transform: (Key) throws -> NewKey) rethrows -> [NewKey: Value] {
+    public func mapKeys<NewKey: Hashable>(
+        _ transform: (Key) throws -> NewKey
+    ) rethrows -> [NewKey: Value] {
         try reduce(into: [:]) { result, pair in
             result[try transform(pair.key)] = pair.value
         }
@@ -37,7 +39,9 @@ extension Dictionary {
     /// let dict = [1: "one", 2: "two"]
     /// dict.compactMapKeys { $0 > 1 ? $0 : nil }  // [2: "two"]
     /// ```
-    public func compactMapKeys<NewKey: Hashable>(_ transform: (Key) throws -> NewKey?) rethrows -> [NewKey: Value] {
+    public func compactMapKeys<NewKey: Hashable>(
+        _ transform: (Key) throws -> NewKey?
+    ) rethrows -> [NewKey: Value] {
         try reduce(into: [:]) { result, pair in
             if let newKey = try transform(pair.key) {
                 result[newKey] = pair.value

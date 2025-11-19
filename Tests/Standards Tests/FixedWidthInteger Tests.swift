@@ -1,6 +1,7 @@
-import Testing
-@testable import Standards
 import StandardsTestSupport
+import Testing
+
+@testable import Standards
 
 @Suite
 struct `FixedWidthInteger - Extensions` {
@@ -47,9 +48,9 @@ struct `FixedWidthInteger - Extensions` {
 
     @Test
     func `rotateLeft works with UInt16`() {
-        let value: UInt16 = 0b1100000000000011
+        let value: UInt16 = 0b11000000_00000011
         let rotated = value.rotateLeft(by: 4)
-        #expect(rotated == 0b0000000000111100)
+        #expect(rotated == 0b00000000_00111100)
     }
 
     // MARK: - rotateRight(by:)
@@ -130,10 +131,10 @@ struct `FixedWidthInteger - Extensions` {
 
     @Test
     func `reverseBits works with UInt16`() {
-        let value: UInt16 = 0b1000000000000001
+        let value: UInt16 = 0b10000000_00000001
         let reversed = value.reverseBits()
 
-        #expect(reversed == 0b1000000000000001)
+        #expect(reversed == 0b10000000_00000001)
     }
 
     @Test
@@ -166,7 +167,7 @@ struct `FixedWidthInteger - Extensions` {
 
     @Test
     func `bytes with little endian UInt32`() {
-        let value: UInt32 = 0x12345678
+        let value: UInt32 = 0x1234_5678
         let bytes = value.bytes(endianness: .little)
 
         #expect(bytes.count == 4)
@@ -175,7 +176,7 @@ struct `FixedWidthInteger - Extensions` {
 
     @Test
     func `bytes with big endian UInt32`() {
-        let value: UInt32 = 0x12345678
+        let value: UInt32 = 0x1234_5678
         let bytes = value.bytes(endianness: .big)
 
         #expect(bytes.count == 4)
@@ -184,7 +185,7 @@ struct `FixedWidthInteger - Extensions` {
 
     @Test
     func `bytes count matches memory layout`() {
-        let value: UInt64 = 0x123456789ABCDEF0
+        let value: UInt64 = 0x1234_5678_9ABC_DEF0
         let bytes = value.bytes()
 
         #expect(bytes.count == MemoryLayout<UInt64>.size)
@@ -240,22 +241,22 @@ struct `FixedWidthInteger - Type Specific` {
 
     @Test
     func `UInt16 rotations`() {
-        let value: UInt16 = 0b1100000000000011
-        #expect(value.rotateLeft(by: 4) == 0b0000000000111100)
+        let value: UInt16 = 0b11000000_00000011
+        #expect(value.rotateLeft(by: 4) == 0b00000000_00111100)
     }
 
     @Test
     func `UInt32 rotations`() {
-        let value: UInt32 = 0x12345678
+        let value: UInt32 = 0x1234_5678
         let rotated = value.rotateLeft(by: 8)
-        #expect(rotated == 0x34567812)
+        #expect(rotated == 0x3456_7812)
     }
 
     @Test
     func `UInt64 rotations`() {
-        let value: UInt64 = 0x123456789ABCDEF0
+        let value: UInt64 = 0x1234_5678_9ABC_DEF0
         let rotated = value.rotateLeft(by: 16)
-        #expect(rotated == 0x56789ABCDEF01234)
+        #expect(rotated == 0x5678_9ABC_DEF0_1234)
     }
 
     @Test
@@ -268,7 +269,7 @@ struct `FixedWidthInteger - Type Specific` {
 
     @Test
     func `Int16 bits reverse`() {
-        let value: Int16 = 0b0000000011111111  // 255
+        let value: Int16 = 0b00000000_11111111  // 255
         let reversed = value.reverseBits()
         // Reversed would be 0b1111111100000000 which is -256 in two's complement
         #expect(reversed == -256)
@@ -281,36 +282,36 @@ extension PerformanceTests {
     @Suite
     struct `FixedWidthInteger - Performance` {
 
-    @Test(.timed(threshold: .milliseconds(120), maxAllocations: 3_000_000))
-    func `rotateLeft 100k UInt32 values`() {
-        let values = Array(0..<100_000).map { UInt32($0) }
-        for value in values {
-            _ = value.rotateLeft(by: 7)
+        @Test(.timed(threshold: .milliseconds(120), maxAllocations: 3_000_000))
+        func `rotateLeft 100k UInt32 values`() {
+            let values = Array(0..<100_000).map { UInt32($0) }
+            for value in values {
+                _ = value.rotateLeft(by: 7)
+            }
         }
-    }
 
-    @Test(.timed(threshold: .milliseconds(45), maxAllocations: 2_000_000))
-    func `rotateRight 100k UInt32 values`() {
-        let values = Array(0..<100_000).map { UInt32($0) }
-        for value in values {
-            _ = value.rotateRight(by: 7)
+        @Test(.timed(threshold: .milliseconds(45), maxAllocations: 2_000_000))
+        func `rotateRight 100k UInt32 values`() {
+            let values = Array(0..<100_000).map { UInt32($0) }
+            for value in values {
+                _ = value.rotateRight(by: 7)
+            }
         }
-    }
 
-    @Test(.timed(threshold: .milliseconds(600), maxAllocations: 2_000_000))
-    func `reverseBits 100k UInt32 values`() {
-        let values = Array(0..<100_000).map { UInt32($0) }
-        for value in values {
-            _ = value.reverseBits()
+        @Test(.timed(threshold: .milliseconds(600), maxAllocations: 2_000_000))
+        func `reverseBits 100k UInt32 values`() {
+            let values = Array(0..<100_000).map { UInt32($0) }
+            for value in values {
+                _ = value.reverseBits()
+            }
         }
-    }
 
-    @Test(.timed(threshold: .milliseconds(50), maxAllocations: 5_000_000))
-    func `bytes conversion 100k UInt32 values`() {
-        let values = Array(0..<100_000).map { UInt32($0) }
-        for value in values {
-            _ = value.bytes(endianness: .big)
+        @Test(.timed(threshold: .milliseconds(50), maxAllocations: 5_000_000))
+        func `bytes conversion 100k UInt32 values`() {
+            let values = Array(0..<100_000).map { UInt32($0) }
+            for value in values {
+                _ = value.bytes(endianness: .big)
+            }
         }
-    }
     }
 }

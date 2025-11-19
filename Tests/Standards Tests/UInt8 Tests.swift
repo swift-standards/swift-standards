@@ -1,4 +1,5 @@
 import Testing
+
 @testable import Standards
 
 // UInt8 Base64 and Hex encoding tests have been moved to swift-rfc-4648
@@ -7,7 +8,7 @@ import Testing
 // MARK: - String Conversion Tests
 
 @Test
-    func `String to bytes conversion`() {
+func `String to bytes conversion`() {
     let string = "Hello, World!"
     let bytes = [UInt8](utf8: string)
 
@@ -16,7 +17,7 @@ import Testing
 }
 
 @Test
-    func `Bytes to UTF-8 string conversion`() {
+func `Bytes to UTF-8 string conversion`() {
     let bytes: [UInt8] = [72, 101, 108, 108, 111]
     let string = String(bytes)
 
@@ -28,23 +29,23 @@ import Testing
 // MARK: - Integer Deserialization Tests
 
 @Test
-    func `Deserialize UInt32 little-endian`() {
+func `Deserialize UInt32 little-endian`() {
     let bytes: [UInt8] = [0x78, 0x56, 0x34, 0x12]
     let value = UInt32(bytes: bytes, endianness: .little)
 
-    #expect(value == 0x12345678)
+    #expect(value == 0x1234_5678)
 }
 
 @Test
-    func `Deserialize UInt32 big-endian`() {
+func `Deserialize UInt32 big-endian`() {
     let bytes: [UInt8] = [0x12, 0x34, 0x56, 0x78]
     let value = UInt32(bytes: bytes, endianness: .big)
 
-    #expect(value == 0x12345678)
+    #expect(value == 0x1234_5678)
 }
 
 @Test
-    func `Deserialize with wrong size returns nil`() {
+func `Deserialize with wrong size returns nil`() {
     let bytes: [UInt8] = [0x12, 0x34, 0x56]
     let value = UInt32(bytes: bytes)
 
@@ -52,8 +53,8 @@ import Testing
 }
 
 @Test
-    func `Roundtrip serialization and deserialization`() {
-    let original: UInt64 = 0x0123456789ABCDEF
+func `Roundtrip serialization and deserialization`() {
+    let original: UInt64 = 0x0123_4567_89AB_CDEF
     let bytes = original.bytes(endianness: .big)
     let deserialized = UInt64(bytes: bytes, endianness: .big)
 
@@ -63,7 +64,7 @@ import Testing
 // MARK: - Subsequence Search Tests
 
 @Test
-    func `Find subsequence at beginning`() {
+func `Find subsequence at beginning`() {
     let bytes: [UInt8] = [1, 2, 3, 4, 5]
     let needle: [UInt8] = [1, 2]
 
@@ -71,7 +72,7 @@ import Testing
 }
 
 @Test
-    func `Find subsequence in middle`() {
+func `Find subsequence in middle`() {
     let bytes: [UInt8] = [1, 2, 3, 4, 5]
     let needle: [UInt8] = [3, 4]
 
@@ -79,7 +80,7 @@ import Testing
 }
 
 @Test
-    func `Find subsequence at end`() {
+func `Find subsequence at end`() {
     let bytes: [UInt8] = [1, 2, 3, 4, 5]
     let needle: [UInt8] = [4, 5]
 
@@ -87,7 +88,7 @@ import Testing
 }
 
 @Test
-    func `Subsequence not found returns nil`() {
+func `Subsequence not found returns nil`() {
     let bytes: [UInt8] = [1, 2, 3, 4, 5]
     let needle: [UInt8] = [6, 7]
 
@@ -95,7 +96,7 @@ import Testing
 }
 
 @Test
-    func `Empty needle returns start index`() {
+func `Empty needle returns start index`() {
     let bytes: [UInt8] = [1, 2, 3]
     let needle: [UInt8] = []
 
@@ -105,7 +106,7 @@ import Testing
 // MARK: - Last Index Tests
 
 @Test
-    func `Find last occurrence at end`() {
+func `Find last occurrence at end`() {
     let bytes: [UInt8] = [1, 2, 3, 2, 3]
     let needle: [UInt8] = [2, 3]
 
@@ -113,7 +114,7 @@ import Testing
 }
 
 @Test
-    func `Find last occurrence in middle`() {
+func `Find last occurrence in middle`() {
     let bytes: [UInt8] = [1, 2, 3, 4, 2, 3, 5]
     let needle: [UInt8] = [2, 3]
 
@@ -121,7 +122,7 @@ import Testing
 }
 
 @Test
-    func `Find last occurrence at beginning when only one`() {
+func `Find last occurrence at beginning when only one`() {
     let bytes: [UInt8] = [1, 2, 3, 4, 5]
     let needle: [UInt8] = [1, 2]
 
@@ -129,7 +130,7 @@ import Testing
 }
 
 @Test
-    func `Last index not found returns nil`() {
+func `Last index not found returns nil`() {
     let bytes: [UInt8] = [1, 2, 3, 4, 5]
     let needle: [UInt8] = [6, 7]
 
@@ -137,7 +138,7 @@ import Testing
 }
 
 @Test
-    func `Last index with empty needle returns end index`() {
+func `Last index with empty needle returns end index`() {
     let bytes: [UInt8] = [1, 2, 3]
     let needle: [UInt8] = []
 
@@ -147,7 +148,7 @@ import Testing
 // MARK: - Contains Tests
 
 @Test
-    func `Contains subsequence that exists`() {
+func `Contains subsequence that exists`() {
     let bytes: [UInt8] = [1, 2, 3, 4, 5]
 
     #expect(bytes.contains([2, 3]) == true)
@@ -157,7 +158,7 @@ import Testing
 }
 
 @Test
-    func `Contains subsequence that doesn't exist`() {
+func `Contains subsequence that doesn't exist`() {
     let bytes: [UInt8] = [1, 2, 3, 4, 5]
 
     #expect(bytes.contains([6, 7]) == false)
@@ -166,7 +167,7 @@ import Testing
 }
 
 @Test
-    func `Contains with empty subsequence`() {
+func `Contains with empty subsequence`() {
     let bytes: [UInt8] = [1, 2, 3]
 
     #expect(bytes.contains([]) == true)
@@ -175,7 +176,7 @@ import Testing
 // MARK: - Edge Case Tests
 
 @Test
-    func `Search in empty array`() {
+func `Search in empty array`() {
     let empty: [UInt8] = []
 
     #expect(empty.firstIndex(of: [1, 2]) == nil)
@@ -187,7 +188,7 @@ import Testing
 }
 
 @Test
-    func `Needle larger than haystack`() {
+func `Needle larger than haystack`() {
     let bytes: [UInt8] = [1, 2]
     let needle: [UInt8] = [1, 2, 3, 4]
 
@@ -197,7 +198,7 @@ import Testing
 }
 
 @Test
-    func `Exact match - needle equals haystack`() {
+func `Exact match - needle equals haystack`() {
     let bytes: [UInt8] = [1, 2, 3]
     let needle: [UInt8] = [1, 2, 3]
 
@@ -207,7 +208,7 @@ import Testing
 }
 
 @Test
-    func `Single byte search`() {
+func `Single byte search`() {
     let bytes: [UInt8] = [1, 2, 3, 2, 4]
 
     #expect(bytes.firstIndex(of: [2]) == 1)
@@ -217,7 +218,7 @@ import Testing
 }
 
 @Test
-    func `Overlapping patterns`() {
+func `Overlapping patterns`() {
     let bytes: [UInt8] = [1, 1, 1, 2]
     let needle: [UInt8] = [1, 1]
 
@@ -226,7 +227,7 @@ import Testing
 }
 
 @Test
-    func `Large byte sequence performance`() {
+func `Large byte sequence performance`() {
     // Create a 10KB array
     let large = [UInt8](repeating: 0xFF, count: 10_000)
     let needle: [UInt8] = [0xFF, 0xFF, 0xFF]
@@ -237,7 +238,7 @@ import Testing
 }
 
 @Test
-    func `Pattern at every position`() {
+func `Pattern at every position`() {
     let bytes: [UInt8] = [1, 1, 1, 1, 1]
     let needle: [UInt8] = [1]
 
@@ -249,25 +250,25 @@ import Testing
 // MARK: - Unicode and String Conversion Edge Cases
 
 @Test
-    func `Empty string conversion`() {
+func `Empty string conversion`() {
     let empty = [UInt8](utf8: "")
     #expect(empty.isEmpty)
     #expect(String(empty) == "")
 }
 
 @Test
-    func `Multi-byte UTF-8 characters`() {
+func `Multi-byte UTF-8 characters`() {
     // Emoji and multi-byte characters
     let emoji = "Hello 👋 World 🌍"
     let bytes = [UInt8](utf8: emoji)
     let restored = String(bytes)
 
     #expect(restored == emoji)
-    #expect(bytes.count > emoji.count) // UTF-8 uses multiple bytes
+    #expect(bytes.count > emoji.count)  // UTF-8 uses multiple bytes
 }
 
 @Test
-    func `Special UTF-8 characters`() {
+func `Special UTF-8 characters`() {
     let special = "Café résumé naïve"
     let bytes = [UInt8](utf8: special)
     let restored = String(bytes)
@@ -276,7 +277,7 @@ import Testing
 }
 
 @Test
-    func `RTL and mixed scripts`() {
+func `RTL and mixed scripts`() {
     let mixed = "Hello مرحبا שלום 你好"
     let bytes = [UInt8](utf8: mixed)
     let restored = String(bytes)
@@ -285,7 +286,7 @@ import Testing
 }
 
 @Test
-    func `Null bytes in string`() {
+func `Null bytes in string`() {
     let withNull: [UInt8] = [72, 101, 108, 108, 111, 0, 87, 111, 114, 108, 100]
     let string = String(withNull)
 
@@ -294,7 +295,7 @@ import Testing
 }
 
 @Test
-    func `Maximum valid UTF-8 sequences`() {
+func `Maximum valid UTF-8 sequences`() {
     // 4-byte UTF-8 character (e.g., 𝄞 musical symbol)
     let musical = "𝄞𝄢𝄫"
     let bytes = [UInt8](utf8: musical)
@@ -304,7 +305,7 @@ import Testing
 }
 
 @Test
-    func `Very long string conversion`() {
+func `Very long string conversion`() {
     let long = String(repeating: "Hello World! ", count: 1000)
     let bytes = [UInt8](utf8: long)
     let restored = String(bytes)
@@ -316,7 +317,7 @@ import Testing
 // MARK: - Split Tests
 
 @Test
-    func `Split on delimiter`() {
+func `Split on delimiter`() {
     let bytes: [UInt8] = [1, 2, 0, 3, 4, 0, 5]
     let parts = bytes.split(separator: [0])
 
@@ -327,7 +328,7 @@ import Testing
 }
 
 @Test
-    func `Split on multi-byte delimiter`() {
+func `Split on multi-byte delimiter`() {
     let bytes: [UInt8] = [1, 2, 255, 255, 3, 4, 255, 255, 5]
     let parts = bytes.split(separator: [255, 255])
 
@@ -338,7 +339,7 @@ import Testing
 }
 
 @Test
-    func `Split with empty separator returns original`() {
+func `Split with empty separator returns original`() {
     let bytes: [UInt8] = [1, 2, 3]
     let parts = bytes.split(separator: [])
 
@@ -347,7 +348,7 @@ import Testing
 }
 
 @Test
-    func `Split CRLF delimiters`() {
+func `Split CRLF delimiters`() {
     let bytes: [UInt8] = Array("Line1\r\nLine2\r\nLine3".utf8)
     let parts = bytes.split(separator: [UInt8](utf8: "\r\n"))
 
@@ -360,7 +361,7 @@ import Testing
 // MARK: - Mutation Helper Tests
 
 @Test
-    func `Append UTF-8 string`() {
+func `Append UTF-8 string`() {
     var bytes: [UInt8] = [1, 2, 3]
     bytes.append(utf8: "Hi")
 
@@ -368,7 +369,7 @@ import Testing
 }
 
 @Test
-    func `Append integer with little-endian`() {
+func `Append integer with little-endian`() {
     var bytes: [UInt8] = []
     bytes.append(UInt16(0x1234), endianness: .little)
 
@@ -376,15 +377,15 @@ import Testing
 }
 
 @Test
-    func `Append integer with big-endian`() {
+func `Append integer with big-endian`() {
     var bytes: [UInt8] = []
-    bytes.append(UInt32(0x12345678), endianness: .big)
+    bytes.append(UInt32(0x1234_5678), endianness: .big)
 
     #expect(bytes == [0x12, 0x34, 0x56, 0x78])
 }
 
 @Test
-    func `Build complex byte sequence`() {
+func `Build complex byte sequence`() {
     var bytes: [UInt8] = []
     bytes.append(utf8: "HTTP/1.1 ")
     bytes.append(UInt16(200), endianness: .big)

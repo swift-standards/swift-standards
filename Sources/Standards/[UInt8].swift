@@ -146,7 +146,8 @@ extension [UInt8] {
     /// - Parameters:
     ///   - values: Collection of integers to convert
     ///   - endianness: Byte order for the output bytes
-    public init<C: Collection>(serializing values: C, endianness: Endianness = .little) where C.Element == Int {
+    public init<C: Collection>(serializing values: C, endianness: Endianness = .little)
+    where C.Element == Int {
         var result: [UInt8] = []
         result.reserveCapacity(values.count * MemoryLayout<Int>.size)
         for value in values {
@@ -159,7 +160,8 @@ extension [UInt8] {
     /// - Parameters:
     ///   - values: Collection of integers to convert
     ///   - endianness: Byte order (ignored for single-byte integers)
-    public init<C: Collection>(serializing values: C, endianness: Endianness = .little) where C.Element == Int8 {
+    public init<C: Collection>(serializing values: C, endianness: Endianness = .little)
+    where C.Element == Int8 {
         var result: [UInt8] = []
         result.reserveCapacity(values.count * MemoryLayout<Int8>.size)
         for value in values {
@@ -172,7 +174,8 @@ extension [UInt8] {
     /// - Parameters:
     ///   - values: Collection of integers to convert
     ///   - endianness: Byte order for the output bytes (defaults to little-endian)
-    public init<C: Collection>(serializing values: C, endianness: Endianness = .little) where C.Element == Int16 {
+    public init<C: Collection>(serializing values: C, endianness: Endianness = .little)
+    where C.Element == Int16 {
         var result: [UInt8] = []
         result.reserveCapacity(values.count * MemoryLayout<Int16>.size)
         for value in values {
@@ -185,7 +188,8 @@ extension [UInt8] {
     /// - Parameters:
     ///   - values: Collection of integers to convert
     ///   - endianness: Byte order for the output bytes (defaults to little-endian)
-    public init<C: Collection>(serializing values: C, endianness: Endianness = .little) where C.Element == Int32 {
+    public init<C: Collection>(serializing values: C, endianness: Endianness = .little)
+    where C.Element == Int32 {
         var result: [UInt8] = []
         result.reserveCapacity(values.count * MemoryLayout<Int32>.size)
         for value in values {
@@ -198,7 +202,8 @@ extension [UInt8] {
     /// - Parameters:
     ///   - values: Collection of integers to convert
     ///   - endianness: Byte order for the output bytes (defaults to little-endian)
-    public init<C: Collection>(serializing values: C, endianness: Endianness = .little) where C.Element == Int64 {
+    public init<C: Collection>(serializing values: C, endianness: Endianness = .little)
+    where C.Element == Int64 {
         var result: [UInt8] = []
         result.reserveCapacity(values.count * MemoryLayout<Int64>.size)
         for value in values {
@@ -211,7 +216,8 @@ extension [UInt8] {
     /// - Parameters:
     ///   - values: Collection of integers to convert
     ///   - endianness: Byte order for the output bytes (defaults to little-endian)
-    public init<C: Collection>(serializing values: C, endianness: Endianness = .little) where C.Element == UInt {
+    public init<C: Collection>(serializing values: C, endianness: Endianness = .little)
+    where C.Element == UInt {
         var result: [UInt8] = []
         result.reserveCapacity(values.count * MemoryLayout<UInt>.size)
         for value in values {
@@ -224,7 +230,8 @@ extension [UInt8] {
     /// - Parameters:
     ///   - values: Collection of integers to convert
     ///   - endianness: Byte order for the output bytes (defaults to little-endian)
-    public init<C: Collection>(serializing values: C, endianness: Endianness = .little) where C.Element == UInt16 {
+    public init<C: Collection>(serializing values: C, endianness: Endianness = .little)
+    where C.Element == UInt16 {
         var result: [UInt8] = []
         result.reserveCapacity(values.count * MemoryLayout<UInt16>.size)
         for value in values {
@@ -237,7 +244,8 @@ extension [UInt8] {
     /// - Parameters:
     ///   - values: Collection of integers to convert
     ///   - endianness: Byte order for the output bytes (defaults to little-endian)
-    public init<C: Collection>(serializing values: C, endianness: Endianness = .little) where C.Element == UInt32 {
+    public init<C: Collection>(serializing values: C, endianness: Endianness = .little)
+    where C.Element == UInt32 {
         var result: [UInt8] = []
         result.reserveCapacity(values.count * MemoryLayout<UInt32>.size)
         for value in values {
@@ -250,7 +258,8 @@ extension [UInt8] {
     /// - Parameters:
     ///   - values: Collection of integers to convert
     ///   - endianness: Byte order for the output bytes (defaults to little-endian)
-    public init<C: Collection>(serializing values: C, endianness: Endianness = .little) where C.Element == UInt64 {
+    public init<C: Collection>(serializing values: C, endianness: Endianness = .little)
+    where C.Element == UInt64 {
         var result: [UInt8] = []
         result.reserveCapacity(values.count * MemoryLayout<UInt64>.size)
         for value in values {
@@ -380,4 +389,3 @@ extension [UInt8] {
         append(contentsOf: value.bytes(endianness: endianness))
     }
 }
-

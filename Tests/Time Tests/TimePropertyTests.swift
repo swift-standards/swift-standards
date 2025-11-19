@@ -20,7 +20,7 @@ struct `Time Property-Based Tests` {
         // Test every month boundary in multiple years
         let testYears = [
             1970, 1971, 1980, 1990, 1999, 2000, 2001, 2004, 2010, 2020, 2023, 2024, 2025, 2030,
-            2038, 2040, 2050, 2060, 2070, 2080, 2090, 2099, 2100,
+            2038, 2040, 2050, 2060, 2070, 2080, 2090, 2099, 2100
         ]
 
         for year in testYears {
@@ -50,7 +50,7 @@ struct `Time Property-Based Tests` {
             (6, 30, 15),  // Morning
             (12, 0, 0),  // Noon
             (18, 45, 30),  // Evening
-            (23, 59, 59),  // End of day
+            (23, 59, 59)  // End of day
         ]
     }
 
@@ -239,7 +239,7 @@ struct `Time Property-Based Tests` {
         components.day = 1
 
         guard let date = calendar.date(from: components),
-            let range = calendar.range(of: .day, in: .month, for: date)
+              let range = calendar.range(of: .day, in: .month, for: date)
         else {
             Issue.record("Foundation failed to get days in month for \(year)-\(month)")
             return

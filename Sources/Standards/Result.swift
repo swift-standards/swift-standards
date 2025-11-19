@@ -18,7 +18,7 @@ extension Result {
     /// result.success  // Optional(42)
     /// ```
     public var success: Success? {
-        guard case let .success(value) = self else { return nil }
+        guard case .success(let value) = self else { return nil }
         return value
     }
 
@@ -36,7 +36,7 @@ extension Result {
     /// result.failure  // Optional(MyError.failed)
     /// ```
     public var failure: Failure? {
-        guard case let .failure(error) = self else { return nil }
+        guard case .failure(let error) = self else { return nil }
         return error
     }
 
@@ -55,13 +55,15 @@ extension Result {
     /// let r2: Result<String, Error> = .success("hello")
     /// r1.zip(r2)  // Result.success((1, "hello"))
     /// ```
-    public func zip<OtherSuccess>(_ other: Result<OtherSuccess, Failure>) -> Result<(Success, OtherSuccess), Failure> {
+    public func zip<OtherSuccess>(
+        _ other: Result<OtherSuccess, Failure>
+    ) -> Result<(Success, OtherSuccess), Failure> {
         switch (self, other) {
-        case let (.success(a), .success(b)):
+        case (.success(let a), .success(let b)):
             return .success((a, b))
-        case let (.failure(error), _):
+        case (.failure(let error), _):
             return .failure(error)
-        case let (_, .failure(error)):
+        case (_, .failure(let error)):
             return .failure(error)
         }
     }

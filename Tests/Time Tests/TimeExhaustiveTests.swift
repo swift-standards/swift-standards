@@ -25,7 +25,7 @@ struct `Time Exhaustive Tests` {
         "Leap Year - Years divisible by 100 but not 400",
         arguments: [
             100, 200, 300, 500, 600, 700, 900, 1000, 1100, 1300, 1400, 1500, 1700, 1800, 1900, 2100,
-            2200, 2300,
+            2200, 2300
         ]
     )
     func testLeapYearDivisibleBy100Not400(year: Int) {
@@ -36,7 +36,7 @@ struct `Time Exhaustive Tests` {
         "Leap Year - Years divisible by 4 but not 100",
         arguments: [
             4, 8, 12, 16, 96, 104, 196, 204, 296, 304, 396, 404, 496, 504, 596, 604, 696, 704, 796,
-            804, 896, 904, 996, 1004, 1996, 2004, 2008, 2012, 2016, 2020, 2024, 2028,
+            804, 896, 904, 996, 1004, 1996, 2004, 2008, 2012, 2016, 2020, 2024, 2028
         ]
     )
     func testLeapYearDivisibleBy4Not100(year: Int) {
@@ -48,7 +48,7 @@ struct `Time Exhaustive Tests` {
         arguments: [
             1, 2, 3, 5, 7, 11, 97, 101, 199, 201, 1001, 1997, 1998, 1999, 2001, 2002, 2003, 2005,
             2006, 2007, 2009, 2010, 2011, 2013, 2014, 2015, 2017, 2018, 2019, 2021, 2022, 2023,
-            2025, 2026, 2027,
+            2025, 2026, 2027
         ]
     )
     func testLeapYearNotDivisibleBy4(year: Int) {
@@ -62,7 +62,7 @@ struct `Time Exhaustive Tests` {
             (-4, true),  // Negative leap year
             (-1, false),  // Negative non-leap year
             (-100, false),  // Negative divisible by 100
-            (-400, true),  // Negative divisible by 400
+            (-400, true)  // Negative divisible by 400
         ]
     )
     func testLeapYearSpecialCases(year: Int, isLeap: Bool) {
@@ -109,7 +109,7 @@ struct `Time Exhaustive Tests` {
             (2024, 29),  // Divisible by 4, not 100
             (2023, 28),  // Not divisible by 4
             (1900, 28),  // Divisible by 100, not 400
-            (2004, 29),  // Divisible by 4, not 100
+            (2004, 29)  // Divisible by 4, not 100
         ]
     )
     func testFebruaryDaysAcrossYears(year: Int, expectedDays: Int) {
@@ -295,7 +295,7 @@ struct `Time Exhaustive Tests` {
             (1, 1, 1, 1_001_001),
             (999, 999, 999, 999_999_999),
             (123, 456, 789, 123_456_789),
-            (500, 500, 500, 500_500_500),
+            (500, 500, 500, 500_500_500)
         ]
     )
     func testTotalNanosecondsCalculation(ms: Int, us: Int, ns: Int, expected: Int) throws {

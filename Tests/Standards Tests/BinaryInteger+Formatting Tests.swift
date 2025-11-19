@@ -1,5 +1,5 @@
-import Testing
 import Standards
+import Testing
 
 @Suite
 struct `BinaryInteger+Formatting Tests` {
