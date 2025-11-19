@@ -1,0 +1,31 @@
+name: SwiftLint
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Cache SwiftLint
+        id: cache-swiftlint
+        uses: actions/cache@v4
+        with:
+          path: /usr/local/bin/swiftlint
+          key: ${{ runner.os }}-swiftlint-${{ hashFiles('.github/workflows/swiftlint.yml') }}
+
+      - name: Install SwiftLint
+        if: steps.cache-swiftlint.outputs.cache-hit != 'true'
+        run: |
+          SWIFTLINT_VERSION=$(curl -s https://api.github.com/repos/realm/SwiftLint/releases/latest | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+          curl -L "https://github.com/realm/SwiftLint/releases/download/${SWIFTLINT_VERSION}/swiftlint_linux.zip" -o swiftlint.zip
+          unzip swiftlint.zip
+          sudo mv swiftlint /usr/local/bin/
+          sudo chmod +x /usr/local/bin/swiftlint
+          rm swiftlint.zip
+
+      - name: SwiftLint
+        run: swiftlint lint
+        continue-on-error: true
