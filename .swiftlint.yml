@@ -1,49 +1,74 @@
 # SwiftLint Configuration for swift-standards
-# Optimized for library/framework development
+# Shared across all packages in the workspace
+# Optimized for library/framework development with Swift Testing
 
 # Disabled rules
 disabled_rules:
-  - explicit_type_interface  # Too strict - type inference is idiomatic Swift
+  # Type inference & Swift idioms
+  - explicit_type_interface  # Type inference is idiomatic Swift
   - explicit_init  # Prefer MyType() over MyType.init()
-  - extension_access_modifier  # We prefer access on members, not on extension
-  - explicit_acl  # Too verbose - require internal on everything
+  - extension_access_modifier  # Prefer access on members, not extensions
+  - explicit_acl  # Don't require `internal` everywhere
+
+  # Development flexibility
   - todo  # TODOs are fine in development
   - force_cast  # Sometimes needed in tests
   - force_try  # Sometimes needed in tests
-  - line_length  # No line length restrictions
-  - file_length  # No file length restrictions
-  - cyclomatic_complexity  # Lookup tables and domain logic often have inherent complexity
-  - function_parameter_count  # Time/Date initializers legitimately need many parameters
+
+  # Length restrictions (swift-format handles line length)
+  - line_length  # HTML attributes can be 300+ chars; swift-format handles this
+  - file_length  # Comprehensive test files are long
+
+  # Domain complexity
+  - cyclomatic_complexity  # Lookup tables and parsing logic have inherent complexity
+  - function_parameter_count  # Time/Date/RFC initializers legitimately need many parameters
   - large_tuple  # Component tuples are acceptable for internal use
-  - file_header  # No consistent file header pattern across packages
-  - missing_docs  # Documentation is handled via code comments, not strictly required
-  - identifier_name  # Swift Testing uses backticks and descriptive names
-  - type_name  # Swift Testing @Suite uses descriptive names with spaces
-  - optional_data_string_conversion  # False positive on [UInt8] conversion
-  - for_where  # Not always clearer than for+if pattern
+
+  # Documentation patterns
+  - file_header  # No consistent pattern across packages
+  - missing_docs  # Documentation via code comments, not strictly required
+
+  # Swift Testing compatibility
+  - identifier_name  # Swift Testing uses backtick names with spaces
+  - type_name  # @Suite uses descriptive names with spaces
+
+  # False positives for our patterns
+  - optional_data_string_conversion  # False positive on [UInt8] -> String conversion
+  - for_where  # Not always clearer than for+if
   - contains_over_first_not_nil  # False positives on custom firstIndex implementations
+  - sorted_imports  # Handled by swift-format's OrderedImports rule
 
-# Opt-in rules for library quality
+# Opt-in rules for code quality
 opt_in_rules:
-  # Code quality
-  - sorted_imports  # Keep imports organized
-  - closure_spacing  # Consistent closure formatting
-  - contains_over_first_not_nil  # Performance optimization
-  - empty_count  # Use .isEmpty instead of .count == 0
-  - first_where  # Performance optimization
-  - last_where  # Performance optimization
+  # Bug prevention
+  - unused_optional_binding  # Catch unused let bindings
 
-  # Style
-  - multiline_parameters  # Better formatted parameter lists
+  # Code quality & cleanliness
+  - implicit_optional_initialization  # Don't initialize optionals to nil (formerly redundant_optional_initialization)
+  - redundant_void_return  # Don't write -> Void
+  - empty_string  # Use .isEmpty not == ""
+  - vertical_whitespace  # Consistent spacing
+
+# Analyzer rules (require --analyze flag)
+analyzer_rules:
+  - unused_import  # Remove unnecessary imports
+
+  # Performance optimizations
+  - empty_count  # Use .isEmpty instead of .count == 0
+  - first_where  # Prefer first(where:) over filter().first
+  - last_where  # Prefer last(where:) over filter().last
+  - contains_over_range_nil_comparison  # Better performance
+  - sorted_first_last  # Prefer sorted().first/last
+
+  # Style consistency
+  - closure_spacing  # Consistent closure formatting
   - operator_usage_whitespace  # Consistent operator spacing
-  - vertical_parameter_alignment_on_call  # Aligned parameters
 
   # Safety
   - array_init  # Safer array initialization
   - fatal_error_message  # Require messages in fatalError
-  - implicitly_unwrapped_optional  # Avoid IUOs where possible
   - legacy_random  # Use modern random APIs
-  - overridden_super_call  # Ensure super is called
+  - overridden_super_call  # Ensure super is called when needed
 
 # Paths
 included:
@@ -69,13 +94,3 @@ type_body_length:
 # Nesting depth
 nesting:
   type_level: 2
-
-
-# Custom rules
-custom_rules:
-  # Ensure performance-critical code is marked
-  performance_comment:
-    name: "Performance Comment"
-    regex: '@inline'
-    message: "Consider documenting why @inline is needed"
-    severity: warning

@@ -19,23 +19,23 @@ struct `Int - Byte serialization` {
         let bytes = [UInt8](value, endianness: .little)
 
         #if arch(x86_64) || arch(arm64)
-        // On 64-bit systems, Int is 8 bytes
-        #expect(bytes.count == 8)
-        #expect(bytes[0] == 0x08)
-        #expect(bytes[1] == 0x07)
-        #expect(bytes[2] == 0x06)
-        #expect(bytes[3] == 0x05)
-        #expect(bytes[4] == 0x04)
-        #expect(bytes[5] == 0x03)
-        #expect(bytes[6] == 0x02)
-        #expect(bytes[7] == 0x01)
+            // On 64-bit systems, Int is 8 bytes
+            #expect(bytes.count == 8)
+            #expect(bytes[0] == 0x08)
+            #expect(bytes[1] == 0x07)
+            #expect(bytes[2] == 0x06)
+            #expect(bytes[3] == 0x05)
+            #expect(bytes[4] == 0x04)
+            #expect(bytes[5] == 0x03)
+            #expect(bytes[6] == 0x02)
+            #expect(bytes[7] == 0x01)
         #else
-        // On 32-bit systems, Int is 4 bytes
-        #expect(bytes.count == 4)
-        #expect(bytes[0] == 0x08)
-        #expect(bytes[1] == 0x07)
-        #expect(bytes[2] == 0x06)
-        #expect(bytes[3] == 0x05)
+            // On 32-bit systems, Int is 4 bytes
+            #expect(bytes.count == 4)
+            #expect(bytes[0] == 0x08)
+            #expect(bytes[1] == 0x07)
+            #expect(bytes[2] == 0x06)
+            #expect(bytes[3] == 0x05)
         #endif
     }
 
@@ -45,23 +45,23 @@ struct `Int - Byte serialization` {
         let bytes = [UInt8](value, endianness: .big)
 
         #if arch(x86_64) || arch(arm64)
-        // On 64-bit systems, Int is 8 bytes
-        #expect(bytes.count == 8)
-        #expect(bytes[0] == 0x01)
-        #expect(bytes[1] == 0x02)
-        #expect(bytes[2] == 0x03)
-        #expect(bytes[3] == 0x04)
-        #expect(bytes[4] == 0x05)
-        #expect(bytes[5] == 0x06)
-        #expect(bytes[6] == 0x07)
-        #expect(bytes[7] == 0x08)
+            // On 64-bit systems, Int is 8 bytes
+            #expect(bytes.count == 8)
+            #expect(bytes[0] == 0x01)
+            #expect(bytes[1] == 0x02)
+            #expect(bytes[2] == 0x03)
+            #expect(bytes[3] == 0x04)
+            #expect(bytes[4] == 0x05)
+            #expect(bytes[5] == 0x06)
+            #expect(bytes[6] == 0x07)
+            #expect(bytes[7] == 0x08)
         #else
-        // On 32-bit systems, Int is 4 bytes
-        #expect(bytes.count == 4)
-        #expect(bytes[0] == 0x05)
-        #expect(bytes[1] == 0x06)
-        #expect(bytes[2] == 0x07)
-        #expect(bytes[3] == 0x08)
+            // On 32-bit systems, Int is 4 bytes
+            #expect(bytes.count == 4)
+            #expect(bytes[0] == 0x05)
+            #expect(bytes[1] == 0x06)
+            #expect(bytes[2] == 0x07)
+            #expect(bytes[3] == 0x08)
         #endif
     }
 
@@ -71,11 +71,11 @@ struct `Int - Byte serialization` {
         let value = Int(bytes: bytes, endianness: .little)
 
         #if arch(x86_64) || arch(arm64)
-        #expect(value == 0x0807_0605_0403_0201)
+            #expect(value == 0x0807_0605_0403_0201)
         #else
-        // On 32-bit, only use first 4 bytes
-        let value32 = Int(bytes: Array(bytes.prefix(4)), endianness: .littleEndian)
-        #expect(value32 == 0x0403_0201)
+            // On 32-bit, only use first 4 bytes
+            let value32 = Int(bytes: Array(bytes.prefix(4)), endianness: .littleEndian)
+            #expect(value32 == 0x0403_0201)
         #endif
     }
 
@@ -85,11 +85,11 @@ struct `Int - Byte serialization` {
         let value = Int(bytes: bytes, endianness: .big)
 
         #if arch(x86_64) || arch(arm64)
-        #expect(value == 0x0102_0304_0506_0708)
+            #expect(value == 0x0102_0304_0506_0708)
         #else
-        // On 32-bit, only use first 4 bytes
-        let value32 = Int(bytes: Array(bytes.prefix(4)), endianness: .bigEndian)
-        #expect(value32 == 0x0102_0304)
+            // On 32-bit, only use first 4 bytes
+            let value32 = Int(bytes: Array(bytes.prefix(4)), endianness: .bigEndian)
+            #expect(value32 == 0x0102_0304)
         #endif
     }
 

@@ -19,7 +19,7 @@ struct `Range - Extensions` {
     @Test(arguments: [
         (0..<5, 5..<10),
         (0..<5, 10..<15),
-        (10..<20, 0..<5)
+        (10..<20, 0..<5),
     ])
     func `overlap with non-overlapping ranges returns nil`(ranges: (Range<Int>, Range<Int>)) {
         let result = ranges.0.overlap(ranges.1)
@@ -103,7 +103,7 @@ struct `Range - Extensions` {
     @Test(arguments: [
         (0..<10, 5, (0..<5, 5..<10)),
         (0..<100, 50, (0..<50, 50..<100)),
-        (10..<20, 15, (10..<15, 15..<20))
+        (10..<20, 15, (10..<15, 15..<20)),
     ])
     func `split at midpoint creates two ranges`(
         testCase: (Range<Int>, Int, (Range<Int>, Range<Int>))

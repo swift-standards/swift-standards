@@ -253,7 +253,7 @@ func `Pattern at every position`() {
 func `Empty string conversion`() {
     let empty = [UInt8](utf8: "")
     #expect(empty.isEmpty)
-    #expect(String(empty) == "")
+    #expect(String(empty).isEmpty)
 }
 
 @Test
