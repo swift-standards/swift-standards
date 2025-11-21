@@ -248,7 +248,7 @@ struct `FloatingPoint - Double specific` {
 
 // MARK: - Performance Tests
 
-extension PerformanceTests {
+extension `Performance Tests` {
     @Suite
     struct `FloatingPoint - Performance` {
 

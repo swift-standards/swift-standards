@@ -8,4 +8,4 @@ import StandardsTestSupport
 import Testing
 
 @Suite(.serialized)
-struct PerformanceTests {}
+struct `Performance Tests` {}

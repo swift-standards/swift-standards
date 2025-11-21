@@ -33,7 +33,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/coenttb/swift-testing-performance", from: "0.1.0")
+        .package(url: "https://github.com/coenttb/swift-testing-performance", from: "0.1.1")
     ],
     targets: [
         .target(
@@ -62,33 +62,40 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "Standards Tests",
+            name: "Standards".tests,
             dependencies: [
                 "Standards",
                 "StandardsTestSupport",
             ]
         ),
         .testTarget(
-            name: "Time Tests",
+            name: "Time".tests,
             dependencies: [
                 "Time",
                 "StandardsTestSupport",
             ]
         ),
         .testTarget(
-            name: "Locale Tests",
+            name: "Locale".tests,
             dependencies: [
                 "Locale",
                 "StandardsTestSupport",
             ]
         ),
-    ]
+    ],
+    swiftLanguageModes: [.v6]
 )
 
-for target in package.targets {
-    var settings = target.swiftSettings ?? []
-    settings.append(
+extension String {
+    var tests: Self { self + " Tests" }
+    var foundation: Self { self + " Foundation" }
+}
+
+for target in package.targets where ![.system, .binary, .plugin].contains(target.type) {
+    let existing = target.swiftSettings ?? []
+    target.swiftSettings = existing + [
+        .enableUpcomingFeature("ExistentialAny"),
+        .enableUpcomingFeature("InternalImportsByDefault"),
         .enableUpcomingFeature("MemberImportVisibility")
-    )
-    target.swiftSettings = settings
+    ]
 }

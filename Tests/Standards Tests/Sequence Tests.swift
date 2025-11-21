@@ -253,7 +253,7 @@ struct `Sequence - Extensions` {
 
 // MARK: - Performance Tests
 
-extension PerformanceTests {
+extension `Performance Tests` {
     @Suite
     struct `Sequence - Performance` {
 

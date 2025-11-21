@@ -278,7 +278,7 @@ struct `FixedWidthInteger - Type Specific` {
 
 // MARK: - Performance Tests
 
-extension PerformanceTests {
+extension `Performance Tests` {
     @Suite
     struct `FixedWidthInteger - Performance` {
 

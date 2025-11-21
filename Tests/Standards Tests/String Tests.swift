@@ -50,7 +50,7 @@ struct `String.CaseInsensitive - Hashing` {
     }
 }
 
-// String.LineEnding tests have been moved to swift-incits-4-1986
+// String.ASCII.LineEnding tests have been moved to swift-incits-4-1986
 // Percent encoding tests have been moved to swift-rfc-3986
 // Hex encoding tests have been moved to swift-rfc-4648
 // Base64 encoding tests have been moved to swift-rfc-4648

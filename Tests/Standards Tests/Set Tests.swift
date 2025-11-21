@@ -179,7 +179,7 @@ struct `Set - Extensions` {
 
 // MARK: - Performance Tests
 
-extension PerformanceTests {
+extension `Performance Tests` {
     @Suite
     struct `Set - Performance` {
 
