@@ -20,8 +20,8 @@ extension String {
     public struct CaseInsensitive: Hashable, Comparable, Sendable {
         public let value: String
 
-        public init(_ value: String) {
-            self.value = value
+        public init(_ value: some StringProtocol) {
+            self.value = String(value)
         }
 
         public func hash(into hasher: inout Hasher) {

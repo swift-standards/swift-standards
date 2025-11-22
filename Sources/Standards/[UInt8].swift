@@ -278,7 +278,7 @@ extension [UInt8] {
     /// ```swift
     /// let bytes = [UInt8](utf8: "Hello")  // [72, 101, 108, 108, 111]
     /// ```
-    public init(utf8 string: String) {
+    public init(utf8 string: some StringProtocol) {
         self = Array(string.utf8)
     }
 }
@@ -365,7 +365,7 @@ extension [UInt8] {
 extension [UInt8] {
     /// Appends a UTF-8 string as bytes
     /// - Parameter string: The string to append as UTF-8 bytes
-    public mutating func append(utf8 string: String) {
+    public mutating func append(utf8 string: some StringProtocol) {
         append(contentsOf: string.utf8)
     }
 
