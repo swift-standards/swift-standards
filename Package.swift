@@ -20,8 +20,8 @@ let package = Package(
             targets: ["Formatting"]
         ),
         .library(
-            name: "Time",
-            targets: ["Time"]
+            name: "StandardTime",
+            targets: ["StandardTime"]
         ),
         .library(
             name: "Locale",
@@ -43,7 +43,7 @@ let package = Package(
             name: "Formatting"
         ),
         .target(
-            name: "Time",
+            name: "StandardTime",
             dependencies: [
                 "Standards"
             ]
@@ -69,9 +69,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "Time".tests,
+            name: "StandardTime".tests,
             dependencies: [
-                "Time",
+                "StandardTime",
                 "StandardsTestSupport",
             ]
         ),

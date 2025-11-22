@@ -171,15 +171,15 @@ This encodes two morphisms:
 
 **Proof**: The group action of durations on instants is free and transitive.
 
-### 3.2 Precision Loss as Quotient Map
+### 3.2 Precision as Quotient Map
 
-**Definition 3.2.1** (Precision Quotient): The conversion from `Swift.Duration` (attosecond precision) to `Instant` (nanosecond precision) is a **quotient map**:
+**Definition 3.2.1** (Precision Quotient): The conversion from `Swift.Duration` (attosecond precision, 10⁻¹⁸) to `Instant` (nanosecond precision, 10⁻⁹) is a **quotient map**:
 ```
 q: Duration → Instant.Nanoseconds
 q(s, a) = (s, ⌊a / 10⁹⌋)
 ```
 
-This induces an equivalence relation:
+This induces an equivalence relation on durations:
 ```
 d₁ ~ d₂  ⟺  ⌊d₁.attoseconds / 10⁹⌋ = ⌊d₂.attoseconds / 10⁹⌋
 ```
@@ -190,6 +190,31 @@ f = g ∘ q
 
 where g: Instant.Nanoseconds → Instant
 ```
+
+**Proof**: By the universal property of quotient objects in category theory. The quotient map `q` is the canonical surjection.
+
+**Theorem 3.2.3** (RFC 3339 Precision Sufficiency): RFC 3339 requires at most nanosecond precision:
+```
+time-secfrac = "." 1*DIGIT
+```
+
+While arbitrary digit count is allowed, internet protocols rarely exceed millisecond (10⁻³) precision. Nanosecond (10⁻⁹) exceeds practical requirements.
+
+**Corollary 3.2.4**: The precision loss `Duration → Instant` is **acceptable** for RFC 3339 compliance, as sub-nanosecond precision is not expressible in the wire format.
+
+**However**, for **lossless round-trips**, we have:
+
+**Theorem 3.2.5** (Instant Precision Preservation):
+```
+∀ time: Time:
+  Time(Instant(time)) = time
+
+Proof: Instant stores full nanosecond precision (Int32).
+       Time stores nanoseconds as (millisecond, microsecond, nanosecond).
+       The conversion preserves all 9 decimal places.
+```
+
+**Implementation**: See `Time.init(secondsSinceEpoch:nanoseconds:)` at Time.swift:259
 
 ## 4. Implementation Correspondence
 

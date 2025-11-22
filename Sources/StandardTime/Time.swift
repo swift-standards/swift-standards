@@ -247,6 +247,72 @@ extension Time {
             nanosecond: 0
         )
     }
+
+    /// Create date components from seconds since Unix epoch with nanosecond precision
+    ///
+    /// Transformation: (Int, Int) → DateComponents
+    ///
+    /// - Parameters:
+    ///   - secondsSinceEpoch: Seconds since Unix epoch (UTC)
+    ///   - nanoseconds: Nanosecond fraction (0-999,999,999)
+    /// - Throws: `Time.Error.nanosecondOutOfRange` if nanoseconds is invalid
+    public init(secondsSinceEpoch: Int, nanoseconds: Int) throws {
+        guard nanoseconds >= 0 && nanoseconds < 1_000_000_000 else {
+            throw Error.nanosecondOutOfRange(nanoseconds)
+        }
+
+        let (year, month, day, hour, minute, second) = Time.Epoch.Conversion
+            .componentsRaw(fromSecondsSinceEpoch: secondsSinceEpoch)
+
+        // Extract millisecond, microsecond, nanosecond from total nanoseconds
+        let millisecond = nanoseconds / 1_000_000
+        let microsecond = (nanoseconds % 1_000_000) / 1_000
+        let nanosecond = nanoseconds % 1_000
+
+        // SAFE: componentsRaw guarantees valid values by construction
+        // SAFE: millisecond, microsecond, nanosecond are computed to be in range
+        self = .unchecked(
+            year: year,
+            month: month,
+            day: day,
+            hour: hour,
+            minute: minute,
+            second: second,
+            millisecond: millisecond,
+            microsecond: microsecond,
+            nanosecond: nanosecond
+        )
+    }
+
+    /// Create date components from seconds and nanoseconds (internal unchecked)
+    ///
+    /// - Warning: Only use when nanoseconds is known to be valid (0-999,999,999)
+    /// - Parameters:
+    ///   - secondsSinceEpoch: Seconds since Unix epoch (UTC)
+    ///   - nanoseconds: Nanosecond fraction (unchecked, must be 0-999,999,999)
+    internal static func unchecked(secondsSinceEpoch: Int, nanoseconds: Int) -> Time {
+        let (year, month, day, hour, minute, second) = Time.Epoch.Conversion
+            .componentsRaw(fromSecondsSinceEpoch: secondsSinceEpoch)
+
+        // Extract millisecond, microsecond, nanosecond from total nanoseconds
+        let millisecond = nanoseconds / 1_000_000
+        let microsecond = (nanoseconds % 1_000_000) / 1_000
+        let nanosecond = nanoseconds % 1_000
+
+        // SAFE: componentsRaw guarantees valid values by construction
+        // SAFE: millisecond, microsecond, nanosecond are computed to be in range
+        return .unchecked(
+            year: year,
+            month: month,
+            day: day,
+            hour: hour,
+            minute: minute,
+            second: second,
+            millisecond: millisecond,
+            microsecond: microsecond,
+            nanosecond: nanosecond
+        )
+    }
 }
 
 // MARK: - Error
@@ -336,12 +402,15 @@ extension Time {
     /// Create Time from Instant
     ///
     /// Transforms timeline representation to calendar representation.
+    /// Preserves full nanosecond precision.
     ///
     /// - Parameter instant: The instant to convert
     public init(_ instant: Instant) {
-        self.init(secondsSinceEpoch: Int(instant.secondsSinceUnixEpoch))
-        // Note: Nanosecond precision currently lost in conversion
-        // TODO: Extend init(secondsSinceEpoch:) to accept nanoseconds
+        // SAFE: Instant guarantees nanosecondFraction is in valid range [0, 1_000_000_000)
+        self = .unchecked(
+            secondsSinceEpoch: Int(instant.secondsSinceUnixEpoch),
+            nanoseconds: Int(instant.nanosecondFraction)
+        )
     }
 }
 
