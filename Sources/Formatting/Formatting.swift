@@ -1,19 +1,59 @@
-/// A namespace for formatting functionality.
+//
+//  File.swift
+//  swift-standards
+//
+//  Created by Coen ten Thije Boonkkamp on 23/11/2025.
+//
+
+/// A type that can format a given value into a representation.
 ///
-/// The `Formatting` namespace provides protocols and extensions for type-safe formatting
-/// of values to strings and parsing strings back to values.
+/// Conform to this protocol to create custom formatting types that can be used with
+/// the `.formatted(_:)` method on types.
 ///
-/// ## Overview
-///
-/// This package provides the core protocols that enable the `.formatted()` API pattern:
+/// ## Example
 ///
 /// ```swift
-/// let value = 42
-/// let formatted = value.formatted(MyFormatStyle())
+/// struct UppercaseFormat: Formatting {
+///     func format(_ value: String) -> String {
+///         value.uppercased()
+///     }
+/// }
+///
+/// let result = "hello".formatted(UppercaseFormat())
+/// // result == "HELLO"
 /// ```
 ///
-/// Extension packages can provide specific format styles:
-/// - swift-percent: Percentage formatting
-/// - swift-iso-8601: ISO 8601 date formatting
-/// - swift-measurement: Unit and measurement formatting
-public enum Format {}
+/// - Note: The most common output type is `String`, but you can format to any type,
+///   including `AttributedString` or custom types.
+public protocol Formatting: Sendable {
+    /// The type of value to be formatted.
+    associatedtype FormatInput
+
+    /// The type of the formatted representation.
+    associatedtype FormatOutput
+
+    /// Formats the given value into the output representation.
+    ///
+    /// - Parameter value: The value to format.
+    /// - Returns: The formatted representation of the value.
+    func format(_ value: FormatInput) -> FormatOutput
+}
+
+// MARK: - Convenience Methods
+
+extension Formatting {
+    /// Formats the given value into the output representation.
+    ///
+    /// This method provides function call syntax for formatting:
+    ///
+    /// ```swift
+    /// let formatter = UppercaseFormat()
+    /// let result = formatter("hello")  // "HELLO"
+    /// ```
+    ///
+    /// - Parameter value: The value to format.
+    /// - Returns: The formatted representation of the value.
+    public func callAsFunction(_ value: FormatInput) -> FormatOutput {
+        format(value)
+    }
+}
