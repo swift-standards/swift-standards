@@ -12,23 +12,23 @@ extension Format.Numeric {
     /// unnecessary decimal points and trailing zeros while preserving precision
     /// when needed. **Foundation-free implementation.**
     ///
+    /// Works with all numeric types: Int, Float, Double, and future types like Decimal.
+    ///
     /// ## Examples
     ///
     /// ```swift
     /// // Basic usage - removes .0 from whole numbers
-    /// 100.0.formatted(Format.Numeric.Clean())  // "100"
-    /// 3.14.formatted(Format.Numeric.Clean())   // "3.14"
+    /// 100.0.formatted(.number)  // "100"
+    /// 3.14.formatted(.number)   // "3.14"
+    /// 42.formatted(.number)     // "42"
     ///
     /// // With maximum precision
-    /// let formatter = Format.Numeric.Clean(maximumFractionDigits: 2)
-    /// 3.14159.formatted(formatter)  // "3.14"
+    /// 3.14159.formatted(.number.precision(.fractionLength(2)))  // "3.14"
     ///
     /// // With grouping separator for large numbers
-    /// let grouped = Format.Numeric.Clean(groupingSeparator: ",")
-    /// 1234567.0.formatted(grouped)  // "1,234,567"
+    /// 1234567.formatted(.number.grouping(.always))  // "1,234,567"
     /// ```
-    public struct Clean: Format.Style, Sendable {
-        public typealias FormatInput = Double
+    public struct Clean: Sendable {
         public typealias FormatOutput = String
 
         /// Maximum number of fraction digits (nil = no limit)
@@ -62,13 +62,16 @@ extension Format.Numeric {
             self.decimalSeparator = decimalSeparator
         }
 
-        public func format(_ value: Double) -> String {
-            // Handle special cases
-            if value.isNaN { return "NaN" }
-            if value.isInfinite { return value > 0 ? "Infinity" : "-Infinity" }
+        /// Format a floating-point value
+        public func format<Value: BinaryFloatingPoint>(_ value: Value) -> String {
+            let doubleValue = Double(value)
 
-            let isNegative = value < 0
-            let absoluteValue = abs(value)
+            // Handle special cases
+            if doubleValue.isNaN { return "NaN" }
+            if doubleValue.isInfinite { return doubleValue > 0 ? "Infinity" : "-Infinity" }
+
+            let isNegative = doubleValue < 0
+            let absoluteValue = abs(doubleValue)
 
             // Split into integer and fractional parts
             let integerPart = Int64(absoluteValue)
@@ -145,6 +148,28 @@ extension Format.Numeric {
             return isNegative ? "-\(result)" : result
         }
 
+        /// Format an integer value
+        public func format<Value: BinaryInteger>(_ value: Value) -> String {
+            let intValue = Int64(value)
+            let isNegative = intValue < 0
+            let absoluteValue = abs(intValue)
+
+            // Format integer part with grouping if needed
+            var integerString = String(absoluteValue)
+            if let separator = groupingSeparator, integerString.count > 3 {
+                integerString = addGroupingSeparator(to: integerString, separator: separator)
+            }
+
+            // Handle minimum fraction digits for integers
+            if let min = minimumFractionDigits, min > 0 {
+                let fractionalString = String(repeating: "0", count: min)
+                let result = integerString + decimalSeparator + fractionalString
+                return isNegative ? "-\(result)" : result
+            }
+
+            return isNegative ? "-\(integerString)" : integerString
+        }
+
         /// Add grouping separator to integer string
         private func addGroupingSeparator(to string: String, separator: String) -> String {
             var result = ""
@@ -171,32 +196,36 @@ extension Format.Numeric.Clean {
 
 // MARK: - Value Extensions
 
-extension Double {
-    /// Formats this value using the clean numeric format style.
+extension BinaryFloatingPoint {
+    /// Formats this floating-point value using the clean numeric format style.
     ///
     /// - Parameter style: The format style to use
     /// - Returns: A formatted string representation
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// 3.14159.formatted(Format.Numeric.Clean())  // "3.14159"
+    /// 100.0.formatted(Format.Numeric.Clean())    // "100"
+    /// ```
     public func formatted(_ style: Format.Numeric.Clean) -> String {
         style.format(self)
     }
 }
 
-extension Float {
-    /// Formats this value using the clean numeric format style.
+extension BinaryInteger {
+    /// Formats this integer value using the clean numeric format style.
     ///
     /// - Parameter style: The format style to use
     /// - Returns: A formatted string representation
-    public func formatted(_ style: Format.Numeric.Clean) -> String {
-        style.format(Double(self))
-    }
-}
-
-extension Int {
-    /// Formats this value using the clean numeric format style.
     ///
-    /// - Parameter style: The format style to use
-    /// - Returns: A formatted string representation
+    /// ## Example
+    ///
+    /// ```swift
+    /// 42.formatted(Format.Numeric.Clean())  // "42"
+    /// 1234567.formatted(Format.Numeric.Clean(groupingSeparator: ","))  // "1,234,567"
+    /// ```
     public func formatted(_ style: Format.Numeric.Clean) -> String {
-        style.format(Double(self))
+        style.format(self)
     }
 }

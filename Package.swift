@@ -69,6 +69,13 @@ let package = Package(
             ]
         ),
         .testTarget(
+            name: "Formatting".tests,
+            dependencies: [
+                "Formatting",
+                "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
             name: "StandardTime".tests,
             dependencies: [
                 "StandardTime",
