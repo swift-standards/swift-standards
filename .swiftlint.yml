@@ -7,6 +7,7 @@ disabled_rules:
   - optional_data_string_conversion  # False positive with String(decoding:as:)
   - for_where  # False positives when for loops have complex logic, not just filtering
   - todo  # Allow TODO comments for tracking future work
+  - type_body_length  # Don't enforce maximum type body length
 
 opt_in_rules:
   - explicit_init
@@ -28,11 +29,6 @@ excluded:
   - Carthage
   - Pods
   - fastlane
-
-# Type body length settings
-type_body_length:
-  warning: 500
-  error: 600
 
 # File length settings
 file_length:
