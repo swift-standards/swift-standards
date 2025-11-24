@@ -9,6 +9,7 @@ disabled_rules:
   - todo  # Allow TODO comments for tracking future work
   - type_body_length  # Don't enforce maximum type body length
   - nesting  # Allow nested types for hierarchical APIs
+  - type_name  # Allow flexible test suite naming (lowercase, special chars, etc.)
 
 opt_in_rules:
   - explicit_init
@@ -51,10 +52,3 @@ function_parameter_count:
 cyclomatic_complexity:
   warning: 15
   error: 20
-
-# Type name settings - very permissive to allow test suite names with spaces/special chars
-type_name:
-  allowed_symbols: ["_", "-", " ", "+", ".", ":", "(", ")", "[", "]", "<", ">"]
-  validates_start_with_lowercase: false
-  min_length: 1
-  max_length: 100
