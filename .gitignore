@@ -13,11 +13,13 @@ Thumbs.db
 !/.swiftformat
 !/.swiftlint.yml
 
-# Documentation (opt-in for top-level .md files only)
-/*.md
+# Documentation (opt-in for whitelisted .md files and .docc catalogs only)
+# Blocks all .md files by default to prevent AI-generated content from being committed
+*.md
 !README.md
 !LICENSE.md
 !CHANGELOG.md
 !CONTRIBUTING.md
 !CODE_OF_CONDUCT.md
 !SECURITY.md
+!**/*.docc/**/*.md
