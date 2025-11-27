@@ -104,8 +104,8 @@ struct `Time Property-Based Tests` {
         let roundTrip = Time(secondsSinceEpoch: epochSeconds)
 
         #expect(roundTrip.year.value == original.year.value)
-        #expect(roundTrip.month.value == original.month.value)
-        #expect(roundTrip.day.value == original.day.value)
+        #expect(roundTrip.month == original.month)
+        #expect(roundTrip.day == original.day)
         #expect(roundTrip.hour.value == original.hour.value)
         #expect(roundTrip.minute.value == original.minute.value)
         #expect(roundTrip.second.value == original.second.value)
@@ -208,8 +208,8 @@ struct `Time Property-Based Tests` {
         // Also verify round-trip
         let roundTrip = Time(secondsSinceEpoch: ourSeconds)
         #expect(roundTrip.year.value == date.year)
-        #expect(roundTrip.month.value == date.month)
-        #expect(roundTrip.day.value == date.day)
+        #expect(roundTrip.month == date.month)
+        #expect(roundTrip.day == date.day)
         #expect(roundTrip.hour.value == time.hour)
         #expect(roundTrip.minute.value == time.minute)
         #expect(roundTrip.second.value == time.second)

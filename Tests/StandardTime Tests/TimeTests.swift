@@ -111,8 +111,8 @@ struct `Time Target Tests` {
             nanosecond: 789
         )
         #expect(valid.year.value == 2024)
-        #expect(valid.month.value == 1)
-        #expect(valid.day.value == 15)
+        #expect(valid.month == 1)
+        #expect(valid.day == 15)
         #expect(valid.hour.value == 12)
         #expect(valid.minute.value == 30)
         #expect(valid.second.value == 45)
@@ -180,8 +180,8 @@ struct `Time Target Tests` {
         // Test Unix epoch itself (transformation: Int → DateComponents)
         let epoch = Time(secondsSinceEpoch: 0)
         #expect(epoch.year.value == 1970)
-        #expect(epoch.month.value == 1)
-        #expect(epoch.day.value == 1)
+        #expect(epoch.month == 1)
+        #expect(epoch.day == 1)
         #expect(epoch.hour.value == 0)
         #expect(epoch.minute.value == 0)
         #expect(epoch.second.value == 0)
@@ -202,8 +202,8 @@ struct `Time Target Tests` {
         // Transformation back: Int → DateComponents
         let roundTrip = Time(secondsSinceEpoch: seconds)
         #expect(roundTrip.year.value == 2024)
-        #expect(roundTrip.month.value == 1)
-        #expect(roundTrip.day.value == 15)
+        #expect(roundTrip.month == 1)
+        #expect(roundTrip.day == 15)
         #expect(roundTrip.hour.value == 12)
         #expect(roundTrip.minute.value == 30)
         #expect(roundTrip.second.value == 0)
@@ -232,18 +232,18 @@ struct `Time Target Tests` {
 
         // Verify Unix epoch reference date
         #expect(unix.referenceDate.year.value == 1970)
-        #expect(unix.referenceDate.month.value == 1)
-        #expect(unix.referenceDate.day.value == 1)
+        #expect(unix.referenceDate.month == 1)
+        #expect(unix.referenceDate.day == 1)
 
         // Verify NTP epoch reference date
         #expect(ntp.referenceDate.year.value == 1900)
-        #expect(ntp.referenceDate.month.value == 1)
-        #expect(ntp.referenceDate.day.value == 1)
+        #expect(ntp.referenceDate.month == 1)
+        #expect(ntp.referenceDate.day == 1)
 
         // Verify GPS epoch reference date
         #expect(gps.referenceDate.year.value == 1980)
-        #expect(gps.referenceDate.month.value == 1)
-        #expect(gps.referenceDate.day.value == 6)
+        #expect(gps.referenceDate.month == 1)
+        #expect(gps.referenceDate.day == 6)
 
         // Epochs should be equatable
         #expect(unix == Time.Epoch.unix)

@@ -50,8 +50,8 @@ struct `Time vs Foundation Comparison Tests` {
         let time = Time(secondsSinceEpoch: 0)
 
         #expect(time.year.value == 1970)
-        #expect(time.month.value == 1)
-        #expect(time.day.value == 1)
+        #expect(time.month == 1)
+        #expect(time.day == 1)
         #expect(time.hour.value == 0)
         #expect(time.minute.value == 0)
         #expect(time.second.value == 0)
@@ -66,8 +66,8 @@ struct `Time vs Foundation Comparison Tests` {
         )
 
         #expect(time.year.value == components.year)
-        #expect(time.month.value == components.month)
-        #expect(time.day.value == components.day)
+        #expect(time.month.rawValue == components.month)
+        #expect(time.day.rawValue == components.day)
         #expect(time.hour.value == components.hour)
         #expect(time.minute.value == components.minute)
         #expect(time.second.value == components.second)
@@ -220,8 +220,8 @@ struct `Time vs Foundation Comparison Tests` {
         )
 
         #expect(time.year.value == components.year)
-        #expect(time.month.value == components.month)
-        #expect(time.day.value == components.day)
+        #expect(time.month.rawValue == components.month)
+        #expect(time.day.rawValue == components.day)
         #expect(time.hour.value == components.hour)
         #expect(time.minute.value == components.minute)
         #expect(time.second.value == components.second)
@@ -258,8 +258,8 @@ struct `Time vs Foundation Comparison Tests` {
                 // Also test round trip
                 let roundTrip = Time(secondsSinceEpoch: ourSeconds)
                 #expect(roundTrip.year.value == year)
-                #expect(roundTrip.month.value == month)
-                #expect(roundTrip.day.value == day)
+                #expect(roundTrip.month == month)
+                #expect(roundTrip.day == day)
             }
         }
     }
