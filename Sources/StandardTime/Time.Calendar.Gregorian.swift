@@ -112,7 +112,7 @@ extension Time.Calendar.Gregorian {
     public static func daysInMonth(_ year: Time.Year, _ month: Time.Month) -> Int {
         let monthArray = isLeapYear(year) ? daysInLeapYearMonths : daysInCommonYearMonths
         // SAFE: month.value is guaranteed to be in range 1-12 by Time.Month invariant
-        return monthArray[month.value - 1]
+        return monthArray[month.rawValue - 1]
     }
 
     /// Get the number of days in each month for a given year

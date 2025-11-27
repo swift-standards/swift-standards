@@ -2,10 +2,23 @@
 // swift-standards
 //
 // Pure Swift byte array utilities
+//
+// This file contains extensions specific to [UInt8]:
+// - Endianness enum (byte order specification)
+// - Initializers that create [UInt8] from other types
+// - Methods that return [UInt8] or [[UInt8]]
+//
+// For generic byte collection operations, see:
+// - Collection+UInt8.swift (search, trim - any Collection where Element == UInt8)
+// - RangeReplaceableCollection+UInt8.swift (append - any RangeReplaceableCollection)
 
 extension [UInt8] {
     /// Byte order for multi-byte integer serialization
-    public enum Endianness {
+    ///
+    /// Specifies how multi-byte integers are arranged in memory.
+    /// - `little`: Least significant byte first (x86, ARM default)
+    /// - `big`: Most significant byte first (network byte order)
+    public enum Endianness: Sendable {
         case little
         case big
     }
@@ -68,8 +81,10 @@ extension [UInt8] {
 }
 
 // MARK: - String Conversions
+
 extension [UInt8] {
     /// Creates a byte array from a UTF-8 encoded string
+    ///
     /// - Parameter string: The string to convert to UTF-8 bytes
     ///
     /// Example:
@@ -81,50 +96,20 @@ extension [UInt8] {
     }
 }
 
-// MARK: - Subsequence Search and Splitting
+// MARK: - Splitting
+
 extension [UInt8] {
-    /// Finds the first occurrence of a byte subsequence
-    /// - Parameter needle: The byte sequence to search for
-    /// - Returns: Index of the first occurrence, or nil if not found
-    public func firstIndex(of needle: [UInt8]) -> Int? {
-        guard !needle.isEmpty else { return startIndex }
-        guard needle.count <= count else { return nil }
-
-        for i in 0...(count - needle.count) {
-            if self[i..<i + needle.count].elementsEqual(needle) {
-                return i
-            }
-        }
-
-        return nil
-    }
-
-    /// Finds the last occurrence of a byte subsequence
-    /// - Parameter needle: The byte sequence to search for
-    /// - Returns: Index of the last occurrence, or nil if not found
-    public func lastIndex(of needle: [UInt8]) -> Int? {
-        guard !needle.isEmpty else { return endIndex }
-        guard needle.count <= count else { return nil }
-
-        for i in stride(from: count - needle.count, through: 0, by: -1) {
-            if self[i..<i + needle.count].elementsEqual(needle) {
-                return i
-            }
-        }
-
-        return nil
-    }
-
-    /// Checks if the byte array contains a subsequence
-    /// - Parameter needle: The byte sequence to search for
-    /// - Returns: True if the subsequence is found, false otherwise
-    public func contains(_ needle: [UInt8]) -> Bool {
-        firstIndex(of: needle) != nil
-    }
-
     /// Splits the byte array at all occurrences of a delimiter sequence
+    ///
     /// - Parameter separator: The byte sequence to split on
     /// - Returns: Array of byte arrays split at the delimiter
+    ///
+    /// Example:
+    /// ```swift
+    /// let data: [UInt8] = [1, 2, 0, 0, 3, 4, 0, 0, 5]
+    /// let parts = data.split(separator: [0, 0])
+    /// // [[1, 2], [3, 4], [5]]
+    /// ```
     public func split(separator: [UInt8]) -> [[UInt8]] {
         guard !separator.isEmpty else { return [self] }
 
@@ -155,6 +140,64 @@ extension [UInt8] {
         }
 
         return result
+    }
+}
+
+// MARK: - Mutation Helpers
+
+extension [UInt8] {
+    /// Appends a multi-byte integer as bytes with specified endianness
+    ///
+    /// This method is for multi-byte integers only. Endianness is meaningless for single bytes.
+    /// For appending single bytes, use `append(_ value: UInt8)` or `.ascii` constants.
+    ///
+    /// - Parameters:
+    ///   - value: The integer value to append
+    ///   - endianness: Byte order for the serialized bytes (defaults to little-endian)
+    ///
+    /// Example:
+    /// ```swift
+    /// var buffer: [UInt8] = []
+    /// buffer.append(UInt16(0x1234), endianness: .big)  // [0x12, 0x34]
+    /// buffer.append(Int32(256), endianness: .little)   // [0, 1, 0, 0]
+    /// ```
+    public mutating func append(_ value: UInt16, endianness: Endianness = .little) {
+        append(contentsOf: value.bytes(endianness: endianness))
+    }
+
+    /// Appends a 32-bit integer as bytes with specified endianness
+    public mutating func append(_ value: UInt32, endianness: Endianness = .little) {
+        append(contentsOf: value.bytes(endianness: endianness))
+    }
+
+    /// Appends a 64-bit integer as bytes with specified endianness
+    public mutating func append(_ value: UInt64, endianness: Endianness = .little) {
+        append(contentsOf: value.bytes(endianness: endianness))
+    }
+
+    /// Appends a signed 16-bit integer as bytes with specified endianness
+    public mutating func append(_ value: Int16, endianness: Endianness = .little) {
+        append(contentsOf: value.bytes(endianness: endianness))
+    }
+
+    /// Appends a signed 32-bit integer as bytes with specified endianness
+    public mutating func append(_ value: Int32, endianness: Endianness = .little) {
+        append(contentsOf: value.bytes(endianness: endianness))
+    }
+
+    /// Appends a signed 64-bit integer as bytes with specified endianness
+    public mutating func append(_ value: Int64, endianness: Endianness = .little) {
+        append(contentsOf: value.bytes(endianness: endianness))
+    }
+
+    /// Appends a platform-sized integer as bytes with specified endianness
+    public mutating func append(_ value: Int, endianness: Endianness = .little) {
+        append(contentsOf: value.bytes(endianness: endianness))
+    }
+
+    /// Appends an unsigned platform-sized integer as bytes with specified endianness
+    public mutating func append(_ value: UInt, endianness: Endianness = .little) {
+        append(contentsOf: value.bytes(endianness: endianness))
     }
 }
 
@@ -235,34 +278,5 @@ extension [[UInt8]] {
         }
 
         return result
-    }
-}
-
-// MARK: - Mutation Helpers
-extension [UInt8] {
-    /// Appends a UTF-8 string as bytes
-    /// - Parameter string: The string to append as UTF-8 bytes
-    public mutating func append(utf8 string: some StringProtocol) {
-        append(contentsOf: string.utf8)
-    }
-
-    /// Appends a single byte
-    /// - Parameter value: The byte value to append
-    ///
-    /// This overload exists to avoid ambiguity with the generic FixedWidthInteger method.
-    /// For UInt8, we can append directly without endianness conversion.
-    public mutating func append(_ value: UInt8) {
-        append(contentsOf: CollectionOfOne(value))
-    }
-
-    /// Appends an integer as bytes with specified endianness
-    /// - Parameters:
-    ///   - value: The integer value to append
-    ///   - endianness: Byte order for the serialized bytes (defaults to little-endian)
-    public mutating func append<T: FixedWidthInteger>(
-        _ value: T,
-        endianness: Endianness = .little
-    ) {
-        append(contentsOf: value.bytes(endianness: endianness))
     }
 }

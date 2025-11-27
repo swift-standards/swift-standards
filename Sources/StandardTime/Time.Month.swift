@@ -8,11 +8,22 @@ extension Time {
     ///
     /// This is a refinement type - an integer constrained to the valid range.
     /// Month names are format-specific and defined in format packages.
-    public struct Month: Sendable, Equatable, Hashable, Comparable {
+    public struct Month: RawRepresentable, Sendable, Equatable, Hashable, Comparable {
         /// The month value (1-12)
-        public let value: Int
+        public let rawValue: Int
 
         /// Create a month with validation
+        ///
+        /// - Parameter rawValue: Month value (1-12)
+        /// - Returns: `nil` if value is not 1-12
+        public init?(rawValue: Int) {
+            guard (1...12).contains(rawValue) else {
+                return nil
+            }
+            self.rawValue = rawValue
+        }
+
+        /// Create a month with validation (throwing)
         ///
         /// - Parameter value: Month value (1-12)
         /// - Throws: `Month.Error` if value is not 1-12
@@ -20,7 +31,7 @@ extension Time {
             guard (1...12).contains(value) else {
                 throw Error.invalidMonth(value)
             }
-            self.value = value
+            self.rawValue = value
         }
     }
 }
@@ -42,7 +53,7 @@ extension Time.Month {
     ///
     /// - Warning: Only use when value is known to be valid (1-12)
     internal init(unchecked value: Int) {
-        self.value = value
+        self.rawValue = value
     }
 }
 
@@ -50,7 +61,21 @@ extension Time.Month {
 
 extension Time.Month {
     public static func < (lhs: Time.Month, rhs: Time.Month) -> Bool {
-        lhs.value < rhs.value
+        lhs.rawValue < rhs.rawValue
+    }
+}
+
+// MARK: - Int Comparison
+
+extension Time.Month {
+    /// Compare month with integer value
+    public static func == (lhs: Time.Month, rhs: Int) -> Bool {
+        lhs.rawValue == rhs
+    }
+
+    /// Compare integer value with month
+    public static func == (lhs: Int, rhs: Time.Month) -> Bool {
+        lhs == rhs.rawValue
     }
 }
 

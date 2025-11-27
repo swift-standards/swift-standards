@@ -104,3 +104,99 @@ extension Collection where Element == UInt8 {
         Self.trimming(self, of: byteSet)
     }
 }
+
+// MARK: - Byte Subsequence Search
+
+extension Collection where Element == UInt8 {
+    /// Finds the first occurrence of a byte subsequence
+    ///
+    /// Searches for the first position where `needle` appears in this collection.
+    /// Returns the index of the first byte of the match, or nil if not found.
+    ///
+    /// - Parameter needle: The byte sequence to search for
+    /// - Returns: Index of the first occurrence, or nil if not found
+    ///
+    /// Example:
+    /// ```swift
+    /// let data: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]  // "Hello"
+    /// data.firstIndex(of: [0x6C, 0x6C])  // 2 (index of "ll")
+    /// data.firstIndex(of: [0x58])        // nil
+    /// ```
+    public func firstIndex<C: Collection>(of needle: C) -> Index?
+    where C.Element == UInt8 {
+        guard !needle.isEmpty else { return startIndex }
+        guard needle.count <= count else { return nil }
+
+        var i = startIndex
+        let searchEnd = index(endIndex, offsetBy: -needle.count + 1)
+
+        while i < searchEnd {
+            var matches = true
+            var selfIndex = i
+            var needleIndex = needle.startIndex
+
+            while needleIndex != needle.endIndex {
+                if self[selfIndex] != needle[needleIndex] {
+                    matches = false
+                    break
+                }
+                selfIndex = index(after: selfIndex)
+                needleIndex = needle.index(after: needleIndex)
+            }
+
+            if matches {
+                return i
+            }
+            i = index(after: i)
+        }
+
+        return nil
+    }
+
+    /// Finds the last occurrence of a byte subsequence
+    ///
+    /// Searches for the last position where `needle` appears in this collection.
+    /// Returns the index of the first byte of the match, or nil if not found.
+    ///
+    /// - Parameter needle: The byte sequence to search for
+    /// - Returns: Index of the last occurrence, or nil if not found
+    ///
+    /// Example:
+    /// ```swift
+    /// let data: [UInt8] = [0x61, 0x62, 0x61, 0x62]  // "abab"
+    /// data.lastIndex(of: [0x61, 0x62])  // 2 (last "ab")
+    /// ```
+    public func lastIndex<C: Collection>(of needle: C) -> Index?
+    where C.Element == UInt8 {
+        guard !needle.isEmpty else { return endIndex }
+        guard needle.count <= count else { return nil }
+
+        // Convert to array for reverse iteration (Collection doesn't guarantee bidirectional)
+        let selfArray = Array(self)
+        let needleArray = Array(needle)
+
+        for i in stride(from: selfArray.count - needleArray.count, through: 0, by: -1) {
+            if selfArray[i..<i + needleArray.count].elementsEqual(needleArray) {
+                return index(startIndex, offsetBy: i)
+            }
+        }
+
+        return nil
+    }
+
+    /// Checks if the collection contains a byte subsequence
+    ///
+    /// - Parameter needle: The byte sequence to search for
+    /// - Returns: True if the subsequence is found, false otherwise
+    ///
+    /// Example:
+    /// ```swift
+    /// let data: [UInt8] = [0x48, 0x65, 0x6C, 0x6C, 0x6F]  // "Hello"
+    /// data.contains([0x65, 0x6C])  // true ("el")
+    /// data.contains([0x58, 0x59])  // false
+    /// ```
+    public func contains<C: Collection>(_ needle: C) -> Bool
+    where C.Element == UInt8 {
+        firstIndex(of: needle) != nil
+    }
+}

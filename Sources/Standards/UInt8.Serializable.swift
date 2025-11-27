@@ -178,4 +178,3 @@ extension StringProtocol {
         self = Self(decoding: value.bytes, as: UTF8.self)
     }
 }
-

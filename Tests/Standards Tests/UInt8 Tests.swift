@@ -394,3 +394,107 @@ func `Build complex byte sequence`() {
     let expected: [UInt8] = Array("HTTP/1.1 ".utf8) + [0x00, 0xC8] + Array(" OK\r\n".utf8)
     #expect(bytes == expected)
 }
+
+// MARK: - Append Single Byte Tests (Bug Fix Verification)
+//
+// These tests verify that appending a single UInt8 byte works correctly
+// and does not accidentally use the multi-byte FixedWidthInteger append.
+// See: https://github.com/swift-standards/swift-standards/issues/XXX
+
+@Test
+func `Append single UInt8 byte`() {
+    var bytes: [UInt8] = []
+    bytes.append(UInt8(0x2F))
+
+    // Should be exactly 1 byte, not 8 bytes
+    #expect(bytes.count == 1)
+    #expect(bytes == [0x2F])
+}
+
+@Test
+func `Append explicit UInt8 value`() {
+    var bytes: [UInt8] = []
+    let slash: UInt8 = 0x2F
+    bytes.append(slash)
+
+    #expect(bytes.count == 1)
+    #expect(bytes == [47])
+}
+
+@Test
+func `Append multiple single bytes`() {
+    var bytes: [UInt8] = []
+    bytes.append(UInt8(0x48))  // 'H'
+    bytes.append(UInt8(0x69))  // 'i'
+
+    #expect(bytes.count == 2)
+    #expect(bytes == [0x48, 0x69])
+    #expect(String(decoding: bytes, as: UTF8.self) == "Hi")
+}
+
+@Test
+func `Append UInt8 vs multi-byte integer distinction`() {
+    // UInt8 should append exactly 1 byte
+    var single: [UInt8] = []
+    single.append(UInt8(47))
+    #expect(single.count == 1)
+
+    // UInt16 should append exactly 2 bytes
+    var double: [UInt8] = []
+    double.append(UInt16(47), endianness: .little)
+    #expect(double.count == 2)
+    #expect(double == [47, 0])
+
+    // UInt32 should append exactly 4 bytes
+    var quad: [UInt8] = []
+    quad.append(UInt32(47), endianness: .little)
+    #expect(quad.count == 4)
+    #expect(quad == [47, 0, 0, 0])
+}
+
+@Test
+func `Append UInt8 boundary values`() {
+    var bytes: [UInt8] = []
+
+    bytes.append(UInt8(0))  // minimum
+    bytes.append(UInt8(127))  // max signed
+    bytes.append(UInt8(128))  // min unsigned > signed
+    bytes.append(UInt8(255))  // maximum
+
+    #expect(bytes.count == 4)
+    #expect(bytes == [0, 127, 128, 255])
+}
+
+@Test
+func `Append Int8 boundary values`() {
+    var bytes: [UInt8] = []
+
+    bytes.append(UInt8(bitPattern: Int8(-128)))  // minimum
+    bytes.append(UInt8(bitPattern: Int8(-1)))  // -1
+    bytes.append(UInt8(bitPattern: Int8(0)))  // zero
+    bytes.append(UInt8(bitPattern: Int8(127)))  // maximum
+
+    #expect(bytes.count == 4)
+    #expect(bytes == [128, 255, 0, 127])
+}
+
+// MARK: - Generic Collection Tests
+
+@Test
+func `Search works with ArraySlice`() {
+    let bytes: [UInt8] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+    let slice = bytes[2..<8]  // [2, 3, 4, 5, 6, 7]
+
+    // These should work on ArraySlice<UInt8> too
+    #expect(slice.firstIndex(of: [4, 5]) == 4)  // index in original array
+    #expect(slice.contains([3, 4, 5]))
+    #expect(!slice.contains([0, 1]))  // not in slice
+}
+
+@Test
+func `Trimming works with generic collection`() {
+    let bytes: [UInt8] = [0x20, 0x20, 0x48, 0x69, 0x20]
+    let trimmed = bytes.trimming(where: { $0 == 0x20 })
+
+    #expect(Array(trimmed) == [0x48, 0x69])
+}

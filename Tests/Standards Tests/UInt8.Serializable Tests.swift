@@ -1,29 +1,30 @@
 //
-//  UInt8.Streaming Tests.swift
+//  UInt8.Serializable Tests.swift
 //  swift-standards
 //
-//  Tests demonstrating the UInt8.Streaming protocol for buffer-based
-//  byte serialization. These tests serve as both verification and
-//  documentation of ideal API usage patterns.
+//  Tests demonstrating the UInt8.Serializable protocol for byte serialization.
+//  These tests serve as both verification and documentation of ideal API usage patterns.
 //
 
 import Testing
 
 @testable import Standards
 
-// MARK: - Example Streaming Types
+// MARK: - Example Serializable Types
 
 /// A simple greeting that serializes to bytes.
-/// Demonstrates the minimal Streaming conformance pattern.
+/// Demonstrates the minimal Serializable conformance pattern.
 private struct Greeting: UInt8.Serializable {
     let name: String
 
-    func serialize<Buffer: RangeReplaceableCollection>(
-        into buffer: inout Buffer
-    ) where Buffer.Element == UInt8 {
-        buffer.append(contentsOf: "Hello, ".utf8)
-        buffer.append(contentsOf: name.utf8)
-        buffer.append(UInt8(ascii: "!"))
+    static var serialize: @Sendable (Self) -> [UInt8] {
+        { greeting in
+            var bytes: [UInt8] = []
+            bytes.append(contentsOf: "Hello, ".utf8)
+            bytes.append(contentsOf: greeting.name.utf8)
+            bytes.append(UInt8(ascii: "!"))
+            return bytes
+        }
     }
 }
 
@@ -33,38 +34,42 @@ private struct Element: UInt8.Serializable {
     let tag: String
     let content: String
 
-    func serialize<Buffer: RangeReplaceableCollection>(
-        into buffer: inout Buffer
-    ) where Buffer.Element == UInt8 {
-        // Opening tag
-        buffer.append(UInt8(ascii: "<"))
-        buffer.append(contentsOf: tag.utf8)
-        buffer.append(UInt8(ascii: ">"))
+    static var serialize: @Sendable (Self) -> [UInt8] {
+        { element in
+            var bytes: [UInt8] = []
+            // Opening tag
+            bytes.append(UInt8(ascii: "<"))
+            bytes.append(contentsOf: element.tag.utf8)
+            bytes.append(UInt8(ascii: ">"))
 
-        // Content
-        buffer.append(contentsOf: content.utf8)
+            // Content
+            bytes.append(contentsOf: element.content.utf8)
 
-        // Closing tag
-        buffer.append(UInt8(ascii: "<"))
-        buffer.append(UInt8(ascii: "/"))
-        buffer.append(contentsOf: tag.utf8)
-        buffer.append(UInt8(ascii: ">"))
+            // Closing tag
+            bytes.append(UInt8(ascii: "<"))
+            bytes.append(UInt8(ascii: "/"))
+            bytes.append(contentsOf: element.tag.utf8)
+            bytes.append(UInt8(ascii: ">"))
+            return bytes
+        }
     }
 }
 
 /// A container that holds multiple streaming children.
 /// Demonstrates compositional serialization of nested structures.
 private struct Container: UInt8.Serializable {
-    let children: [any UInt8.Serializable]
+    let children: [Element]
 
-    func serialize<Buffer: RangeReplaceableCollection>(
-        into buffer: inout Buffer
-    ) where Buffer.Element == UInt8 {
-        buffer.append(contentsOf: "<div>".utf8)
-        for child in children {
-            child.serialize(into: &buffer)
+    static var serialize: @Sendable (Self) -> [UInt8] {
+        { container in
+            var bytes: [UInt8] = []
+            bytes.append(contentsOf: "<div>".utf8)
+            for child in container.children {
+                bytes.append(contentsOf: Element.serialize(child))
+            }
+            bytes.append(contentsOf: "</div>".utf8)
+            return bytes
         }
-        buffer.append(contentsOf: "</div>".utf8)
     }
 }
 
@@ -72,22 +77,24 @@ private struct Container: UInt8.Serializable {
 private struct LargeContent: UInt8.Serializable {
     let lines: [String]
 
-    func serialize<Buffer: RangeReplaceableCollection>(
-        into buffer: inout Buffer
-    ) where Buffer.Element == UInt8 {
-        for (index, line) in lines.enumerated() {
-            if index > 0 {
-                buffer.append(UInt8(ascii: "\n"))
+    static var serialize: @Sendable (Self) -> [UInt8] {
+        { content in
+            var bytes: [UInt8] = []
+            for (index, line) in content.lines.enumerated() {
+                if index > 0 {
+                    bytes.append(UInt8(ascii: "\n"))
+                }
+                bytes.append(contentsOf: line.utf8)
             }
-            buffer.append(contentsOf: line.utf8)
+            return bytes
         }
     }
 }
 
 // MARK: - Basic Serialization Tests
 
-@Suite("UInt8.Streaming - Basic Usage")
-struct StreamingBasicTests {
+@Suite("UInt8.Serializable - Basic Usage")
+struct SerializableBasicTests {
 
     @Test("Serialize into byte array using serialize(into:)")
     func serializeIntoBuffer() {
@@ -110,12 +117,11 @@ struct StreamingBasicTests {
         #expect(bytes == Array("Hello, Swift!".utf8))
     }
 
-    @Test("Get bytes with capacity hint")
-    func bytesWithCapacity() {
+    @Test("Get bytes from static serialize")
+    func staticSerializeBytes() {
         let content = LargeContent(lines: ["Line 1", "Line 2", "Line 3"])
 
-        // When you know approximate size, use capacity hint
-        let bytes = content.bytes(reservingCapacity: 100)
+        let bytes = LargeContent.serialize(content)
 
         #expect(bytes == Array("Line 1\nLine 2\nLine 3".utf8))
     }
@@ -143,8 +149,8 @@ struct StreamingBasicTests {
 
 // MARK: - Composition Tests
 
-@Suite("UInt8.Streaming - Composition")
-struct StreamingCompositionTests {
+@Suite("UInt8.Serializable - Composition")
+struct SerializableCompositionTests {
 
     @Test("Nested streaming types compose naturally")
     func nestedComposition() {
@@ -191,8 +197,8 @@ struct StreamingCompositionTests {
 
 // MARK: - Buffer Type Tests
 
-@Suite("UInt8.Streaming - Buffer Types")
-struct StreamingBufferTests {
+@Suite("UInt8.Serializable - Buffer Types")
+struct SerializableBufferTests {
 
     @Test("Serialize into [UInt8]")
     func serializeIntoArray() {
@@ -228,8 +234,8 @@ struct StreamingBufferTests {
 
 // MARK: - Edge Cases
 
-@Suite("UInt8.Streaming - Edge Cases")
-struct StreamingEdgeCaseTests {
+@Suite("UInt8.Serializable - Edge Cases")
+struct SerializableEdgeCaseTests {
 
     @Test("Empty content serializes correctly")
     func emptyContent() {
@@ -261,8 +267,8 @@ struct StreamingEdgeCaseTests {
 
 // MARK: - API Design Demonstration
 
-@Suite("UInt8.Streaming - API Patterns")
-struct StreamingAPIPatternTests {
+@Suite("UInt8.Serializable - API Patterns")
+struct SerializableAPIPatternTests {
 
     @Test("Pattern: Direct buffer writing for maximum control")
     func directBufferWriting() {

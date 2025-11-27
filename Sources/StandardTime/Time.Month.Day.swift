@@ -11,9 +11,12 @@ extension Time.Month {
     ///
     /// Category Theory: This represents a dependent product type where
     /// the day value depends on (month, year) for its validity.
+    ///
+    /// Note: Does not conform to `RawRepresentable` because validity depends
+    /// on context (month/year), not just the raw value itself.
     public struct Day: Sendable, Equatable, Hashable, Comparable {
         /// The day value (1-31)
-        public let value: Int
+        public let rawValue: Int
 
         /// Create a day with validation against month and year
         ///
@@ -30,7 +33,7 @@ extension Time.Month {
             guard (1...maxDay).contains(value) else {
                 throw Error.invalidDay(value, month: month, year: year)
             }
-            self.value = value
+            self.rawValue = value
         }
     }
 }
