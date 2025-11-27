@@ -39,20 +39,6 @@ extension Time.Year {
     }
 }
 
-// MARK: - Int Comparison
-
-extension Time.Year {
-    /// Compare year with integer value
-    public static func == (lhs: Time.Year, rhs: Int) -> Bool {
-        lhs.rawValue == rhs
-    }
-
-    /// Compare integer value with year
-    public static func == (lhs: Int, rhs: Time.Year) -> Bool {
-        lhs == rhs.rawValue
-    }
-}
-
 // MARK: - Convenience
 
 extension Time.Year {
