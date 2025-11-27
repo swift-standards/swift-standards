@@ -243,13 +243,13 @@ extension Time.Epoch.Conversion {
 
         // Add days for complete months in current year
         let monthDays = Time.Calendar.Gregorian.daysInMonths(year: year.value)
-        // SAFE: month.value guaranteed to be in range 1-12 by Time.Month invariant
-        for m in 0..<(month.value - 1) {
+        // SAFE: month.rawValue guaranteed to be in range 1-12 by Time.Month invariant
+        for m in 0..<(month.rawValue - 1) {
             days += monthDays[m]
         }
 
         // Add remaining days
-        days += day.value - 1
+        days += day.rawValue - 1
 
         return days
     }

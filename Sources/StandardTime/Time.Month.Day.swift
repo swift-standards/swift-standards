@@ -55,7 +55,7 @@ extension Time.Month.Day {
     ///
     /// - Warning: Only use when value is known to be valid for the context
     internal init(unchecked value: Int) {
-        self.value = value
+        self.rawValue = value
     }
 }
 
@@ -63,6 +63,20 @@ extension Time.Month.Day {
 
 extension Time.Month.Day {
     public static func < (lhs: Time.Month.Day, rhs: Time.Month.Day) -> Bool {
-        lhs.value < rhs.value
+        lhs.rawValue < rhs.rawValue
+    }
+}
+
+// MARK: - Int Comparison
+
+extension Time.Month.Day {
+    /// Compare day with integer value
+    public static func == (lhs: Time.Month.Day, rhs: Int) -> Bool {
+        lhs.rawValue == rhs
+    }
+
+    /// Compare integer value with day
+    public static func == (lhs: Int, rhs: Time.Month.Day) -> Bool {
+        lhs == rhs.rawValue
     }
 }

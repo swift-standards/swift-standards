@@ -78,7 +78,7 @@ extension Time.Weekday {
         day: Time.Month.Day
     ) {
         var y = year.value
-        var m = month.value
+        var m = month.rawValue
 
         // Zeller's congruence: treat Jan/Feb as months 13/14 of previous year
         if m < 3 {
@@ -86,7 +86,7 @@ extension Time.Weekday {
             y -= 1
         }
 
-        let q = day.value
+        let q = day.rawValue
         let K = y % 100
         let J = y / 100
 
