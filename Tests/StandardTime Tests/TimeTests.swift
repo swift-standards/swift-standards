@@ -110,7 +110,7 @@ struct `Time Target Tests` {
             microsecond: 456,
             nanosecond: 789
         )
-        #expect(valid.year.value == 2024)
+        #expect(valid.year.rawValue == 2024)
         #expect(valid.month == 1)
         #expect(valid.day == 15)
         #expect(valid.hour.value == 12)
@@ -179,7 +179,7 @@ struct `Time Target Tests` {
     func `EpochConversion - Round Trip`() throws {
         // Test Unix epoch itself (transformation: Int → DateComponents)
         let epoch = Time(secondsSinceEpoch: 0)
-        #expect(epoch.year.value == 1970)
+        #expect(epoch.year.rawValue == 1970)
         #expect(epoch.month == 1)
         #expect(epoch.day == 1)
         #expect(epoch.hour.value == 0)
@@ -201,7 +201,7 @@ struct `Time Target Tests` {
 
         // Transformation back: Int → DateComponents
         let roundTrip = Time(secondsSinceEpoch: seconds)
-        #expect(roundTrip.year.value == 2024)
+        #expect(roundTrip.year.rawValue == 2024)
         #expect(roundTrip.month == 1)
         #expect(roundTrip.day == 15)
         #expect(roundTrip.hour.value == 12)
@@ -231,17 +231,17 @@ struct `Time Target Tests` {
         let gps = Time.Epoch.gps
 
         // Verify Unix epoch reference date
-        #expect(unix.referenceDate.year.value == 1970)
+        #expect(unix.referenceDate.year.rawValue == 1970)
         #expect(unix.referenceDate.month == 1)
         #expect(unix.referenceDate.day == 1)
 
         // Verify NTP epoch reference date
-        #expect(ntp.referenceDate.year.value == 1900)
+        #expect(ntp.referenceDate.year.rawValue == 1900)
         #expect(ntp.referenceDate.month == 1)
         #expect(ntp.referenceDate.day == 1)
 
         // Verify GPS epoch reference date
-        #expect(gps.referenceDate.year.value == 1980)
+        #expect(gps.referenceDate.year.rawValue == 1980)
         #expect(gps.referenceDate.month == 1)
         #expect(gps.referenceDate.day == 6)
 

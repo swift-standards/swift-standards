@@ -77,7 +77,7 @@ extension Time.Weekday {
         month: Time.Month,
         day: Time.Month.Day
     ) {
-        var y = year.value
+        var y = year.rawValue
         var m = month.rawValue
 
         // Zeller's congruence: treat Jan/Feb as months 13/14 of previous year

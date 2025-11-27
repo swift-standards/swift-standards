@@ -8,18 +8,25 @@ extension Time {
     ///
     /// This is a newtype wrapper providing type safety for year values.
     /// No range restrictions - supports any integer year (including BC years as negative).
-    public struct Year: Sendable, Equatable, Hashable, Comparable {
+    public struct Year: RawRepresentable, Sendable, Equatable, Hashable, Comparable {
         /// The year value
-        public let value: Int
+        public let rawValue: Int
 
         /// Create a year
         ///
         /// No validation - any integer year is allowed.
         /// Negative years represent BC/BCE years.
         ///
+        /// - Parameter rawValue: The year value
+        public init(rawValue: Int) {
+            self.rawValue = rawValue
+        }
+
+        /// Create a year (convenience)
+        ///
         /// - Parameter value: The year value
         public init(_ value: Int) {
-            self.value = value
+            self.rawValue = value
         }
     }
 }
@@ -28,7 +35,21 @@ extension Time {
 
 extension Time.Year {
     public static func < (lhs: Time.Year, rhs: Time.Year) -> Bool {
-        lhs.value < rhs.value
+        lhs.rawValue < rhs.rawValue
+    }
+}
+
+// MARK: - Int Comparison
+
+extension Time.Year {
+    /// Compare year with integer value
+    public static func == (lhs: Time.Year, rhs: Int) -> Bool {
+        lhs.rawValue == rhs
+    }
+
+    /// Compare integer value with year
+    public static func == (lhs: Int, rhs: Time.Year) -> Bool {
+        lhs == rhs.rawValue
     }
 }
 

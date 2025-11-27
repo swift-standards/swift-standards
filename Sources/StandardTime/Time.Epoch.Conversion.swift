@@ -224,13 +224,13 @@ extension Time.Epoch.Conversion {
         day: Time.Month.Day
     ) -> Int {
         // Optimized calculation avoiding year-by-year iteration
-        let yearsSince1970 = year.value - 1970
+        let yearsSince1970 = year.rawValue - 1970
 
         // Calculate leap years between 1970 and year (exclusive)
         // Count years divisible by 4, subtract those divisible by 100, add back those divisible by 400
         let leapYears: Int
         if yearsSince1970 > 0 {
-            let yearBefore = year.value - 1
+            let yearBefore = year.rawValue - 1
             leapYears =
                 (yearBefore / 4 - 1970 / 4) - (yearBefore / 100 - 1970 / 100)
                 + (yearBefore / 400 - 1970 / 400)
@@ -242,7 +242,7 @@ extension Time.Epoch.Conversion {
             yearsSince1970 * Time.Calendar.Gregorian.TimeConstants.daysPerCommonYear + leapYears
 
         // Add days for complete months in current year
-        let monthDays = Time.Calendar.Gregorian.daysInMonths(year: year.value)
+        let monthDays = Time.Calendar.Gregorian.daysInMonths(year: year.rawValue)
         // SAFE: month.rawValue guaranteed to be in range 1-12 by Time.Month invariant
         for m in 0..<(month.rawValue - 1) {
             days += monthDays[m]

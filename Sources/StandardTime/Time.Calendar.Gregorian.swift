@@ -76,7 +76,7 @@ extension Time.Calendar.Gregorian {
     /// - Parameter year: The year to check
     /// - Returns: `true` if the year is a leap year, `false` otherwise
     public static func isLeapYear(_ year: Time.Year) -> Bool {
-        let y = year.value
+        let y = year.rawValue
         return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0)
     }
 

@@ -49,7 +49,7 @@ struct `Time vs Foundation Comparison Tests` {
     func `Epoch Conversion - Unix Epoch Zero`() {
         let time = Time(secondsSinceEpoch: 0)
 
-        #expect(time.year.value == 1970)
+        #expect(time.year.rawValue == 1970)
         #expect(time.month == 1)
         #expect(time.day == 1)
         #expect(time.hour.value == 0)
@@ -65,7 +65,7 @@ struct `Time vs Foundation Comparison Tests` {
             from: foundationEpoch
         )
 
-        #expect(time.year.value == components.year)
+        #expect(time.year.rawValue == components.year)
         #expect(time.month.rawValue == components.month)
         #expect(time.day.rawValue == components.day)
         #expect(time.hour.value == components.hour)
@@ -219,7 +219,7 @@ struct `Time vs Foundation Comparison Tests` {
             from: foundationDate
         )
 
-        #expect(time.year.value == components.year)
+        #expect(time.year.rawValue == components.year)
         #expect(time.month.rawValue == components.month)
         #expect(time.day.rawValue == components.day)
         #expect(time.hour.value == components.hour)
@@ -257,7 +257,7 @@ struct `Time vs Foundation Comparison Tests` {
 
                 // Also test round trip
                 let roundTrip = Time(secondsSinceEpoch: ourSeconds)
-                #expect(roundTrip.year.value == year)
+                #expect(roundTrip.year.rawValue == year)
                 #expect(roundTrip.month == month)
                 #expect(roundTrip.day == day)
             }
