@@ -213,6 +213,15 @@ extension UInt8.Serializable {
     }
 }
 
+extension RangeReplaceableCollection where Element == UInt8 {
+    @inlinable
+    public mutating func append<Serializable: UInt8.Serializable>(
+        _ serializable: Serializable
+    ) {
+        Serializable.serialize(serializable, into: &self)
+    }
+}
+
 // MARK: - Collection Initializers
 
 extension Array where Element == UInt8 {
@@ -251,7 +260,7 @@ extension ContiguousArray where Element == UInt8 {
 
 // MARK: - String Conversion
 
-extension String {
+extension StringProtocol {
     /// Create a string from a serializable value's UTF-8 output
     ///
     /// Serializes the value and interprets the bytes as UTF-8.
@@ -266,7 +275,7 @@ extension String {
     /// - Parameter value: The serializable value to convert
     @inlinable
     public init<T: UInt8.Serializable>(_ value: T) {
-        self = String(decoding: value.bytes, as: UTF8.self)
+        self = Self(decoding: value.bytes, as: UTF8.self)
     }
 }
 
