@@ -7,27 +7,27 @@ extension Geometry {
     /// This is the base type for specific dimensional types like `Width`, `Height`, and `Length`.
     public struct Dimension {
         /// The measurement value
-        public var value: Unit
+        public var value: Scalar
 
         /// Create a dimension with the given value
         @inlinable
-        public init(_ value: consuming Unit) {
+        public init(_ value: consuming Scalar) {
             self.value = value
         }
     }
 }
 
-extension Geometry.Dimension: Sendable where Unit: Sendable {}
-extension Geometry.Dimension: Equatable where Unit: Equatable {}
-extension Geometry.Dimension: Hashable where Unit: Hashable {}
+extension Geometry.Dimension: Sendable where Scalar: Sendable {}
+extension Geometry.Dimension: Equatable where Scalar: Equatable {}
+extension Geometry.Dimension: Hashable where Scalar: Hashable {}
 
 // MARK: - Codable
 
-extension Geometry.Dimension: Codable where Unit: Codable {}
+extension Geometry.Dimension: Codable where Scalar: Codable {}
 
 // MARK: - AdditiveArithmetic
 
-extension Geometry.Dimension: AdditiveArithmetic where Unit: AdditiveArithmetic {
+extension Geometry.Dimension: AdditiveArithmetic where Scalar: AdditiveArithmetic {
     @inlinable
     public static var zero: Self {
         Self(.zero)
@@ -46,7 +46,7 @@ extension Geometry.Dimension: AdditiveArithmetic where Unit: AdditiveArithmetic 
 
 // MARK: - Comparable
 
-extension Geometry.Dimension: Comparable where Unit: Comparable {
+extension Geometry.Dimension: Comparable where Scalar: Comparable {
     @inlinable
     public static func < (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
         lhs.value < rhs.value
@@ -55,25 +55,25 @@ extension Geometry.Dimension: Comparable where Unit: Comparable {
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Geometry.Dimension: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral {
+extension Geometry.Dimension: ExpressibleByIntegerLiteral where Scalar: ExpressibleByIntegerLiteral {
     @inlinable
-    public init(integerLiteral value: Unit.IntegerLiteralType) {
-        self.value = Unit(integerLiteral: value)
+    public init(integerLiteral value: Scalar.IntegerLiteralType) {
+        self.value = Scalar(integerLiteral: value)
     }
 }
 
 // MARK: - ExpressibleByFloatLiteral
 
-extension Geometry.Dimension: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral {
+extension Geometry.Dimension: ExpressibleByFloatLiteral where Scalar: ExpressibleByFloatLiteral {
     @inlinable
-    public init(floatLiteral value: Unit.FloatLiteralType) {
-        self.value = Unit(floatLiteral: value)
+    public init(floatLiteral value: Scalar.FloatLiteralType) {
+        self.value = Scalar(floatLiteral: value)
     }
 }
 
 // MARK: - Negation
 
-extension Geometry.Dimension where Unit: SignedNumeric {
+extension Geometry.Dimension where Scalar: SignedNumeric {
     /// Negate
     @inlinable
     public static prefix func - (value: borrowing Self) -> Self {
@@ -83,22 +83,22 @@ extension Geometry.Dimension where Unit: SignedNumeric {
 
 // MARK: - Multiplication/Division
 
-extension Geometry.Dimension where Unit: FloatingPoint {
+extension Geometry.Dimension where Scalar: FloatingPoint {
     /// Multiply by a scalar
     @inlinable
-    public static func * (lhs: borrowing Self, rhs: Unit) -> Self {
+    public static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
         Self(lhs.value * rhs)
     }
 
     /// Multiply scalar by value
     @inlinable
-    public static func * (lhs: Unit, rhs: borrowing Self) -> Self {
+    public static func * (lhs: Scalar, rhs: borrowing Self) -> Self {
         Self(lhs * rhs.value)
     }
 
     /// Divide by a scalar
     @inlinable
-    public static func / (lhs: borrowing Self, rhs: Unit) -> Self {
+    public static func / (lhs: borrowing Self, rhs: Scalar) -> Self {
         Self(lhs.value / rhs)
     }
 }
@@ -108,14 +108,14 @@ extension Geometry.Dimension where Unit: FloatingPoint {
 extension Geometry.Dimension {
     /// Create a Dimension by transforming the value of another Dimension
     @inlinable
-    public init<U>(_ other: borrowing Geometry<U>.Dimension, _ transform: (U) -> Unit) {
+    public init<U>(_ other: borrowing Geometry<U>.Dimension, _ transform: (U) -> Scalar) {
         self.init(transform(other.value))
     }
 
     /// Transform the value using the given closure
     @inlinable
     public func map<E: Error, Result>(
-        _ transform: (Unit) throws(E) -> Result
+        _ transform: (Scalar) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Dimension {
         Geometry<Result>.Dimension(try transform(value))
     }

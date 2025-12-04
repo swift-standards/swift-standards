@@ -13,16 +13,16 @@ extension Geometry {
     /// ```
     public struct EdgeInsets {
         /// Top inset
-        public var top: Unit
+        public var top: Scalar
 
         /// Leading (left in LTR) inset
-        public var leading: Unit
+        public var leading: Scalar
 
         /// Bottom inset
-        public var bottom: Unit
+        public var bottom: Scalar
 
         /// Trailing (right in LTR) inset
-        public var trailing: Unit
+        public var trailing: Scalar
 
         /// Create edge insets
         ///
@@ -31,7 +31,7 @@ extension Geometry {
         ///   - leading: Leading inset
         ///   - bottom: Bottom inset
         ///   - trailing: Trailing inset
-        public init(top: consuming Unit, leading: consuming Unit, bottom: consuming Unit, trailing: consuming Unit) {
+        public init(top: consuming Scalar, leading: consuming Scalar, bottom: consuming Scalar, trailing: consuming Scalar) {
             self.top = top
             self.leading = leading
             self.bottom = bottom
@@ -40,13 +40,13 @@ extension Geometry {
     }
 }
 
-extension Geometry.EdgeInsets: Sendable where Unit: Sendable {}
-extension Geometry.EdgeInsets: Equatable where Unit: Equatable {}
-extension Geometry.EdgeInsets: Hashable where Unit: Hashable {}
+extension Geometry.EdgeInsets: Sendable where Scalar: Sendable {}
+extension Geometry.EdgeInsets: Equatable where Scalar: Equatable {}
+extension Geometry.EdgeInsets: Hashable where Scalar: Hashable {}
 
 // MARK: - Codable
 
-extension Geometry.EdgeInsets: Codable where Unit: Codable {}
+extension Geometry.EdgeInsets: Codable where Scalar: Codable {}
 
 // MARK: - Convenience Initializers
 
@@ -54,7 +54,7 @@ extension Geometry.EdgeInsets {
     /// Create edge insets with the same value on all edges
     ///
     /// - Parameter all: The inset value for all edges
-    public init(all: Unit) {
+    public init(all: Scalar) {
         self.top = all
         self.leading = all
         self.bottom = all
@@ -66,7 +66,7 @@ extension Geometry.EdgeInsets {
     /// - Parameters:
     ///   - horizontal: Inset for leading and trailing edges
     ///   - vertical: Inset for top and bottom edges
-    public init(horizontal: Unit, vertical: Unit) {
+    public init(horizontal: Scalar, vertical: Scalar) {
         self.top = vertical
         self.leading = horizontal
         self.bottom = vertical
@@ -76,10 +76,21 @@ extension Geometry.EdgeInsets {
 
 // MARK: - Zero
 
-extension Geometry.EdgeInsets where Unit: AdditiveArithmetic {
+extension Geometry.EdgeInsets where Scalar: AdditiveArithmetic {
     /// Zero insets
+    @inlinable
     public static var zero: Self {
         Self(top: .zero, leading: .zero, bottom: .zero, trailing: .zero)
+    }
+}
+
+// MARK: - Negation
+
+extension Geometry.EdgeInsets where Scalar: SignedNumeric {
+    /// Negate all insets
+    @inlinable
+    public static prefix func - (value: borrowing Self) -> Self {
+        Self(top: -value.top, leading: -value.leading, bottom: -value.bottom, trailing: -value.trailing)
     }
 }
 
@@ -88,7 +99,7 @@ extension Geometry.EdgeInsets where Unit: AdditiveArithmetic {
 extension Geometry.EdgeInsets {
     /// Create edge insets by transforming each value of another edge insets
     @inlinable
-    public init<U>(_ other: borrowing Geometry<U>.EdgeInsets, _ transform: (U) -> Unit) {
+    public init<U>(_ other: borrowing Geometry<U>.EdgeInsets, _ transform: (U) -> Scalar) {
         self.init(
             top: transform(other.top),
             leading: transform(other.leading),
@@ -100,7 +111,7 @@ extension Geometry.EdgeInsets {
     /// Transform each inset value using the given closure
     @inlinable
     public func map<E: Error, Result>(
-        _ transform: (Unit) throws(E) -> Result
+        _ transform: (Scalar) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.EdgeInsets {
         Geometry<Result>.EdgeInsets(
             top: try transform(top),
@@ -113,7 +124,7 @@ extension Geometry.EdgeInsets {
 
 // MARK: - Monoid
 
-extension Geometry.EdgeInsets where Unit: AdditiveArithmetic {
+extension Geometry.EdgeInsets where Scalar: AdditiveArithmetic {
     /// Combine two edge insets by adding their values
     @inlinable
     public static func combined(_ lhs: borrowing Self, _ rhs: borrowing Self) -> Self {
@@ -126,12 +137,12 @@ extension Geometry.EdgeInsets where Unit: AdditiveArithmetic {
     }
 }
 
-extension Geometry.EdgeInsets where Unit: AdditiveArithmetic {
+extension Geometry.EdgeInsets where Scalar: AdditiveArithmetic {
     /// Total horizontal inset (leading + trailing)
     @inlinable
-    public var horizontal: Unit { leading + trailing }
+    public var horizontal: Scalar { leading + trailing }
 
     /// Total vertical inset (top + bottom)
     @inlinable
-    public var vertical: Unit { top + bottom }
+    public var vertical: Scalar { top + bottom }
 }

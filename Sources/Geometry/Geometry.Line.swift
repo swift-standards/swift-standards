@@ -41,17 +41,17 @@ extension Geometry {
     }
 }
 
-extension Geometry.Line: Sendable where Unit: Sendable {}
-extension Geometry.Line: Equatable where Unit: Equatable {}
-extension Geometry.Line: Hashable where Unit: Hashable {}
+extension Geometry.Line: Sendable where Scalar: Sendable {}
+extension Geometry.Line: Equatable where Scalar: Equatable {}
+extension Geometry.Line: Hashable where Scalar: Hashable {}
 
 // MARK: - Codable
 
-extension Geometry.Line: Codable where Unit: Codable {}
+extension Geometry.Line: Codable where Scalar: Codable {}
 
 // MARK: - Factory Methods (AdditiveArithmetic)
 
-extension Geometry.Line where Unit: AdditiveArithmetic {
+extension Geometry.Line where Scalar: AdditiveArithmetic {
     /// Create a line through two points
     ///
     /// - Parameters:
@@ -66,7 +66,7 @@ extension Geometry.Line where Unit: AdditiveArithmetic {
 
 // MARK: - FloatingPoint Operations
 
-extension Geometry.Line where Unit: FloatingPoint {
+extension Geometry.Line where Scalar: FloatingPoint {
     /// A normalized direction vector (unit length)
     @inlinable
     public var normalizedDirection: Geometry.Vector<2> {
@@ -78,7 +78,7 @@ extension Geometry.Line where Unit: FloatingPoint {
     /// - Parameter t: The parameter (0 = base point, 1 = base point + direction)
     /// - Returns: The point at parameter t
     @inlinable
-    public func point(at t: Unit) -> Geometry.Point<2> {
+    public func point(at t: Scalar) -> Geometry.Point<2> {
         Geometry.Point(
             x: point.x + t * direction.dx,
             y: point.y + t * direction.dy
@@ -89,7 +89,7 @@ extension Geometry.Line where Unit: FloatingPoint {
     ///
     /// - Returns: The perpendicular distance, or `nil` if the line has zero-length direction vector.
     @inlinable
-    public func distance(to other: Geometry.Point<2>) -> Unit? {
+    public func distance(to other: Geometry.Point<2>) -> Scalar? {
         let len = direction.length
         guard len != 0 else { return nil }
         let v = Geometry.Vector(dx: other.x - point.x, dy: other.y - point.y)
@@ -132,13 +132,13 @@ extension Geometry.Line {
     }
 }
 
-extension Geometry.Line.Segment: Sendable where Unit: Sendable {}
-extension Geometry.Line.Segment: Equatable where Unit: Equatable {}
-extension Geometry.Line.Segment: Hashable where Unit: Hashable {}
+extension Geometry.Line.Segment: Sendable where Scalar: Sendable {}
+extension Geometry.Line.Segment: Equatable where Scalar: Equatable {}
+extension Geometry.Line.Segment: Hashable where Scalar: Hashable {}
 
 // MARK: - Segment Codable
 
-extension Geometry.Line.Segment: Codable where Unit: Codable {}
+extension Geometry.Line.Segment: Codable where Scalar: Codable {}
 
 // MARK: - Segment Reversed
 
@@ -152,7 +152,7 @@ extension Geometry.Line.Segment {
 
 // MARK: - Segment Vector (AdditiveArithmetic)
 
-extension Geometry.Line.Segment where Unit: AdditiveArithmetic {
+extension Geometry.Line.Segment where Scalar: AdditiveArithmetic {
     /// The vector from start to end
     @inlinable
     public var vector: Geometry.Vector2 {
@@ -168,18 +168,18 @@ extension Geometry.Line.Segment where Unit: AdditiveArithmetic {
 
 // MARK: - Segment FloatingPoint Operations
 
-extension Geometry.Line.Segment where Unit: FloatingPoint {
+extension Geometry.Line.Segment where Scalar: FloatingPoint {
     /// The squared length of the segment
     ///
     /// Use this when comparing lengths to avoid the sqrt computation.
     @inlinable
-    public var lengthSquared: Unit {
+    public var lengthSquared: Scalar {
         vector.lengthSquared
     }
 
     /// The length of the segment
     @inlinable
-    public var length: Unit {
+    public var length: Scalar {
         vector.length
     }
 
@@ -197,7 +197,7 @@ extension Geometry.Line.Segment where Unit: FloatingPoint {
     /// - Parameter t: Parameter from 0 (start) to 1 (end)
     /// - Returns: The interpolated point
     @inlinable
-    public func point(at t: Unit) -> Geometry.Point<2> {
+    public func point(at t: Scalar) -> Geometry.Point<2> {
         let x = start.x + t * (end.x - start.x)
         let y = start.y + t * (end.y - start.y)
         return Geometry.Point(x: x, y: y)
@@ -219,7 +219,7 @@ extension Geometry {
 extension Geometry.Line {
     /// Create a line by transforming the coordinates of another line
     @inlinable
-    public init<U>(_ other: borrowing Geometry<U>.Line, _ transform: (U) -> Unit) {
+    public init<U>(_ other: borrowing Geometry<U>.Line, _ transform: (U) -> Scalar) {
         self.init(
             point: Geometry.Point<2>(other.point, transform),
             direction: Geometry.Vector<2>(other.direction, transform)
@@ -229,7 +229,7 @@ extension Geometry.Line {
     /// Transform coordinates using the given closure
     @inlinable
     public func map<E: Error, Result>(
-        _ transform: (Unit) throws(E) -> Result
+        _ transform: (Scalar) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Line {
         Geometry<Result>.Line(
             point: try point.map(transform),
@@ -243,7 +243,7 @@ extension Geometry.Line {
 extension Geometry.Line.Segment {
     /// Create a segment by transforming the coordinates of another segment
     @inlinable
-    public init<U>(_ other: borrowing Geometry<U>.Line.Segment, _ transform: (U) -> Unit) {
+    public init<U>(_ other: borrowing Geometry<U>.Line.Segment, _ transform: (U) -> Scalar) {
         self.init(
             start: Geometry.Point<2>(other.start, transform),
             end: Geometry.Point<2>(other.end, transform)
@@ -253,7 +253,7 @@ extension Geometry.Line.Segment {
     /// Transform coordinates using the given closure
     @inlinable
     public func map<E: Error, Result>(
-        _ transform: (Unit) throws(E) -> Result
+        _ transform: (Scalar) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Line.Segment {
         Geometry<Result>.Line.Segment(
             start: try start.map(transform),

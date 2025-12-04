@@ -21,21 +21,21 @@ extension Geometry {
     /// ```
     public struct Vector<let N: Int> {
         /// The vector components stored inline
-        public var components: InlineArray<N, Unit>
+        public var components: InlineArray<N, Scalar>
 
         /// Create a vector from an inline array of components
         @inlinable
-        public init(_ components: consuming InlineArray<N, Unit>) {
+        public init(_ components: consuming InlineArray<N, Scalar>) {
             self.components = components
         }
     }
 }
 
-extension Geometry.Vector: Sendable where Unit: Sendable {}
+extension Geometry.Vector: Sendable where Scalar: Sendable {}
 
 // MARK: - Equatable
 
-extension Geometry.Vector: Equatable where Unit: Equatable {
+extension Geometry.Vector: Equatable where Scalar: Equatable {
     @inlinable
     public static func == (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
         for i in 0..<N {
@@ -49,7 +49,7 @@ extension Geometry.Vector: Equatable where Unit: Equatable {
 
 // MARK: - Hashable
 
-extension Geometry.Vector: Hashable where Unit: Hashable {
+extension Geometry.Vector: Hashable where Scalar: Hashable {
     @inlinable
     public func hash(into hasher: inout Hasher) {
         for i in 0..<N {
@@ -73,12 +73,12 @@ extension Geometry {
 
 // MARK: - Codable
 
-extension Geometry.Vector: Codable where Unit: Codable {
+extension Geometry.Vector: Codable where Scalar: Codable {
     public init(from decoder: any Decoder) throws {
         var container = try decoder.unkeyedContainer()
-        var components = InlineArray<N, Unit>(repeating: try container.decode(Unit.self))
+        var components = InlineArray<N, Scalar>(repeating: try container.decode(Scalar.self))
         for i in 1..<N {
-            components[i] = try container.decode(Unit.self)
+            components[i] = try container.decode(Scalar.self)
         }
         self.components = components
     }
@@ -96,7 +96,7 @@ extension Geometry.Vector: Codable where Unit: Codable {
 extension Geometry.Vector {
     /// Access component by index
     @inlinable
-    public subscript(index: Int) -> Unit {
+    public subscript(index: Int) -> Scalar {
         get { components[index] }
         set { components[index] = newValue }
     }
@@ -107,8 +107,8 @@ extension Geometry.Vector {
 extension Geometry.Vector {
     /// Create a vector by transforming each component of another vector
     @inlinable
-    public init<U>(_ other: borrowing Geometry<U>.Vector<N>, _ transform: (U) -> Unit) {
-        var comps = InlineArray<N, Unit>(repeating: transform(other.components[0]))
+    public init<U>(_ other: borrowing Geometry<U>.Vector<N>, _ transform: (U) -> Scalar) {
+        var comps = InlineArray<N, Scalar>(repeating: transform(other.components[0]))
         for i in 1..<N {
             comps[i] = transform(other.components[i])
         }
@@ -118,7 +118,7 @@ extension Geometry.Vector {
     /// Transform each component using the given closure
     @inlinable
     public func map<E: Error, Result>(
-        _ transform: (Unit) throws(E) -> Result
+        _ transform: (Scalar) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Vector<N> {
         var result = InlineArray<N, Result>(repeating: try transform(components[0]))
         for i in 1..<N {
@@ -130,7 +130,7 @@ extension Geometry.Vector {
 
 // MARK: - Zero
 
-extension Geometry.Vector where Unit: AdditiveArithmetic {
+extension Geometry.Vector where Scalar: AdditiveArithmetic {
     /// The zero vector
     @inlinable
     public static var zero: Self {
@@ -140,7 +140,7 @@ extension Geometry.Vector where Unit: AdditiveArithmetic {
 
 // MARK: - AdditiveArithmetic
 
-extension Geometry.Vector: AdditiveArithmetic where Unit: AdditiveArithmetic {
+extension Geometry.Vector: AdditiveArithmetic where Scalar: AdditiveArithmetic {
     /// Add two vectors
     @inlinable
     public static func + (lhs: borrowing Self, rhs: borrowing Self) -> Self {
@@ -164,7 +164,7 @@ extension Geometry.Vector: AdditiveArithmetic where Unit: AdditiveArithmetic {
 
 // MARK: - Negation (SignedNumeric)
 
-extension Geometry.Vector where Unit: SignedNumeric {
+extension Geometry.Vector where Scalar: SignedNumeric {
     /// Negate vector
     @inlinable
     public static prefix func - (value: borrowing Self) -> Self {
@@ -178,10 +178,10 @@ extension Geometry.Vector where Unit: SignedNumeric {
 
 // MARK: - Scalar Operations (FloatingPoint)
 
-extension Geometry.Vector where Unit: FloatingPoint {
+extension Geometry.Vector where Scalar: FloatingPoint {
     /// Scale vector by a scalar
     @inlinable
-    public static func * (lhs: borrowing Self, rhs: Unit) -> Self {
+    public static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
         var result = lhs.components
         for i in 0..<N {
             result[i] = lhs.components[i] * rhs
@@ -191,7 +191,7 @@ extension Geometry.Vector where Unit: FloatingPoint {
 
     /// Scale vector by a scalar
     @inlinable
-    public static func * (lhs: Unit, rhs: borrowing Self) -> Self {
+    public static func * (lhs: Scalar, rhs: borrowing Self) -> Self {
         var result = rhs.components
         for i in 0..<N {
             result[i] = lhs * rhs.components[i]
@@ -201,7 +201,7 @@ extension Geometry.Vector where Unit: FloatingPoint {
 
     /// Divide vector by a scalar
     @inlinable
-    public static func / (lhs: borrowing Self, rhs: Unit) -> Self {
+    public static func / (lhs: borrowing Self, rhs: Scalar) -> Self {
         var result = lhs.components
         for i in 0..<N {
             result[i] = lhs.components[i] / rhs
@@ -212,13 +212,13 @@ extension Geometry.Vector where Unit: FloatingPoint {
 
 // MARK: - Properties (FloatingPoint)
 
-extension Geometry.Vector where Unit: FloatingPoint {
+extension Geometry.Vector where Scalar: FloatingPoint {
     /// The squared length of the vector
     ///
     /// Use this when comparing magnitudes to avoid the sqrt computation.
     @inlinable
-    public var lengthSquared: Unit {
-        var sum = Unit.zero
+    public var lengthSquared: Scalar {
+        var sum = Scalar.zero
         for i in 0..<N {
             sum += components[i] * components[i]
         }
@@ -227,7 +227,7 @@ extension Geometry.Vector where Unit: FloatingPoint {
 
     /// The length (magnitude) of the vector
     @inlinable
-    public var length: Unit {
+    public var length: Scalar {
         lengthSquared.squareRoot()
     }
 
@@ -244,11 +244,11 @@ extension Geometry.Vector where Unit: FloatingPoint {
 
 // MARK: - Operations (FloatingPoint)
 
-extension Geometry.Vector where Unit: FloatingPoint {
+extension Geometry.Vector where Scalar: FloatingPoint {
     /// Dot product of two vectors
     @inlinable
-    public func dot(_ other: borrowing Self) -> Unit {
-        var sum = Unit.zero
+    public func dot(_ other: borrowing Self) -> Scalar {
+        var sum = Scalar.zero
         for i in 0..<N {
             sum += components[i] * other.components[i]
         }
@@ -259,37 +259,43 @@ extension Geometry.Vector where Unit: FloatingPoint {
 // MARK: - 2D Convenience
 
 extension Geometry.Vector where N == 2 {
-    /// The x component (horizontal displacement)
+    /// The x component (horizontal displacement, type-safe)
     @inlinable
-    public var dx: Unit {
-        get { components[0] }
-        set { components[0] = newValue }
+    public var dx: Geometry.X {
+        get { Geometry.X(components[0]) }
+        set { components[0] = newValue.value }
     }
 
-    /// The y component (vertical displacement)
+    /// The y component (vertical displacement, type-safe)
     @inlinable
-    public var dy: Unit {
-        get { components[1] }
-        set { components[1] = newValue }
+    public var dy: Geometry.Y {
+        get { Geometry.Y(components[1]) }
+        set { components[1] = newValue.value }
     }
 
-    /// Create a 2D vector with the given components
+    /// Create a 2D vector with typed components
     @inlinable
-    public init(dx: Unit, dy: Unit) {
+    public init(dx: Geometry.X, dy: Geometry.Y) {
+        self.init([dx.value, dy.value])
+    }
+
+    /// Create a 2D vector from raw scalar values
+    @inlinable
+    public init(dx: Scalar, dy: Scalar) {
         self.init([dx, dy])
     }
 }
 
 // MARK: - 2D Cross Product (SignedNumeric)
 
-extension Geometry.Vector where N == 2, Unit: SignedNumeric {
+extension Geometry.Vector where N == 2, Scalar: SignedNumeric {
     /// 2D cross product (returns scalar z-component)
     ///
     /// This is the signed area of the parallelogram formed by the two vectors.
     /// Positive if `other` is counter-clockwise from `self`.
     @inlinable
-    public func cross(_ other: borrowing Self) -> Unit {
-        dx * other.dy - dy * other.dx
+    public func cross(_ other: borrowing Self) -> Scalar {
+        dx.value * other.dy.value - dy.value * other.dx.value
     }
 }
 
@@ -298,41 +304,41 @@ extension Geometry.Vector where N == 2, Unit: SignedNumeric {
 extension Geometry.Vector where N == 3 {
     /// The x component
     @inlinable
-    public var dx: Unit {
+    public var dx: Scalar {
         get { components[0] }
         set { components[0] = newValue }
     }
 
     /// The y component
     @inlinable
-    public var dy: Unit {
+    public var dy: Scalar {
         get { components[1] }
         set { components[1] = newValue }
     }
 
     /// The z component
     @inlinable
-    public var dz: Unit {
+    public var dz: Scalar {
         get { components[2] }
         set { components[2] = newValue }
     }
 
     /// Create a 3D vector with the given components
     @inlinable
-    public init(dx: Unit, dy: Unit, dz: Unit) {
+    public init(dx: Scalar, dy: Scalar, dz: Scalar) {
         self.init([dx, dy, dz])
     }
 
     /// Create a 3D vector from a 2D vector with z component
     @inlinable
-    public init(_ vector2: Geometry.Vector<2>, dz: Unit) {
-        self.init(dx: vector2.dx, dy: vector2.dy, dz: dz)
+    public init(_ vector2: Geometry.Vector<2>, dz: Scalar) {
+        self.init(dx: vector2.dx.value, dy: vector2.dy.value, dz: dz)
     }
 }
 
 // MARK: - 3D Cross Product (SignedNumeric)
 
-extension Geometry.Vector where N == 3, Unit: SignedNumeric {
+extension Geometry.Vector where N == 3, Scalar: SignedNumeric {
     /// 3D cross product
     @inlinable
     public func cross(_ other: borrowing Self) -> Self {
@@ -349,41 +355,41 @@ extension Geometry.Vector where N == 3, Unit: SignedNumeric {
 extension Geometry.Vector where N == 4 {
     /// The x component
     @inlinable
-    public var dx: Unit {
+    public var dx: Scalar {
         get { components[0] }
         set { components[0] = newValue }
     }
 
     /// The y component
     @inlinable
-    public var dy: Unit {
+    public var dy: Scalar {
         get { components[1] }
         set { components[1] = newValue }
     }
 
     /// The z component
     @inlinable
-    public var dz: Unit {
+    public var dz: Scalar {
         get { components[2] }
         set { components[2] = newValue }
     }
 
     /// The w component
     @inlinable
-    public var dw: Unit {
+    public var dw: Scalar {
         get { components[3] }
         set { components[3] = newValue }
     }
 
     /// Create a 4D vector with the given components
     @inlinable
-    public init(dx: Unit, dy: Unit, dz: Unit, dw: Unit) {
+    public init(dx: Scalar, dy: Scalar, dz: Scalar, dw: Scalar) {
         self.init([dx, dy, dz, dw])
     }
 
     /// Create a 4D vector from a 3D vector with w component
     @inlinable
-    public init(_ vector3: Geometry.Vector<3>, dw: Unit) {
+    public init(_ vector3: Geometry.Vector<3>, dw: Scalar) {
         self.init(dx: vector3.dx, dy: vector3.dy, dz: vector3.dz, dw: dw)
     }
 }
@@ -393,7 +399,7 @@ extension Geometry.Vector where N == 4 {
 extension Geometry.Vector {
     /// Combine two vectors component-wise
     @inlinable
-    public static func zip(_ a: Self, _ b: Self, _ combine: (Unit, Unit) -> Unit) -> Self {
+    public static func zip(_ a: Self, _ b: Self, _ combine: (Scalar, Scalar) -> Scalar) -> Self {
         var result = a.components
         for i in 0..<N {
             result[i] = combine(a.components[i], b.components[i])

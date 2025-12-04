@@ -1,110 +1,72 @@
-// Vector+Trigonometry.swift
-// Angle and rotation operations for 2D vectors.
+// Vector+Real.swift
+// Angle and rotation operations for 2D vectors with Real scalar types.
 
 public import RealModule
 
 // MARK: - Angle from Vector
 
-extension Geometry<Double>.Vector where N == 2 {
+extension Geometry.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// The angle of this vector from the positive x-axis
     @inlinable
-    public var angle: Geometry<Double>.Radian {
-        .atan2(y: dy, x: dx)
+    public var angle: Radian {
+        .atan2(
+            y: Geometry<Double>.Y(Double(dy.value)),
+            x: Geometry<Double>.X(Double(dx.value))
+        )
     }
 }
 
-extension Geometry<Float>.Vector where N == 2 {
-    /// The angle of this vector from the positive x-axis
-    @inlinable
-    public var angle: Geometry<Float>.Radian {
-        .atan2(y: dy, x: dx)
-    }
-}
+// MARK: - Scalar Vector at Angle
 
-// MARK: - Unit Vector at Angle
-
-extension Geometry<Double>.Vector where N == 2 {
+extension Geometry.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// Create a unit vector at the given angle
     @inlinable
-    public static func unit(at angle: Geometry<Double>.Radian) -> Self {
-        Self(dx: angle.cos, dy: angle.sin)
+    public static func unit(at angle: Radian) -> Self {
+        Self(dx: Geometry.X(Scalar(angle.cos)), dy: Geometry.Y(Scalar(angle.sin)))
     }
 
     /// Create a vector with given length at the given angle (polar coordinates)
     @inlinable
-    public static func polar(length: Double, angle: Geometry<Double>.Radian) -> Self {
-        Self(dx: length * angle.cos, dy: length * angle.sin)
-    }
-}
-
-extension Geometry<Float>.Vector where N == 2 {
-    /// Create a unit vector at the given angle
-    @inlinable
-    public static func unit(at angle: Geometry<Float>.Radian) -> Self {
-        Self(dx: angle.cos, dy: angle.sin)
-    }
-
-    /// Create a vector with given length at the given angle (polar coordinates)
-    @inlinable
-    public static func polar(length: Float, angle: Geometry<Float>.Radian) -> Self {
-        Self(dx: length * angle.cos, dy: length * angle.sin)
+    public static func polar(length: Scalar, angle: Radian) -> Self {
+        Self(
+            dx: Geometry.X(length * Scalar(angle.cos)),
+            dy: Geometry.Y(length * Scalar(angle.sin))
+        )
     }
 }
 
 // MARK: - Angle Between Vectors
 
-extension Geometry<Double>.Vector where N == 2 {
+extension Geometry.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// The angle between this vector and another
     @inlinable
-    public func angle(to other: Self) -> Geometry<Double>.Radian {
+    public func angle(to other: Self) -> Radian {
         let dotProduct = self.dot(other)
         let magnitudes = self.length * other.length
         guard magnitudes > 0 else { return .zero }
-        return .acos(dotProduct / magnitudes)
-    }
-}
-
-extension Geometry<Float>.Vector where N == 2 {
-    /// The angle between this vector and another
-    @inlinable
-    public func angle(to other: Self) -> Geometry<Float>.Radian {
-        let dotProduct = self.dot(other)
-        let magnitudes = self.length * other.length
-        guard magnitudes > 0 else { return .zero }
-        return .acos(dotProduct / magnitudes)
+        return .acos(Double(dotProduct / magnitudes))
     }
 }
 
 // MARK: - Rotation
 
-extension Geometry<Double>.Vector where N == 2 {
+extension Geometry.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// Rotate this vector by an angle
     @inlinable
-    public func rotated(by angle: Geometry<Double>.Radian) -> Self {
-        let c = angle.cos
-        let s = angle.sin
-        return Self(dx: dx * c - dy * s, dy: dx * s + dy * c)
+    public func rotated(by angle: Radian) -> Self {
+        let c = Scalar(angle.cos)
+        let s = Scalar(angle.sin)
+        let x = dx.value
+        let y = dy.value
+        return Self(
+            dx: Geometry.X(x * c - y * s),
+            dy: Geometry.Y(x * s + y * c)
+        )
     }
 
     /// Rotate this vector by an angle in degrees
     @inlinable
-    public func rotated(by angle: Geometry<Double>.Degree) -> Self {
-        rotated(by: angle.radians)
-    }
-}
-
-extension Geometry<Float>.Vector where N == 2 {
-    /// Rotate this vector by an angle
-    @inlinable
-    public func rotated(by angle: Geometry<Float>.Radian) -> Self {
-        let c = angle.cos
-        let s = angle.sin
-        return Self(dx: dx * c - dy * s, dy: dx * s + dy * c)
-    }
-
-    /// Rotate this vector by an angle in degrees
-    @inlinable
-    public func rotated(by angle: Geometry<Float>.Degree) -> Self {
+    public func rotated(by angle: Degree) -> Self {
         rotated(by: angle.radians)
     }
 }

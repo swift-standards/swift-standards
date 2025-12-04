@@ -14,27 +14,27 @@ extension Geometry {
     /// ```
     public struct Scalar {
         /// The underlying value
-        public var value: Unit
+        public var value: Scalar
 
         /// Create a scalar with the given value
         @inlinable
-        public init(_ value: consuming Unit) {
+        public init(_ value: consuming Scalar) {
             self.value = value
         }
     }
 }
 
-extension Geometry.Scalar: Sendable where Unit: Sendable {}
-extension Geometry.Scalar: Equatable where Unit: Equatable {}
-extension Geometry.Scalar: Hashable where Unit: Hashable {}
+extension Geometry.Scalar: Sendable where Scalar: Sendable {}
+extension Geometry.Scalar: Equatable where Scalar: Equatable {}
+extension Geometry.Scalar: Hashable where Scalar: Hashable {}
 
 // MARK: - Codable
 
-extension Geometry.Scalar: Codable where Unit: Codable {}
+extension Geometry.Scalar: Codable where Scalar: Codable {}
 
 // MARK: - Zero
 
-extension Geometry.Scalar where Unit: AdditiveArithmetic {
+extension Geometry.Scalar where Scalar: AdditiveArithmetic {
     /// Zero scalar
     @inlinable
     public static var zero: Self { Self(.zero) }
@@ -42,7 +42,7 @@ extension Geometry.Scalar where Unit: AdditiveArithmetic {
 
 // MARK: - AdditiveArithmetic
 
-extension Geometry.Scalar: AdditiveArithmetic where Unit: AdditiveArithmetic {
+extension Geometry.Scalar: AdditiveArithmetic where Scalar: AdditiveArithmetic {
     @inlinable
     public static func + (lhs: borrowing Self, rhs: borrowing Self) -> Self {
         Self(lhs.value + rhs.value)
@@ -56,7 +56,7 @@ extension Geometry.Scalar: AdditiveArithmetic where Unit: AdditiveArithmetic {
 
 // MARK: - Comparable
 
-extension Geometry.Scalar: Comparable where Unit: Comparable {
+extension Geometry.Scalar: Comparable where Scalar: Comparable {
     @inlinable
     public static func < (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
         lhs.value < rhs.value
@@ -65,25 +65,25 @@ extension Geometry.Scalar: Comparable where Unit: Comparable {
 
 // MARK: - ExpressibleByFloatLiteral
 
-extension Geometry.Scalar: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral {
+extension Geometry.Scalar: ExpressibleByFloatLiteral where Scalar: ExpressibleByFloatLiteral {
     @inlinable
-    public init(floatLiteral value: Unit.FloatLiteralType) {
-        self.value = Unit(floatLiteral: value)
+    public init(floatLiteral value: Scalar.FloatLiteralType) {
+        self.value = Scalar(floatLiteral: value)
     }
 }
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Geometry.Scalar: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral {
+extension Geometry.Scalar: ExpressibleByIntegerLiteral where Scalar: ExpressibleByIntegerLiteral {
     @inlinable
-    public init(integerLiteral value: Unit.IntegerLiteralType) {
-        self.value = Unit(integerLiteral: value)
+    public init(integerLiteral value: Scalar.IntegerLiteralType) {
+        self.value = Scalar(integerLiteral: value)
     }
 }
 
 // MARK: - Negation (SignedNumeric)
 
-extension Geometry.Scalar where Unit: SignedNumeric {
+extension Geometry.Scalar where Scalar: SignedNumeric {
     /// Negate
     @inlinable
     public static prefix func - (value: borrowing Self) -> Self {
@@ -96,14 +96,14 @@ extension Geometry.Scalar where Unit: SignedNumeric {
 extension Geometry.Scalar {
     /// Create a scalar by transforming the value of another scalar
     @inlinable
-    public init<U>(_ other: borrowing Geometry<U>.Scalar, _ transform: (U) -> Unit) {
+    public init<U>(_ other: borrowing Geometry<U>.Scalar, _ transform: (U) -> Scalar) {
         self.init(transform(other.value))
     }
 
     /// Transform the value using the given closure
     @inlinable
     public func map<E: Error, Result>(
-        _ transform: (Unit) throws(E) -> Result
+        _ transform: (Scalar) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Scalar {
         Geometry<Result>.Scalar(try transform(value))
     }
@@ -111,22 +111,22 @@ extension Geometry.Scalar {
 
 // MARK: - Multiplication/Division (FloatingPoint)
 
-extension Geometry.Scalar where Unit: FloatingPoint {
+extension Geometry.Scalar where Scalar: FloatingPoint {
     /// Multiply by a scalar
     @inlinable
-    public static func * (lhs: borrowing Self, rhs: Unit) -> Self {
+    public static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
         Self(lhs.value * rhs)
     }
 
     /// Multiply scalar by value
     @inlinable
-    public static func * (lhs: Unit, rhs: borrowing Self) -> Self {
+    public static func * (lhs: Scalar, rhs: borrowing Self) -> Self {
         Self(lhs * rhs.value)
     }
 
     /// Divide by a scalar
     @inlinable
-    public static func / (lhs: borrowing Self, rhs: Unit) -> Self {
+    public static func / (lhs: borrowing Self, rhs: Scalar) -> Self {
         Self(lhs.value / rhs)
     }
 }
