@@ -1,29 +1,7 @@
 // Degree+Trigonometry.swift
-// Trigonometric extensions for Degree using swift-numerics Real protocol.
+// Degree constants.
 
 public import RealModule
-
-// MARK: - Degree → Radian Conversion
-
-extension Geometry.Degree where Unit: Real {
-    /// Convert degrees to radians
-    @inlinable
-    public var radians: Geometry<Unit>.Radian {
-        Geometry<Unit>.Radian(value * Unit.pi / 180)
-    }
-
-    /// Sine of the angle
-    @inlinable
-    public var sin: Unit { radians.sin }
-
-    /// Cosine of the angle
-    @inlinable
-    public var cos: Unit { radians.cos }
-
-    /// Tangent of the angle
-    @inlinable
-    public var tan: Unit { radians.tan }
-}
 
 // MARK: - Constants
 
