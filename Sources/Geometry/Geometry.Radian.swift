@@ -95,4 +95,3 @@ extension Geometry.Radian {
         Geometry<Result>.Radian(try transform(value))
     }
 }
-

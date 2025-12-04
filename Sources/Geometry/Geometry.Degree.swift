@@ -95,4 +95,3 @@ extension Geometry.Degree {
         Geometry<Result>.Degree(try transform(value))
     }
 }
-
