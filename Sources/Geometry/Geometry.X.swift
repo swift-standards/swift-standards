@@ -14,7 +14,7 @@ extension Geometry {
     ///     // Compiler prevents accidentally swapping x and y
     /// }
     /// ```
-    public struct X {
+    public struct X: ~Copyable {
         /// The x coordinate value
         public var value: Unit
 
@@ -26,17 +26,18 @@ extension Geometry {
     }
 }
 
+extension Geometry.X: Copyable where Unit: Copyable {}
 extension Geometry.X: Sendable where Unit: Sendable {}
-extension Geometry.X: Equatable where Unit: Equatable {}
-extension Geometry.X: Hashable where Unit: Hashable {}
+extension Geometry.X: Equatable where Unit: Equatable & Copyable {}
+extension Geometry.X: Hashable where Unit: Hashable & Copyable {}
 
 // MARK: - Codable
 
-extension Geometry.X: Codable where Unit: Codable {}
+extension Geometry.X: Codable where Unit: Codable & Copyable {}
 
 // MARK: - AdditiveArithmetic
 
-extension Geometry.X: AdditiveArithmetic where Unit: AdditiveArithmetic {
+extension Geometry.X: AdditiveArithmetic where Unit: AdditiveArithmetic & Copyable {
     @inlinable
     public static var zero: Self {
         Self(.zero)
@@ -55,7 +56,7 @@ extension Geometry.X: AdditiveArithmetic where Unit: AdditiveArithmetic {
 
 // MARK: - Comparable
 
-extension Geometry.X: Comparable where Unit: Comparable {
+extension Geometry.X: Comparable where Unit: Comparable & Copyable {
     @inlinable
     public static func < (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
         lhs.value < rhs.value
@@ -64,7 +65,7 @@ extension Geometry.X: Comparable where Unit: Comparable {
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Geometry.X: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral {
+extension Geometry.X: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral & Copyable {
     @inlinable
     public init(integerLiteral value: Unit.IntegerLiteralType) {
         self.value = Unit(integerLiteral: value)
@@ -73,7 +74,7 @@ extension Geometry.X: ExpressibleByIntegerLiteral where Unit: ExpressibleByInteg
 
 // MARK: - ExpressibleByFloatLiteral
 
-extension Geometry.X: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral {
+extension Geometry.X: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral & Copyable {
     @inlinable
     public init(floatLiteral value: Unit.FloatLiteralType) {
         self.value = Unit(floatLiteral: value)
@@ -123,7 +124,7 @@ extension Geometry.X {
 
     /// Transform the value using the given closure
     @inlinable
-    public func map<E: Error, Result>(
+    public func map<E: Error, Result: ~Copyable>(
         _ transform: (Unit) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.X {
         Geometry<Result>.X(try transform(value))

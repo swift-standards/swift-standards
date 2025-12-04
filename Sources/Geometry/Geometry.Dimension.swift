@@ -5,7 +5,7 @@ extension Geometry {
     /// A generic linear measurement parameterized by unit type.
     ///
     /// This is the base type for specific dimensional types like `Width`, `Height`, and `Length`.
-    public struct Dimension {
+    public struct Dimension: ~Copyable {
         /// The measurement value
         public var value: Unit
 
@@ -17,17 +17,18 @@ extension Geometry {
     }
 }
 
+extension Geometry.Dimension: Copyable where Unit: Copyable {}
 extension Geometry.Dimension: Sendable where Unit: Sendable {}
-extension Geometry.Dimension: Equatable where Unit: Equatable {}
-extension Geometry.Dimension: Hashable where Unit: Hashable {}
+extension Geometry.Dimension: Equatable where Unit: Equatable & Copyable {}
+extension Geometry.Dimension: Hashable where Unit: Hashable & Copyable {}
 
 // MARK: - Codable
 
-extension Geometry.Dimension: Codable where Unit: Codable {}
+extension Geometry.Dimension: Codable where Unit: Codable & Copyable {}
 
 // MARK: - AdditiveArithmetic
 
-extension Geometry.Dimension: AdditiveArithmetic where Unit: AdditiveArithmetic {
+extension Geometry.Dimension: AdditiveArithmetic where Unit: AdditiveArithmetic & Copyable {
     @inlinable
     public static var zero: Self {
         Self(.zero)
@@ -46,7 +47,7 @@ extension Geometry.Dimension: AdditiveArithmetic where Unit: AdditiveArithmetic 
 
 // MARK: - Comparable
 
-extension Geometry.Dimension: Comparable where Unit: Comparable {
+extension Geometry.Dimension: Comparable where Unit: Comparable & Copyable {
     @inlinable
     public static func < (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
         lhs.value < rhs.value
@@ -55,7 +56,7 @@ extension Geometry.Dimension: Comparable where Unit: Comparable {
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Geometry.Dimension: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral {
+extension Geometry.Dimension: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral & Copyable {
     @inlinable
     public init(integerLiteral value: Unit.IntegerLiteralType) {
         self.value = Unit(integerLiteral: value)
@@ -64,7 +65,7 @@ extension Geometry.Dimension: ExpressibleByIntegerLiteral where Unit: Expressibl
 
 // MARK: - ExpressibleByFloatLiteral
 
-extension Geometry.Dimension: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral {
+extension Geometry.Dimension: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral & Copyable {
     @inlinable
     public init(floatLiteral value: Unit.FloatLiteralType) {
         self.value = Unit(floatLiteral: value)
@@ -114,7 +115,7 @@ extension Geometry.Dimension {
 
     /// Transform the value using the given closure
     @inlinable
-    public func map<E: Error, Result>(
+    public func map<E: Error, Result: ~Copyable>(
         _ transform: (Unit) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Dimension {
         Geometry<Result>.Dimension(try transform(value))

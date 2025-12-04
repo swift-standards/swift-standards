@@ -25,7 +25,7 @@ extension Geometry {
     ///     to: .init(x: 10, y: 10)
     /// )
     /// ```
-    public struct Line {
+    public struct Line: ~Copyable {
         /// A point on the line
         public var point: Point<2>
 
@@ -42,12 +42,12 @@ extension Geometry {
 }
 
 extension Geometry.Line: Sendable where Unit: Sendable {}
-extension Geometry.Line: Equatable where Unit: Equatable {}
-extension Geometry.Line: Hashable where Unit: Hashable {}
+extension Geometry.Line: Equatable where Unit: Equatable & Copyable {}
+extension Geometry.Line: Hashable where Unit: Hashable & Copyable {}
 
 // MARK: - Codable
 
-extension Geometry.Line: Codable where Unit: Codable {}
+extension Geometry.Line: Codable where Unit: Codable & Copyable {}
 
 // MARK: - Factory Methods (AdditiveArithmetic)
 
@@ -116,7 +116,7 @@ extension Geometry.Line {
     /// )
     /// print(segment.length)  // 141.42...
     /// ```
-    public struct Segment {
+    public struct Segment: ~Copyable {
         /// The start point
         public var start: Geometry.Point<2>
 
@@ -132,13 +132,14 @@ extension Geometry.Line {
     }
 }
 
+extension Geometry.Line.Segment: Copyable where Unit: Copyable {}
 extension Geometry.Line.Segment: Sendable where Unit: Sendable {}
-extension Geometry.Line.Segment: Equatable where Unit: Equatable {}
-extension Geometry.Line.Segment: Hashable where Unit: Hashable {}
+extension Geometry.Line.Segment: Equatable where Unit: Equatable & Copyable {}
+extension Geometry.Line.Segment: Hashable where Unit: Hashable & Copyable {}
 
 // MARK: - Segment Codable
 
-extension Geometry.Line.Segment: Codable where Unit: Codable {}
+extension Geometry.Line.Segment: Codable where Unit: Codable & Copyable {}
 
 // MARK: - Segment Reversed
 
@@ -228,7 +229,7 @@ extension Geometry.Line {
 
     /// Transform coordinates using the given closure
     @inlinable
-    public func map<E: Error, Result>(
+    public func map<E: Error, Result: ~Copyable>(
         _ transform: (Unit) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Line {
         Geometry<Result>.Line(
@@ -252,7 +253,7 @@ extension Geometry.Line.Segment {
 
     /// Transform coordinates using the given closure
     @inlinable
-    public func map<E: Error, Result>(
+    public func map<E: Error, Result: ~Copyable>(
         _ transform: (Unit) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Line.Segment {
         Geometry<Result>.Line.Segment(

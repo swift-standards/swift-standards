@@ -30,7 +30,7 @@ extension Geometry {
     /// let point = Geometry<Double>.Point<2>(x: 10, y: 20)
     /// let transformed = transform.apply(to: point)
     /// ```
-    public struct AffineTransform {
+    public struct AffineTransform: ~Copyable {
         /// Scale/rotation component (row 1, col 1)
         public var a: Unit
 
@@ -62,9 +62,10 @@ extension Geometry {
     }
 }
 
+extension Geometry.AffineTransform: Copyable where Unit: Copyable {}
 extension Geometry.AffineTransform: Sendable where Unit: Sendable {}
-extension Geometry.AffineTransform: Equatable where Unit: Equatable {}
-extension Geometry.AffineTransform: Hashable where Unit: Hashable {}
+extension Geometry.AffineTransform: Equatable where Unit: Equatable & Copyable {}
+extension Geometry.AffineTransform: Hashable where Unit: Hashable & Copyable {}
 
 // MARK: - Typealiases
 
@@ -75,7 +76,7 @@ extension Geometry {
 
 // MARK: - Codable
 
-extension Geometry.AffineTransform: Codable where Unit: Codable {}
+extension Geometry.AffineTransform: Codable where Unit: Codable & Copyable {}
 
 // MARK: - Identity
 
@@ -284,7 +285,7 @@ extension Geometry.AffineTransform {
 
     /// Transform components using the given closure
     @inlinable
-    public func map<E: Error, Result>(
+    public func map<E: Error, Result: ~Copyable>(
         _ transform: (Unit) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.AffineTransform {
         Geometry<Result>.AffineTransform(

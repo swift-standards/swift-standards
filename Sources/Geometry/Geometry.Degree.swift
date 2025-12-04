@@ -9,7 +9,7 @@ extension Geometry {
     /// ```swift
     /// let rightAngle: Geometry<Double>.Degree = .init(90)
     /// ```
-    public struct Degree {
+    public struct Degree: ~Copyable {
         /// The value in degrees
         public var value: Unit
 
@@ -21,13 +21,14 @@ extension Geometry {
     }
 }
 
+extension Geometry.Degree: Copyable where Unit: Copyable {}
 extension Geometry.Degree: Sendable where Unit: Sendable {}
-extension Geometry.Degree: Equatable where Unit: Equatable {}
-extension Geometry.Degree: Hashable where Unit: Hashable {}
+extension Geometry.Degree: Equatable where Unit: Equatable & Copyable {}
+extension Geometry.Degree: Hashable where Unit: Hashable & Copyable {}
 
 // MARK: - Codable
 
-extension Geometry.Degree: Codable where Unit: Codable {}
+extension Geometry.Degree: Codable where Unit: Codable & Copyable {}
 
 // MARK: - Zero
 
@@ -39,7 +40,7 @@ extension Geometry.Degree where Unit: AdditiveArithmetic {
 
 // MARK: - AdditiveArithmetic
 
-extension Geometry.Degree: AdditiveArithmetic where Unit: AdditiveArithmetic {
+extension Geometry.Degree: AdditiveArithmetic where Unit: AdditiveArithmetic & Copyable {
     @inlinable
     public static func + (lhs: borrowing Self, rhs: borrowing Self) -> Self {
         Self(lhs.value + rhs.value)
@@ -53,7 +54,7 @@ extension Geometry.Degree: AdditiveArithmetic where Unit: AdditiveArithmetic {
 
 // MARK: - Comparable
 
-extension Geometry.Degree: Comparable where Unit: Comparable {
+extension Geometry.Degree: Comparable where Unit: Comparable & Copyable {
     @inlinable
     public static func < (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
         lhs.value < rhs.value
@@ -62,7 +63,7 @@ extension Geometry.Degree: Comparable where Unit: Comparable {
 
 // MARK: - ExpressibleByFloatLiteral
 
-extension Geometry.Degree: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral {
+extension Geometry.Degree: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral & Copyable {
     @inlinable
     public init(floatLiteral value: Unit.FloatLiteralType) {
         self.value = Unit(floatLiteral: value)
@@ -71,7 +72,7 @@ extension Geometry.Degree: ExpressibleByFloatLiteral where Unit: ExpressibleByFl
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Geometry.Degree: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral {
+extension Geometry.Degree: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral & Copyable {
     @inlinable
     public init(integerLiteral value: Unit.IntegerLiteralType) {
         self.value = Unit(integerLiteral: value)
@@ -89,7 +90,7 @@ extension Geometry.Degree {
 
     /// Transform the value using the given closure
     @inlinable
-    public func map<E: Error, Result>(
+    public func map<E: Error, Result: ~Copyable>(
         _ transform: (Unit) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Degree {
         Geometry<Result>.Degree(try transform(value))

@@ -19,7 +19,7 @@ extension Geometry {
     /// let velocity: Geometry.Vector<2> = .init(dx: 10, dy: 5)
     /// let velocity3D: Geometry.Vector<3, Double> = .init(dx: 1, dy: 2, dz: 3)
     /// ```
-    public struct Vector<let N: Int> {
+    public struct Vector<let N: Int>: ~Copyable {
         /// The vector components stored inline
         public var components: InlineArray<N, Unit>
 
@@ -31,11 +31,12 @@ extension Geometry {
     }
 }
 
+extension Geometry.Vector: Copyable where Unit: Copyable {}
 extension Geometry.Vector: Sendable where Unit: Sendable {}
 
 // MARK: - Equatable
 
-extension Geometry.Vector: Equatable where Unit: Equatable {
+extension Geometry.Vector: Equatable where Unit: Equatable & Copyable {
     @inlinable
     public static func == (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
         for i in 0..<N {
@@ -49,7 +50,7 @@ extension Geometry.Vector: Equatable where Unit: Equatable {
 
 // MARK: - Hashable
 
-extension Geometry.Vector: Hashable where Unit: Hashable {
+extension Geometry.Vector: Hashable where Unit: Hashable & Copyable {
     @inlinable
     public func hash(into hasher: inout Hasher) {
         for i in 0..<N {
@@ -73,7 +74,7 @@ extension Geometry {
 
 // MARK: - Codable
 
-extension Geometry.Vector: Codable where Unit: Codable {
+extension Geometry.Vector: Codable where Unit: Codable & Copyable {
     public init(from decoder: any Decoder) throws {
         var container = try decoder.unkeyedContainer()
         var components = InlineArray<N, Unit>(repeating: try container.decode(Unit.self))
@@ -117,7 +118,7 @@ extension Geometry.Vector {
 
     /// Transform each component using the given closure
     @inlinable
-    public func map<E: Error, Result>(
+    public func map<E: Error, Result: ~Copyable>(
         _ transform: (Unit) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Vector<N> {
         var result = InlineArray<N, Result>(repeating: try transform(components[0]))
@@ -140,7 +141,7 @@ extension Geometry.Vector where Unit: AdditiveArithmetic {
 
 // MARK: - AdditiveArithmetic
 
-extension Geometry.Vector: AdditiveArithmetic where Unit: AdditiveArithmetic {
+extension Geometry.Vector: AdditiveArithmetic where Unit: AdditiveArithmetic & Copyable {
     /// Add two vectors
     @inlinable
     public static func + (lhs: borrowing Self, rhs: borrowing Self) -> Self {
