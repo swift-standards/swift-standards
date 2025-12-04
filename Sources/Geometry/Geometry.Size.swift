@@ -16,7 +16,7 @@ extension Geometry {
     /// let pageSize: Geometry.Size<2> = .init(width: 612, height: 792)
     /// let boxSize: Geometry.Size<3, Double> = .init(width: 10, height: 20, depth: 30)
     /// ```
-    public struct Size<let N: Int> {
+    public struct Size<let N: Int>: ~Copyable {
         /// The size dimensions stored inline
         public var dimensions: InlineArray<N, Unit>
 
@@ -28,11 +28,12 @@ extension Geometry {
     }
 }
 
+extension Geometry.Size: Copyable where Unit: Copyable {}
 extension Geometry.Size: Sendable where Unit: Sendable {}
 
 // MARK: - Equatable
 
-extension Geometry.Size: Equatable where Unit: Equatable {
+extension Geometry.Size: Equatable where Unit: Equatable & Copyable {
     @inlinable
     public static func == (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
         for i in 0..<N {
@@ -46,7 +47,7 @@ extension Geometry.Size: Equatable where Unit: Equatable {
 
 // MARK: - Hashable
 
-extension Geometry.Size: Hashable where Unit: Hashable {
+extension Geometry.Size: Hashable where Unit: Hashable & Copyable {
     @inlinable
     public func hash(into hasher: inout Hasher) {
         for i in 0..<N {
@@ -67,7 +68,7 @@ extension Geometry {
 
 // MARK: - Codable
 
-extension Geometry.Size: Codable where Unit: Codable {
+extension Geometry.Size: Codable where Unit: Codable & Copyable {
     public init(from decoder: any Decoder) throws {
         var container = try decoder.unkeyedContainer()
         var dimensions = InlineArray<N, Unit>(repeating: try container.decode(Unit.self))
@@ -111,7 +112,7 @@ extension Geometry.Size {
 
     /// Transform each dimension using the given closure
     @inlinable
-    public func map<E: Error, Result>(
+    public func map<E: Error, Result: ~Copyable>(
         _ transform: (Unit) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Size<N> {
         var result = InlineArray<N, Result>(repeating: try transform(dimensions[0]))

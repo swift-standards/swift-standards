@@ -12,7 +12,7 @@ extension Geometry {
     /// ```swift
     /// let bounds: Geometry.Rectangle<Double> = .init(x: 0, y: 0, width: 612, height: 792)
     /// ```
-    public struct Rectangle {
+    public struct Rectangle: ~Copyable {
         /// Lower-left x coordinate
         public let llx: Unit
 
@@ -41,13 +41,14 @@ extension Geometry {
     }
 }
 
+extension Geometry.Rectangle: Copyable where Unit: Copyable {}
 extension Geometry.Rectangle: Sendable where Unit: Sendable {}
-extension Geometry.Rectangle: Equatable where Unit: Equatable {}
-extension Geometry.Rectangle: Hashable where Unit: Hashable {}
+extension Geometry.Rectangle: Equatable where Unit: Equatable & Copyable {}
+extension Geometry.Rectangle: Hashable where Unit: Hashable & Copyable {}
 
 // MARK: - Codable
 
-extension Geometry.Rectangle: Codable where Unit: Codable {}
+extension Geometry.Rectangle: Codable where Unit: Codable & Copyable {}
 
 // MARK: - AdditiveArithmetic Convenience
 
@@ -274,7 +275,7 @@ extension Geometry.Rectangle {
 
     /// Transform each coordinate using the given closure
     @inlinable
-    public func map<E: Error, Result>(
+    public func map<E: Error, Result: ~Copyable>(
         _ transform: (Unit) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Rectangle {
         Geometry<Result>.Rectangle(

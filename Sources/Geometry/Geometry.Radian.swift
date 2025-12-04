@@ -9,7 +9,7 @@ extension Geometry {
     /// ```swift
     /// let rightAngle: Geometry<Double>.Radian = .init(1.5707963267948966)
     /// ```
-    public struct Radian {
+    public struct Radian: ~Copyable {
         /// The value in radians
         public var value: Unit
 
@@ -21,13 +21,14 @@ extension Geometry {
     }
 }
 
+extension Geometry.Radian: Copyable where Unit: Copyable {}
 extension Geometry.Radian: Sendable where Unit: Sendable {}
-extension Geometry.Radian: Equatable where Unit: Equatable {}
-extension Geometry.Radian: Hashable where Unit: Hashable {}
+extension Geometry.Radian: Equatable where Unit: Equatable & Copyable {}
+extension Geometry.Radian: Hashable where Unit: Hashable & Copyable {}
 
 // MARK: - Codable
 
-extension Geometry.Radian: Codable where Unit: Codable {}
+extension Geometry.Radian: Codable where Unit: Codable & Copyable {}
 
 // MARK: - Zero
 
@@ -39,7 +40,7 @@ extension Geometry.Radian where Unit: AdditiveArithmetic {
 
 // MARK: - AdditiveArithmetic
 
-extension Geometry.Radian: AdditiveArithmetic where Unit: AdditiveArithmetic {
+extension Geometry.Radian: AdditiveArithmetic where Unit: AdditiveArithmetic & Copyable {
     @inlinable
     public static func + (lhs: borrowing Self, rhs: borrowing Self) -> Self {
         Self(lhs.value + rhs.value)
@@ -53,7 +54,7 @@ extension Geometry.Radian: AdditiveArithmetic where Unit: AdditiveArithmetic {
 
 // MARK: - Comparable
 
-extension Geometry.Radian: Comparable where Unit: Comparable {
+extension Geometry.Radian: Comparable where Unit: Comparable & Copyable {
     @inlinable
     public static func < (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
         lhs.value < rhs.value
@@ -62,7 +63,7 @@ extension Geometry.Radian: Comparable where Unit: Comparable {
 
 // MARK: - ExpressibleByFloatLiteral
 
-extension Geometry.Radian: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral {
+extension Geometry.Radian: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral & Copyable {
     @inlinable
     public init(floatLiteral value: Unit.FloatLiteralType) {
         self.value = Unit(floatLiteral: value)
@@ -71,7 +72,7 @@ extension Geometry.Radian: ExpressibleByFloatLiteral where Unit: ExpressibleByFl
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Geometry.Radian: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral {
+extension Geometry.Radian: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral & Copyable {
     @inlinable
     public init(integerLiteral value: Unit.IntegerLiteralType) {
         self.value = Unit(integerLiteral: value)
@@ -89,7 +90,7 @@ extension Geometry.Radian {
 
     /// Transform the value using the given closure
     @inlinable
-    public func map<E: Error, Result>(
+    public func map<E: Error, Result: ~Copyable>(
         _ transform: (Unit) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Radian {
         Geometry<Result>.Radian(try transform(value))

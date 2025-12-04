@@ -11,7 +11,7 @@ extension Geometry {
     ///     top: 72, leading: 72, bottom: 72, trailing: 72
     /// )
     /// ```
-    public struct EdgeInsets {
+    public struct EdgeInsets: ~Copyable {
         /// Top inset
         public var top: Unit
 
@@ -40,13 +40,14 @@ extension Geometry {
     }
 }
 
+extension Geometry.EdgeInsets: Copyable where Unit: Copyable {}
 extension Geometry.EdgeInsets: Sendable where Unit: Sendable {}
-extension Geometry.EdgeInsets: Equatable where Unit: Equatable {}
-extension Geometry.EdgeInsets: Hashable where Unit: Hashable {}
+extension Geometry.EdgeInsets: Equatable where Unit: Equatable & Copyable {}
+extension Geometry.EdgeInsets: Hashable where Unit: Hashable & Copyable {}
 
 // MARK: - Codable
 
-extension Geometry.EdgeInsets: Codable where Unit: Codable {}
+extension Geometry.EdgeInsets: Codable where Unit: Codable & Copyable {}
 
 // MARK: - Convenience Initializers
 
@@ -99,7 +100,7 @@ extension Geometry.EdgeInsets {
 
     /// Transform each inset value using the given closure
     @inlinable
-    public func map<E: Error, Result>(
+    public func map<E: Error, Result: ~Copyable>(
         _ transform: (Unit) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.EdgeInsets {
         Geometry<Result>.EdgeInsets(

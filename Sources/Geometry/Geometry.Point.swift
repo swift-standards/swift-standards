@@ -19,7 +19,7 @@ extension Geometry {
     /// let position = Geometry.Point(x: 72.0, y: 144.0)
     /// let position3D = Geometry.Point(x: 1.0, y: 2.0, z: 3.0)
     /// ```
-    public struct Point<let N: Int> {
+    public struct Point<let N: Int>: ~Copyable {
         /// The point coordinates stored inline
         public var coordinates: InlineArray<N, Unit>
 
@@ -31,11 +31,12 @@ extension Geometry {
     }
 }
 
+extension Geometry.Point: Copyable where Unit: Copyable {}
 extension Geometry.Point: Sendable where Unit: Sendable {}
 
 // MARK: - Equatable
 
-extension Geometry.Point: Equatable where Unit: Equatable {
+extension Geometry.Point: Equatable where Unit: Equatable & Copyable {
     @inlinable
     public static func == (lhs: borrowing Self, rhs: borrowing Self) -> Bool {
         for i in 0..<N {
@@ -49,7 +50,7 @@ extension Geometry.Point: Equatable where Unit: Equatable {
 
 // MARK: - Hashable
 
-extension Geometry.Point: Hashable where Unit: Hashable {
+extension Geometry.Point: Hashable where Unit: Hashable & Copyable {
     @inlinable
     public func hash(into hasher: inout Hasher) {
         for i in 0..<N {
@@ -73,7 +74,7 @@ extension Geometry {
 
 // MARK: - Codable
 
-extension Geometry.Point: Codable where Unit: Codable {
+extension Geometry.Point: Codable where Unit: Codable & Copyable {
     public init(from decoder: any Decoder) throws {
         var container = try decoder.unkeyedContainer()
         var coordinates = InlineArray<N, Unit>(repeating: try container.decode(Unit.self))
@@ -117,7 +118,7 @@ extension Geometry.Point {
 
     /// Transform each coordinate using the given closure
     @inlinable
-    public func map<E: Error, Result>(
+    public func map<E: Error, Result: ~Copyable>(
         _ transform: (Unit) throws(E) -> Result
     ) throws(E) -> Geometry<Result>.Point<N> {
         var result = InlineArray<N, Result>(repeating: try transform(coordinates[0]))
