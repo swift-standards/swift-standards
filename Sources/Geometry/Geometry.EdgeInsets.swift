@@ -125,3 +125,13 @@ extension Geometry.EdgeInsets where Unit: AdditiveArithmetic {
         )
     }
 }
+
+extension Geometry.EdgeInsets where Unit: AdditiveArithmetic {
+    /// Total horizontal inset (leading + trailing)
+    @inlinable
+    public var horizontal: Unit { leading + trailing }
+
+    /// Total vertical inset (top + bottom)
+    @inlinable
+    public var vertical: Unit { top + bottom }
+}
