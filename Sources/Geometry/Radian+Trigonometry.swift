@@ -58,19 +58,19 @@ extension Geometry.Radian where Unit: Real {
     @inlinable
     public static var twoPi: Self { Self(2 * Unit.pi) }
 
-    /// π/2 radians (90°)
+    /// π divided by the given divisor
+    ///
+    /// - Parameter divisor: The value to divide π by
+    /// - Returns: π/divisor radians
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let rightAngle: Geometry<Double>.Radian = .pi(over: 2)  // π/2
+    /// let halfRight: Geometry<Double>.Radian = .pi(over: 4)   // π/4
+    /// ```
     @inlinable
-    public static var piOver2: Self { Self(Unit.pi / 2) }
-
-    /// π/4 radians (45°)
-    @inlinable
-    public static var piOver4: Self { Self(Unit.pi / 4) }
-
-    /// π/3 radians (60°)
-    @inlinable
-    public static var piOver3: Self { Self(Unit.pi / 3) }
-
-    /// π/6 radians (30°)
-    @inlinable
-    public static var piOver6: Self { Self(Unit.pi / 6) }
+    public static func pi(over divisor: Unit) -> Self {
+        Self(Unit.pi / divisor)
+    }
 }
