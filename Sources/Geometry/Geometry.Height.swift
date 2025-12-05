@@ -138,6 +138,22 @@ extension Geometry.Height where Scalar: FloatingPoint {
     }
 }
 
+// MARK: - Strideable
+
+extension Geometry.Height: Strideable where Scalar: Strideable {
+    public typealias Stride = Scalar.Stride
+
+    @inlinable
+    public func distance(to other: Self) -> Stride {
+        value.distance(to: other.value)
+    }
+
+    @inlinable
+    public func advanced(by n: Stride) -> Self {
+        Self(value.advanced(by: n))
+    }
+}
+
 // MARK: - Functorial Map
 
 extension Geometry.Height {
@@ -149,9 +165,9 @@ extension Geometry.Height {
 
     /// Transform the value using the given closure
     @inlinable
-    public func map<E: Error, Result>(
-        _ transform: (Scalar) throws(E) -> Result
-    ) throws(E) -> Geometry<Result>.Height {
-        Geometry<Result>.Height(try transform(value))
+    public func map<Result>(
+        _ transform: (Scalar) -> Result
+    ) -> Geometry<Result>.Height {
+        Geometry<Result>.Height(transform(value))
     }
 }

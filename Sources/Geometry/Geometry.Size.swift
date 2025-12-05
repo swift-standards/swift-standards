@@ -111,24 +111,92 @@ extension Geometry.Size {
 
     /// Transform each dimension using the given closure
     @inlinable
-    public func map<E: Error, Result>(
-        _ transform: (Scalar) throws(E) -> Result
-    ) throws(E) -> Geometry<Result>.Size<N> {
-        var result = InlineArray<N, Result>(repeating: try transform(dimensions[0]))
+    public func map<Result>(
+        _ transform: (Scalar) -> Result
+    ) -> Geometry<Result>.Size<N> {
+        var result = InlineArray<N, Result>(repeating: transform(dimensions[0]))
         for i in 1..<N {
-            result[i] = try transform(dimensions[i])
+            result[i] = transform(dimensions[i])
         }
         return Geometry<Result>.Size<N>(result)
     }
 }
 
-// MARK: - Zero
+// MARK: - AdditiveArithmetic
 
-extension Geometry.Size where Scalar: AdditiveArithmetic {
+extension Geometry.Size: AdditiveArithmetic where Scalar: AdditiveArithmetic {
     /// Zero size (all dimensions zero)
     @inlinable
     public static var zero: Self {
         Self(InlineArray(repeating: .zero))
+    }
+
+    /// Add two sizes component-wise
+    @inlinable
+    public static func + (lhs: borrowing Self, rhs: borrowing Self) -> Self {
+        var result = InlineArray<N, Scalar>(repeating: .zero)
+        for i in 0..<N {
+            result[i] = lhs.dimensions[i] + rhs.dimensions[i]
+        }
+        return Self(result)
+    }
+
+    /// Subtract two sizes component-wise
+    @inlinable
+    public static func - (lhs: borrowing Self, rhs: borrowing Self) -> Self {
+        var result = InlineArray<N, Scalar>(repeating: .zero)
+        for i in 0..<N {
+            result[i] = lhs.dimensions[i] - rhs.dimensions[i]
+        }
+        return Self(result)
+    }
+}
+
+// MARK: - Negation
+
+extension Geometry.Size where Scalar: SignedNumeric {
+    /// Negate all dimensions
+    @inlinable
+    public static prefix func - (value: borrowing Self) -> Self {
+        var result = InlineArray<N, Scalar>(repeating: .zero)
+        for i in 0..<N {
+            result[i] = -value.dimensions[i]
+        }
+        return Self(result)
+    }
+}
+
+// MARK: - Scalar Multiplication
+
+extension Geometry.Size where Scalar: Numeric {
+    /// Multiply all dimensions by a scalar
+    @inlinable
+    public static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
+        var result = lhs.dimensions
+        for i in 0..<N {
+            result[i] = lhs.dimensions[i] * rhs
+        }
+        return Self(result)
+    }
+
+    /// Multiply scalar by size
+    @inlinable
+    public static func * (lhs: Scalar, rhs: borrowing Self) -> Self {
+        rhs * lhs
+    }
+}
+
+// MARK: - Scalar Division
+
+extension Geometry.Size where Scalar: FloatingPoint {
+    /// Divide all dimensions by a scalar
+    @inlinable
+    public static func / (lhs: borrowing Self, rhs: Scalar) -> Self {
+        var result = lhs.dimensions
+        for i in 0..<N {
+            result[i] = lhs.dimensions[i] / rhs
+        }
+        return Self(result)
     }
 }
 

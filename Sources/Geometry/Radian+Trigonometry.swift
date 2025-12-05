@@ -79,6 +79,20 @@ extension Radian {
     }
 }
 
+// MARK: - Normalization
+
+extension Radian {
+    /// The angle normalized to [0, 2π)
+    @inlinable
+    public var normalized: Self {
+        var result = value.truncatingRemainder(dividingBy: 2 * Double.pi)
+        if result < 0 {
+            result += 2 * Double.pi
+        }
+        return Self(result)
+    }
+}
+
 // MARK: - Conversion
 
 extension Radian {

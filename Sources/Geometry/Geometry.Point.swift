@@ -117,12 +117,12 @@ extension Geometry.Point {
 
     /// Transform each coordinate using the given closure
     @inlinable
-    public func map<E: Error, Result>(
-        _ transform: (Scalar) throws(E) -> Result
-    ) throws(E) -> Geometry<Result>.Point<N> {
-        var result = InlineArray<N, Result>(repeating: try transform(coordinates[0]))
+    public func map<Result>(
+        _ transform: (Scalar) -> Result
+    ) -> Geometry<Result>.Point<N> {
+        var result = InlineArray<N, Result>(repeating: transform(coordinates[0]))
         for i in 1..<N {
-            result[i] = try transform(coordinates[i])
+            result[i] = transform(coordinates[i])
         }
         return Geometry<Result>.Point<N>(result)
     }
@@ -344,6 +344,56 @@ extension Geometry.Point where N == 2, Scalar: FloatingPoint {
     @inlinable
     public func distance(to other: Self) -> Scalar {
         distanceSquared(to: other).squareRoot()
+    }
+
+    /// Project this point onto a line.
+    ///
+    /// - Parameter line: The line to project onto
+    /// - Returns: The closest point on the line, or `nil` if line has zero-length direction
+    @inlinable
+    public func projection(onto line: Geometry.Line) -> Self? {
+        line.projection(of: self)
+    }
+
+    /// Reflect this point across a line.
+    ///
+    /// - Parameter line: The line to reflect across
+    /// - Returns: The reflected point, or `nil` if line has zero-length direction
+    @inlinable
+    public func reflection(across line: Geometry.Line) -> Self? {
+        line.reflection(of: self)
+    }
+
+    /// The perpendicular distance from this point to a line.
+    ///
+    /// - Parameter line: The line to measure distance to
+    /// - Returns: The perpendicular distance, or `nil` if line has zero-length direction
+    @inlinable
+    public func distance(to line: Geometry.Line) -> Scalar? {
+        line.distance(to: self)
+    }
+
+    /// Linear interpolation between two points.
+    ///
+    /// - Parameters:
+    ///   - other: The target point
+    ///   - t: The interpolation parameter (0 = self, 1 = other)
+    /// - Returns: The interpolated point
+    @inlinable
+    public func lerp(to other: Self, t: Scalar) -> Self {
+        Self(
+            x: Geometry.X(x.value + t * (other.x.value - x.value)),
+            y: Geometry.Y(y.value + t * (other.y.value - y.value))
+        )
+    }
+
+    /// The midpoint between two points.
+    @inlinable
+    public func midpoint(to other: Self) -> Self {
+        Self(
+            x: Geometry.X((x.value + other.x.value) / 2),
+            y: Geometry.Y((y.value + other.y.value) / 2)
+        )
     }
 }
 

@@ -102,10 +102,10 @@ extension Geometry.Scalar {
 
     /// Transform the value using the given closure
     @inlinable
-    public func map<E: Error, Result>(
-        _ transform: (Scalar) throws(E) -> Result
-    ) throws(E) -> Geometry<Result>.Scalar {
-        Geometry<Result>.Scalar(try transform(value))
+    public func map<Result>(
+        _ transform: (Scalar) -> Result
+    ) -> Geometry<Result>.Scalar {
+        Geometry<Result>.Scalar(transform(value))
     }
 }
 

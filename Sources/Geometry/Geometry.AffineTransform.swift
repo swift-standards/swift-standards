@@ -91,17 +91,17 @@ extension Geometry.AffineTransform where Scalar == Double {
         self.init(linear: rotation.matrix, translation: .zero)
     }
 
-    /// Create from a scale
-    @inlinable
-    public init(_ scale: Scale<2>) {
-        self.init(linear: scale.linear, translation: .zero)
-    }
-
-    /// Create from a shear
-    @inlinable
-    public init(_ shear: Shear<2>) {
-        self.init(linear: shear.linear, translation: .zero)
-    }
+//    /// Create from a scale
+//    @inlinable
+//    public init(_ scale: Scale<2>) {
+//        self.init(linear: scale.linear, translation: .zero)
+//    }
+//
+//    /// Create from a shear
+//    @inlinable
+//    public init(_ shear: Shear<2>) {
+//        self.init(linear: shear.linear, translation: .zero)
+//    }
 }
 
 // MARK: - Component Access (Standard Notation)

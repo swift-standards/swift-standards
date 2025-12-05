@@ -74,13 +74,35 @@ extension Geometry.EdgeInsets {
     }
 }
 
-// MARK: - Zero
+// MARK: - AdditiveArithmetic
 
-extension Geometry.EdgeInsets where Scalar: AdditiveArithmetic {
+extension Geometry.EdgeInsets: AdditiveArithmetic where Scalar: AdditiveArithmetic {
     /// Zero insets
     @inlinable
     public static var zero: Self {
         Self(top: .zero, leading: .zero, bottom: .zero, trailing: .zero)
+    }
+
+    /// Add two edge insets component-wise
+    @inlinable
+    public static func + (lhs: borrowing Self, rhs: borrowing Self) -> Self {
+        Self(
+            top: lhs.top + rhs.top,
+            leading: lhs.leading + rhs.leading,
+            bottom: lhs.bottom + rhs.bottom,
+            trailing: lhs.trailing + rhs.trailing
+        )
+    }
+
+    /// Subtract two edge insets component-wise
+    @inlinable
+    public static func - (lhs: borrowing Self, rhs: borrowing Self) -> Self {
+        Self(
+            top: lhs.top - rhs.top,
+            leading: lhs.leading - rhs.leading,
+            bottom: lhs.bottom - rhs.bottom,
+            trailing: lhs.trailing - rhs.trailing
+        )
     }
 }
 
@@ -110,14 +132,14 @@ extension Geometry.EdgeInsets {
 
     /// Transform each inset value using the given closure
     @inlinable
-    public func map<E: Error, Result>(
-        _ transform: (Scalar) throws(E) -> Result
-    ) throws(E) -> Geometry<Result>.EdgeInsets {
+    public func map<Result>(
+        _ transform: (Scalar) -> Result
+    ) -> Geometry<Result>.EdgeInsets {
         Geometry<Result>.EdgeInsets(
-            top: try transform(top),
-            leading: try transform(leading),
-            bottom: try transform(bottom),
-            trailing: try transform(trailing)
+            top: transform(top),
+            leading: transform(leading),
+            bottom: transform(bottom),
+            trailing: transform(trailing)
         )
     }
 }

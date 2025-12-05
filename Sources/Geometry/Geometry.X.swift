@@ -170,10 +170,10 @@ extension Geometry.X {
 
     /// Transform the value using the given closure
     @inlinable
-    public func map<E: Error, Result>(
-        _ transform: (Scalar) throws(E) -> Result
-    ) throws(E) -> Geometry<Result>.X {
-        Geometry<Result>.X(try transform(value))
+    public func map<Result>(
+        _ transform: (Scalar) -> Result
+    ) -> Geometry<Result>.X {
+        Geometry<Result>.X(transform(value))
     }
 }
 
@@ -194,5 +194,21 @@ extension Geometry.X: ExpressibleByFloatLiteral where Scalar: ExpressibleByFloat
     @inlinable
     public init(floatLiteral value: Scalar.FloatLiteralType) {
         self.init(Scalar(floatLiteral: value))
+    }
+}
+
+// MARK: - Strideable
+
+extension Geometry.X: Strideable where Scalar: Strideable {
+    public typealias Stride = Scalar.Stride
+
+    @inlinable
+    public func distance(to other: Self) -> Stride {
+        value.distance(to: other.value)
+    }
+
+    @inlinable
+    public func advanced(by n: Stride) -> Self {
+        Self(value.advanced(by: n))
     }
 }

@@ -38,13 +38,25 @@ extension Geometry.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
 // MARK: - Angle Between Vectors
 
 extension Geometry.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
-    /// The angle between this vector and another
+    /// The angle between this vector and another (always positive).
+    ///
+    /// Returns the unsigned angle in [0, π].
     @inlinable
     public func angle(to other: Self) -> Radian {
         let dotProduct = self.dot(other)
         let magnitudes = self.length * other.length
         guard magnitudes > 0 else { return .zero }
         return .acos(Double(dotProduct / magnitudes))
+    }
+
+    /// The signed angle from this vector to another.
+    ///
+    /// Returns the angle in (-π, π], positive for counter-clockwise rotation.
+    @inlinable
+    public func signedAngle(to other: Self) -> Radian {
+        let cross = self.cross(other)
+        let dot = self.dot(other)
+        return .atan2(y: Geometry<Double>.Y(Double(cross)), x: Geometry<Double>.X(Double(dot)))
     }
 }
 

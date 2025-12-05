@@ -355,14 +355,14 @@ extension Geometry.Rectangle {
 
     /// Transform each coordinate using the given closure
     @inlinable
-    public func map<E: Error, Result>(
-        _ transform: (Scalar) throws(E) -> Result
-    ) throws(E) -> Geometry<Result>.Rectangle {
+    public func map<Result>(
+        _ transform: (Scalar) -> Result
+    ) -> Geometry<Result>.Rectangle {
         Geometry<Result>.Rectangle(
-            llx: try .init(transform(llx.value)),
-            lly: try .init(transform(lly.value)),
-            urx: try .init(transform(urx.value)),
-            ury: try .init(transform(ury.value))
+            llx: .init(transform(llx.value)),
+            lly: .init(transform(lly.value)),
+            urx: .init(transform(urx.value)),
+            ury: .init(transform(ury.value))
         )
     }
 }

@@ -117,12 +117,12 @@ extension Geometry.Vector {
 
     /// Transform each component using the given closure
     @inlinable
-    public func map<E: Error, Result>(
-        _ transform: (Scalar) throws(E) -> Result
-    ) throws(E) -> Geometry<Result>.Vector<N> {
-        var result = InlineArray<N, Result>(repeating: try transform(components[0]))
+    public func map<Result>(
+        _ transform: (Scalar) -> Result
+    ) -> Geometry<Result>.Vector<N> {
+        var result = InlineArray<N, Result>(repeating: transform(components[0]))
         for i in 1..<N {
-            result[i] = try transform(components[i])
+            result[i] = transform(components[i])
         }
         return Geometry<Result>.Vector<N>(result)
     }
@@ -253,6 +253,41 @@ extension Geometry.Vector where Scalar: FloatingPoint {
             sum += components[i] * other.components[i]
         }
         return sum
+    }
+
+    /// Project this vector onto another vector.
+    ///
+    /// Returns the component of `self` that lies in the direction of `other`.
+    ///
+    /// - Parameter other: The vector to project onto
+    /// - Returns: The projection of `self` onto `other`, or zero if `other` has zero length
+    @inlinable
+    public func projection(onto other: borrowing Self) -> Self {
+        let otherLenSq = other.lengthSquared
+        guard otherLenSq > 0 else { return .zero }
+        let scale = dot(other) / otherLenSq
+        return other * scale
+    }
+
+    /// The rejection (orthogonal component) of this vector from another vector.
+    ///
+    /// Returns the component of `self` that is perpendicular to `other`.
+    /// `self = projection(onto: other) + rejection(from: other)`
+    ///
+    /// - Parameter other: The vector to reject from
+    /// - Returns: The component of `self` perpendicular to `other`
+    @inlinable
+    public func rejection(from other: borrowing Self) -> Self {
+        self - projection(onto: other)
+    }
+
+    /// The distance between the tips of two vectors (when both start at origin).
+    ///
+    /// - Parameter other: Another vector
+    /// - Returns: The distance between the endpoints
+    @inlinable
+    public func distance(to other: borrowing Self) -> Scalar {
+        (self - other).length
     }
 }
 

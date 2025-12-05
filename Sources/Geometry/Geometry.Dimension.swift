@@ -103,6 +103,22 @@ extension Geometry.Dimension where Scalar: FloatingPoint {
     }
 }
 
+// MARK: - Strideable
+
+extension Geometry.Dimension: Strideable where Scalar: Strideable {
+    public typealias Stride = Scalar.Stride
+
+    @inlinable
+    public func distance(to other: Self) -> Stride {
+        value.distance(to: other.value)
+    }
+
+    @inlinable
+    public func advanced(by n: Stride) -> Self {
+        Self(value.advanced(by: n))
+    }
+}
+
 // MARK: - Functorial Map
 
 extension Geometry.Dimension {
