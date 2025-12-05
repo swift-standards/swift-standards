@@ -318,6 +318,67 @@ struct BezierTests {
         #expect(reversed.endPoint?.x == 0)
     }
 
+    // MARK: - Ellipse Approximation
+
+    @Test("Approximating unit circle")
+    func approximatingCircle() {
+        let circle: Geometry<Double>.Circle = .unit
+        let beziers = Geometry<Double>.Bezier.approximating(circle)
+        #expect(beziers.count == 4)
+
+        // Each bezier should be cubic
+        for b in beziers {
+            #expect(b.degree == 3)
+        }
+
+        // First bezier starts at (1, 0)
+        #expect(abs(beziers[0].startPoint!.x.value - 1) < 1e-10)
+        #expect(abs(beziers[0].startPoint!.y.value) < 1e-10)
+
+        // Last bezier ends at (1, 0) closing the circle
+        #expect(abs(beziers[3].endPoint!.x.value - 1) < 1e-10)
+        #expect(abs(beziers[3].endPoint!.y.value) < 1e-10)
+    }
+
+    @Test("Approximating ellipse")
+    func approximatingEllipse() {
+        let ellipse: Geometry<Double>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
+        let beziers = Geometry<Double>.Bezier.approximating(ellipse)
+        #expect(beziers.count == 4)
+
+        // First bezier starts at (10, 0) - rightmost point
+        #expect(abs(beziers[0].startPoint!.x.value - 10) < 1e-10)
+        #expect(abs(beziers[0].startPoint!.y.value) < 1e-10)
+
+        // Second bezier starts at (0, 5) - topmost point
+        #expect(abs(beziers[1].startPoint!.x.value) < 1e-10)
+        #expect(abs(beziers[1].startPoint!.y.value - 5) < 1e-10)
+    }
+
+    @Test("Bezier approximation is continuous")
+    func approximationContinuous() {
+        let ellipse: Geometry<Double>.Ellipse = .init(
+            center: .init(x: 5, y: 5),
+            semiMajor: 10,
+            semiMinor: 5
+        )
+        let beziers = Geometry<Double>.Bezier.approximating(ellipse)
+
+        // Each bezier should connect to the next
+        for i in 0..<3 {
+            let end = beziers[i].endPoint!
+            let start = beziers[i + 1].startPoint!
+            #expect(abs(end.x.value - start.x.value) < 1e-10)
+            #expect(abs(end.y.value - start.y.value) < 1e-10)
+        }
+
+        // Last connects to first
+        let lastEnd = beziers[3].endPoint!
+        let firstStart = beziers[0].startPoint!
+        #expect(abs(lastEnd.x.value - firstStart.x.value) < 1e-10)
+        #expect(abs(lastEnd.y.value - firstStart.y.value) < 1e-10)
+    }
+
     // MARK: - Functorial Map
 
     @Test("Bezier map")

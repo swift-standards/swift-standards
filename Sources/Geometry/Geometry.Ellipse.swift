@@ -291,13 +291,18 @@ extension Geometry.Ellipse where Scalar: BinaryFloatingPoint {
 // MARK: - Circle Conversion (FloatingPoint)
 
 extension Geometry.Ellipse where Scalar: FloatingPoint {
-    /// Convert to a circle if the ellipse is actually circular.
+    /// Create an ellipse from a circle.
     ///
-    /// - Returns: The equivalent circle, or `nil` if not circular
+    /// The resulting ellipse has equal semi-major and semi-minor axes
+    /// equal to the circle's radius, with zero rotation.
     @inlinable
-    public var asCircle: Geometry.Circle? {
-        guard isCircle else { return nil }
-        return Geometry.Circle(center: center, radius: semiMajor)
+    public init(_ circle: Geometry.Circle) {
+        self.init(
+            center: circle.center,
+            semiMajor: circle.radius,
+            semiMinor: circle.radius,
+            rotation: .zero
+        )
     }
 }
 

@@ -328,6 +328,84 @@ extension Geometry.Bezier where Scalar: FloatingPoint {
     }
 }
 
+// MARK: - Ellipse Approximation (BinaryFloatingPoint)
+
+extension Geometry.Bezier where Scalar: BinaryFloatingPoint {
+    /// Create cubic Bezier curves that approximate an ellipse.
+    ///
+    /// Uses the standard technique of splitting the ellipse into 4 quadrants,
+    /// each approximated by a cubic Bezier curve.
+    ///
+    /// - Parameter ellipse: The ellipse to approximate
+    /// - Returns: Array of 4 cubic Bezier curves approximating the ellipse
+    @inlinable
+    public static func approximating(_ ellipse: Geometry.Ellipse) -> [Self] {
+        // Control point factor for 90° arc approximation
+        // k = (4/3) * tan(π/8) ≈ 0.5522847498
+        let k: Scalar = Scalar(0.5522847498307936)
+
+        let cx: Scalar = ellipse.center.x.value
+        let cy: Scalar = ellipse.center.y.value
+        let a: Scalar = ellipse.semiMajor.value
+        let b: Scalar = ellipse.semiMinor.value
+        let cosR: Scalar = Scalar(ellipse.rotation.cos)
+        let sinR: Scalar = Scalar(ellipse.rotation.sin)
+
+        // Helper to rotate a point around the center
+        func rotated(x: Scalar, y: Scalar) -> Geometry.Point<2> {
+            let rx: Scalar = x * cosR - y * sinR
+            let ry: Scalar = x * sinR + y * cosR
+            return Geometry.Point(
+                x: Geometry.X(cx + rx),
+                y: Geometry.Y(cy + ry)
+            )
+        }
+
+        // Cardinal points on the unrotated ellipse (relative to center)
+        let right = rotated(x: a, y: Scalar(0))
+        let top = rotated(x: Scalar(0), y: b)
+        let left = rotated(x: -a, y: Scalar(0))
+        let bottom = rotated(x: Scalar(0), y: -b)
+
+        // Control point offsets
+        let ka: Scalar = k * a
+        let kb: Scalar = k * b
+
+        // Control points for each quadrant
+        // Quadrant 1: right to top
+        let c1_1 = rotated(x: a, y: kb)
+        let c1_2 = rotated(x: ka, y: b)
+
+        // Quadrant 2: top to left
+        let c2_1 = rotated(x: -ka, y: b)
+        let c2_2 = rotated(x: -a, y: kb)
+
+        // Quadrant 3: left to bottom
+        let c3_1 = rotated(x: -a, y: -kb)
+        let c3_2 = rotated(x: -ka, y: -b)
+
+        // Quadrant 4: bottom to right
+        let c4_1 = rotated(x: ka, y: -b)
+        let c4_2 = rotated(x: a, y: -kb)
+
+        return [
+            .cubic(from: right, control1: c1_1, control2: c1_2, to: top),
+            .cubic(from: top, control1: c2_1, control2: c2_2, to: left),
+            .cubic(from: left, control1: c3_1, control2: c3_2, to: bottom),
+            .cubic(from: bottom, control1: c4_1, control2: c4_2, to: right)
+        ]
+    }
+
+    /// Create cubic Bezier curves that approximate a circle.
+    ///
+    /// - Parameter circle: The circle to approximate
+    /// - Returns: Array of 4 cubic Bezier curves approximating the circle
+    @inlinable
+    public static func approximating(_ circle: Geometry.Circle) -> [Self] {
+        approximating(Geometry.Ellipse(circle))
+    }
+}
+
 // MARK: - Functorial Map
 
 extension Geometry.Bezier {

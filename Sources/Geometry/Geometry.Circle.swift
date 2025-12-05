@@ -48,6 +48,29 @@ extension Geometry.Circle {
     }
 }
 
+extension Geometry.Circle where Scalar: FloatingPoint {
+    /// Create a circle from an ellipse, if the ellipse is actually circular.
+    ///
+    /// - Parameter ellipse: The ellipse to convert
+    /// - Returns: A circle if the ellipse has equal semi-axes, `nil` otherwise
+    @inlinable
+    public init?(_ ellipse: Geometry.Ellipse) {
+        let diff: Scalar = ellipse.semiMajor.value - ellipse.semiMinor.value
+        guard abs(diff) < Scalar.ulpOfOne else { return nil }
+        self.init(center: ellipse.center, radius: ellipse.semiMajor)
+    }
+}
+
+// MARK: - Static Properties
+
+extension Geometry.Circle where Scalar: ExpressibleByIntegerLiteral & AdditiveArithmetic {
+    /// A unit circle centered at the origin with radius 1
+    @inlinable
+    public static var unit: Self {
+        Self(center: .zero, radius: 1)
+    }
+}
+
 // MARK: - Properties (FloatingPoint)
 
 extension Geometry.Circle where Scalar: FloatingPoint {
@@ -141,6 +164,21 @@ extension Geometry.Circle where Scalar: BinaryFloatingPoint {
         return Geometry.Point(
             x: Geometry.X(cx + r * c),
             y: Geometry.Y(cy + r * s)
+        )
+    }
+
+    /// Get the tangent vector at the given angle (unit length, perpendicular to radius).
+    ///
+    /// - Parameter angle: The angle in radians
+    /// - Returns: The unit tangent vector (counter-clockwise direction)
+    @inlinable
+    public func tangent(at angle: Radian) -> Geometry.Vector<2> {
+        // Tangent is perpendicular to radius, pointing counter-clockwise
+        let c: Scalar = Scalar(angle.cos)
+        let s: Scalar = Scalar(angle.sin)
+        return Geometry.Vector(
+            dx: Geometry.X(-s),
+            dy: Geometry.Y(c)
         )
     }
 

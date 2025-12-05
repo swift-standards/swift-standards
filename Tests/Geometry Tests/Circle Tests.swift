@@ -28,6 +28,31 @@ struct CircleTests {
         #expect(circle.radius == 10)
     }
 
+    @Test("Unit circle")
+    func unitCircle() {
+        let circle: Geometry<Double>.Circle = .unit
+        #expect(circle.center.x == 0)
+        #expect(circle.center.y == 0)
+        #expect(circle.radius == 1)
+    }
+
+    @Test("Circle from circular ellipse")
+    func circleFromEllipse() {
+        let ellipse: Geometry<Double>.Ellipse = .circle(center: .init(x: 5, y: 10), radius: 7)
+        let circle = Geometry<Double>.Circle(ellipse)
+        #expect(circle != nil)
+        #expect(circle?.center.x == 5)
+        #expect(circle?.center.y == 10)
+        #expect(circle?.radius == 7)
+    }
+
+    @Test("Circle from non-circular ellipse is nil")
+    func circleFromNonCircularEllipse() {
+        let ellipse: Geometry<Double>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
+        let circle = Geometry<Double>.Circle(ellipse)
+        #expect(circle == nil)
+    }
+
     // MARK: - Properties
 
     @Test("Circle diameter")
@@ -115,6 +140,39 @@ struct CircleTests {
         let point = circle.point(at: .zero)
         #expect(abs(point.x.value - 15) < 1e-10)
         #expect(abs(point.y.value - 20) < 1e-10)
+    }
+
+    // MARK: - Tangent
+
+    @Test("Tangent at angle 0")
+    func tangentAtZero() {
+        let circle: Geometry<Double>.Circle = .init(center: .zero, radius: 5)
+        let tangent = circle.tangent(at: .zero)
+        // At angle 0 (right side), tangent points up (0, 1)
+        #expect(abs(tangent.dx.value) < 1e-10)
+        #expect(abs(tangent.dy.value - 1) < 1e-10)
+    }
+
+    @Test("Tangent at angle pi/2")
+    func tangentAtHalfPi() {
+        let circle: Geometry<Double>.Circle = .init(center: .zero, radius: 5)
+        let tangent = circle.tangent(at: .halfPi)
+        // At angle pi/2 (top), tangent points left (-1, 0)
+        #expect(abs(tangent.dx.value - (-1)) < 1e-10)
+        #expect(abs(tangent.dy.value) < 1e-10)
+    }
+
+    @Test("Tangent is perpendicular to radius")
+    func tangentPerpendicular() {
+        let circle: Geometry<Double>.Circle = .init(center: .zero, radius: 5)
+        let angle: Radian = .init(Double.pi / 3)
+        let point = circle.point(at: angle)
+        let tangent = circle.tangent(at: angle)
+        // Vector from center to point
+        let radius: Geometry<Double>.Vector<2> = .init(dx: point.x, dy: point.y)
+        // Dot product should be zero
+        let dot = radius.dot(tangent)
+        #expect(abs(dot) < 1e-10)
     }
 
     // MARK: - Bounding Box

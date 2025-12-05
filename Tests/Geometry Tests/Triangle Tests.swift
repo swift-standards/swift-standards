@@ -24,6 +24,92 @@ struct TriangleTests {
         #expect(triangle.c.y == 3)
     }
 
+    @Test("Triangle init from vertices array")
+    func initFromVertices() {
+        let vertices: [Geometry<Double>.Point<2>] = [
+            .init(x: 0, y: 0),
+            .init(x: 3, y: 0),
+            .init(x: 0, y: 4)
+        ]
+        let triangle = Geometry<Double>.Triangle(vertices: vertices)
+        #expect(triangle != nil)
+        #expect(triangle!.a.x == 0)
+        #expect(triangle!.b.x == 3)
+        #expect(triangle!.c.y == 4)
+    }
+
+    @Test("Triangle init from wrong size array is nil")
+    func initFromWrongSizeArray() {
+        let twoVertices: [Geometry<Double>.Point<2>] = [
+            .init(x: 0, y: 0),
+            .init(x: 3, y: 0)
+        ]
+        let triangle = Geometry<Double>.Triangle(vertices: twoVertices)
+        #expect(triangle == nil)
+    }
+
+    // MARK: - Factory Methods
+
+    @Test("Right triangle factory")
+    func rightTriangle() {
+        let triangle: Geometry<Double>.Triangle = .right(base: 3, height: 4)
+        #expect(triangle.a.x == 0)
+        #expect(triangle.a.y == 0)
+        #expect(triangle.b.x == 3)
+        #expect(triangle.b.y == 0)
+        #expect(triangle.c.x == 0)
+        #expect(triangle.c.y == 4)
+        // Area = 0.5 * base * height = 6
+        #expect(abs(triangle.area - 6) < 1e-10)
+    }
+
+    @Test("Right triangle at origin")
+    func rightTriangleAtOrigin() {
+        let origin: Geometry<Double>.Point<2> = .init(x: 5, y: 10)
+        let triangle: Geometry<Double>.Triangle = .right(base: 3, height: 4, at: origin)
+        #expect(triangle.a.x == 5)
+        #expect(triangle.a.y == 10)
+        #expect(triangle.b.x == 8)
+        #expect(triangle.b.y == 10)
+    }
+
+    @Test("Equilateral triangle factory")
+    func equilateralTriangle() {
+        let triangle: Geometry<Double>.Triangle = .equilateral(sideLength: 6)
+        // All sides should be equal to 6
+        let sides = triangle.sideLengths
+        #expect(abs(sides.ab - 6) < 1e-10)
+        #expect(abs(sides.bc - 6) < 1e-10)
+        #expect(abs(sides.ca - 6) < 1e-10)
+    }
+
+    @Test("Equilateral triangle at origin")
+    func equilateralTriangleAtOrigin() {
+        let origin: Geometry<Double>.Point<2> = .init(x: 10, y: 20)
+        let triangle: Geometry<Double>.Triangle = .equilateral(sideLength: 4, at: origin)
+        #expect(triangle.a.x == 10)
+        #expect(triangle.a.y == 20)
+    }
+
+    @Test("Isosceles triangle factory")
+    func isoscelesTriangle() {
+        let triangle = Geometry<Double>.Triangle.isosceles(base: 6, leg: 5)
+        #expect(triangle != nil)
+        // Base should be 6
+        let sides = triangle!.sideLengths
+        #expect(abs(sides.ab - 6) < 1e-10)
+        // Two legs should be equal to 5
+        #expect(abs(sides.bc - 5) < 1e-10)
+        #expect(abs(sides.ca - 5) < 1e-10)
+    }
+
+    @Test("Isosceles triangle impossible returns nil")
+    func isoscelesTriangleImpossible() {
+        // Leg too short to reach apex
+        let triangle = Geometry<Double>.Triangle.isosceles(base: 10, leg: 2)
+        #expect(triangle == nil)
+    }
+
     // MARK: - Properties
 
     @Test("Vertices array")

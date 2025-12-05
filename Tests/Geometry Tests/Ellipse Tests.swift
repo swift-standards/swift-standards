@@ -233,19 +233,31 @@ struct EllipseTests {
 
     // MARK: - Circle Conversion
 
-    @Test("asCircle for circular ellipse")
-    func asCircleValid() {
+    @Test("Circle from circular ellipse")
+    func circleFromCircularEllipse() {
         let ellipse: Geometry<Double>.Ellipse = .circle(center: .zero, radius: 5)
-        let circle = ellipse.asCircle
+        let circle = Geometry<Double>.Circle(ellipse)
         #expect(circle != nil)
         #expect(circle?.radius == 5)
     }
 
-    @Test("asCircle for non-circular ellipse")
-    func asCircleNil() {
+    @Test("Circle from non-circular ellipse is nil")
+    func circleFromNonCircularEllipse() {
         let ellipse: Geometry<Double>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
-        let circle = ellipse.asCircle
+        let circle = Geometry<Double>.Circle(ellipse)
         #expect(circle == nil)
+    }
+
+    @Test("Ellipse from circle")
+    func ellipseFromCircle() {
+        let circle: Geometry<Double>.Circle = .init(center: .init(x: 5, y: 10), radius: 7)
+        let ellipse = Geometry<Double>.Ellipse(circle)
+        #expect(ellipse.center.x == 5)
+        #expect(ellipse.center.y == 10)
+        #expect(ellipse.semiMajor == 7)
+        #expect(ellipse.semiMinor == 7)
+        #expect(ellipse.rotation == .zero)
+        #expect(ellipse.isCircle)
     }
 
     // MARK: - Functorial Map

@@ -45,6 +45,103 @@ extension Geometry.Triangle: Hashable where Scalar: Hashable {}
 
 extension Geometry.Triangle: Codable where Scalar: Codable {}
 
+// MARK: - Array Initializer
+
+extension Geometry.Triangle {
+    /// Create a triangle from an array of exactly 3 vertices.
+    ///
+    /// - Parameter vertices: Array of 3 points
+    /// - Returns: A triangle, or `nil` if the array doesn't have exactly 3 points
+    @inlinable
+    public init?(vertices: [Geometry.Point<2>]) {
+        guard vertices.count == 3 else { return nil }
+        self.init(a: vertices[0], b: vertices[1], c: vertices[2])
+    }
+}
+
+// MARK: - Factory Methods (FloatingPoint)
+
+extension Geometry.Triangle where Scalar: FloatingPoint {
+    /// Create a right triangle with the right angle at vertex A (origin).
+    ///
+    /// - Parameters:
+    ///   - base: The length of the base (along positive x-axis)
+    ///   - height: The length of the height (along positive y-axis)
+    ///   - origin: The position of the right-angle vertex (default: origin)
+    /// - Returns: A right triangle
+    @inlinable
+    public static func right(
+        base: Scalar,
+        height: Scalar,
+        at origin: Geometry.Point<2> = .zero
+    ) -> Self where Scalar: AdditiveArithmetic {
+        let ox: Scalar = origin.x.value
+        let oy: Scalar = origin.y.value
+        return Self(
+            a: origin,
+            b: Geometry.Point(x: Geometry.X(ox + base), y: Geometry.Y(oy)),
+            c: Geometry.Point(x: Geometry.X(ox), y: Geometry.Y(oy + height))
+        )
+    }
+
+    /// Create an equilateral triangle with given side length.
+    ///
+    /// The first vertex is at the origin (or specified point), with the base
+    /// along the positive x-axis.
+    ///
+    /// - Parameters:
+    ///   - sideLength: The length of each side
+    ///   - origin: The position of the first vertex (default: origin)
+    /// - Returns: An equilateral triangle
+    @inlinable
+    public static func equilateral(
+        sideLength: Scalar,
+        at origin: Geometry.Point<2> = .zero
+    ) -> Self where Scalar: AdditiveArithmetic {
+        let ox: Scalar = origin.x.value
+        let oy: Scalar = origin.y.value
+        let half: Scalar = sideLength / Scalar(2)
+        // Height of equilateral triangle: h = s * sqrt(3) / 2
+        let sqrtThree: Scalar = Scalar(3).squareRoot()
+        let h: Scalar = sideLength * sqrtThree / Scalar(2)
+        return Self(
+            a: origin,
+            b: Geometry.Point(x: Geometry.X(ox + sideLength), y: Geometry.Y(oy)),
+            c: Geometry.Point(x: Geometry.X(ox + half), y: Geometry.Y(oy + h))
+        )
+    }
+
+    /// Create an isosceles triangle with given base and leg length.
+    ///
+    /// The base is along the positive x-axis starting from the origin.
+    ///
+    /// - Parameters:
+    ///   - base: The length of the base
+    ///   - leg: The length of the two equal sides
+    ///   - origin: The position of the first vertex (default: origin)
+    /// - Returns: An isosceles triangle, or `nil` if impossible (leg too short)
+    @inlinable
+    public static func isosceles(
+        base: Scalar,
+        leg: Scalar,
+        at origin: Geometry.Point<2> = .zero
+    ) -> Self? where Scalar: AdditiveArithmetic {
+        // Height: h = sqrt(leg² - (base/2)²)
+        let half: Scalar = base / Scalar(2)
+        let hSquared: Scalar = leg * leg - half * half
+        guard hSquared >= Scalar(0) else { return nil }
+        let h: Scalar = hSquared.squareRoot()
+
+        let ox: Scalar = origin.x.value
+        let oy: Scalar = origin.y.value
+        return Self(
+            a: origin,
+            b: Geometry.Point(x: Geometry.X(ox + base), y: Geometry.Y(oy)),
+            c: Geometry.Point(x: Geometry.X(ox + half), y: Geometry.Y(oy + h))
+        )
+    }
+}
+
 // MARK: - Vertices and Edges
 
 extension Geometry.Triangle {
