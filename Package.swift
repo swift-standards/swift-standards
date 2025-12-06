@@ -62,6 +62,14 @@ let package = Package(
             name: "StandardsTestSupport",
             targets: ["StandardsTestSupport"]
         ),
+        .library(
+            name: "ThreeValuedLogic",
+            targets: ["ThreeValuedLogic"]
+        ),
+        .library(
+            name: "Predicate",
+            targets: ["Predicate"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/coenttb/swift-testing-performance", from: "0.1.1"),
@@ -120,6 +128,12 @@ let package = Package(
                 "Positioning",
                 "Geometry",
             ]
+        ),
+        .target(
+            name: "ThreeValuedLogic"
+        ),
+        .target(
+            name: "Predicate"
         ),
         .target(
             name: "StandardsTestSupport",
@@ -195,6 +209,20 @@ let package = Package(
             name: "Layout".tests,
             dependencies: [
                 "Layout",
+                "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
+            name: "ThreeValuedLogic".tests,
+            dependencies: [
+                "ThreeValuedLogic",
+                "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
+            name: "Predicate".tests,
+            dependencies: [
+                "Predicate",
                 "StandardsTestSupport",
             ]
         ),
