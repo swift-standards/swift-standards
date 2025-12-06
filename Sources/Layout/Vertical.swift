@@ -1,10 +1,7 @@
 // Vertical.swift
 // Vertical axis namespace.
 
-/// Vertical axis namespace.
-///
-/// Contains types related to the vertical axis.
-public enum Vertical {}
+public import Dimension
 
 // MARK: - Baseline
 
@@ -44,7 +41,7 @@ extension Vertical {
         case bottom
 
         /// Align to a text baseline.
-        case baseline(Baseline)
+        case baseline(Vertical.Baseline)
     }
 }
 

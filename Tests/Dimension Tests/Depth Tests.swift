@@ -1,6 +1,7 @@
 // Depth Tests.swift
 
 import Testing
+import Algebra
 @testable import Dimension
 
 @Suite
@@ -43,6 +44,27 @@ struct DepthTests {
     func `Depth Hashable`() {
         let set: Set<Depth> = [.forward, .backward, .forward]
         #expect(set.count == 2)
+    }
+}
+
+// MARK: - Depth.Value Struct Tests
+
+@Suite
+struct DepthValueTests {
+    @Test
+    func `Depth Value holds direction and value`() {
+        let d = Depth.Value(direction: .forward, value: 10.0)
+        #expect(d.direction == .forward)
+        #expect(d.value == 10.0)
+    }
+
+    @Test
+    func `Depth Value Equatable`() {
+        let d1 = Depth.Value(direction: .forward, value: 10.0)
+        let d2 = Depth.Value(direction: .forward, value: 10.0)
+        let d3 = Depth.Value(direction: .backward, value: 10.0)
+        #expect(d1 == d2)
+        #expect(d1 != d3)
     }
 }
 

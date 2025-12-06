@@ -1,42 +1,68 @@
 // Temporal.swift
-// Temporal (W/T) axis orientation convention.
+// Temporal (W/T) axis orientation and oriented values.
 
-/// Temporal (W/T) axis orientation convention.
+/// Temporal (W/T) axis orientation.
 ///
-/// Determines how "past" and "future" map to the fourth coordinate:
-/// - `.future`: T/W increases toward the future
-/// - `.past`: T/W increases toward the past
+/// `Temporal` is an enum representing pure time-axis orientation, with a nested
+/// `Value` struct for oriented magnitudes.
 ///
-/// This is a coordinate system convention for 4D+ spaces, commonly used
-/// in physics (spacetime) and animation (time dimension).
+/// ## Pure Orientation
 ///
-/// ## Mathematical Background
-///
-/// In Minkowski spacetime, time is the fourth dimension with a special
-/// metric signature. The convention for time direction affects causality
-/// and the light cone structure.
-///
-/// ## Usage
+/// Use `Temporal` directly for time direction conventions:
 ///
 /// ```swift
-/// let orientation: Temporal = .future
-///
-/// // Also accessible via Axis<N>.Temporal (where N >= 4):
-/// let tOrientation: Axis<4>.Temporal = .future
+/// let t: Temporal = .future
+/// switch t {
+/// case .future: print("time flows forward")
+/// case .past: print("time flows backward")
+/// }
 /// ```
-public enum Temporal: Sendable, Hashable, Codable, CaseIterable {
+///
+/// ## Usage in Physics
+///
+/// In Minkowski spacetime, time is typically the fourth coordinate.
+/// The choice of `.future` vs `.past` affects:
+/// - Light cone orientation
+/// - Causality direction
+/// - Proper time calculations
+///
+/// ## Oriented Values
+///
+/// Use `Temporal.Value<Scalar>` for durations with explicit direction:
+///
+/// ```swift
+/// let delta = Temporal.Value(direction: .future, value: 10.0)
+/// ```
+public enum Temporal: Sendable, Hashable, Codable {
     /// Time increases toward the future.
-    ///
-    /// Higher coordinate values represent later moments in time.
     case future
-
+    
     /// Time increases toward the past.
-    ///
-    /// Higher coordinate values represent earlier moments in time.
     case past
 }
 
-extension Temporal {
+
+// MARK: - Orientation Conformance
+
+extension Temporal: Orientation {
+    /// The underlying canonical direction.
+    @inlinable
+    public var direction: Direction {
+        switch self {
+        case .future: return .positive
+        case .past: return .negative
+        }
+    }
+
+    /// Creates a temporal orientation from a canonical direction.
+    @inlinable
+    public init(direction: Direction) {
+        switch direction {
+        case .positive: self = .future
+        case .negative: self = .past
+        }
+    }
+
     /// The opposite orientation.
     @inlinable
     public var opposite: Temporal {
@@ -46,12 +72,29 @@ extension Temporal {
         }
     }
 
-    /// Returns the opposite orientation.
-    ///
-    /// - `!.future == .past`
-    /// - `!.past == .future`
+    /// All cases.
+    public static let allCases: [Temporal] = [.future, .past]
+}
+
+// MARK: - Pattern Matching Support
+
+extension Temporal {
+    /// Whether this is future orientation.
     @inlinable
-    public static prefix func ! (value: Self) -> Self {
-        value.opposite
+    public var isFuture: Bool { self == .future }
+
+    /// Whether this is past orientation.
+    @inlinable
+    public var isPast: Bool { self == .past }
+}
+
+// MARK: - CustomStringConvertible
+
+extension Temporal: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .future: return "future"
+        case .past: return "past"
+        }
     }
 }

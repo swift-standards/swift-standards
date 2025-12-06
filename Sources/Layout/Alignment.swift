@@ -1,6 +1,8 @@
 // Alignment.swift
 // Combined horizontal and vertical alignment.
 
+public import Dimension
+
 /// A combined horizontal and vertical alignment.
 ///
 /// Use this when you need to specify alignment in both dimensions,

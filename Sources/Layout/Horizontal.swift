@@ -4,7 +4,7 @@
 /// Horizontal axis namespace.
 ///
 /// Contains types related to the horizontal axis.
-public enum Horizontal {}
+public import Dimension
 
 // MARK: - Alignment
 

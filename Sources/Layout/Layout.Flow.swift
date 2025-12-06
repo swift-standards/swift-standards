@@ -1,6 +1,8 @@
 // Layout.Flow.swift
 // A wrapping layout that flows content to the next line when full.
 
+public import Dimension
+
 extension Layout {
     /// A wrapping layout that flows content to the next line when full.
     ///

@@ -1,6 +1,7 @@
 // Vertical Tests.swift
 
 import Testing
+import Algebra
 @testable import Dimension
 
 @Suite
@@ -43,6 +44,27 @@ struct VerticalTests {
     func `Vertical Hashable`() {
         let set: Set<Vertical> = [.upward, .downward, .upward]
         #expect(set.count == 2)
+    }
+}
+
+// MARK: - Vertical.Value Struct Tests
+
+@Suite
+struct VerticalValueTests {
+    @Test
+    func `Vertical Value holds direction and value`() {
+        let v = Vertical.Value(direction: .upward, value: 10.0)
+        #expect(v.direction == .upward)
+        #expect(v.value == 10.0)
+    }
+
+    @Test
+    func `Vertical Value Equatable`() {
+        let v1 = Vertical.Value(direction: .upward, value: 10.0)
+        let v2 = Vertical.Value(direction: .upward, value: 10.0)
+        let v3 = Vertical.Value(direction: .downward, value: 10.0)
+        #expect(v1 == v2)
+        #expect(v1 != v3)
     }
 }
 

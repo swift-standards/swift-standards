@@ -30,13 +30,17 @@ let package = Package(
             name: "StandardTime",
             targets: ["StandardTime"]
         ),
-        .library(
-            name: "Locale",
-            targets: ["Locale"]
-        ),
+//        .library(
+//            name: "Locale",
+//            targets: ["Locale"]
+//        ),
         .library(
             name: "Algebra",
             targets: ["Algebra"]
+        ),
+        .library(
+            name: "Binary",
+            targets: ["Binary"]
         ),
         .library(
             name: "Dimension",
@@ -76,14 +80,20 @@ let package = Package(
                 "Standards"
             ]
         ),
-        .target(
-            name: "Locale",
-            dependencies: [
-                "Standards"
-            ]
-        ),
+//        .target(
+//            name: "Locale",
+//            dependencies: [
+//                "Standards"
+//            ]
+//        ),
         .target(
             name: "Algebra"
+        ),
+        .target(
+            name: "Binary",
+            dependencies: [
+                "Algebra",
+            ]
         ),
         .target(
             name: "Dimension",
@@ -139,17 +149,24 @@ let package = Package(
                 "StandardsTestSupport",
             ]
         ),
-        .testTarget(
-            name: "Locale".tests,
-            dependencies: [
-                "Locale",
-                "StandardsTestSupport",
-            ]
-        ),
+//        .testTarget(
+//            name: "Locale".tests,
+//            dependencies: [
+//                "Locale",
+//                "StandardsTestSupport",
+//            ]
+//        ),
         .testTarget(
             name: "Algebra".tests,
             dependencies: [
                 "Algebra",
+                "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
+            name: "Binary".tests,
+            dependencies: [
+                "Binary",
                 "StandardsTestSupport",
             ]
         ),

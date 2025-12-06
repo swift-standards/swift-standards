@@ -1,51 +1,64 @@
 // Vertical.swift
-// Vertical (Y) axis orientation convention.
+// Vertical (Y) axis orientation and oriented values.
 
-/// Vertical (Y) axis orientation convention.
+/// Vertical (Y) axis orientation.
 ///
-/// Determines how "top" and "bottom" map to y-coordinates:
-/// - `.upward`: Y increases upward (standard Cartesian, PDF)
-/// - `.downward`: Y increases downward (screen coordinates, CSS/HTML)
+/// `Vertical` is an enum representing pure Y-axis orientation, with a nested
+/// `Value` struct for oriented magnitudes.
 ///
-/// This is a coordinate system convention, independent of dimension count.
-/// Like `Direction`, this type exists at the module level since it describes
-/// a general orientation choice, not a property of a specific axis.
+/// ## Pure Orientation
 ///
-/// ## Mathematical Background
-///
-/// In the standard Cartesian coordinate system, the y-axis points upward.
-/// Many screen-based systems invert this, with y increasing downward.
-/// This affects how directional terms ("top", "bottom") map to coordinates.
-///
-/// ## Usage
+/// Use `Vertical` directly for coordinate system conventions:
 ///
 /// ```swift
-/// let orientation: Vertical = .upward
-///
-/// // Also accessible via Axis<N>.Vertical (where N >= 2):
-/// let yOrientation: Axis<2>.Vertical = .downward
+/// let v: Vertical = .upward
+/// switch v {
+/// case .upward: print("Y increases up")
+/// case .downward: print("Y increases down")
+/// }
 /// ```
-public enum Vertical: Sendable, Hashable, Codable, CaseIterable {
+///
+/// ## Coordinate System Conventions
+///
+/// - **Upward** (standard Cartesian, PDF): Lower Y values at bottom
+/// - **Downward** (screen coordinates, CSS): Lower Y values at top
+///
+/// ## Oriented Values
+///
+/// Use `Vertical.Value<Scalar>` for values with explicit direction:
+///
+/// ```swift
+/// let offset = Vertical.Value(direction: .upward, value: 10.0)
+/// ```
+public enum Vertical: Sendable, Hashable, Codable {
     /// Y axis increases upward (standard Cartesian convention).
-    ///
-    /// In this system:
-    /// - Lower y values are at the bottom visually
-    /// - `lly` corresponds to the bottom edge
-    /// - `ury` corresponds to the top edge
-    /// - "Top inset" shrinks from `ury`
     case upward
 
     /// Y axis increases downward (screen coordinate convention).
-    ///
-    /// In this system:
-    /// - Lower y values are at the top visually
-    /// - `lly` corresponds to the top edge
-    /// - `ury` corresponds to the bottom edge
-    /// - "Top inset" shrinks from `lly`
     case downward
 }
 
-extension Vertical {
+// MARK: - Orientation Conformance
+
+extension Vertical: Orientation {
+    /// The underlying canonical direction.
+    @inlinable
+    public var direction: Direction {
+        switch self {
+        case .upward: return .positive
+        case .downward: return .negative
+        }
+    }
+
+    /// Creates a vertical orientation from a canonical direction.
+    @inlinable
+    public init(direction: Direction) {
+        switch direction {
+        case .positive: self = .upward
+        case .negative: self = .downward
+        }
+    }
+
     /// The opposite orientation.
     @inlinable
     public var opposite: Vertical {
@@ -55,12 +68,29 @@ extension Vertical {
         }
     }
 
-    /// Returns the opposite orientation.
-    ///
-    /// - `!.upward == .downward`
-    /// - `!.downward == .upward`
+    /// All cases.
+    public static let allCases: [Vertical] = [.upward, .downward]
+}
+
+// MARK: - Pattern Matching Support
+
+extension Vertical {
+    /// Whether this is upward orientation.
     @inlinable
-    public static prefix func ! (value: Self) -> Self {
-        value.opposite
+    public var isUpward: Bool { self == .upward }
+
+    /// Whether this is downward orientation.
+    @inlinable
+    public var isDownward: Bool { self == .downward }
+}
+
+// MARK: - CustomStringConvertible
+
+extension Vertical: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .upward: return "upward"
+        case .downward: return "downward"
+        }
     }
 }

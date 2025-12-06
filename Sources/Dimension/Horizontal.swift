@@ -1,25 +1,31 @@
 // Horizontal.swift
-// Horizontal (X) axis orientation convention.
+// Horizontal (X) axis orientation and oriented values.
 
-/// Horizontal (X) axis orientation convention.
+/// Horizontal (X) axis orientation.
 ///
-/// Determines how "leading" and "trailing" map to x-coordinates:
-/// - `.rightward`: X increases rightward (standard convention)
-/// - `.leftward`: X increases leftward
+/// `Horizontal` is an enum representing pure X-axis orientation, with a nested
+/// `Value` struct for oriented magnitudes.
 ///
-/// This is a coordinate system convention, independent of dimension count.
-/// Like `Direction`, this type exists at the module level since it describes
-/// a general orientation choice, not a property of a specific axis.
+/// ## Pure Orientation
 ///
-/// ## Usage
+/// Use `Horizontal` directly for coordinate system conventions:
 ///
 /// ```swift
-/// let orientation: Horizontal = .rightward
-///
-/// // Also accessible via Axis<N>.Horizontal (where N >= 2):
-/// let xOrientation: Axis<2>.Horizontal = .rightward
+/// let h: Horizontal = .rightward
+/// switch h {
+/// case .rightward: print("X increases right")
+/// case .leftward: print("X increases left")
+/// }
 /// ```
-public enum Horizontal: Sendable, Hashable, Codable, CaseIterable {
+///
+/// ## Oriented Values
+///
+/// Use `Horizontal.Value<Scalar>` for values with explicit direction:
+///
+/// ```swift
+/// let offset = Horizontal.Value(direction: .rightward, value: 10.0)
+/// ```
+public enum Horizontal: Sendable, Hashable, Codable {
     /// X axis increases rightward (standard convention).
     case rightward
 
@@ -27,7 +33,27 @@ public enum Horizontal: Sendable, Hashable, Codable, CaseIterable {
     case leftward
 }
 
-extension Horizontal {
+// MARK: - Orientation Conformance
+
+extension Horizontal: Orientation {
+    /// The underlying canonical direction.
+    @inlinable
+    public var direction: Direction {
+        switch self {
+        case .rightward: return .positive
+        case .leftward: return .negative
+        }
+    }
+
+    /// Creates a horizontal orientation from a canonical direction.
+    @inlinable
+    public init(direction: Direction) {
+        switch direction {
+        case .positive: self = .rightward
+        case .negative: self = .leftward
+        }
+    }
+
     /// The opposite orientation.
     @inlinable
     public var opposite: Horizontal {
@@ -37,12 +63,29 @@ extension Horizontal {
         }
     }
 
-    /// Returns the opposite orientation.
-    ///
-    /// - `!.rightward == .leftward`
-    /// - `!.leftward == .rightward`
+    /// All cases.
+    public static let allCases: [Horizontal] = [.rightward, .leftward]
+}
+
+// MARK: - Pattern Matching Support
+
+extension Horizontal {
+    /// Whether this is rightward orientation.
     @inlinable
-    public static prefix func ! (value: Self) -> Self {
-        value.opposite
+    public var isRightward: Bool { self == .rightward }
+
+    /// Whether this is leftward orientation.
+    @inlinable
+    public var isLeftward: Bool { self == .leftward }
+}
+
+// MARK: - CustomStringConvertible
+
+extension Horizontal: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .rightward: return "rightward"
+        case .leftward: return "leftward"
+        }
     }
 }

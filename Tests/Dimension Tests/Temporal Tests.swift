@@ -1,6 +1,7 @@
 // Temporal Tests.swift
 
 import Testing
+import Algebra
 @testable import Dimension
 
 @Suite
@@ -43,6 +44,27 @@ struct TemporalTests {
     func `Temporal Hashable`() {
         let set: Set<Temporal> = [.future, .past, .future]
         #expect(set.count == 2)
+    }
+}
+
+// MARK: - Temporal.Value Struct Tests
+
+@Suite
+struct TemporalValueTests {
+    @Test
+    func `Temporal Value holds direction and value`() {
+        let t = Temporal.Value(direction: .future, value: 10.0)
+        #expect(t.direction == .future)
+        #expect(t.value == 10.0)
+    }
+
+    @Test
+    func `Temporal Value Equatable`() {
+        let t1 = Temporal.Value(direction: .future, value: 10.0)
+        let t2 = Temporal.Value(direction: .future, value: 10.0)
+        let t3 = Temporal.Value(direction: .past, value: 10.0)
+        #expect(t1 == t2)
+        #expect(t1 != t3)
     }
 }
 
