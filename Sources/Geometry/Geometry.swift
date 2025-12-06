@@ -38,6 +38,8 @@
 // typealias Transform = Geometry<Points>.AffineTransform
 // ```
 
+public import Dimension
+
 /// The Geometry namespace for affine geometry primitives.
 ///
 /// Parameterized by the scalar type used for coordinates and measurements.

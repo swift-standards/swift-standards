@@ -1,6 +1,8 @@
 // Axis.Vertical.swift
 // Vertical (Y) axis direction.
 
+public import Dimension
+
 extension Axis {
     /// Vertical (Y) axis direction.
     ///

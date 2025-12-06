@@ -1,6 +1,8 @@
 // Rectangle.swift
 // A rectangle defined by corner coordinates, parameterized by unit type.
 
+public import Dimension
+
 extension Geometry {
     /// A rectangle parameterized by its unit type.
     ///

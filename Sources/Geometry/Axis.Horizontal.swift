@@ -1,6 +1,8 @@
 // Axis.Horizontal.swift
 // Horizontal (X) axis direction.
 
+public import Dimension
+
 extension Axis {
     /// Horizontal (X) axis direction.
     ///

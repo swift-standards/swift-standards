@@ -35,8 +35,24 @@ let package = Package(
             targets: ["Locale"]
         ),
         .library(
+            name: "Algebra",
+            targets: ["Algebra"]
+        ),
+        .library(
+            name: "Dimension",
+            targets: ["Dimension"]
+        ),
+        .library(
+            name: "Positioning",
+            targets: ["Positioning"]
+        ),
+        .library(
             name: "Geometry",
             targets: ["Geometry"]
+        ),
+        .library(
+            name: "Layout",
+            targets: ["Layout"]
         ),
         .library(
             name: "StandardsTestSupport",
@@ -67,10 +83,29 @@ let package = Package(
             ]
         ),
         .target(
+            name: "Algebra"
+        ),
+        .target(
+            name: "Dimension"
+        ),
+        .target(
+            name: "Positioning"
+        ),
+        .target(
             name: "Geometry",
             dependencies: [
+                "Algebra",
+                "Dimension",
                 "Formatting",
                 .product(name: "RealModule", package: "swift-numerics"),
+            ]
+        ),
+        .target(
+            name: "Layout",
+            dependencies: [
+                "Dimension",
+                "Positioning",
+                "Geometry",
             ]
         ),
         .target(
@@ -109,9 +144,37 @@ let package = Package(
             ]
         ),
         .testTarget(
+            name: "Algebra".tests,
+            dependencies: [
+                "Algebra",
+                "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
+            name: "Dimension".tests,
+            dependencies: [
+                "Dimension",
+                "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
+            name: "Positioning".tests,
+            dependencies: [
+                "Positioning",
+                "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
             name: "Geometry".tests,
             dependencies: [
                 "Geometry",
+                "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
+            name: "Layout".tests,
+            dependencies: [
+                "Layout",
                 "StandardsTestSupport",
             ]
         ),
