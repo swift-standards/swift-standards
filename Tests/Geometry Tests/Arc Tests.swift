@@ -10,8 +10,8 @@ struct ArcTests {
 
     // MARK: - Initialization
 
-    @Test("Arc initialization")
-    func initialization() {
+    @Test
+    func `Arc initialization`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .init(x: 10, y: 20),
             radius: 5,
@@ -25,8 +25,8 @@ struct ArcTests {
         #expect(arc.endAngle.value == Double.pi)
     }
 
-    @Test("Full circle arc")
-    func fullCircle() {
+    @Test
+    func `Full circle arc`() {
         let arc: Geometry<Double>.Arc = .fullCircle(
             center: .zero,
             radius: 5
@@ -36,8 +36,8 @@ struct ArcTests {
         #expect(arc.isFullCircle)
     }
 
-    @Test("Semicircle arc")
-    func semicircle() {
+    @Test
+    func `Semicircle arc`() {
         let arc: Geometry<Double>.Arc = .semicircle(
             center: .zero,
             radius: 5
@@ -46,8 +46,8 @@ struct ArcTests {
         #expect(abs(arc.endAngle.value - Double.pi) < 1e-10)
     }
 
-    @Test("Quarter circle arc")
-    func quarterCircle() {
+    @Test
+    func `Quarter circle arc`() {
         let arc: Geometry<Double>.Arc = .quarterCircle(
             center: .zero,
             radius: 5
@@ -56,8 +56,8 @@ struct ArcTests {
         #expect(abs(arc.endAngle.value - Double.pi / 2) < 1e-10)
     }
 
-    @Test("Quarter circle with start angle")
-    func quarterCircleWithStart() {
+    @Test
+    func `Quarter circle with start angle`() {
         let arc: Geometry<Double>.Arc = .quarterCircle(
             center: .zero,
             radius: 5,
@@ -69,8 +69,8 @@ struct ArcTests {
 
     // MARK: - Angle Properties
 
-    @Test("Sweep angle")
-    func sweepAngle() {
+    @Test
+    func `Sweep angle`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .zero,
             radius: 5,
@@ -80,8 +80,8 @@ struct ArcTests {
         #expect(abs(arc.sweep.value - Double.pi) < 1e-10)
     }
 
-    @Test("Counter-clockwise sweep")
-    func counterClockwiseSweep() {
+    @Test
+    func `Counter-clockwise sweep`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .zero,
             radius: 5,
@@ -91,8 +91,8 @@ struct ArcTests {
         #expect(arc.isCounterClockwise)
     }
 
-    @Test("Clockwise sweep")
-    func clockwiseSweep() {
+    @Test
+    func `Clockwise sweep`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .zero,
             radius: 5,
@@ -102,8 +102,8 @@ struct ArcTests {
         #expect(!arc.isCounterClockwise)
     }
 
-    @Test("Is full circle")
-    func isFullCircle() {
+    @Test
+    func `Is full circle`() {
         let full: Geometry<Double>.Arc = .fullCircle(center: .zero, radius: 5)
         #expect(full.isFullCircle)
 
@@ -113,8 +113,8 @@ struct ArcTests {
 
     // MARK: - Endpoints
 
-    @Test("Start point")
-    func startPoint() {
+    @Test
+    func `Start point`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .zero,
             radius: 5,
@@ -125,8 +125,8 @@ struct ArcTests {
         #expect(abs(arc.startPoint.y.value) < 1e-10)
     }
 
-    @Test("End point")
-    func endPoint() {
+    @Test
+    func `End point`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .zero,
             radius: 5,
@@ -137,8 +137,8 @@ struct ArcTests {
         #expect(abs(arc.endPoint.y.value) < 1e-10)
     }
 
-    @Test("Mid point")
-    func midPoint() {
+    @Test
+    func `Mid point`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .zero,
             radius: 5,
@@ -150,8 +150,8 @@ struct ArcTests {
         #expect(abs(arc.midPoint.y.value - 5) < 1e-10)
     }
 
-    @Test("Start point with offset center")
-    func startPointOffsetCenter() {
+    @Test
+    func `Start point with offset center`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .init(x: 10, y: 20),
             radius: 5,
@@ -164,8 +164,8 @@ struct ArcTests {
 
     // MARK: - Point at Parameter
 
-    @Test("Point at t=0")
-    func pointAtZero() {
+    @Test
+    func `Point at t=0`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .zero,
             radius: 5,
@@ -177,8 +177,8 @@ struct ArcTests {
         #expect(abs(point.y.value - arc.startPoint.y.value) < 1e-10)
     }
 
-    @Test("Point at t=1")
-    func pointAtOne() {
+    @Test
+    func `Point at t=1`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .zero,
             radius: 5,
@@ -190,8 +190,8 @@ struct ArcTests {
         #expect(abs(point.y.value - arc.endPoint.y.value) < 1e-10)
     }
 
-    @Test("Point at t=0.5")
-    func pointAtHalf() {
+    @Test
+    func `Point at t=0.5`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .zero,
             radius: 5,
@@ -205,8 +205,8 @@ struct ArcTests {
 
     // MARK: - Tangent
 
-    @Test("Tangent at t=0")
-    func tangentAtZero() {
+    @Test
+    func `Tangent at t=0`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .zero,
             radius: 5,
@@ -219,8 +219,8 @@ struct ArcTests {
         #expect(abs(tangent.dy.value - 1) < 1e-10)
     }
 
-    @Test("Tangent at t=0.5")
-    func tangentAtHalf() {
+    @Test
+    func `Tangent at t=0.5`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .zero,
             radius: 5,
@@ -235,22 +235,22 @@ struct ArcTests {
 
     // MARK: - Length
 
-    @Test("Length of semicircle")
-    func lengthSemicircle() {
+    @Test
+    func `Length of semicircle`() {
         let arc: Geometry<Double>.Arc = .semicircle(center: .zero, radius: 5)
         // Length = pi * r = 5 * pi
         #expect(abs(arc.length - 5 * Double.pi) < 1e-10)
     }
 
-    @Test("Length of full circle")
-    func lengthFullCircle() {
+    @Test
+    func `Length of full circle`() {
         let arc: Geometry<Double>.Arc = .fullCircle(center: .zero, radius: 5)
         // Length = 2 * pi * r = 10 * pi
         #expect(abs(arc.length - 10 * Double.pi) < 1e-10)
     }
 
-    @Test("Length of quarter circle")
-    func lengthQuarterCircle() {
+    @Test
+    func `Length of quarter circle`() {
         let arc: Geometry<Double>.Arc = .quarterCircle(center: .zero, radius: 4)
         // Length = (pi/2) * r = 2 * pi
         #expect(abs(arc.length - 2 * Double.pi) < 1e-10)
@@ -258,8 +258,8 @@ struct ArcTests {
 
     // MARK: - Bounding Box
 
-    @Test("Bounding box of quarter circle")
-    func boundingBoxQuarter() {
+    @Test
+    func `Bounding box of quarter circle`() {
         let arc: Geometry<Double>.Arc = .quarterCircle(
             center: .zero,
             radius: 5
@@ -271,8 +271,8 @@ struct ArcTests {
         #expect(abs(bbox.ury.value - 5) < 1e-10)
     }
 
-    @Test("Bounding box of semicircle")
-    func boundingBoxSemicircle() {
+    @Test
+    func `Bounding box of semicircle`() {
         let arc: Geometry<Double>.Arc = .semicircle(center: .zero, radius: 5)
         let bbox = arc.boundingBox
         #expect(abs(bbox.llx.value - (-5)) < 1e-10)
@@ -281,8 +281,8 @@ struct ArcTests {
         #expect(abs(bbox.ury.value - 5) < 1e-10)
     }
 
-    @Test("Bounding box of full circle")
-    func boundingBoxFullCircle() {
+    @Test
+    func `Bounding box of full circle`() {
         let arc: Geometry<Double>.Arc = .fullCircle(center: .zero, radius: 5)
         let bbox = arc.boundingBox
         #expect(abs(bbox.llx.value - (-5)) < 1e-10)
@@ -293,8 +293,8 @@ struct ArcTests {
 
     // MARK: - Containment
 
-    @Test("Contains point on arc")
-    func containsPointOnArc() {
+    @Test
+    func `Contains point on arc`() {
         let arc: Geometry<Double>.Arc = .quarterCircle(center: .zero, radius: 5)
         // Point at 45 degrees
         let x = 5 * Double.cos(Double.pi / 4)
@@ -303,16 +303,16 @@ struct ArcTests {
         #expect(arc.contains(point))
     }
 
-    @Test("Does not contain point outside arc range")
-    func doesNotContainOutsideRange() {
+    @Test
+    func `Does not contain point outside arc range`() {
         let arc: Geometry<Double>.Arc = .quarterCircle(center: .zero, radius: 5)
         // Point at 180 degrees - on circle but outside arc
         let point: Geometry<Double>.Point<2> = .init(x: -5, y: 0)
         #expect(!arc.contains(point))
     }
 
-    @Test("Does not contain point at wrong radius")
-    func doesNotContainWrongRadius() {
+    @Test
+    func `Does not contain point at wrong radius`() {
         let arc: Geometry<Double>.Arc = .quarterCircle(center: .zero, radius: 5)
         // Point at 45 degrees but wrong radius
         let point: Geometry<Double>.Point<2> = .init(x: 3, y: 3)
@@ -321,8 +321,8 @@ struct ArcTests {
 
     // MARK: - Transformation
 
-    @Test("Translation")
-    func translation() {
+    @Test
+    func `Translation`() {
         let arc: Geometry<Double>.Arc = .semicircle(center: .zero, radius: 5)
         let translated = arc.translated(by: .init(dx: 10, dy: 20))
         #expect(translated.center.x == 10)
@@ -330,8 +330,8 @@ struct ArcTests {
         #expect(translated.radius == 5)
     }
 
-    @Test("Scaling")
-    func scaling() {
+    @Test
+    func `Scaling`() {
         let arc: Geometry<Double>.Arc = .semicircle(center: .zero, radius: 5)
         let scaled = arc.scaled(by: 2)
         #expect(scaled.radius == 10)
@@ -339,8 +339,8 @@ struct ArcTests {
         #expect(scaled.endAngle == arc.endAngle)
     }
 
-    @Test("Reversed arc")
-    func reversedArc() {
+    @Test
+    func `Reversed arc`() {
         let arc: Geometry<Double>.Arc = .init(
             center: .zero,
             radius: 5,
@@ -354,30 +354,30 @@ struct ArcTests {
 
     // MARK: - Bezier Conversion
 
-    @Test("Quarter arc to Beziers")
-    func quarterArcToBeziers() {
+    @Test
+    func `Quarter arc to Beziers`() {
         let arc: Geometry<Double>.Arc = .quarterCircle(center: .zero, radius: 5)
         let beziers = arc.toBeziers()
         #expect(beziers.count == 1)
         #expect(beziers[0].degree == 3)
     }
 
-    @Test("Semicircle to Beziers")
-    func semicircleToBeziers() {
+    @Test
+    func `Semicircle to Beziers`() {
         let arc: Geometry<Double>.Arc = .semicircle(center: .zero, radius: 5)
         let beziers = arc.toBeziers()
         #expect(beziers.count == 2)
     }
 
-    @Test("Full circle to Beziers")
-    func fullCircleToBeziers() {
+    @Test
+    func `Full circle to Beziers`() {
         let arc: Geometry<Double>.Arc = .fullCircle(center: .zero, radius: 5)
         let beziers = arc.toBeziers()
         #expect(beziers.count == 4)
     }
 
-    @Test("Beziers start and end match arc")
-    func beziersMatchArc() {
+    @Test
+    func `Beziers start and end match arc`() {
         let arc: Geometry<Double>.Arc = .quarterCircle(center: .zero, radius: 5)
         let beziers = arc.toBeziers()
 
@@ -394,8 +394,8 @@ struct ArcTests {
 
     // MARK: - Functorial Map
 
-    @Test("Arc map")
-    func arcMap() {
+    @Test
+    func `Arc map`() {
         let arc: Geometry<Double>.Arc = .semicircle(center: .zero, radius: 5)
         let mapped: Geometry<Float>.Arc = arc.map { Float($0) }
         #expect(mapped.center.x.value == 0)

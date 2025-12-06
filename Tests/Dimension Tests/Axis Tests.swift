@@ -1,6 +1,7 @@
 // Axis Tests.swift
 
 import Testing
+import Algebra
 @testable import Dimension
 
 // MARK: - Axis Tests

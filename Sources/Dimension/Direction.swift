@@ -1,9 +1,5 @@
-//
-//  File.swift
-//  swift-standards
-//
-//  Created by Coen ten Thije Boonkkamp on 06/12/2025.
-//
+// Direction.swift
+// Direction along an axis.
 
 /// Direction along an axis (positive or negative).
 ///
@@ -53,15 +49,6 @@ extension Direction {
         switch self {
         case .positive: return 1
         case .negative: return -1
-        }
-    }
-
-    /// The sign multiplier as a Double.
-    @inlinable
-    public var signDouble: Double {
-        switch self {
-        case .positive: return 1.0
-        case .negative: return -1.0
         }
     }
 }

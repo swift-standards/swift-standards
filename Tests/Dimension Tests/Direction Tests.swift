@@ -27,12 +27,6 @@ struct DirectionTests {
     }
 
     @Test
-    func `Direction signDouble`() {
-        #expect(Direction.positive.signDouble == 1.0)
-        #expect(Direction.negative.signDouble == -1.0)
-    }
-
-    @Test
     func `Direction CaseIterable`() {
         #expect(Direction.allCases.count == 2)
         #expect(Direction.allCases.contains(.positive))
@@ -100,7 +94,7 @@ struct AxisDirectionTypealiasTests {
         let dir: Axis<2>.Direction = .negative
 
         #expect(dir.sign == -1)
-        #expect(dir.signDouble == -1.0)
+        #expect(Double(dir.sign) == -1.0)
         #expect(dir.opposite == .positive)
     }
 }

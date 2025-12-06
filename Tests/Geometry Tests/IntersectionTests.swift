@@ -4,10 +4,10 @@
 import Testing
 @testable import Geometry
 
-@Suite("Line Intersection Tests")
-struct LineIntersectionTests {
-    @Test("Intersecting lines")
-    func intersectingLines() {
+@Suite
+struct `Line Intersection Tests` {
+    @Test
+    func `Intersecting lines`() {
         // Line y = x (through origin, slope 1)
         let line1: Geometry<Double>.Line = .init(
             point: .init(x: 0, y: 0),
@@ -25,8 +25,8 @@ struct LineIntersectionTests {
         #expect(abs(intersection!.y.value - 1) < 1e-10)
     }
 
-    @Test("Parallel lines do not intersect")
-    func parallelLines() {
+    @Test
+    func `Parallel lines do not intersect`() {
         let line1: Geometry<Double>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 0)
@@ -40,8 +40,8 @@ struct LineIntersectionTests {
         #expect(intersection == nil)
     }
 
-    @Test("Coincident lines do not intersect (special case)")
-    func coincidentLines() {
+    @Test
+    func `Coincident lines do not intersect (special case)`() {
         let line1: Geometry<Double>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 1)
@@ -56,8 +56,8 @@ struct LineIntersectionTests {
         #expect(intersection == nil)
     }
 
-    @Test("Perpendicular lines")
-    func perpendicularLines() {
+    @Test
+    func `Perpendicular lines`() {
         let horizontal: Geometry<Double>.Line = .init(
             point: .init(x: 0, y: 5),
             direction: .init(dx: 1, dy: 0)
@@ -74,10 +74,10 @@ struct LineIntersectionTests {
     }
 }
 
-@Suite("Line Segment Intersection Tests")
-struct LineSegmentIntersectionTests {
-    @Test("Intersecting segments")
-    func intersectingSegments() {
+@Suite
+struct `Line Segment Intersection Tests` {
+    @Test
+    func `Intersecting segments`() {
         let seg1: Geometry<Double>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 10)
@@ -93,8 +93,8 @@ struct LineSegmentIntersectionTests {
         #expect(abs(intersection!.y.value - 5) < 1e-10)
     }
 
-    @Test("Non-intersecting segments (parallel)")
-    func parallelSegments() {
+    @Test
+    func `Non-intersecting segments (parallel)`() {
         let seg1: Geometry<Double>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 0)
@@ -108,8 +108,8 @@ struct LineSegmentIntersectionTests {
         #expect(intersection == nil)
     }
 
-    @Test("Non-intersecting segments (would intersect if extended)")
-    func nonIntersectingWouldExtend() {
+    @Test
+    func `Non-intersecting segments (would intersect if extended)`() {
         let seg1: Geometry<Double>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 2, y: 2)
@@ -124,8 +124,8 @@ struct LineSegmentIntersectionTests {
         #expect(intersection == nil)
     }
 
-    @Test("T-junction intersection")
-    func tJunctionIntersection() {
+    @Test
+    func `T-junction intersection`() {
         let horizontal: Geometry<Double>.Line.Segment = .init(
             start: .init(x: 0, y: 5),
             end: .init(x: 10, y: 5)
@@ -141,8 +141,8 @@ struct LineSegmentIntersectionTests {
         #expect(abs(intersection!.y.value - 5) < 1e-10)
     }
 
-    @Test("Segment intersection at endpoint")
-    func endpointIntersection() {
+    @Test
+    func `Segment intersection at endpoint`() {
         let seg1: Geometry<Double>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 5, y: 5)
@@ -159,10 +159,10 @@ struct LineSegmentIntersectionTests {
     }
 }
 
-@Suite("Line Projection and Reflection Tests")
-struct LineProjectionReflectionTests {
-    @Test("Point projection onto horizontal line")
-    func projectionOntoHorizontal() {
+@Suite
+struct `Line Projection and Reflection Tests` {
+    @Test
+    func `Point projection onto horizontal line`() {
         let line: Geometry<Double>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 0)
@@ -175,8 +175,8 @@ struct LineProjectionReflectionTests {
         #expect(abs(projection!.y.value - 0) < 1e-10)
     }
 
-    @Test("Point projection onto vertical line")
-    func projectionOntoVertical() {
+    @Test
+    func `Point projection onto vertical line`() {
         let line: Geometry<Double>.Line = .init(
             point: .init(x: 3, y: 0),
             direction: .init(dx: 0, dy: 1)
@@ -189,8 +189,8 @@ struct LineProjectionReflectionTests {
         #expect(abs(projection!.y.value - 5) < 1e-10)
     }
 
-    @Test("Point projection onto diagonal line")
-    func projectionOntoDiagonal() {
+    @Test
+    func `Point projection onto diagonal line`() {
         let line: Geometry<Double>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 1)
@@ -204,8 +204,8 @@ struct LineProjectionReflectionTests {
         #expect(abs(projection!.y.value - 2) < 1e-10)
     }
 
-    @Test("Point reflection across horizontal line")
-    func reflectionAcrossHorizontal() {
+    @Test
+    func `Point reflection across horizontal line`() {
         let line: Geometry<Double>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 0)
@@ -218,8 +218,8 @@ struct LineProjectionReflectionTests {
         #expect(abs(reflection!.y.value - (-3)) < 1e-10)
     }
 
-    @Test("Point reflection across vertical line")
-    func reflectionAcrossVertical() {
+    @Test
+    func `Point reflection across vertical line`() {
         let line: Geometry<Double>.Line = .init(
             point: .init(x: 5, y: 0),
             direction: .init(dx: 0, dy: 1)
@@ -232,8 +232,8 @@ struct LineProjectionReflectionTests {
         #expect(abs(reflection!.y.value - 7) < 1e-10)
     }
 
-    @Test("Point on line has same projection")
-    func pointOnLine() {
+    @Test
+    func `Point on line has same projection`() {
         let line: Geometry<Double>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 1)
@@ -246,8 +246,8 @@ struct LineProjectionReflectionTests {
         #expect(abs(projection!.y.value - 3) < 1e-10)
     }
 
-    @Test("Zero direction line returns nil")
-    func zeroDirectionLine() {
+    @Test
+    func `Zero direction line returns nil`() {
         let line: Geometry<Double>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 0, dy: 0)
@@ -259,10 +259,10 @@ struct LineProjectionReflectionTests {
     }
 }
 
-@Suite("Line Segment Distance Tests")
-struct LineSegmentDistanceTests {
-    @Test("Distance to point on segment")
-    func distanceToPointOnSegment() {
+@Suite
+struct `Line Segment Distance Tests` {
+    @Test
+    func `Distance to point on segment`() {
         let segment: Geometry<Double>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 0)
@@ -272,8 +272,8 @@ struct LineSegmentDistanceTests {
         #expect(abs(segment.distance(to: point)) < 1e-10)
     }
 
-    @Test("Distance to point near segment")
-    func distanceToPointNearSegment() {
+    @Test
+    func `Distance to point near segment`() {
         let segment: Geometry<Double>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 0)
@@ -283,8 +283,8 @@ struct LineSegmentDistanceTests {
         #expect(abs(segment.distance(to: point) - 3) < 1e-10)
     }
 
-    @Test("Distance to point past segment end")
-    func distanceToPointPastEnd() {
+    @Test
+    func `Distance to point past segment end`() {
         let segment: Geometry<Double>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 0)
@@ -294,8 +294,8 @@ struct LineSegmentDistanceTests {
         #expect(abs(segment.distance(to: point) - 5) < 1e-10)
     }
 
-    @Test("Distance to point before segment start")
-    func distanceToPointBeforeStart() {
+    @Test
+    func `Distance to point before segment start`() {
         let segment: Geometry<Double>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 0)
