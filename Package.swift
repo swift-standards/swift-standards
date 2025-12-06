@@ -86,7 +86,10 @@ let package = Package(
             name: "Algebra"
         ),
         .target(
-            name: "Dimension"
+            name: "Dimension",
+            dependencies: [
+                "Algebra",
+            ]
         ),
         .target(
             name: "Positioning"

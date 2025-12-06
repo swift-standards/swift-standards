@@ -86,10 +86,6 @@ extension Axis where N == 1 {
     /// The first axis (index 0).
     @inlinable
     public static var primary: Self { Self(unchecked: 0) }
-
-    /// All axes in 1D space.
-    @inlinable
-    public static var allCases: [Self] { [.primary] }
 }
 
 // MARK: - 2D
@@ -112,10 +108,6 @@ extension Axis where N == 2 {
     public var perpendicular: Self {
         Self(unchecked: 1 - rawValue)
     }
-
-    /// All axes in 2D space.
-    @inlinable
-    public static var allCases: [Self] { [.primary, .secondary] }
 }
 
 // MARK: - 3D
@@ -132,10 +124,6 @@ extension Axis where N == 3 {
     /// The third axis (index 2, typically Z/depth).
     @inlinable
     public static var tertiary: Self { Self(unchecked: 2) }
-
-    /// All axes in 3D space.
-    @inlinable
-    public static var allCases: [Self] { [.primary, .secondary, .tertiary] }
 }
 
 // MARK: - 4D
@@ -156,8 +144,5 @@ extension Axis where N == 4 {
     /// The fourth axis (index 3, typically W).
     @inlinable
     public static var quaternary: Self { Self(unchecked: 3) }
-
-    /// All axes in 4D space.
-    @inlinable
-    public static var allCases: [Self] { [.primary, .secondary, .tertiary, .quaternary] }
 }
+
