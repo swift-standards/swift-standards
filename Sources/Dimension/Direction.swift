@@ -51,4 +51,13 @@ extension Direction {
         case .negative: return -1
         }
     }
+
+    /// Returns the opposite direction.
+    ///
+    /// - `!.positive == .negative`
+    /// - `!.negative == .positive`
+    @inlinable
+    public static prefix func ! (value: Self) -> Self {
+        value.opposite
+    }
 }

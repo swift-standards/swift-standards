@@ -21,6 +21,13 @@ struct DirectionTests {
     }
 
     @Test
+    func `Direction negation operator`() {
+        #expect(!Direction.positive == .negative)
+        #expect(!Direction.negative == .positive)
+        #expect(!(!Direction.positive) == .positive)
+    }
+
+    @Test
     func `Direction sign Int`() {
         #expect(Direction.positive.sign == 1)
         #expect(Direction.negative.sign == -1)

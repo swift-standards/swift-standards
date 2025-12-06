@@ -54,4 +54,13 @@ extension Vertical {
         case .downward: return .upward
         }
     }
+
+    /// Returns the opposite orientation.
+    ///
+    /// - `!.upward == .downward`
+    /// - `!.downward == .upward`
+    @inlinable
+    public static prefix func ! (value: Self) -> Self {
+        value.opposite
+    }
 }

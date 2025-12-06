@@ -45,4 +45,13 @@ extension Temporal {
         case .past: return .future
         }
     }
+
+    /// Returns the opposite orientation.
+    ///
+    /// - `!.future == .past`
+    /// - `!.past == .future`
+    @inlinable
+    public static prefix func ! (value: Self) -> Self {
+        value.opposite
+    }
 }

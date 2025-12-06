@@ -46,4 +46,13 @@ extension Depth {
         case .backward: return .forward
         }
     }
+
+    /// Returns the opposite orientation.
+    ///
+    /// - `!.forward == .backward`
+    /// - `!.backward == .forward`
+    @inlinable
+    public static prefix func ! (value: Self) -> Self {
+        value.opposite
+    }
 }

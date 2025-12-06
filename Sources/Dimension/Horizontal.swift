@@ -36,4 +36,13 @@ extension Horizontal {
         case .leftward: return .rightward
         }
     }
+
+    /// Returns the opposite orientation.
+    ///
+    /// - `!.rightward == .leftward`
+    /// - `!.leftward == .rightward`
+    @inlinable
+    public static prefix func ! (value: Self) -> Self {
+        value.opposite
+    }
 }
