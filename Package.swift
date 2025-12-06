@@ -63,8 +63,8 @@ let package = Package(
             targets: ["StandardsTestSupport"]
         ),
         .library(
-            name: "ThreeValuedLogic",
-            targets: ["ThreeValuedLogic"]
+            name: "TernaryLogic",
+            targets: ["TernaryLogic"]
         ),
         .library(
             name: "Predicate",
@@ -130,7 +130,7 @@ let package = Package(
             ]
         ),
         .target(
-            name: "ThreeValuedLogic"
+            name: "TernaryLogic"
         ),
         .target(
             name: "Predicate"
@@ -213,9 +213,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "ThreeValuedLogic".tests,
+            name: "TernaryLogic".tests,
             dependencies: [
-                "ThreeValuedLogic",
+                "TernaryLogic",
                 "StandardsTestSupport",
             ]
         ),

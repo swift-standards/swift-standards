@@ -1,8 +1,8 @@
-// ThreeValuedLogic Tests.swift
+// TernaryLogic Tests.swift
 // Tests for Strong Kleene three-valued logic.
 
 import Testing
-@testable import ThreeValuedLogic
+@testable import TernaryLogic
 
 @Suite
 struct ThreeValuedLogicANDTests {
