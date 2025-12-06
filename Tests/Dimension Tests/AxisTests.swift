@@ -122,39 +122,36 @@ struct AxisDirectionTests {
     }
 }
 
-// MARK: - Type System Limitation Tests
+// MARK: - Type System Tests
 
 @Suite
 struct AxisTypeSystemTests {
-    /// Demonstrates that nested types in generic structs are distinct per specialization.
+    /// Direction is dimension-independent - same type across all Axis<N>.
     ///
-    /// Even though `Direction` doesn't use the generic parameter `N`, Swift treats
-    /// `Axis<2>.Direction` and `Axis<3>.Direction` as different types. This is a
-    /// limitation of Swift's generics system.
-    ///
-    /// Workaround: If you need a single `Direction` type across dimensions, define
-    /// it as a standalone type (e.g., `AxisDirection`) with a typealias.
+    /// Mathematically, direction along an axis is just a sign (±1), which is
+    /// the same concept regardless of the dimension of the space.
     @Test
-    func `Nested types are distinct per Axis specialization`() {
-        // These are the SAME enum definition with identical cases and behavior...
+    func `Direction is same type across all dimensions`() {
         let dir2: Axis<2>.Direction = .positive
         let dir3: Axis<3>.Direction = .positive
+        let dir4: Axis<4>.Direction = .negative
 
-        // ...but Swift considers them DIFFERENT types.
-        // This line would NOT compile:
-        // let same: Bool = (dir2 == dir3)  // Error: cannot convert Axis<3>.Direction to Axis<2>.Direction
+        // These ARE the same type (via typealias to Direction)
+        #expect(dir2 == dir3)
+        #expect(dir2 != dir4)
 
-        // We can only compare their computed properties, not the values directly
-        #expect(dir2.sign == dir3.sign)
-        #expect(dir2.signDouble == dir3.signDouble)
-
-        // Same limitation applies to Vertical and Horizontal in Geometry module
-        // Axis<2>.Vertical and Axis<3>.Vertical are also distinct types
+        // Can use Direction directly
+        let dir: Direction = .positive
+        #expect(dir == dir2)
+        #expect(dir == dir3)
     }
 
+    /// Axis<N> types are distinct across dimensions - this is correct behavior.
+    ///
+    /// An axis in 2D space is fundamentally different from an axis in 3D space.
+    /// Axis<2> has 2 possible values, Axis<3> has 3, etc.
     @Test
     func `Axis types are distinct across dimensions`() {
-        // Axis<2> and Axis<3> are (correctly) different types
         let axis2: Axis<2> = .primary
         let axis3: Axis<3> = .primary
 
