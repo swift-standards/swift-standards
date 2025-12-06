@@ -133,7 +133,10 @@ let package = Package(
             name: "TernaryLogic"
         ),
         .target(
-            name: "Predicate"
+            name: "Predicate",
+            dependencies: [
+                "TernaryLogic",
+            ]
         ),
         .target(
             name: "StandardsTestSupport",
