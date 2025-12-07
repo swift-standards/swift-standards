@@ -94,24 +94,4 @@ extension FloatingPoint {
         let divisor = Self(10).power(places)
         return (self * divisor).rounded() / divisor
     }
-
-    /// Clamps value to unit interval [0, 1]
-    ///
-    /// Common operation in graphics, color spaces, and normalized computations.
-    /// Restricts value to valid probability/percentage range.
-    ///
-    /// Category theory: Restriction morphism to unit interval
-    /// clamp01: ℝ → [0,1]
-    ///
-    /// Example:
-    /// ```swift
-    /// 0.5.clamp01()   // 0.5
-    /// 1.5.clamp01()   // 1.0
-    /// (-0.5).clamp01() // 0.0
-    /// ```
-    public func clamp01() -> Self {
-        if self < 0 { return 0 }
-        if self > 1 { return 1 }
-        return self
-    }
 }

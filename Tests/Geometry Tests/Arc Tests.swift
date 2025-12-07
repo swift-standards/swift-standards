@@ -358,7 +358,7 @@ struct ArcTests {
     @Test
     func `Quarter arc to Beziers`() {
         let arc: Geometry<Double>.Arc = .quarterCircle(center: .zero, radius: 5)
-        let beziers = arc.toBeziers()
+        let beziers = [Geometry<Double>.Bezier](arc: arc)
         #expect(beziers.count == 1)
         #expect(beziers[0].degree == 3)
     }
@@ -366,21 +366,21 @@ struct ArcTests {
     @Test
     func `Semicircle to Beziers`() {
         let arc: Geometry<Double>.Arc = .semicircle(center: .zero, radius: 5)
-        let beziers = arc.toBeziers()
+        let beziers = [Geometry<Double>.Bezier](arc: arc)
         #expect(beziers.count == 2)
     }
 
     @Test
     func `Full circle to Beziers`() {
         let arc: Geometry<Double>.Arc = .fullCircle(center: .zero, radius: 5)
-        let beziers = arc.toBeziers()
+        let beziers = [Geometry<Double>.Bezier](arc: arc)
         #expect(beziers.count == 4)
     }
 
     @Test
     func `Beziers start and end match arc`() {
         let arc: Geometry<Double>.Arc = .quarterCircle(center: .zero, radius: 5)
-        let beziers = arc.toBeziers()
+        let beziers = [Geometry<Double>.Bezier](arc: arc)
 
         // First bezier starts at arc start
         let firstBezier = beziers.first!

@@ -300,18 +300,23 @@ extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
     }
 }
 
-// MARK: - Conversion to Bezier (Real & BinaryFloatingPoint)
+// MARK: - Array of Beziers from Arc
 
-extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
-    /// Approximate the arc with cubic Bezier curves.
+extension Array {
+    /// Create an array of cubic Bezier curves approximating an arc.
     ///
     /// Uses the standard approximation where each Bezier spans at most 90°.
     ///
-    /// - Returns: Array of cubic Bezier curves approximating the arc
+    /// - Parameter arc: The arc to approximate
     @inlinable
-    public func toBeziers() -> [Geometry.Bezier] {
-        let sweepValue = sweep.value
-        guard abs(sweepValue) > 0 else { return [] }
+    public init<Scalar: Real & BinaryFloatingPoint>(
+        arc: Geometry<Scalar>.Arc
+    ) where Element == Geometry<Scalar>.Bezier {
+        let sweepValue = arc.sweep.value
+        guard abs(sweepValue) > 0 else {
+            self = []
+            return
+        }
 
         // Maximum angle per Bezier segment (90° = π/2)
         let maxAngle = Double.pi / 2
@@ -320,16 +325,17 @@ extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
         let segmentCount = Int((abs(sweepValue) / maxAngle).rounded(.up))
         let segmentAngle = sweepValue / Double(segmentCount)
 
-        var beziers: [Geometry.Bezier] = []
+        var beziers: [Geometry<Scalar>.Bezier] = []
         beziers.reserveCapacity(segmentCount)
 
-        var currentAngle = startAngle
+        var currentAngle = arc.startAngle
 
         for _ in 0..<segmentCount {
             let nextAngle = currentAngle + Radian(segmentAngle)
 
             // Create Bezier for this segment
-            let bezier = arcSegmentToBezier(
+            let bezier = Self.arcSegmentToBezier(
+                arc: arc,
                 from: currentAngle,
                 to: nextAngle
             )
@@ -338,26 +344,30 @@ extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
             currentAngle = nextAngle
         }
 
-        return beziers
+        self = beziers
     }
 
     /// Convert a single arc segment (≤90°) to a cubic Bezier
     @inlinable
-    internal func arcSegmentToBezier(from startAngle: Radian, to endAngle: Radian) -> Geometry.Bezier {
+    internal static func arcSegmentToBezier<Scalar: Real & BinaryFloatingPoint>(
+        arc: Geometry<Scalar>.Arc,
+        from startAngle: Radian,
+        to endAngle: Radian
+    ) -> Geometry<Scalar>.Bezier where Element == Geometry<Scalar>.Bezier {
         let sweep = endAngle - startAngle
         let halfSweep = sweep.value / 2
 
         // Control point distance factor
         let k = Scalar(4.0 / 3.0) * Scalar.tan(Scalar(halfSweep / 2))
 
-        let p0 = Geometry.Point(
-            x: Geometry.X(center.x.value + radius.value * Scalar(startAngle.cos)),
-            y: Geometry.Y(center.y.value + radius.value * Scalar(startAngle.sin))
+        let p0 = Geometry<Scalar>.Point(
+            x: Geometry<Scalar>.X(arc.center.x.value + arc.radius.value * Scalar(startAngle.cos)),
+            y: Geometry<Scalar>.Y(arc.center.y.value + arc.radius.value * Scalar(startAngle.sin))
         )
 
-        let p3 = Geometry.Point(
-            x: Geometry.X(center.x.value + radius.value * Scalar(endAngle.cos)),
-            y: Geometry.Y(center.y.value + radius.value * Scalar(endAngle.sin))
+        let p3 = Geometry<Scalar>.Point(
+            x: Geometry<Scalar>.X(arc.center.x.value + arc.radius.value * Scalar(endAngle.cos)),
+            y: Geometry<Scalar>.Y(arc.center.y.value + arc.radius.value * Scalar(endAngle.sin))
         )
 
         // Tangent directions at start and end
@@ -366,14 +376,14 @@ extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
         let t1x = -Scalar(endAngle.sin)
         let t1y = Scalar(endAngle.cos)
 
-        let p1 = Geometry.Point(
-            x: Geometry.X(p0.x.value + k * radius.value * t0x),
-            y: Geometry.Y(p0.y.value + k * radius.value * t0y)
+        let p1 = Geometry<Scalar>.Point(
+            x: Geometry<Scalar>.X(p0.x.value + k * arc.radius.value * t0x),
+            y: Geometry<Scalar>.Y(p0.y.value + k * arc.radius.value * t0y)
         )
 
-        let p2 = Geometry.Point(
-            x: Geometry.X(p3.x.value - k * radius.value * t1x),
-            y: Geometry.Y(p3.y.value - k * radius.value * t1y)
+        let p2 = Geometry<Scalar>.Point(
+            x: Geometry<Scalar>.X(p3.x.value - k * arc.radius.value * t1x),
+            y: Geometry<Scalar>.Y(p3.y.value - k * arc.radius.value * t1y)
         )
 
         return .cubic(from: p0, control1: p1, control2: p2, to: p3)

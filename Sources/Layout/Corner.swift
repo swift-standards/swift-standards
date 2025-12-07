@@ -13,8 +13,8 @@ public import Region
 ///
 /// ```swift
 /// let corner: Corner = .topLeading
-/// let absolute = corner.resolved(for: .leftToRight)  // .topLeft
-/// let rtl = corner.resolved(for: .rightToLeft)       // .topRight
+/// let absolute = Region.Corner(corner, direction: .leftToRight)  // .topLeft
+/// let rtl = Region.Corner(corner, direction: .rightToLeft)       // .topRight
 /// ```
 public struct Corner: Sendable, Hashable, Codable {
     /// The horizontal side (leading or trailing).
@@ -49,16 +49,20 @@ extension Horizontal.Alignment {
             case .trailing: return .leading
             }
         }
+    }
+}
 
-        /// Resolve to absolute horizontal direction.
-        @inlinable
-        public func resolved(for direction: LayoutDirection) -> Horizontal {
-            switch (self, direction) {
-            case (.leading, .leftToRight), (.trailing, .rightToLeft):
-                return .leftward
-            case (.trailing, .leftToRight), (.leading, .rightToLeft):
-                return .rightward
-            }
+// MARK: - Horizontal from Side
+
+extension Horizontal {
+    /// Create from a layout-relative side and direction.
+    @inlinable
+    public init(_ side: Horizontal.Alignment.Side, direction: Direction) {
+        switch (side, direction) {
+        case (.leading, .leftToRight), (.trailing, .rightToLeft):
+            self = .leftward
+        case (.trailing, .leftToRight), (.leading, .rightToLeft):
+            self = .rightward
         }
     }
 }
@@ -81,14 +85,18 @@ extension Vertical.Alignment {
             case .bottom: return .top
             }
         }
+    }
+}
 
-        /// Resolve to absolute vertical direction.
-        @inlinable
-        public var resolved: Vertical {
-            switch self {
-            case .top: return .upward
-            case .bottom: return .downward
-            }
+// MARK: - Vertical from Side
+
+extension Vertical {
+    /// Create from a layout-relative side.
+    @inlinable
+    public init(_ side: Vertical.Alignment.Side) {
+        switch side {
+        case .top: self = .upward
+        case .bottom: self = .downward
         }
     }
 }
@@ -169,15 +177,15 @@ extension Corner {
     }
 }
 
-// MARK: - Resolution to Absolute Corner
+// MARK: - Region.Corner from Layout.Corner
 
-extension Corner {
-    /// Resolve to an absolute corner for the given layout direction.
+extension Region.Corner {
+    /// Create from a layout-relative corner and direction.
     @inlinable
-    public func resolved(for direction: LayoutDirection) -> Region.Corner {
-        Region.Corner(
-            horizontal: horizontal.resolved(for: direction),
-            vertical: vertical.resolved
+    public init(_ corner: Corner, direction: Direction) {
+        self.init(
+            horizontal: Horizontal(corner.horizontal, direction: direction),
+            vertical: Vertical(corner.vertical)
         )
     }
 }

@@ -146,38 +146,6 @@ struct `FloatingPoint - Extensions` {
         let value = 0.00123456
         #expect(value.rounded(to: 4) == 0.0012)
     }
-
-    // MARK: - clamp01()
-
-    @Test(arguments: [
-        (0.5, 0.5),
-        (0.0, 0.0),
-        (1.0, 1.0),
-        (1.5, 1.0),
-        (-0.5, 0.0),
-        (2.0, 1.0),
-        (-10.0, 0.0),
-    ])
-    func `clamp01 restricts to unit interval`(testCase: (Double, Double)) {
-        let (value, expected) = testCase
-        #expect(value.clamp01() == expected)
-    }
-
-    @Test
-    func `clamp01 is idempotent`() {
-        let value = 1.5
-        let clamped = value.clamp01()
-        let doubleClamped = clamped.clamp01()
-
-        #expect(clamped == doubleClamped)
-    }
-
-    @Test
-    func `clamp01 preserves values in range`() {
-        for value in stride(from: 0.0, through: 1.0, by: 0.1) {
-            #expect(value.clamp01() == value)
-        }
-    }
 }
 
 @Suite
@@ -205,12 +173,6 @@ struct `FloatingPoint - Float specific` {
         let value: Float = 3.14159
         #expect(value.rounded(to: 2) == 3.14)
     }
-
-    @Test
-    func `Float inherits clamp01`() {
-        let value: Float = 1.5
-        #expect(value.clamp01() == 1.0)
-    }
 }
 
 @Suite
@@ -237,12 +199,6 @@ struct `FloatingPoint - Double specific` {
     func `Double inherits rounded`() {
         let value: Double = 3.14159
         #expect(value.rounded(to: 2) == 3.14)
-    }
-
-    @Test
-    func `Double inherits clamp01`() {
-        let value: Double = 1.5
-        #expect(value.clamp01() == 1.0)
     }
 }
 
@@ -273,14 +229,6 @@ extension `Performance Tests` {
             let values = Array(0..<100_000).map { Double($0) / 1000.0 }
             for value in values {
                 _ = value.rounded(to: 2)
-            }
-        }
-
-        @Test(.timed(threshold: .milliseconds(60), maxAllocations: 2_000_000))
-        func `clamp01 100k values`() {
-            let values = Array(0..<100_000).map { Double($0) / 50_000.0 - 1.0 }
-            for value in values {
-                _ = value.clamp01()
             }
         }
     }

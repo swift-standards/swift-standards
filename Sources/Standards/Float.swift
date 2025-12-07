@@ -5,7 +5,7 @@
 
 // Float inherits all FloatingPoint protocol extensions
 // including isApproximatelyEqual(to:tolerance:), lerp(to:t:),
-// rounded(to:), and clamp01()
+// rounded(to:)
 
 extension Float {
     // Type-specific extensions can be added here if needed
