@@ -1,6 +1,8 @@
 // Triangle.swift
 // A triangle defined by three vertices.
 
+public import Angle
+
 extension Geometry {
     /// A triangle in 2D space defined by three vertices.
     ///

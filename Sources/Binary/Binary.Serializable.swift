@@ -130,7 +130,7 @@ extension Binary.Serializable {
 
 // MARK: - RangeReplaceableCollection Append
 
-extension RangeReplaceableCollection where Element == UInt8 {
+extension RangeReplaceableCollection<UInt8> {
     /// Appends a serializable value to the collection.
     @inlinable
     public mutating func append<S: Binary.Serializable>(_ serializable: S) {

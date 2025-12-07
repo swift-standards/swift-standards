@@ -1,6 +1,8 @@
 // Bezier.swift
 // Bezier curves of arbitrary degree.
 
+public import Angle
+
 extension Geometry {
     /// A Bezier curve defined by control points.
     ///

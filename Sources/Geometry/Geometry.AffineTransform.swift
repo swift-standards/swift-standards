@@ -1,6 +1,7 @@
 // Geometry.AffineTransform.swift
 // A 2D affine transformation: linear transformation + translation.
 
+public import Angle
 public import RealModule
 
 extension Geometry {
@@ -84,25 +85,8 @@ extension Geometry.AffineTransform where Scalar: AdditiveArithmetic & Expressibl
     }
 }
 
-extension Geometry.AffineTransform where Scalar == Double {
-    /// Create from a rotation
-    @inlinable
-    public init(_ rotation: Rotation<2>) {
-        self.init(linear: rotation.matrix, translation: .zero)
-    }
-
-//    /// Create from a scale
-//    @inlinable
-//    public init(_ scale: Scale<2>) {
-//        self.init(linear: scale.linear, translation: .zero)
-//    }
-//
-//    /// Create from a shear
-//    @inlinable
-//    public init(_ shear: Shear<2>) {
-//        self.init(linear: shear.linear, translation: .zero)
-//    }
-}
+// MARK: - Symmetry Initializers
+// See Symmetry module for init(_ rotation:), init(_ scale:), init(_ shear:)
 
 // MARK: - Component Access (Standard Notation)
 

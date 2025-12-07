@@ -51,6 +51,18 @@ let package = Package(
             targets: ["Positioning"]
         ),
         .library(
+            name: "Angle",
+            targets: ["Angle"]
+        ),
+        .library(
+            name: "Symmetry",
+            targets: ["Symmetry"]
+        ),
+        .library(
+            name: "Region",
+            targets: ["Region"]
+        ),
+        .library(
             name: "Geometry",
             targets: ["Geometry"]
         ),
@@ -113,12 +125,34 @@ let package = Package(
             name: "Positioning"
         ),
         .target(
+            name: "Angle",
+            dependencies: [
+                .product(name: "RealModule", package: "swift-numerics"),
+            ]
+        ),
+        .target(
+            name: "Region",
+            dependencies: [
+                "Dimension",
+                "Algebra",
+            ]
+        ),
+        .target(
             name: "Geometry",
             dependencies: [
                 "Algebra",
                 "Dimension",
                 "Formatting",
+                "Angle",
+                "Region",
                 .product(name: "RealModule", package: "swift-numerics"),
+            ]
+        ),
+        .target(
+            name: "Symmetry",
+            dependencies: [
+                "Angle",
+                "Geometry",
             ]
         ),
         .target(
@@ -202,9 +236,31 @@ let package = Package(
             ]
         ),
         .testTarget(
+            name: "Angle".tests,
+            dependencies: [
+                "Angle",
+                "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
+            name: "Symmetry".tests,
+            dependencies: [
+                "Symmetry",
+                "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
+            name: "Region".tests,
+            dependencies: [
+                "Region",
+                "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
             name: "Geometry".tests,
             dependencies: [
                 "Geometry",
+                "Symmetry",
                 "StandardsTestSupport",
             ]
         ),

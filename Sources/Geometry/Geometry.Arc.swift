@@ -1,6 +1,7 @@
 // Arc.swift
 // A circular arc defined by center, radius, and angle range.
 
+public import Angle
 public import RealModule
 
 extension Geometry {
@@ -271,7 +272,7 @@ extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
         // Check if point's angle is within the arc
         let dx = point.x.value - center.x.value
         let dy = point.y.value - center.y.value
-        let pointAngle = Radian.atan2(y: Geometry<Double>.Y(Double(dy)), x: Geometry<Double>.X(Double(dx)))
+        let pointAngle = Radian.atan2(y: Double(dy), x: Double(dx))
 
         return angleIsInArc(pointAngle)
     }

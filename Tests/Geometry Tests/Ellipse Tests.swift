@@ -3,6 +3,7 @@
 
 import Testing
 @testable import Geometry
+import Angle
 
 @Suite
 struct `Ellipse Tests` {

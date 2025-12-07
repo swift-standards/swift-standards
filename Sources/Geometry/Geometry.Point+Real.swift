@@ -1,6 +1,7 @@
 // Point+Real.swift
 // Polar coordinates and rotation for 2D points with Real scalar types.
 
+public import Angle
 public import RealModule
 
 // MARK: - Polar Coordinates
@@ -18,10 +19,7 @@ extension Geometry.Point where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// The angle from the origin to this point
     @inlinable
     public var angle: Radian {
-        .atan2(
-            y: Geometry<Double>.Y(Double(y.value)),
-            x: Geometry<Double>.X(Double(x.value))
-        )
+        .atan2(y: Double(y.value), x: Double(x.value))
     }
 
     /// The distance from the origin (radius in polar coordinates)

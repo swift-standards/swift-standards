@@ -1,6 +1,8 @@
 // Circle.swift
 // A circle defined by center and radius.
 
+public import Angle
+
 extension Geometry {
     /// A circle in 2D space defined by its center and radius.
     ///

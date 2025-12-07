@@ -20,11 +20,19 @@ extension Optional: TernaryLogic where Wrapped == Bool {
 
     /// Returns self, since `Bool?` is the canonical representation.
     @inlinable
-    public var boolValue: Bool? { self }
+    public static func from(_ self: Self) -> Bool? { self }
 
     /// Creates an optional Bool from an optional Bool (identity).
     @inlinable
-    public init(boolValue: Bool?) {
-        self = boolValue
+    public init(_ bool: Bool?) {
+        self = bool
+    }
+}
+
+extension Optional where Wrapped == Bool {
+    public init<T: TernaryLogic>(
+        _ t: T
+    ){
+        self = T.from(t)
     }
 }

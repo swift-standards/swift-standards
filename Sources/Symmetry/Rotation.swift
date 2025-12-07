@@ -1,6 +1,9 @@
 // Rotation.swift
 // An N-dimensional rotation (element of SO(n), dimensionless).
 
+public import Angle
+public import Geometry
+
 /// An N-dimensional rotation.
 ///
 /// Rotations are dimensionless - they represent an angular displacement

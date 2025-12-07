@@ -1,6 +1,7 @@
 // Geometry.Linear.swift
 // An N×N linear transformation matrix parameterized by scalar type.
 
+public import Angle
 public import RealModule
 
 extension Geometry {
@@ -306,7 +307,7 @@ extension Geometry.Linear where N == 2, Scalar == Double {
     /// For matrices with scale/shear, this extracts the rotational component.
     @inlinable
     public var rotationAngle: Radian {
-        Radian.atan2(y: Geometry<Double>.Y(c), x: Geometry<Double>.X(a))
+        Radian.atan2(y: c, x: a)
     }
 }
 

@@ -2,6 +2,8 @@
 
 import Testing
 @testable import Geometry
+import Angle
+import Symmetry
 
 // MARK: - Test Unit Type
 

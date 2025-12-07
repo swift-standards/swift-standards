@@ -3,7 +3,7 @@
 
 // MARK: - Byte Collection Trimming
 
-extension Collection where Element == UInt8 {
+extension Collection<UInt8> {
     /// Trims bytes from both ends of a collection (authoritative implementation).
     ///
     /// - Parameters:
@@ -80,7 +80,7 @@ extension Collection where Element == UInt8 {
 
 // MARK: - Byte Subsequence Search
 
-extension Collection where Element == UInt8 {
+extension Collection<UInt8> {
     /// Finds the first occurrence of a byte subsequence.
     ///
     /// - Parameter needle: The byte sequence to search for

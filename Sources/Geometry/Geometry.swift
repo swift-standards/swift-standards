@@ -7,13 +7,12 @@
 //
 // ## Structure
 //
-// The module separates:
-// - **Dimensionless types** (global): `Radian`, `Degree`, `Scale`, `Rotation`, `Linear`, `Shear`
-// - **Spatial types** (parameterized): `Point`, `Vector`, `Size`, `Rectangle`, `Translation`, `AffineTransform`
+// Geometry depends on and re-exports:
+// - **Angle**: Angular measurements (`Radian`, `Degree`)
+// - **Region**: Discrete spatial partitions (`Cardinal`, `Quadrant`, `Octant`, `Edge`, `Corner`)
 //
-// This reflects the mathematical reality that linear transformations (rotation,
-// scale, shear) are independent of coordinate system, while positions and
-// displacements are not.
+// Related modules (import separately):
+// - **Symmetry**: Lie group transformations (`Rotation`, `Scale`, `Shear`)
 //
 // ## Spatial Types (Geometry<Scalar>)
 //
@@ -38,7 +37,9 @@
 // typealias Transform = Geometry<Points>.AffineTransform
 // ```
 
+public import Angle
 public import Dimension
+public import Region
 
 /// The Geometry namespace for affine geometry primitives.
 ///

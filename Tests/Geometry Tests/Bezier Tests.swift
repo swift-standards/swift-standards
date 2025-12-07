@@ -3,6 +3,7 @@
 
 import Testing
 @testable import Geometry
+import Angle
 
 @Suite("Bezier Tests")
 struct BezierTests {

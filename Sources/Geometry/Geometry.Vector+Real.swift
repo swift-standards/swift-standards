@@ -1,6 +1,7 @@
 // Vector+Real.swift
 // Angle and rotation operations for 2D vectors with Real scalar types.
 
+public import Angle
 public import RealModule
 
 // MARK: - Angle from Vector
@@ -9,10 +10,7 @@ extension Geometry.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// The angle of this vector from the positive x-axis
     @inlinable
     public var angle: Radian {
-        .atan2(
-            y: Geometry<Double>.Y(Double(dy.value)),
-            x: Geometry<Double>.X(Double(dx.value))
-        )
+        .atan2(y: Double(dy.value), x: Double(dx.value))
     }
 }
 
@@ -56,7 +54,7 @@ extension Geometry.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
     public func signedAngle(to other: Self) -> Radian {
         let cross = self.cross(other)
         let dot = self.dot(other)
-        return .atan2(y: Geometry<Double>.Y(Double(cross)), x: Geometry<Double>.X(Double(dot)))
+        return .atan2(y: Double(cross), x: Double(dot))
     }
 }
 

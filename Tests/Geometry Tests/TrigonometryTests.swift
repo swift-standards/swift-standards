@@ -3,6 +3,7 @@
 
 import Testing
 import Geometry
+import Angle
 import RealModule
 
 @Suite
@@ -41,7 +42,7 @@ struct `Trigonometry Tests` {
         let angle3 = Radian.atan(1.0)
         #expect(abs(angle3 - .pi / 4) < 1e-10)
 
-        let angle4 = Radian.atan2(y: Geometry<Double>.Y(1.0), x: Geometry<Double>.X(1.0))
+        let angle4 = Radian.atan2(y: 1.0, x: 1.0)
         #expect(abs(angle4 - .pi / 4) < 1e-10)
     }
 

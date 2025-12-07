@@ -3,6 +3,7 @@
 
 import Testing
 @testable import Geometry
+import Angle
 @testable import RealModule
 
 @Suite("Arc Tests")

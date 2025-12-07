@@ -1,6 +1,8 @@
 // Scale.swift
 // An N-dimensional scale transformation (dimensionless).
 
+public import Geometry
+
 /// An N-dimensional scale transformation.
 ///
 /// Scale factors are dimensionless - they represent ratios by which

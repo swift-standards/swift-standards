@@ -1,6 +1,8 @@
 // Ellipse.swift
 // An ellipse defined by center, semi-axes, and rotation.
 
+public import Angle
+
 extension Geometry {
     /// An ellipse in 2D space defined by center, semi-axes, and rotation.
     ///

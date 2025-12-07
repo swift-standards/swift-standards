@@ -3,7 +3,7 @@
 
 // MARK: - Byte Mutation Helpers
 
-extension RangeReplaceableCollection where Element == UInt8 {
+extension RangeReplaceableCollection<UInt8> {
     /// Appends a UTF-8 string as bytes.
     ///
     /// - Parameter string: The string to append as UTF-8 bytes

@@ -50,15 +50,12 @@ public protocol TernaryLogic {
     /// The unknown/indeterminate value.
     static var unknown: Self { get }
 
-    /// Converts this value to an optional Bool.
-    ///
-    /// - Returns: `true`, `false`, or `nil` for unknown.
-    var boolValue: Bool? { get }
+    static func from(_ self: Self)-> Bool?
 
     /// Creates a ternary value from an optional Bool.
     ///
     /// - Parameter boolValue: `true`, `false`, or `nil` for unknown.
-    init(boolValue: Bool?)
+    init(_ bool: Bool?)
 }
 
 // MARK: - AND Operator
@@ -73,10 +70,10 @@ public func && <T: TernaryLogic>(
     lhs: T,
     rhs: @autoclosure () throws -> T
 ) rethrows -> T {
-    if lhs.boolValue == false { return .false }
+    if T.from(lhs) == false { return .false }
     let rhs = try rhs()
-    if rhs.boolValue == false { return .false }
-    if lhs.boolValue == nil || rhs.boolValue == nil { return .unknown }
+    if T.from(rhs) == false { return .false }
+    if T.from(lhs) == nil || T.from(rhs) == nil { return .unknown }
     return .true
 }
 
@@ -92,10 +89,10 @@ public func || <T: TernaryLogic>(
     lhs: T,
     rhs: @autoclosure () throws -> T
 ) rethrows -> T {
-    if lhs.boolValue == true { return .true }
+    if T.from(lhs) == true { return .true }
     let rhs = try rhs()
-    if rhs.boolValue == true { return .true }
-    if lhs.boolValue == nil || rhs.boolValue == nil { return .unknown }
+    if T.from(rhs) == true { return .true }
+    if T.from(lhs) == nil || T.from(rhs) == nil { return .unknown }
     return .false
 }
 
@@ -106,7 +103,7 @@ public func || <T: TernaryLogic>(
 /// Returns unknown if the operand is unknown, otherwise returns the negation.
 @inlinable
 public prefix func ! <T: TernaryLogic>(value: T) -> T {
-    switch value.boolValue {
+    switch T.from(value) {
     case true: return .false
     case false: return .true
     case nil: return .unknown
@@ -121,7 +118,7 @@ public prefix func ! <T: TernaryLogic>(value: T) -> T {
 /// otherwise returns `true` if exactly one operand is `true`.
 @inlinable
 public func ^ <T: TernaryLogic>(lhs: T, rhs: T) -> T {
-    guard let l = lhs.boolValue, let r = rhs.boolValue else { return .unknown }
+    guard let l = T.from(lhs), let r = T.from(rhs) else { return .unknown }
     return l != r ? .true : .false
 }
 
@@ -168,6 +165,6 @@ infix operator !^ : ComparisonPrecedence
 /// otherwise returns `true` if both operands have the same value.
 @inlinable
 public func !^ <T: TernaryLogic>(lhs: T, rhs: T) -> T {
-    guard let l = lhs.boolValue, let r = rhs.boolValue else { return .unknown }
+    guard let l = T.from(lhs), let r = T.from(rhs) else { return .unknown }
     return l == r ? .true : .false
 }

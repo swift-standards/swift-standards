@@ -1,6 +1,8 @@
 // Shear.swift
 // An N-dimensional shear transformation (dimensionless).
 
+public import Geometry
+
 /// A 2D shear transformation.
 ///
 /// Shear factors are dimensionless - they represent the amount by which

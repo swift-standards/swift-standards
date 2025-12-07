@@ -42,8 +42,8 @@ extension Radian {
 
     /// Create a radian angle from y/x coordinates (atan2)
     @inlinable
-    public static func atan2(y: Geometry<Double>.Y, x: Geometry<Double>.X) -> Self {
-        Self(Double.atan2(y: y.value, x: x.value))
+    public static func atan2(y: Double, x: Double) -> Self {
+        Self(Double.atan2(y: y, x: x))
     }
 }
 
