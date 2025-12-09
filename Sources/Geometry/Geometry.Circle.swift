@@ -381,3 +381,98 @@ extension Geometry.Circle {
         )
     }
 }
+
+// MARK: - Bézier Approximation
+
+extension Geometry.Circle where Scalar: BinaryFloatingPoint {
+    /// A cubic Bézier curve segment
+    public struct BezierSegment {
+        /// Start point
+        public let start: Geometry.Point<2>
+        /// First control point
+        public let control1: Geometry.Point<2>
+        /// Second control point
+        public let control2: Geometry.Point<2>
+        /// End point
+        public let end: Geometry.Point<2>
+
+        /// Create a Bézier segment with the given control points
+        @inlinable
+        public init(
+            start: Geometry.Point<2>,
+            control1: Geometry.Point<2>,
+            control2: Geometry.Point<2>,
+            end: Geometry.Point<2>
+        ) {
+            self.start = start
+            self.control1 = control1
+            self.control2 = control2
+            self.end = end
+        }
+    }
+}
+
+extension Geometry.Circle.BezierSegment: Sendable where Scalar: Sendable {}
+
+extension Geometry.Circle where Scalar: BinaryFloatingPoint {
+    /// The 4 cubic Bézier curves that approximate this circle.
+    ///
+    /// Uses the standard constant k = 0.5522847498 (4/3 * (√2 - 1))
+    /// which provides an excellent approximation of a circle.
+    ///
+    /// The curves start at the 3 o'clock position and proceed clockwise:
+    /// 1. 3 o'clock to 6 o'clock (bottom-right quadrant)
+    /// 2. 6 o'clock to 9 o'clock (bottom-left quadrant)
+    /// 3. 9 o'clock to 12 o'clock (top-left quadrant)
+    /// 4. 12 o'clock to 3 o'clock (top-right quadrant)
+    @inlinable
+    public var bezierCurves: [BezierSegment] {
+        let k: Scalar = Scalar(0.5522847498) * radius.value
+        let cx = center.x.value
+        let cy = center.y.value
+        let r = radius.value
+
+        // Cardinal points
+        let right = Geometry.Point<2>(x: .init(cx + r), y: .init(cy))
+        let bottom = Geometry.Point<2>(x: .init(cx), y: .init(cy - r))
+        let left = Geometry.Point<2>(x: .init(cx - r), y: .init(cy))
+        let top = Geometry.Point<2>(x: .init(cx), y: .init(cy + r))
+
+        return [
+            // Bottom-right quadrant (3 o'clock to 6 o'clock)
+            BezierSegment(
+                start: right,
+                control1: Geometry.Point<2>(x: .init(cx + r), y: .init(cy - k)),
+                control2: Geometry.Point<2>(x: .init(cx + k), y: .init(cy - r)),
+                end: bottom
+            ),
+            // Bottom-left quadrant (6 o'clock to 9 o'clock)
+            BezierSegment(
+                start: bottom,
+                control1: Geometry.Point<2>(x: .init(cx - k), y: .init(cy - r)),
+                control2: Geometry.Point<2>(x: .init(cx - r), y: .init(cy - k)),
+                end: left
+            ),
+            // Top-left quadrant (9 o'clock to 12 o'clock)
+            BezierSegment(
+                start: left,
+                control1: Geometry.Point<2>(x: .init(cx - r), y: .init(cy + k)),
+                control2: Geometry.Point<2>(x: .init(cx - k), y: .init(cy + r)),
+                end: top
+            ),
+            // Top-right quadrant (12 o'clock to 3 o'clock)
+            BezierSegment(
+                start: top,
+                control1: Geometry.Point<2>(x: .init(cx + k), y: .init(cy + r)),
+                control2: Geometry.Point<2>(x: .init(cx + r), y: .init(cy + k)),
+                end: right
+            )
+        ]
+    }
+
+    /// The starting point for rendering this circle as Bézier curves (3 o'clock position)
+    @inlinable
+    public var bezierStartPoint: Geometry.Point<2> {
+        Geometry.Point<2>(x: .init(center.x.value + radius.value), y: center.y)
+    }
+}
