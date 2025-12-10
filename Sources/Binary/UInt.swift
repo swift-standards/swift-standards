@@ -5,7 +5,7 @@
 // // swift-standards
 // //
 // // Extensions for Swift standard library UInt
-// 
+//
 // extension UInt {
 //     /// Creates an integer from its byte representation
 //     /// - Parameters:

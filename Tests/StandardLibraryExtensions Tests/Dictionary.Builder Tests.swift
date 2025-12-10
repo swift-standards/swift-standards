@@ -204,51 +204,51 @@ struct DictionaryBuilderTests {
 
         @Test("buildExpression tuple")
         func buildExpressionTuple() {
-            let result = Dictionary<String, Int>.Builder.buildExpression(("key", 42))
+            let result = [String: Int].Builder.buildExpression(("key", 42))
             #expect(result == ["key": 42])
         }
 
         @Test("buildExpression dictionary")
         func buildExpressionDictionary() {
-            let result = Dictionary<String, Int>.Builder.buildExpression(["a": 1, "b": 2])
+            let result = [String: Int].Builder.buildExpression(["a": 1, "b": 2])
             #expect(result == ["a": 1, "b": 2])
         }
 
         @Test("buildExpression array of tuples")
         func buildExpressionArrayOfTuples() {
-            let result = Dictionary<String, Int>.Builder.buildExpression([("a", 1), ("b", 2)])
+            let result = [String: Int].Builder.buildExpression([("a", 1), ("b", 2)])
             #expect(result == ["a": 1, "b": 2])
         }
 
         @Test("buildExpression optional tuple some")
         func buildExpressionOptionalTupleSome() {
             let pair: (String, Int)? = ("key", 42)
-            let result = Dictionary<String, Int>.Builder.buildExpression(pair)
+            let result = [String: Int].Builder.buildExpression(pair)
             #expect(result == ["key": 42])
         }
 
         @Test("buildExpression optional tuple none")
         func buildExpressionOptionalTupleNone() {
             let pair: (String, Int)? = nil
-            let result = Dictionary<String, Int>.Builder.buildExpression(pair)
+            let result = [String: Int].Builder.buildExpression(pair)
             #expect(result == [:])
         }
 
         @Test("buildPartialBlock first")
         func buildPartialBlockFirst() {
-            let result = Dictionary<String, Int>.Builder.buildPartialBlock(first: ["a": 1])
+            let result = [String: Int].Builder.buildPartialBlock(first: ["a": 1])
             #expect(result == ["a": 1])
         }
 
         @Test("buildPartialBlock first void")
         func buildPartialBlockFirstVoid() {
-            let result = Dictionary<String, Int>.Builder.buildPartialBlock(first: ())
+            let result = [String: Int].Builder.buildPartialBlock(first: ())
             #expect(result == [:])
         }
 
         @Test("buildPartialBlock accumulated")
         func buildPartialBlockAccumulated() {
-            let result = Dictionary<String, Int>.Builder.buildPartialBlock(
+            let result = [String: Int].Builder.buildPartialBlock(
                 accumulated: ["a": 1],
                 next: ["b": 2]
             )
@@ -257,31 +257,31 @@ struct DictionaryBuilderTests {
 
         @Test("buildOptional some")
         func buildOptionalSome() {
-            let result = Dictionary<String, Int>.Builder.buildOptional(["a": 1])
+            let result = [String: Int].Builder.buildOptional(["a": 1])
             #expect(result == ["a": 1])
         }
 
         @Test("buildOptional none")
         func buildOptionalNone() {
-            let result = Dictionary<String, Int>.Builder.buildOptional(nil)
+            let result = [String: Int].Builder.buildOptional(nil)
             #expect(result == [:])
         }
 
         @Test("buildEither first")
         func buildEitherFirst() {
-            let result = Dictionary<String, Int>.Builder.buildEither(first: ["a": 1])
+            let result = [String: Int].Builder.buildEither(first: ["a": 1])
             #expect(result == ["a": 1])
         }
 
         @Test("buildEither second")
         func buildEitherSecond() {
-            let result = Dictionary<String, Int>.Builder.buildEither(second: ["b": 2])
+            let result = [String: Int].Builder.buildEither(second: ["b": 2])
             #expect(result == ["b": 2])
         }
 
         @Test("buildArray")
         func buildArray() {
-            let result = Dictionary<String, Int>.Builder.buildArray([
+            let result = [String: Int].Builder.buildArray([
                 ["a": 1],
                 ["b": 2],
                 ["c": 3],
@@ -291,7 +291,7 @@ struct DictionaryBuilderTests {
 
         @Test("buildLimitedAvailability")
         func buildLimitedAvailability() {
-            let result = Dictionary<String, Int>.Builder.buildLimitedAvailability(["a": 1])
+            let result = [String: Int].Builder.buildLimitedAvailability(["a": 1])
             #expect(result == ["a": 1])
         }
     }

@@ -1,6 +1,7 @@
 // Direction Tests.swift
 
 import Testing
+
 @testable import Dimension
 
 // MARK: - Direction Tests

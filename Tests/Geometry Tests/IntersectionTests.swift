@@ -2,6 +2,7 @@
 // Tests for intersection operations on Line, Line.Segment, and other geometric types.
 
 import Testing
+
 @testable import Geometry
 
 @Suite

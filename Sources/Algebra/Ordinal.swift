@@ -83,20 +83,20 @@ public struct Ordinal<let N: Int>: Sendable, Hashable {
 // MARK: - Special Values
 
 extension Ordinal {
-    /// The zero value (first element).
-    ///
-    /// - Note: Ideally this would only be available when N >= 1, but Swift
-    ///   does not yet support `where` clauses on properties.
+    // The zero value (first element).
+    //
+    // - Note: Ideally this would only be available when N >= 1, but Swift
+    //   does not yet support `where` clauses on properties.
     // FUTURE: public static var zero: Self where N >= 1 { ... }
     @inlinable
     public static var zero: Self {
         Self(unchecked: 0)
     }
 
-    /// The maximum value (N - 1).
-    ///
-    /// - Note: Ideally this would only be available when N >= 1, but Swift
-    ///   does not yet support `where` clauses on properties.
+    // The maximum value (N - 1).
+    //
+    // - Note: Ideally this would only be available when N >= 1, but Swift
+    //   does not yet support `where` clauses on properties.
     // FUTURE: public static var max: Self where N >= 1 { ... }
     @inlinable
     public static var max: Self {
@@ -127,7 +127,8 @@ extension Ordinal: Codable {
             throw DecodingError.dataCorrupted(
                 DecodingError.Context(
                     codingPath: decoder.codingPath,
-                    debugDescription: "Value \(value) out of bounds for Ordinal<\(N)> (expected 0..<\(N))"
+                    debugDescription:
+                        "Value \(value) out of bounds for Ordinal<\(N)> (expected 0..<\(N))"
                 )
             )
         }
@@ -143,19 +144,19 @@ extension Ordinal: Codable {
 // MARK: - Conversion
 
 extension Ordinal {
-    /// Converts this value to an `Ordinal` of a different domain.
-    ///
-    /// This is safe when M >= N, as every value in Ordinal<N> is also valid in Ordinal<M>.
-    ///
-    /// ```swift
-    /// let small: Ordinal<3> = Ordinal(2)!
-    /// let large: Ordinal<10> = small.injected()  // Still represents 2
-    /// ```
-    ///
-    /// - Note: Ideally this would have a `where M >= N` constraint, but Swift
-    ///   does not yet support comparison constraints on integer generic parameters.
+    // Converts this value to an `Ordinal` of a different domain.
+    //
+    // This is safe when M >= N, as every value in Ordinal<N> is also valid in Ordinal<M>.
+    //
+    // ```swift
+    // let small: Ordinal<3> = Ordinal(2)!
+    // let large: Ordinal<10> = small.injected()  // Still represents 2
+    // ```
+    //
+    // - Note: Ideally this would have a `where M >= N` constraint, but Swift
+    //   does not yet support comparison constraints on integer generic parameters.
     // FUTURE: public func injected<let M: Int>() -> Ordinal<M> where M >= N { ... }
-    /// - Precondition: `rawValue` must be less than M
+    // - Precondition: `rawValue` must be less than M
     @inlinable
     public func injected<let M: Int>() -> Ordinal<M> {
         Ordinal<M>(unchecked: rawValue)

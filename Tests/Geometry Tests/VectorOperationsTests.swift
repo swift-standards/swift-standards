@@ -1,9 +1,10 @@
 // VectorOperationsTests.swift
 // Tests for vector operations including projection, rejection, and angle calculations.
 
-import Testing
-@testable import Geometry
 import Angle
+import Testing
+
+@testable import Geometry
 
 @Suite
 struct `Vector Projection Tests` {
@@ -155,7 +156,7 @@ struct `Vector Angle Tests` {
         let v2: Geometry<Double>.Vector<2> = .init(dx: 0, dy: 1)
 
         let angle = v1.signedAngle(to: v2)
-        #expect(angle.value > 0) // CCW is positive
+        #expect(angle.value > 0)  // CCW is positive
         #expect(abs(angle.value - Double.pi / 2) < 1e-10)
     }
 
@@ -165,7 +166,7 @@ struct `Vector Angle Tests` {
         let v2: Geometry<Double>.Vector<2> = .init(dx: 0, dy: -1)
 
         let angle = v1.signedAngle(to: v2)
-        #expect(angle.value < 0) // CW is negative
+        #expect(angle.value < 0)  // CW is negative
         #expect(abs(angle.value - (-(Double.pi / 2))) < 1e-10)
     }
 }

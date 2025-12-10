@@ -323,7 +323,7 @@ extension Geometry.Circle where Scalar: FloatingPoint {
             Geometry.Point(
                 x: Geometry.X(px - h * dy),
                 y: Geometry.Y(py + h * dx)
-            )
+            ),
         ]
     }
 }
@@ -363,7 +363,10 @@ extension Geometry.Circle where Scalar: FloatingPoint {
 extension Geometry.Circle {
     /// Create a circle by transforming the coordinates of another circle
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Circle, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Circle,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(
             center: try Geometry.Point<2>(other.center, transform),
             radius: try Geometry.Length(other.radius, transform)
@@ -466,7 +469,7 @@ extension Geometry.Circle where Scalar: BinaryFloatingPoint {
                 control1: Geometry.Point<2>(x: .init(cx + k), y: .init(cy + r)),
                 control2: Geometry.Point<2>(x: .init(cx + r), y: .init(cy + k)),
                 end: right
-            )
+            ),
         ]
     }
 

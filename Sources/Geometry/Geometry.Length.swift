@@ -139,7 +139,10 @@ extension Geometry.Length: Strideable where Scalar: Strideable {
 extension Geometry.Length {
     /// Create a Length by transforming the value of another Length
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Length, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Length,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(try transform(other.value))
     }
 

@@ -46,12 +46,12 @@ public protocol Orientation: Sendable, Hashable, CaseIterable where AllCases == 
     ///
     /// This is an involution: `x.opposite.opposite == x`
     var opposite: Self { get }
-    
+
     /// The underlying canonical direction.
     ///
     /// This makes the isomorphism `Self ≅ Direction` explicit.
     var direction: Direction { get }
-    
+
     /// Creates an orientation from a canonical direction.
     ///
     /// This is the inverse of `direction`, completing the isomorphism.
@@ -68,7 +68,7 @@ extension Orientation {
     public static prefix func ! (value: Self) -> Self {
         value.opposite
     }
-    
+
     /// All cases, derived from Direction's cases.
     @inlinable
     public static var allCases: [Self] {
@@ -86,13 +86,13 @@ extension Orientation {
     public init(_ condition: Bool) {
         self.init(direction: condition ? Direction.positive : Direction.negative)
     }
-    
+
     /// Whether this is the "positive" orientation.
     @inlinable
     public var isPositive: Bool {
         direction == Direction.positive
     }
-    
+
     /// Whether this is the "negative" orientation.
     @inlinable
     public var isNegative: Bool {
@@ -135,4 +135,3 @@ extension Tagged where Tag: Orientation {
 extension Orientation {
     public typealias Value<Scalar> = Oriented<Self, Scalar>
 }
-

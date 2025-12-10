@@ -19,4 +19,3 @@ extension Bool {
     /// ```
     public var int: Int { .init(self) }
 }
-

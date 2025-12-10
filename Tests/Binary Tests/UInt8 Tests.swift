@@ -1,4 +1,5 @@
 import Testing
+
 @testable import Binary
 
 // UInt8 Base64 and Hex encoding tests have been moved to swift-rfc-4648

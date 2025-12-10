@@ -31,13 +31,11 @@ extension Degree: AdditiveArithmetic {
     public static var zero: Self { Self(0) }
 
     @inlinable
-    @_disfavoredOverload
     public static func + (lhs: borrowing Self, rhs: borrowing Self) -> Self {
         Self(lhs.value + rhs.value)
     }
 
     @inlinable
-    @_disfavoredOverload
     public static func - (lhs: borrowing Self, rhs: borrowing Self) -> Self {
         Self(lhs.value - rhs.value)
     }

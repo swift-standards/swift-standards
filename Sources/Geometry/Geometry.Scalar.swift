@@ -99,7 +99,10 @@ extension Geometry.Scalar where Scalar: SignedNumeric {
 extension Geometry.Scalar {
     /// Create a scalar by transforming the value of another scalar
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Scalar, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Scalar,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(try transform(other.value))
     }
 

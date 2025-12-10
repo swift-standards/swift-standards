@@ -2,6 +2,7 @@
 // Tests for Geometry.Ray type.
 
 import Testing
+
 @testable import Geometry
 
 @Suite

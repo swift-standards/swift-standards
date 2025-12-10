@@ -1,14 +1,14 @@
 // TernaryLogic.swift
 // Namespace and protocol for three-valued logic types.
 
-/// Namespace for ternary (three-valued) logic types and operations.
-///
-/// Ternary logic extends classical boolean logic with a third value
-/// representing "unknown" or "indeterminate".
-///
-/// The canonical ternary logic type is `Bool?`, which conforms to
-/// `TernaryLogic.Protocol`.
-//public enum TernaryLogic {}
+// Namespace for ternary (three-valued) logic types and operations.
+//
+// Ternary logic extends classical boolean logic with a third value
+// representing "unknown" or "indeterminate".
+//
+// The canonical ternary logic type is `Bool?`, which conforms to
+// `TernaryLogic.Protocol`.
+// public enum TernaryLogic {}
 public enum TernaryLogic {}
 
 // MARK: - Protocol

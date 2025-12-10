@@ -236,7 +236,7 @@ extension Geometry.AffineTransform where Scalar: Real & BinaryFloatingPoint {
 //
 //// MARK: - Rotation Factory (Float)
 //
-//extension Geometry.AffineTransform where Scalar == Float {
+// extension Geometry.AffineTransform where Scalar == Float {
 //    /// Create a rotation transform
 //    @inlinable
 //    public static func rotation(_ angle: Radian) -> Self {
@@ -248,7 +248,7 @@ extension Geometry.AffineTransform where Scalar: Real & BinaryFloatingPoint {
 //    public static func rotation(_ angle: Degree) -> Self {
 //        Self(linear: .rotation(angle.radians), translation: .zero)
 //    }
-//}
+// }
 
 // MARK: - Fluent Modifiers
 

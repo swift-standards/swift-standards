@@ -1,6 +1,8 @@
 // Winding.swift
 // Rotational direction around an axis.
 
+public import Algebra
+
 /// Rotational winding direction: clockwise or counterclockwise.
 ///
 /// Describes the direction of rotation around an axis, commonly used
@@ -63,8 +65,6 @@ extension Winding {
 }
 
 // MARK: - Tagged Value
-
-public import Algebra
 
 extension Winding {
     /// A value paired with its winding direction.

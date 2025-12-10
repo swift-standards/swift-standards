@@ -34,7 +34,12 @@ extension Geometry {
         ///   - lly: Lower-left y coordinate
         ///   - urx: Upper-right x coordinate
         ///   - ury: Upper-right y coordinate
-        public init(llx: consuming Geometry.X, lly: consuming Geometry.Y, urx: consuming Geometry.X, ury: consuming Geometry.Y) {
+        public init(
+            llx: consuming Geometry.X,
+            lly: consuming Geometry.Y,
+            urx: consuming Geometry.X,
+            ury: consuming Geometry.Y
+        ) {
             self.llx = llx
             self.lly = lly
             self.urx = urx
@@ -264,22 +269,19 @@ extension Geometry.Rectangle where Scalar: Comparable {
     /// Check if the rectangle contains a point
     @inlinable
     public func contains(_ point: Geometry.Point<2>) -> Bool {
-        point.x >= minX && point.x <= maxX &&
-        point.y >= minY && point.y <= maxY
+        point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY
     }
 
     /// Check if this rectangle contains another rectangle
     @inlinable
     public func contains(_ other: Self) -> Bool {
-        other.minX >= minX && other.maxX <= maxX &&
-        other.minY >= minY && other.maxY <= maxY
+        other.minX >= minX && other.maxX <= maxX && other.minY >= minY && other.maxY <= maxY
     }
 
     /// Check if this rectangle intersects another
     @inlinable
     public func intersects(_ other: Self) -> Bool {
-        minX <= other.maxX && maxX >= other.minX &&
-        minY <= other.maxY && maxY >= other.minY
+        minX <= other.maxX && maxX >= other.minX && minY <= other.maxY && maxY >= other.minY
     }
 
     /// The union of this rectangle with another
@@ -412,7 +414,10 @@ extension Geometry.Rectangle where Scalar: Comparable & AdditiveArithmetic {
 extension Geometry.Rectangle {
     /// Create a rectangle by transforming each coordinate of another rectangle
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Rectangle, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Rectangle,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(
             llx: .init(try transform(other.llx.value)),
             lly: .init(try transform(other.lly.value)),

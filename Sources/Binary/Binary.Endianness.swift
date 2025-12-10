@@ -1,6 +1,8 @@
 // Endianness.swift
 // Byte order for multi-byte integer serialization.
 
+public import Algebra
+
 /// Byte order for multi-byte integer serialization.
 ///
 /// Specifies how multi-byte integers are arranged in memory.
@@ -35,7 +37,7 @@ extension Binary {
     public enum Endianness: Sendable, Hashable, Codable, CaseIterable {
         /// Least significant byte first (x86, ARM, most modern CPUs).
         case little
-        
+
         /// Most significant byte first (network byte order).
         case big
     }
@@ -70,9 +72,9 @@ extension Binary.Endianness {
     @inlinable
     public static var native: Binary.Endianness {
         #if _endian(little)
-        return .little
+            return .little
         #else
-        return .big
+            return .big
         #endif
     }
 
@@ -84,8 +86,6 @@ extension Binary.Endianness {
 }
 
 // MARK: - Tagged Value
-
-public import Algebra
 
 extension Binary.Endianness {
     /// A value paired with its byte order.

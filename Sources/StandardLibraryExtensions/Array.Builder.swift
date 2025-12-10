@@ -102,12 +102,12 @@ extension ArraySlice {
     public enum Builder {
         @inlinable
         public static func buildExpression(_ expression: Element) -> [Element] {
-            Array<Element>.Builder.buildExpression(expression)
+            [Element].Builder.buildExpression(expression)
         }
 
         @inlinable
         public static func buildExpression(_ expression: [Element]) -> [Element] {
-            Array<Element>.Builder.buildExpression(expression)
+            [Element].Builder.buildExpression(expression)
         }
 
         @inlinable
@@ -117,17 +117,17 @@ extension ArraySlice {
 
         @inlinable
         public static func buildExpression(_ expression: Element?) -> [Element] {
-            Array<Element>.Builder.buildExpression(expression)
+            [Element].Builder.buildExpression(expression)
         }
 
         @inlinable
         public static func buildPartialBlock(first: [Element]) -> [Element] {
-            Array<Element>.Builder.buildPartialBlock(first: first)
+            [Element].Builder.buildPartialBlock(first: first)
         }
 
         @inlinable
         public static func buildPartialBlock(first: Void) -> [Element] {
-            Array<Element>.Builder.buildPartialBlock(first: first)
+            [Element].Builder.buildPartialBlock(first: first)
         }
 
         @inlinable
@@ -135,37 +135,37 @@ extension ArraySlice {
 
         @inlinable
         public static func buildPartialBlock(accumulated: [Element], next: [Element]) -> [Element] {
-            Array<Element>.Builder.buildPartialBlock(accumulated: accumulated, next: next)
+            [Element].Builder.buildPartialBlock(accumulated: accumulated, next: next)
         }
 
         @inlinable
         public static func buildBlock() -> [Element] {
-            Array<Element>.Builder.buildBlock()
+            [Element].Builder.buildBlock()
         }
 
         @inlinable
         public static func buildOptional(_ component: [Element]?) -> [Element] {
-            Array<Element>.Builder.buildOptional(component)
+            [Element].Builder.buildOptional(component)
         }
 
         @inlinable
         public static func buildEither(first: [Element]) -> [Element] {
-            Array<Element>.Builder.buildEither(first: first)
+            [Element].Builder.buildEither(first: first)
         }
 
         @inlinable
         public static func buildEither(second: [Element]) -> [Element] {
-            Array<Element>.Builder.buildEither(second: second)
+            [Element].Builder.buildEither(second: second)
         }
 
         @inlinable
         public static func buildArray(_ components: [[Element]]) -> [Element] {
-            Array<Element>.Builder.buildArray(components)
+            [Element].Builder.buildArray(components)
         }
 
         @inlinable
         public static func buildLimitedAvailability(_ component: [Element]) -> [Element] {
-            Array<Element>.Builder.buildLimitedAvailability(component)
+            [Element].Builder.buildLimitedAvailability(component)
         }
 
         @inlinable
@@ -192,12 +192,12 @@ extension ContiguousArray {
     public enum Builder {
         @inlinable
         public static func buildExpression(_ expression: Element) -> [Element] {
-            Array<Element>.Builder.buildExpression(expression)
+            [Element].Builder.buildExpression(expression)
         }
 
         @inlinable
         public static func buildExpression(_ expression: [Element]) -> [Element] {
-            Array<Element>.Builder.buildExpression(expression)
+            [Element].Builder.buildExpression(expression)
         }
 
         @inlinable
@@ -207,17 +207,17 @@ extension ContiguousArray {
 
         @inlinable
         public static func buildExpression(_ expression: Element?) -> [Element] {
-            Array<Element>.Builder.buildExpression(expression)
+            [Element].Builder.buildExpression(expression)
         }
 
         @inlinable
         public static func buildPartialBlock(first: [Element]) -> [Element] {
-            Array<Element>.Builder.buildPartialBlock(first: first)
+            [Element].Builder.buildPartialBlock(first: first)
         }
 
         @inlinable
         public static func buildPartialBlock(first: Void) -> [Element] {
-            Array<Element>.Builder.buildPartialBlock(first: first)
+            [Element].Builder.buildPartialBlock(first: first)
         }
 
         @inlinable
@@ -225,37 +225,37 @@ extension ContiguousArray {
 
         @inlinable
         public static func buildPartialBlock(accumulated: [Element], next: [Element]) -> [Element] {
-            Array<Element>.Builder.buildPartialBlock(accumulated: accumulated, next: next)
+            [Element].Builder.buildPartialBlock(accumulated: accumulated, next: next)
         }
 
         @inlinable
         public static func buildBlock() -> [Element] {
-            Array<Element>.Builder.buildBlock()
+            [Element].Builder.buildBlock()
         }
 
         @inlinable
         public static func buildOptional(_ component: [Element]?) -> [Element] {
-            Array<Element>.Builder.buildOptional(component)
+            [Element].Builder.buildOptional(component)
         }
 
         @inlinable
         public static func buildEither(first: [Element]) -> [Element] {
-            Array<Element>.Builder.buildEither(first: first)
+            [Element].Builder.buildEither(first: first)
         }
 
         @inlinable
         public static func buildEither(second: [Element]) -> [Element] {
-            Array<Element>.Builder.buildEither(second: second)
+            [Element].Builder.buildEither(second: second)
         }
 
         @inlinable
         public static func buildArray(_ components: [[Element]]) -> [Element] {
-            Array<Element>.Builder.buildArray(components)
+            [Element].Builder.buildArray(components)
         }
 
         @inlinable
         public static func buildLimitedAvailability(_ component: [Element]) -> [Element] {
-            Array<Element>.Builder.buildLimitedAvailability(component)
+            [Element].Builder.buildLimitedAvailability(component)
         }
 
         @inlinable

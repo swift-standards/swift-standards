@@ -107,7 +107,10 @@ extension Geometry.Vector {
 extension Geometry.Vector {
     /// Create a vector by transforming each component of another vector
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Vector<N>, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Vector<N>,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         var comps = InlineArray<N, Scalar>(repeating: try transform(other.components[0]))
         for i in 1..<N {
             comps[i] = try transform(other.components[i])

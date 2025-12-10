@@ -25,7 +25,7 @@ struct StringBuilderTests {
         func optionalStringExpressionNone() {
             let value: String? = nil
             let result = String.Builder.buildExpression(value)
-            #expect(result == "")
+            #expect(result.isEmpty)
         }
     }
 
@@ -55,14 +55,14 @@ struct StringBuilderTests {
             let result = String {
                 ""
             }
-            #expect(result == "")
+            #expect(result.isEmpty)
         }
 
         @Test("Empty block")
         func emptyBlock() {
             let result = String {
             }
-            #expect(result == "")
+            #expect(result.isEmpty)
         }
     }
 
@@ -307,7 +307,7 @@ struct StringBuilderTests {
         @Test("buildPartialBlock first void")
         func buildPartialBlockFirstVoid() {
             let result = String.Builder.buildPartialBlock(first: ())
-            #expect(result == "")
+            #expect(result.isEmpty)
         }
 
         @Test("buildPartialBlock accumulated and next")
@@ -343,7 +343,7 @@ struct StringBuilderTests {
         @Test("buildOptional with nil")
         func buildOptionalWithNil() {
             let result = String.Builder.buildOptional(nil)
-            #expect(result == "")
+            #expect(result.isEmpty)
         }
 
         @Test("buildArray")
@@ -356,7 +356,7 @@ struct StringBuilderTests {
         @Test("buildArray with empty array")
         func buildArrayWithEmptyArray() {
             let result = String.Builder.buildArray([])
-            #expect(result == "")
+            #expect(result.isEmpty)
         }
 
         @Test("buildLimitedAvailability")

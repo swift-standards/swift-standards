@@ -315,12 +315,14 @@ extension Geometry.Bezier where Scalar: FloatingPoint {
     /// Return a curve scaled uniformly about a given point.
     @inlinable
     public func scaled(by factor: Scalar, about point: Geometry.Point<2>) -> Self {
-        Self(controlPoints: controlPoints.map { p in
-            Geometry.Point(
-                x: Geometry.X(point.x.value + factor * (p.x.value - point.x.value)),
-                y: Geometry.Y(point.y.value + factor * (p.y.value - point.y.value))
-            )
-        })
+        Self(
+            controlPoints: controlPoints.map { p in
+                Geometry.Point(
+                    x: Geometry.X(point.x.value + factor * (p.x.value - point.x.value)),
+                    y: Geometry.Y(point.y.value + factor * (p.y.value - point.y.value))
+                )
+            }
+        )
     }
 
     /// Return the curve with reversed direction.
@@ -394,7 +396,7 @@ extension Geometry.Bezier where Scalar: BinaryFloatingPoint {
             .cubic(from: right, control1: c1_1, control2: c1_2, to: top),
             .cubic(from: top, control1: c2_1, control2: c2_2, to: left),
             .cubic(from: left, control1: c3_1, control2: c3_2, to: bottom),
-            .cubic(from: bottom, control1: c4_1, control2: c4_2, to: right)
+            .cubic(from: bottom, control1: c4_1, control2: c4_2, to: right),
         ]
     }
 
@@ -413,7 +415,10 @@ extension Geometry.Bezier where Scalar: BinaryFloatingPoint {
 extension Geometry.Bezier {
     /// Create a curve by transforming the coordinates of another curve
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Bezier, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Bezier,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         var result: [Geometry.Point<2>] = []
         result.reserveCapacity(other.controlPoints.count)
         for point in other.controlPoints {

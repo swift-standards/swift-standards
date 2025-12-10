@@ -139,7 +139,10 @@ extension Geometry.Depth: Strideable where Scalar: Strideable {
 extension Geometry.Depth {
     /// Create a Depth by transforming the value of another Depth
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Depth, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Depth,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(try transform(other.value))
     }
 
@@ -151,4 +154,3 @@ extension Geometry.Depth {
         Geometry<Result>.Depth(try transform(value))
     }
 }
-

@@ -1,9 +1,10 @@
 // Circle Tests.swift
 // Tests for Geometry.Circle type.
 
-import Testing
-@testable import Geometry
 import Angle
+import Testing
+
+@testable import Geometry
 
 @Suite
 struct `Circle Tests` {
@@ -88,21 +89,21 @@ struct `Circle Tests` {
     @Test
     func `Circle contains interior point`() {
         let circle: Geometry<Double>.Circle = .init(center: .zero, radius: 10)
-        let point: Geometry<Double>.Point<2> = .init(x: 3, y: 4) // distance 5
+        let point: Geometry<Double>.Point<2> = .init(x: 3, y: 4)  // distance 5
         #expect(circle.contains(point))
     }
 
     @Test
     func `Circle contains boundary point`() {
         let circle: Geometry<Double>.Circle = .init(center: .zero, radius: 5)
-        let point: Geometry<Double>.Point<2> = .init(x: 3, y: 4) // distance 5
+        let point: Geometry<Double>.Point<2> = .init(x: 3, y: 4)  // distance 5
         #expect(circle.contains(point))
     }
 
     @Test
     func `Circle does not contain exterior point`() {
         let circle: Geometry<Double>.Circle = .init(center: .zero, radius: 5)
-        let point: Geometry<Double>.Point<2> = .init(x: 6, y: 8) // distance 10
+        let point: Geometry<Double>.Point<2> = .init(x: 6, y: 8)  // distance 10
         #expect(!circle.contains(point))
     }
 

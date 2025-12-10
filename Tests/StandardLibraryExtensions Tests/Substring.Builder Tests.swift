@@ -30,7 +30,7 @@ struct SubstringBuilderTests {
         func emptyBlock() {
             let result: Substring = Substring {
             }
-            #expect(result == "")
+            #expect(result.isEmpty)
         }
 
         @Test("Empty string")
@@ -38,7 +38,7 @@ struct SubstringBuilderTests {
             let result: Substring = Substring {
                 ""
             }
-            #expect(result == "")
+            #expect(result.isEmpty)
         }
 
         @Test("Mixed String and Substring")
@@ -136,7 +136,7 @@ struct SubstringBuilderTests {
             let result: Substring = Substring {
                 value
             }
-            #expect(result == "")
+            #expect(result.isEmpty)
         }
 
         @Test("Optional String - some")
@@ -154,7 +154,7 @@ struct SubstringBuilderTests {
             let result: Substring = Substring {
                 value
             }
-            #expect(result == "")
+            #expect(result.isEmpty)
         }
     }
 
@@ -182,7 +182,7 @@ struct SubstringBuilderTests {
         @Test("buildPartialBlock first void")
         func buildPartialBlockFirstVoid() {
             let result = Substring.Builder.buildPartialBlock(first: ())
-            #expect(result == "")
+            #expect(result.isEmpty)
         }
 
         @Test("buildPartialBlock accumulated")
@@ -206,7 +206,7 @@ struct SubstringBuilderTests {
         @Test("buildOptional none")
         func buildOptionalNone() {
             let result = Substring.Builder.buildOptional(nil)
-            #expect(result == "")
+            #expect(result.isEmpty)
         }
 
         @Test("buildArray")

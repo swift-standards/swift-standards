@@ -31,7 +31,12 @@ extension Geometry {
         ///   - leading: Leading inset
         ///   - bottom: Bottom inset
         ///   - trailing: Trailing inset
-        public init(top: consuming Scalar, leading: consuming Scalar, bottom: consuming Scalar, trailing: consuming Scalar) {
+        public init(
+            top: consuming Scalar,
+            leading: consuming Scalar,
+            bottom: consuming Scalar,
+            trailing: consuming Scalar
+        ) {
             self.top = top
             self.leading = leading
             self.bottom = bottom
@@ -115,7 +120,12 @@ extension Geometry.EdgeInsets where Scalar: SignedNumeric {
     @inlinable
     @_disfavoredOverload
     public static prefix func - (value: borrowing Self) -> Self {
-        Self(top: -value.top, leading: -value.leading, bottom: -value.bottom, trailing: -value.trailing)
+        Self(
+            top: -value.top,
+            leading: -value.leading,
+            bottom: -value.bottom,
+            trailing: -value.trailing
+        )
     }
 }
 
@@ -124,7 +134,10 @@ extension Geometry.EdgeInsets where Scalar: SignedNumeric {
 extension Geometry.EdgeInsets {
     /// Create edge insets by transforming each value of another edge insets
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.EdgeInsets, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.EdgeInsets,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(
             top: try transform(other.top),
             leading: try transform(other.leading),

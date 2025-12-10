@@ -1,6 +1,7 @@
 // Algebra Tests.swift
 
 import Testing
+
 @testable import Algebra
 
 // MARK: - Parity Tests

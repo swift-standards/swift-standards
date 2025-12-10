@@ -338,7 +338,8 @@ extension Predicate {
     /// let isAdult = Predicate<Person>.where(\.age, Predicate<Int>.greater.thanOrEqualTo(18))
     /// ```
     @inlinable
-    public static func `where`<V>(_ keyPath: KeyPath<T, V>, _ predicate: Predicate<V>) -> Predicate {
+    public static func `where`<V>(_ keyPath: KeyPath<T, V>, _ predicate: Predicate<V>) -> Predicate
+    {
         predicate.pullback(keyPath)
     }
 
@@ -348,7 +349,10 @@ extension Predicate {
     /// let isLongName = Predicate<Person>.where(\.name) { $0.count > 10 }
     /// ```
     @inlinable
-    public static func `where`<V>(_ keyPath: KeyPath<T, V>, _ test: @escaping (V) -> Bool) -> Predicate {
+    public static func `where`<V>(
+        _ keyPath: KeyPath<T, V>,
+        _ test: @escaping (V) -> Bool
+    ) -> Predicate {
         Predicate<V>(test).pullback(keyPath)
     }
 }
@@ -491,7 +495,8 @@ extension Predicate.In where T: Comparable {
 
 extension Predicate.In where T: Equatable {
     @inlinable
-    public static func collection<C: Collection>(_ collection: C) -> Predicate<T> where C.Element == T {
+    public static func collection<C: Collection>(_ collection: C) -> Predicate<T>
+    where C.Element == T {
         Predicate { collection.contains($0) }
     }
 }

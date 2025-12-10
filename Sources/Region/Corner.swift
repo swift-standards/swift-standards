@@ -64,7 +64,7 @@ extension Region.Corner {
 
 extension Region.Corner: CaseIterable {
     public static let allCases: [Region.Corner] = [
-        .topLeft, .topRight, .bottomLeft, .bottomRight
+        .topLeft, .topRight, .bottomLeft, .bottomRight,
     ]
 }
 

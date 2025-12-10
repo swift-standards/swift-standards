@@ -157,7 +157,9 @@ extension Geometry.Triangle {
 extension Geometry.Triangle where Scalar: AdditiveArithmetic {
     /// The three edges as line segments
     @inlinable
-    public var edges: (ab: Geometry.Line.Segment, bc: Geometry.Line.Segment, ca: Geometry.Line.Segment) {
+    public var edges:
+        (ab: Geometry.Line.Segment, bc: Geometry.Line.Segment, ca: Geometry.Line.Segment)
+    {
         (
             Geometry.Line.Segment(start: a, end: b),
             Geometry.Line.Segment(start: b, end: c),
@@ -472,7 +474,10 @@ extension Geometry.Triangle where Scalar: FloatingPoint {
 extension Geometry.Triangle {
     /// Create a triangle by transforming the coordinates of another triangle
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Triangle, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Triangle,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(
             a: try Geometry.Point<2>(other.a, transform),
             b: try Geometry.Point<2>(other.b, transform),

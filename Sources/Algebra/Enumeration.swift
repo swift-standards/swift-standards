@@ -68,8 +68,10 @@ extension Enumeration: Collection {
     /// Returns the element at the given position.
     @inlinable
     public subscript(position: Int) -> Element {
-        precondition(position >= 0 && position < Element.caseCount,
-                     "Index \(position) out of bounds for \(Element.self)")
+        precondition(
+            position >= 0 && position < Element.caseCount,
+            "Index \(position) out of bounds for \(Element.self)"
+        )
         return Element(caseIndex: position)
     }
 

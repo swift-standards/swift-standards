@@ -2,6 +2,7 @@
 // Tests for Predicate<T> type and composition operators.
 
 import Testing
+
 @testable import Predicate
 
 // MARK: - Basic Tests
@@ -47,10 +48,10 @@ struct PredicateANDTests {
     func `AND combines predicates`() {
         let isEvenAndPositive = isEven && isPositive
 
-        #expect(isEvenAndPositive(4) == true)   // even and positive
+        #expect(isEvenAndPositive(4) == true)  // even and positive
         #expect(isEvenAndPositive(3) == false)  // odd
-        #expect(isEvenAndPositive(-4) == false) // negative
-        #expect(isEvenAndPositive(-3) == false) // odd and negative
+        #expect(isEvenAndPositive(-4) == false)  // negative
+        #expect(isEvenAndPositive(-3) == false)  // odd and negative
     }
 
     @Test
@@ -115,10 +116,10 @@ struct PredicateORTests {
     func `OR combines predicates`() {
         let isEvenOrNegative = isEven || isNegative
 
-        #expect(isEvenOrNegative(4) == true)    // even
-        #expect(isEvenOrNegative(-3) == true)   // negative
-        #expect(isEvenOrNegative(-4) == true)   // both
-        #expect(isEvenOrNegative(3) == false)   // neither
+        #expect(isEvenOrNegative(4) == true)  // even
+        #expect(isEvenOrNegative(-3) == true)  // negative
+        #expect(isEvenOrNegative(-4) == true)  // both
+        #expect(isEvenOrNegative(3) == false)  // neither
     }
 
     @Test
@@ -235,9 +236,9 @@ struct PredicateXORTests {
     func `XOR returns true when exactly one is true`() {
         let isEvenXorPositive = isEven ^ isPositive
 
-        #expect(isEvenXorPositive(4) == false)   // both true
-        #expect(isEvenXorPositive(3) == true)    // positive only
-        #expect(isEvenXorPositive(-4) == true)   // even only
+        #expect(isEvenXorPositive(4) == false)  // both true
+        #expect(isEvenXorPositive(3) == true)  // positive only
+        #expect(isEvenXorPositive(-4) == true)  // even only
         #expect(isEvenXorPositive(-3) == false)  // neither
     }
 
@@ -398,7 +399,7 @@ struct PredicatePullbackTests {
         let isEven = Predicate<Int> { $0 % 2 == 0 }
         let hasEvenLength = isEven.pullback { (s: String) in s.count }
 
-        #expect(hasEvenLength("hi") == true)      // count 2
+        #expect(hasEvenLength("hi") == true)  // count 2
         #expect(hasEvenLength("hello") == false)  // count 5
     }
 
@@ -407,8 +408,8 @@ struct PredicatePullbackTests {
         let isLong = Predicate<Int> { $0 > 3 }
         let hasLongCount: Predicate<String> = isLong.pullback(\.count)
 
-        #expect(hasLongCount("hi") == false)     // count 2
-        #expect(hasLongCount("hello") == true)   // count 5
+        #expect(hasLongCount("hi") == false)  // count 2
+        #expect(hasLongCount("hello") == true)  // count 5
     }
 }
 
@@ -604,8 +605,8 @@ struct PredicateQuantifierTests {
     func `forAll quantifier with ClosedRange`() {
         let allEven: Predicate<ClosedRange<Int>> = isEven.forAll()
 
-        #expect(allEven(2...2) == true)     // single even
-        #expect(allEven(1...10) == false)   // mixed
+        #expect(allEven(2...2) == true)  // single even
+        #expect(allEven(1...10) == false)  // mixed
     }
 
     @Test
@@ -613,7 +614,7 @@ struct PredicateQuantifierTests {
         let anyEven: Predicate<ClosedRange<Int>> = isEven.forAny()
 
         #expect(anyEven(1...10) == true)
-        #expect(anyEven(1...1) == false)    // single odd
+        #expect(anyEven(1...1) == false)  // single odd
     }
 
     @Test
@@ -656,9 +657,9 @@ struct PredicateClosureOperatorTests {
     func `XOR with two closures`() {
         let combined = isEvenClosure ^ isPositiveClosure
 
-        #expect(combined(4) == false)   // both
-        #expect(combined(3) == true)    // positive only
-        #expect(combined(-4) == true)   // even only
+        #expect(combined(4) == false)  // both
+        #expect(combined(3) == true)  // positive only
+        #expect(combined(-4) == true)  // even only
     }
 
     @Test

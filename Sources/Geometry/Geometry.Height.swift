@@ -127,12 +127,14 @@ extension Geometry.Height where Scalar: SignedNumeric {
 extension Geometry.Height where Scalar: FloatingPoint {
     /// Multiply by a scalar
     @inlinable
+    @_disfavoredOverload
     public static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
         Self(lhs.value * rhs)
     }
 
     /// Multiply scalar by value
     @inlinable
+    @_disfavoredOverload
     public static func * (lhs: Scalar, rhs: borrowing Self) -> Self {
         Self(lhs * rhs.value)
     }
@@ -166,7 +168,10 @@ extension Geometry.Height: Strideable where Scalar: Strideable {
 extension Geometry.Height {
     /// Create a Height by transforming the value of another Height
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Height, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Height,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(try transform(other.value))
     }
 

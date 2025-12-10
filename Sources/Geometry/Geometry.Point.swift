@@ -107,7 +107,10 @@ extension Geometry.Point {
 extension Geometry.Point {
     /// Create a point by transforming each coordinate of another point
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Point<N>, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Point<N>,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         var coords = InlineArray<N, Scalar>(repeating: try transform(other.coordinates[0]))
         for i in 1..<N {
             coords[i] = try transform(other.coordinates[i])
@@ -400,7 +403,6 @@ extension Geometry.Point where N == 2, Scalar: FloatingPoint {
     }
 }
 
-
 // MARK: - 3D Point Translation (AdditiveArithmetic)
 
 extension Geometry.Point where N == 3, Scalar: AdditiveArithmetic {
@@ -441,4 +443,3 @@ extension Geometry.Point where N == 3, Scalar: FloatingPoint {
         distanceSquared(to: other).squareRoot()
     }
 }
-

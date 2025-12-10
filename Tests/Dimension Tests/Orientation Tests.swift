@@ -1,6 +1,7 @@
 // Orientation Tests.swift
 
 import Testing
+
 @testable import Dimension
 
 @Suite
@@ -125,7 +126,8 @@ struct OrientationTests {
     @Test
     func `Convert between orientation types via Direction`() {
         func convert<From: Orientation, To: Orientation>(
-            _ from: From, to _: To.Type
+            _ from: From,
+            to _: To.Type
         ) -> To {
             To(direction: from.direction)
         }

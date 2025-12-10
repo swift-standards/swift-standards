@@ -83,8 +83,8 @@ extension Geometry.Polygon where Scalar: SignedNumeric {
         var sum: Scalar = .zero
         for i in 0..<vertices.count {
             let j = (i + 1) % vertices.count
-            sum = sum + (vertices[i].x.value * vertices[j].y.value)
-            sum = sum - (vertices[j].x.value * vertices[i].y.value)
+            sum += (vertices[i].x.value * vertices[j].y.value)
+            sum -= (vertices[j].x.value * vertices[i].y.value)
         }
         return sum
     }
@@ -129,7 +129,9 @@ extension Geometry.Polygon where Scalar: FloatingPoint {
 
         for i in 0..<vertices.count {
             let j = (i + 1) % vertices.count
-            let cross = vertices[i].x.value * vertices[j].y.value - vertices[j].x.value * vertices[i].y.value
+            let cross =
+                vertices[i].x.value * vertices[j].y.value - vertices[j].x.value
+                * vertices[i].y.value
             cx += (vertices[i].x.value + vertices[j].x.value) * cross
             cy += (vertices[i].y.value + vertices[j].y.value) * cross
         }
@@ -294,12 +296,14 @@ extension Geometry.Polygon where Scalar: FloatingPoint {
     /// Return a polygon scaled uniformly about a given point.
     @inlinable
     public func scaled(by factor: Scalar, about point: Geometry.Point<2>) -> Self {
-        Self(vertices: vertices.map { v in
-            Geometry.Point(
-                x: Geometry.X(point.x.value + factor * (v.x.value - point.x.value)),
-                y: Geometry.Y(point.y.value + factor * (v.y.value - point.y.value))
-            )
-        })
+        Self(
+            vertices: vertices.map { v in
+                Geometry.Point(
+                    x: Geometry.X(point.x.value + factor * (v.x.value - point.x.value)),
+                    y: Geometry.Y(point.y.value + factor * (v.y.value - point.y.value))
+                )
+            }
+        )
     }
 }
 
@@ -336,8 +340,9 @@ extension Geometry.Polygon where Scalar: FloatingPoint {
                 let c = remaining[next]
 
                 // Check if this is a convex vertex (ear candidate)
-                let cross = (b.x.value - a.x.value) * (c.y.value - a.y.value) -
-                           (b.y.value - a.y.value) * (c.x.value - a.x.value)
+                let cross =
+                    (b.x.value - a.x.value) * (c.y.value - a.y.value) - (b.y.value - a.y.value)
+                    * (c.x.value - a.x.value)
 
                 // For CCW polygon, ears have positive cross product
                 guard cross > 0 else { continue }
@@ -381,7 +386,10 @@ extension Geometry.Polygon where Scalar: FloatingPoint {
 extension Geometry.Polygon {
     /// Create a polygon by transforming the coordinates of another polygon
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Polygon, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Polygon,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         var result: [Geometry.Point<2>] = []
         result.reserveCapacity(other.vertices.count)
         for vertex in other.vertices {

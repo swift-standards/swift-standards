@@ -1,9 +1,10 @@
 // Arc Tests.swift
 // Tests for Geometry.Arc type.
 
-import Testing
-@testable import Geometry
 import Angle
+import Testing
+
+@testable import Geometry
 @testable import RealModule
 
 @Suite("Arc Tests")
@@ -300,7 +301,10 @@ struct ArcTests {
         // Point at 45 degrees
         let x = 5 * Double.cos(Double.pi / 4)
         let y = 5 * Double.sin(Double.pi / 4)
-        let point: Geometry<Double>.Point<2> = .init(x: Geometry<Double>.X(x), y: Geometry<Double>.Y(y))
+        let point: Geometry<Double>.Point<2> = .init(
+            x: Geometry<Double>.X(x),
+            y: Geometry<Double>.Y(y)
+        )
         #expect(arc.contains(point))
     }
 

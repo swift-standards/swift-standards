@@ -1,8 +1,9 @@
 // Winding Tests.swift
 
+import Algebra
 import Foundation
 import Testing
-import Algebra
+
 @testable import Dimension
 
 @Suite

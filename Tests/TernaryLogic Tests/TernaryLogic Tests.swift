@@ -2,6 +2,7 @@
 // Tests for Strong Kleene three-valued logic.
 
 import Testing
+
 @testable import TernaryLogic
 
 // MARK: - Test Cases

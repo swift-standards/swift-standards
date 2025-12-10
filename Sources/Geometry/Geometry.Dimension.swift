@@ -58,7 +58,8 @@ extension Geometry.Dimension: Comparable where Scalar: Comparable {
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Geometry.Dimension: ExpressibleByIntegerLiteral where Scalar: ExpressibleByIntegerLiteral {
+extension Geometry.Dimension: ExpressibleByIntegerLiteral
+where Scalar: ExpressibleByIntegerLiteral {
     @inlinable
     public init(integerLiteral value: Scalar.IntegerLiteralType) {
         self.value = Scalar(integerLiteral: value)
@@ -89,12 +90,14 @@ extension Geometry.Dimension where Scalar: SignedNumeric {
 extension Geometry.Dimension where Scalar: FloatingPoint {
     /// Multiply by a scalar
     @inlinable
+    @_disfavoredOverload
     public static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
         Self(lhs.value * rhs)
     }
 
     /// Multiply scalar by value
     @inlinable
+    @_disfavoredOverload
     public static func * (lhs: Scalar, rhs: borrowing Self) -> Self {
         Self(lhs * rhs.value)
     }
@@ -128,7 +131,10 @@ extension Geometry.Dimension: Strideable where Scalar: Strideable {
 extension Geometry.Dimension {
     /// Create a Dimension by transforming the value of another Dimension
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Dimension, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Dimension,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(try transform(other.value))
     }
 

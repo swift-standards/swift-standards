@@ -2,6 +2,7 @@
 // Tests for Geometry.Triangle type.
 
 import Testing
+
 @testable import Geometry
 
 @Suite
@@ -29,7 +30,7 @@ struct `Triangle Tests` {
         let vertices: [Geometry<Double>.Point<2>] = [
             .init(x: 0, y: 0),
             .init(x: 3, y: 0),
-            .init(x: 0, y: 4)
+            .init(x: 0, y: 4),
         ]
         let triangle = Geometry<Double>.Triangle(vertices: vertices)
         #expect(triangle != nil)
@@ -42,7 +43,7 @@ struct `Triangle Tests` {
     func `Triangle init from wrong size array is nil`() {
         let twoVertices: [Geometry<Double>.Point<2>] = [
             .init(x: 0, y: 0),
-            .init(x: 3, y: 0)
+            .init(x: 3, y: 0),
         ]
         let triangle = Geometry<Double>.Triangle(vertices: twoVertices)
         #expect(triangle == nil)
@@ -313,9 +314,9 @@ struct `Triangle Tests` {
         let bary = triangle.barycentric(triangle.centroid)
         #expect(bary != nil)
         // Centroid has equal barycentric coordinates
-        #expect(abs(bary!.u - 1.0/3.0) < 1e-10)
-        #expect(abs(bary!.v - 1.0/3.0) < 1e-10)
-        #expect(abs(bary!.w - 1.0/3.0) < 1e-10)
+        #expect(abs(bary!.u - 1.0 / 3.0) < 1e-10)
+        #expect(abs(bary!.v - 1.0 / 3.0) < 1e-10)
+        #expect(abs(bary!.w - 1.0 / 3.0) < 1e-10)
     }
 
     @Test
@@ -351,7 +352,7 @@ struct `Triangle Tests` {
             b: .init(x: 6, y: 0),
             c: .init(x: 0, y: 6)
         )
-        let point = triangle.point(u: 1.0/3.0, v: 1.0/3.0, w: 1.0/3.0)
+        let point = triangle.point(u: 1.0 / 3.0, v: 1.0 / 3.0, w: 1.0 / 3.0)
         #expect(abs(point.x.value - 2) < 1e-10)
         #expect(abs(point.y.value - 2) < 1e-10)
     }

@@ -1,8 +1,9 @@
 // Symmetry Tests.swift
 
-import Testing
-@testable import Symmetry
 import Geometry
+import Testing
+
+@testable import Symmetry
 
 @Suite
 struct SymmetryTests {

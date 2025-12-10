@@ -1,9 +1,10 @@
 // Ellipse Tests.swift
 // Tests for Geometry.Ellipse type.
 
-import Testing
-@testable import Geometry
 import Angle
+import Testing
+
+@testable import Geometry
 
 @Suite
 struct `Ellipse Tests` {
@@ -103,7 +104,7 @@ struct `Ellipse Tests` {
     func `Perimeter approximation`() {
         // For a circle, perimeter = 2πr
         let circle: Geometry<Double>.Ellipse = .circle(center: .zero, radius: 5)
-        #expect(abs(circle.perimeter - 10 * .pi) < 0.01) // Ramanujan is exact for circles
+        #expect(abs(circle.perimeter - 10 * .pi) < 0.01)  // Ramanujan is exact for circles
     }
 
     // MARK: - isCircle

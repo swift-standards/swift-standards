@@ -1,15 +1,17 @@
 // GeometryTests.swift
 
-import Testing
-@testable import Geometry
 import Angle
 import Symmetry
+import Testing
+
+@testable import Geometry
 
 // MARK: - Test Unit Type
 
 /// A custom unit type for testing
 struct TestUnit: AdditiveArithmetic, Comparable, Codable, Hashable,
-                 ExpressibleByIntegerLiteral, ExpressibleByFloatLiteral {
+    ExpressibleByIntegerLiteral, ExpressibleByFloatLiteral
+{
     let value: Double
 
     init(_ value: Double) {
@@ -172,14 +174,14 @@ struct Vector2Tests {
     func `Vector dot product`() {
         let a: Geometry<Double>.Vector2 = .init(dx: 1, dy: 0)
         let b: Geometry<Double>.Vector2 = .init(dx: 0, dy: 1)
-        #expect(a.dot(b) == 0) // perpendicular
+        #expect(a.dot(b) == 0)  // perpendicular
     }
 
     @Test
     func `Vector cross product`() {
         let a: Geometry<Double>.Vector2 = .init(dx: 1, dy: 0)
         let b: Geometry<Double>.Vector2 = .init(dx: 0, dy: 1)
-        #expect(a.cross(b) == 1) // counter-clockwise
+        #expect(a.cross(b) == 1)  // counter-clockwise
     }
 
     @Test
@@ -571,7 +573,12 @@ struct LineTests {
 struct EdgeInsetsTests {
     @Test
     func `Creates edge insets`() {
-        let insets: Geometry<TestUnit>.EdgeInsets = .init(top: 10, leading: 20, bottom: 30, trailing: 40)
+        let insets: Geometry<TestUnit>.EdgeInsets = .init(
+            top: 10,
+            leading: 20,
+            bottom: 30,
+            trailing: 40
+        )
         #expect(insets.top == 10)
         #expect(insets.leading == 20)
         #expect(insets.bottom == 30)

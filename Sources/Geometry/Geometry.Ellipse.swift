@@ -350,7 +350,10 @@ extension Geometry.Ellipse where Scalar: FloatingPoint {
 extension Geometry.Ellipse {
     /// Create an ellipse by transforming the coordinates of another ellipse
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Ellipse, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Ellipse,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(
             center: try Geometry.Point<2>(other.center, transform),
             semiMajor: try Geometry.Length(other.semiMajor, transform),

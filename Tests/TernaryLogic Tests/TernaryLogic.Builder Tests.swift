@@ -1,7 +1,7 @@
+import StandardLibraryExtensions
 import Testing
 
 @testable import TernaryLogic
-import StandardLibraryExtensions
 
 @Suite("TernaryLogic.Builder Tests")
 struct TernaryLogicBuilderTests {
@@ -347,11 +347,17 @@ struct TernaryLogicBuilderTests {
         @Test("All.buildPartialBlock accumulated")
         func allBuildPartialBlockAccumulated() {
             // true AND true = true
-            let r1 = TernaryLogic.Builder<Bool?>.All.buildPartialBlock(accumulated: true, next: true)
+            let r1 = TernaryLogic.Builder<Bool?>.All.buildPartialBlock(
+                accumulated: true,
+                next: true
+            )
             #expect(r1 == true)
 
             // true AND false = false
-            let r2 = TernaryLogic.Builder<Bool?>.All.buildPartialBlock(accumulated: true, next: false)
+            let r2 = TernaryLogic.Builder<Bool?>.All.buildPartialBlock(
+                accumulated: true,
+                next: false
+            )
             #expect(r2 == false)
 
             // true AND unknown = unknown
@@ -359,26 +365,41 @@ struct TernaryLogicBuilderTests {
             #expect(r3 == nil)
 
             // unknown AND false = false (false dominates)
-            let r4 = TernaryLogic.Builder<Bool?>.All.buildPartialBlock(accumulated: nil, next: false)
+            let r4 = TernaryLogic.Builder<Bool?>.All.buildPartialBlock(
+                accumulated: nil,
+                next: false
+            )
             #expect(r4 == false)
         }
 
         @Test("Any.buildPartialBlock accumulated")
         func anyBuildPartialBlockAccumulated() {
             // false OR false = false
-            let r1 = TernaryLogic.Builder<Bool?>.`Any`.buildPartialBlock(accumulated: false, next: false)
+            let r1 = TernaryLogic.Builder<Bool?>.`Any`.buildPartialBlock(
+                accumulated: false,
+                next: false
+            )
             #expect(r1 == false)
 
             // false OR true = true
-            let r2 = TernaryLogic.Builder<Bool?>.`Any`.buildPartialBlock(accumulated: false, next: true)
+            let r2 = TernaryLogic.Builder<Bool?>.`Any`.buildPartialBlock(
+                accumulated: false,
+                next: true
+            )
             #expect(r2 == true)
 
             // false OR unknown = unknown
-            let r3 = TernaryLogic.Builder<Bool?>.`Any`.buildPartialBlock(accumulated: false, next: nil)
+            let r3 = TernaryLogic.Builder<Bool?>.`Any`.buildPartialBlock(
+                accumulated: false,
+                next: nil
+            )
             #expect(r3 == nil)
 
             // unknown OR true = true (true dominates)
-            let r4 = TernaryLogic.Builder<Bool?>.`Any`.buildPartialBlock(accumulated: nil, next: true)
+            let r4 = TernaryLogic.Builder<Bool?>.`Any`.buildPartialBlock(
+                accumulated: nil,
+                next: true
+            )
             #expect(r4 == true)
         }
 

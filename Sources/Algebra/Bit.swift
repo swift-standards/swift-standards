@@ -1,30 +1,30 @@
 // Bit.swift
 // Binary digit (0 or 1).
 
-/// A single binary digit: zero or one.
-///
-/// The fundamental unit of information in digital systems.
-///
-/// ## Mathematical Properties
-///
-/// - Forms Z₂ field under XOR (addition) and AND (multiplication)
-/// - `flipped` is the NOT operation
-/// - Identity for AND is `one`, for XOR is `zero`
-///
-/// ## Tagged Values
-///
-/// Use `Bit.Value<T>` to pair a value with a bit flag:
-///
-/// ```swift
-/// let weighted: Bit.Value<Double> = .init(tag: .one, value: 0.5)
-/// ```
-//public enum Bit: UInt8, Sendable, Hashable, Codable, CaseIterable {
+// A single binary digit: zero or one.
+//
+// The fundamental unit of information in digital systems.
+//
+// ## Mathematical Properties
+//
+// - Forms Z₂ field under XOR (addition) and AND (multiplication)
+// - `flipped` is the NOT operation
+// - Identity for AND is `one`, for XOR is `zero`
+//
+// ## Tagged Values
+//
+// Use `Bit.Value<T>` to pair a value with a bit flag:
+//
+// ```swift
+// let weighted: Bit.Value<Double> = .init(tag: .one, value: 0.5)
+// ```
+// public enum Bit: UInt8, Sendable, Hashable, Codable, CaseIterable {
 //    /// Binary zero (false, off, low).
 //    case zero = 0
 //
 //    /// Binary one (true, on, high).
 //    case one = 1
-//}
+// }
 
 public typealias Bit = UInt8
 

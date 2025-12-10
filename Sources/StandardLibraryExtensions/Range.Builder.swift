@@ -42,7 +42,10 @@ extension Range {
         public static func buildPartialBlock(first: Never) -> [Range<Bound>] {}
 
         @inlinable
-        public static func buildPartialBlock(accumulated: [Range<Bound>], next: [Range<Bound>]) -> [Range<Bound>] {
+        public static func buildPartialBlock(
+            accumulated: [Range<Bound>],
+            next: [Range<Bound>]
+        ) -> [Range<Bound>] {
             accumulated + next
         }
 
@@ -84,7 +87,9 @@ extension Range {
 
 extension Range {
     @inlinable
-    public static func build(@Range<Bound>.Builder _ builder: () -> [Range<Bound>]) -> [Range<Bound>] {
+    public static func build(
+        @Range<Bound>.Builder _ builder: () -> [Range<Bound>]
+    ) -> [Range<Bound>] {
         builder()
     }
 }
@@ -110,12 +115,15 @@ extension ClosedRange {
         // MARK: - Expression Building
 
         @inlinable
-        public static func buildExpression(_ expression: ClosedRange<Bound>) -> [ClosedRange<Bound>] {
+        public static func buildExpression(_ expression: ClosedRange<Bound>) -> [ClosedRange<Bound>]
+        {
             [expression]
         }
 
         @inlinable
-        public static func buildExpression(_ expression: [ClosedRange<Bound>]) -> [ClosedRange<Bound>] {
+        public static func buildExpression(
+            _ expression: [ClosedRange<Bound>]
+        ) -> [ClosedRange<Bound>] {
             expression
         }
 
@@ -141,7 +149,10 @@ extension ClosedRange {
         public static func buildPartialBlock(first: Never) -> [ClosedRange<Bound>] {}
 
         @inlinable
-        public static func buildPartialBlock(accumulated: [ClosedRange<Bound>], next: [ClosedRange<Bound>]) -> [ClosedRange<Bound>] {
+        public static func buildPartialBlock(
+            accumulated: [ClosedRange<Bound>],
+            next: [ClosedRange<Bound>]
+        ) -> [ClosedRange<Bound>] {
             accumulated + next
         }
 
@@ -155,7 +166,8 @@ extension ClosedRange {
         // MARK: - Control Flow
 
         @inlinable
-        public static func buildOptional(_ component: [ClosedRange<Bound>]?) -> [ClosedRange<Bound>] {
+        public static func buildOptional(_ component: [ClosedRange<Bound>]?) -> [ClosedRange<Bound>]
+        {
             component ?? []
         }
 
@@ -170,12 +182,15 @@ extension ClosedRange {
         }
 
         @inlinable
-        public static func buildArray(_ components: [[ClosedRange<Bound>]]) -> [ClosedRange<Bound>] {
+        public static func buildArray(_ components: [[ClosedRange<Bound>]]) -> [ClosedRange<Bound>]
+        {
             components.flatMap { $0 }
         }
 
         @inlinable
-        public static func buildLimitedAvailability(_ component: [ClosedRange<Bound>]) -> [ClosedRange<Bound>] {
+        public static func buildLimitedAvailability(
+            _ component: [ClosedRange<Bound>]
+        ) -> [ClosedRange<Bound>] {
             component
         }
     }
@@ -183,7 +198,9 @@ extension ClosedRange {
 
 extension ClosedRange {
     @inlinable
-    public static func build(@ClosedRange<Bound>.Builder _ builder: () -> [ClosedRange<Bound>]) -> [ClosedRange<Bound>] {
+    public static func build(
+        @ClosedRange<Bound>.Builder _ builder: () -> [ClosedRange<Bound>]
+    ) -> [ClosedRange<Bound>] {
         builder()
     }
 }

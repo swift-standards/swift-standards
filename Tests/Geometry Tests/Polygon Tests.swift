@@ -2,6 +2,7 @@
 // Tests for Geometry.Polygon type.
 
 import Testing
+
 @testable import Geometry
 
 @Suite
@@ -15,7 +16,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
             .init(x: 4, y: 3),
-            .init(x: 0, y: 3)
+            .init(x: 0, y: 3),
         ])
         #expect(polygon.vertices.count == 4)
         #expect(polygon.vertexCount == 4)
@@ -28,7 +29,7 @@ struct `Polygon Tests` {
         let polygon: Geometry<Double>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
-            .init(x: 0, y: 1)
+            .init(x: 0, y: 1),
         ])
         #expect(polygon.isValid)
     }
@@ -37,7 +38,7 @@ struct `Polygon Tests` {
     func `Invalid polygon with 2 vertices`() {
         let polygon: Geometry<Double>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
-            .init(x: 1, y: 0)
+            .init(x: 1, y: 0),
         ])
         #expect(!polygon.isValid)
     }
@@ -49,7 +50,7 @@ struct `Polygon Tests` {
         let polygon: Geometry<Double>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
-            .init(x: 2, y: 3)
+            .init(x: 2, y: 3),
         ])
         let edges = polygon.edges
         #expect(edges.count == 3)
@@ -69,7 +70,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
             .init(x: 1, y: 1),
-            .init(x: 0, y: 1)
+            .init(x: 0, y: 1),
         ])
         let edges = polygon.edges
         #expect(edges.count == 4)
@@ -83,7 +84,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
             .init(x: 1, y: 1),
-            .init(x: 0, y: 1)
+            .init(x: 0, y: 1),
         ])
         #expect(abs(polygon.area - 1) < 1e-10)
     }
@@ -94,7 +95,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
             .init(x: 4, y: 3),
-            .init(x: 0, y: 3)
+            .init(x: 0, y: 3),
         ])
         #expect(abs(polygon.area - 12) < 1e-10)
     }
@@ -104,7 +105,7 @@ struct `Polygon Tests` {
         let polygon: Geometry<Double>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
-            .init(x: 0, y: 3)
+            .init(x: 0, y: 3),
         ])
         #expect(abs(polygon.area - 6) < 1e-10)
     }
@@ -115,7 +116,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
             .init(x: 1, y: 1),
-            .init(x: 0, y: 1)
+            .init(x: 0, y: 1),
         ])
         #expect(polygon.signedDoubleArea > 0)
     }
@@ -126,7 +127,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 0, y: 1),
             .init(x: 1, y: 1),
-            .init(x: 1, y: 0)
+            .init(x: 1, y: 0),
         ])
         #expect(polygon.signedDoubleArea < 0)
     }
@@ -139,7 +140,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
             .init(x: 1, y: 1),
-            .init(x: 0, y: 1)
+            .init(x: 0, y: 1),
         ])
         #expect(abs(polygon.perimeter - 4) < 1e-10)
     }
@@ -149,7 +150,7 @@ struct `Polygon Tests` {
         let polygon: Geometry<Double>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 3, y: 0),
-            .init(x: 0, y: 4)
+            .init(x: 0, y: 4),
         ])
         #expect(abs(polygon.perimeter - 12) < 1e-10)
     }
@@ -162,7 +163,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 2, y: 0),
             .init(x: 2, y: 2),
-            .init(x: 0, y: 2)
+            .init(x: 0, y: 2),
         ])
         let centroid = polygon.centroid
         #expect(centroid != nil)
@@ -175,7 +176,7 @@ struct `Polygon Tests` {
         let polygon: Geometry<Double>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 6, y: 0),
-            .init(x: 0, y: 6)
+            .init(x: 0, y: 6),
         ])
         let centroid = polygon.centroid!
         #expect(abs(centroid.x.value - 2) < 1e-10)
@@ -190,7 +191,7 @@ struct `Polygon Tests` {
             .init(x: 1, y: 2),
             .init(x: 5, y: 3),
             .init(x: 4, y: 7),
-            .init(x: 2, y: 5)
+            .init(x: 2, y: 5),
         ])
         let bbox = polygon.boundingBox!
         #expect(bbox.llx == 1)
@@ -207,7 +208,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
             .init(x: 1, y: 1),
-            .init(x: 0, y: 1)
+            .init(x: 0, y: 1),
         ])
         #expect(polygon.isConvex)
     }
@@ -220,7 +221,7 @@ struct `Polygon Tests` {
             .init(x: 2, y: 1),
             .init(x: 1, y: 1),
             .init(x: 1, y: 2),
-            .init(x: 0, y: 2)
+            .init(x: 0, y: 2),
         ])
         #expect(!polygon.isConvex)
     }
@@ -230,7 +231,7 @@ struct `Polygon Tests` {
         let polygon: Geometry<Double>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 5, y: 0),
-            .init(x: 2, y: 4)
+            .init(x: 2, y: 4),
         ])
         #expect(polygon.isConvex)
     }
@@ -243,7 +244,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
             .init(x: 1, y: 1),
-            .init(x: 0, y: 1)
+            .init(x: 0, y: 1),
         ])
         #expect(polygon.isCounterClockwise)
         #expect(!polygon.isClockwise)
@@ -255,7 +256,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 0, y: 1),
             .init(x: 1, y: 1),
-            .init(x: 1, y: 0)
+            .init(x: 1, y: 0),
         ])
         #expect(polygon.isClockwise)
         #expect(!polygon.isCounterClockwise)
@@ -266,7 +267,7 @@ struct `Polygon Tests` {
         let polygon: Geometry<Double>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
-            .init(x: 1, y: 1)
+            .init(x: 1, y: 1),
         ])
         let reversed = polygon.reversed
         #expect(reversed.vertices[0] == polygon.vertices[2])
@@ -281,7 +282,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
             .init(x: 4, y: 4),
-            .init(x: 0, y: 4)
+            .init(x: 0, y: 4),
         ])
         let point: Geometry<Double>.Point<2> = .init(x: 2, y: 2)
         #expect(polygon.contains(point))
@@ -293,7 +294,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
             .init(x: 4, y: 4),
-            .init(x: 0, y: 4)
+            .init(x: 0, y: 4),
         ])
         let point: Geometry<Double>.Point<2> = .init(x: 10, y: 10)
         #expect(!polygon.contains(point))
@@ -307,7 +308,7 @@ struct `Polygon Tests` {
             .init(x: 2, y: 1),
             .init(x: 1, y: 1),
             .init(x: 1, y: 2),
-            .init(x: 0, y: 2)
+            .init(x: 0, y: 2),
         ])
         // Point in the bottom-left corner of the L
         let inside: Geometry<Double>.Point<2> = .init(x: 0.5, y: 0.5)
@@ -324,7 +325,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
             .init(x: 4, y: 4),
-            .init(x: 0, y: 4)
+            .init(x: 0, y: 4),
         ])
         let onEdge: Geometry<Double>.Point<2> = .init(x: 2, y: 0)
         #expect(polygon.isOnBoundary(onEdge))
@@ -340,7 +341,7 @@ struct `Polygon Tests` {
         let polygon: Geometry<Double>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
-            .init(x: 0, y: 1)
+            .init(x: 0, y: 1),
         ])
         let translated = polygon.translated(by: .init(dx: 5, dy: 10))
         #expect(translated.vertices[0].x == 5)
@@ -353,7 +354,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 2, y: 0),
             .init(x: 2, y: 2),
-            .init(x: 0, y: 2)
+            .init(x: 0, y: 2),
         ])
         let scaled = polygon.scaled(by: 2)!
         // Area should be 4x
@@ -371,7 +372,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
             .init(x: 1, y: 1),
-            .init(x: 0, y: 1)
+            .init(x: 0, y: 1),
         ])
         let scaled = polygon.scaled(by: 2, about: polygon.vertices[0])
         #expect(scaled.vertices[0].x == 0)
@@ -387,7 +388,7 @@ struct `Polygon Tests` {
         let polygon: Geometry<Double>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
-            .init(x: 2, y: 3)
+            .init(x: 2, y: 3),
         ])
         let triangles = polygon.triangulate()
         #expect(triangles.count == 1)
@@ -399,7 +400,7 @@ struct `Polygon Tests` {
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
             .init(x: 4, y: 4),
-            .init(x: 0, y: 4)
+            .init(x: 0, y: 4),
         ])
         let triangles = polygon.triangulate()
         #expect(triangles.count == 2)
@@ -416,10 +417,10 @@ struct `Polygon Tests` {
             .init(x: 4, y: 0),
             .init(x: 5, y: 3),
             .init(x: 2, y: 5),
-            .init(x: -1, y: 3)
+            .init(x: -1, y: 3),
         ])
         let triangles = polygon.triangulate()
-        #expect(triangles.count == 3) // n - 2 triangles
+        #expect(triangles.count == 3)  // n - 2 triangles
 
         let totalArea = triangles.reduce(0.0) { $0 + $1.area }
         #expect(abs(totalArea - polygon.area) < 1e-10)
@@ -432,7 +433,7 @@ struct `Polygon Tests` {
         let polygon: Geometry<Double>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
-            .init(x: 0, y: 1)
+            .init(x: 0, y: 1),
         ])
         let mapped: Geometry<Float>.Polygon = polygon.map { Float($0) }
         #expect(mapped.vertices.count == 3)

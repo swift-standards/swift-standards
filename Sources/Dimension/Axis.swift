@@ -145,4 +145,3 @@ extension Axis where N == 4 {
     @inlinable
     public static var quaternary: Self { Self(unchecked: 3) }
 }
-

@@ -1,8 +1,6 @@
 // Axis.Direction.swift
 // Direction along an axis.
 
-
-
 // MARK: - Axis.Direction typealias
 
 extension Axis {

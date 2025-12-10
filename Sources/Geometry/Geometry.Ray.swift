@@ -270,7 +270,10 @@ extension Geometry.Ray where Scalar: FloatingPoint {
 extension Geometry.Ray {
     /// Create a ray by transforming the coordinates of another ray
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Ray, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Ray,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(
             origin: try Geometry.Point<2>(other.origin, transform),
             direction: try Geometry.Vector<2>(other.direction, transform)

@@ -1,6 +1,8 @@
 // Curvature.swift
 // Curve bending direction.
 
+public import Algebra
+
 /// Curvature direction: convex or concave.
 ///
 /// Describes which way a curve bends relative to a reference.
@@ -50,8 +52,6 @@ extension Curvature {
 }
 
 // MARK: - Tagged Value
-
-public import Algebra
 
 extension Curvature {
     /// A value paired with its curvature direction.

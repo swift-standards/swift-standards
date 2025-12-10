@@ -36,11 +36,10 @@
 public enum Temporal: Sendable, Hashable, Codable {
     /// Time increases toward the future.
     case future
-    
+
     /// Time increases toward the past.
     case past
 }
-
 
 // MARK: - Orientation Conformance
 

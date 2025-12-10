@@ -39,7 +39,10 @@ extension Dictionary {
         public static func buildPartialBlock(first: Never) -> [Key: Value] {}
 
         @inlinable
-        public static func buildPartialBlock(accumulated: [Key: Value], next: [Key: Value]) -> [Key: Value] {
+        public static func buildPartialBlock(
+            accumulated: [Key: Value],
+            next: [Key: Value]
+        ) -> [Key: Value] {
             accumulated.merging(next, uniquingKeysWith: { _, new in new })
         }
 

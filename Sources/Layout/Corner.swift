@@ -121,7 +121,7 @@ extension Corner {
 
 extension Corner: CaseIterable {
     public static let allCases: [Corner] = [
-        .topLeading, .topTrailing, .bottomLeading, .bottomTrailing
+        .topLeading, .topTrailing, .bottomLeading, .bottomTrailing,
     ]
 }
 

@@ -402,7 +402,12 @@ extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
     /// Return an arc scaled uniformly about its center.
     @inlinable
     public func scaled(by factor: Scalar) -> Self {
-        Self(center: center, radius: Geometry.Length(radius.value * factor), startAngle: startAngle, endAngle: endAngle)
+        Self(
+            center: center,
+            radius: Geometry.Length(radius.value * factor),
+            startAngle: startAngle,
+            endAngle: endAngle
+        )
     }
 
     /// Return the arc with reversed direction.
@@ -417,7 +422,10 @@ extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
 extension Geometry.Arc {
     /// Create an arc by transforming the coordinates of another arc
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Arc, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Arc,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(
             center: try Geometry.Point<2>(other.center, transform),
             radius: try Geometry.Length(other.radius, transform),

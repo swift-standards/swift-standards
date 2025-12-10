@@ -344,7 +344,10 @@ extension Geometry {
 extension Geometry.Line {
     /// Create a line by transforming the coordinates of another line
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Line, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Line,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(
             point: try Geometry.Point<2>(other.point, transform),
             direction: try Geometry.Vector<2>(other.direction, transform)
@@ -368,7 +371,10 @@ extension Geometry.Line {
 extension Geometry.Line.Segment {
     /// Create a segment by transforming the coordinates of another segment
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Line.Segment, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Line.Segment,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(
             start: try Geometry.Point<2>(other.start, transform),
             end: try Geometry.Point<2>(other.end, transform)

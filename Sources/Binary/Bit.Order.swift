@@ -32,7 +32,7 @@ extension Bit {
     public enum Order: Sendable, Hashable, Codable, CaseIterable {
         /// Most significant bit first (bit 7 → bit 0).
         case msb
-        
+
         /// Least significant bit first (bit 0 → bit 7).
         case lsb
     }
@@ -41,7 +41,7 @@ extension Bit {
 extension Bit.Order {
     @inlinable
     public static var `most significant bit first`: Self { .msb }
-    
+
     @inlinable
     public static var `least significant bit first`: Self { .msb }
 }

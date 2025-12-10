@@ -1,9 +1,10 @@
 // Bezier Tests.swift
 // Tests for Geometry.Bezier type.
 
-import Testing
-@testable import Geometry
 import Angle
+import Testing
+
+@testable import Geometry
 
 @Suite("Bezier Tests")
 struct BezierTests {
@@ -16,7 +17,7 @@ struct BezierTests {
             .init(x: 0, y: 0),
             .init(x: 1, y: 2),
             .init(x: 3, y: 2),
-            .init(x: 4, y: 0)
+            .init(x: 4, y: 0),
         ])
         #expect(bezier.controlPoints.count == 4)
     }
@@ -229,7 +230,7 @@ struct BezierTests {
             to: .init(x: 4, y: 0)
         )
         let points = bezier.subdivide(into: 10)
-        #expect(points.count == 11) // 10 segments = 11 points
+        #expect(points.count == 11)  // 10 segments = 11 points
 
         // First point is start
         #expect(abs(points[0].x.value - 0) < 1e-10)

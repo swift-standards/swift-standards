@@ -138,12 +138,14 @@ extension Rotation where N == 2 {
     @inlinable
     public var inverted: Self {
         // For 2D: transpose is simple
-        Self(matrix: Linear(
-            a: matrix.a,
-            b: matrix.c,  // swapped
-            c: matrix.b,  // swapped
-            d: matrix.d
-        ))
+        Self(
+            matrix: Linear(
+                a: matrix.a,
+                b: matrix.c,  // swapped
+                c: matrix.b,  // swapped
+                d: matrix.d
+            )
+        )
     }
 }
 

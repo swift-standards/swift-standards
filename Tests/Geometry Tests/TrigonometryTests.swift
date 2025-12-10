@@ -1,10 +1,10 @@
 // TrigonometryTests.swift
 // Tests for trigonometric extensions on Geometry types.
 
-import Testing
-import Geometry
 import Angle
+import Geometry
 import RealModule
+import Testing
 
 @Suite
 struct `Trigonometry Tests` {

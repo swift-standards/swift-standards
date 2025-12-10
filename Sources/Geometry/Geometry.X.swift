@@ -94,7 +94,7 @@ extension Geometry.X: Comparable where Scalar: Comparable {
 
 //// MARK: - Scalar Comparison
 //
-//extension Geometry.X where Scalar: Equatable {
+// extension Geometry.X where Scalar: Equatable {
 //    /// Compare X to a raw scalar value
 //    @_disfavoredOverload
 //    @inlinable
@@ -108,8 +108,7 @@ extension Geometry.X: Comparable where Scalar: Comparable {
 //    public static func == (lhs: Scalar, rhs: borrowing Self) -> Bool {
 //        lhs == rhs.value
 //    }
-//}
-
+// }
 
 // MARK: - Negation
 
@@ -126,7 +125,7 @@ extension Geometry.X where Scalar: SignedNumeric {
 extension Geometry.X where Scalar: FloatingPoint {
     /// Multiply by a scalar
     @inlinable
-    @_disfavoredOverload
+    //    @_disfavoredOverload
     public static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
         Self(lhs.value * rhs)
     }
@@ -140,7 +139,7 @@ extension Geometry.X where Scalar: FloatingPoint {
 
     /// Divide by a scalar
     @inlinable
-    @_disfavoredOverload
+    //    @_disfavoredOverload
     public static func / (lhs: borrowing Self, rhs: Scalar) -> Self {
         Self(lhs.value / rhs)
     }
@@ -173,7 +172,10 @@ extension Geometry.X where Scalar: Numeric {
 extension Geometry.X {
     /// Create an X coordinate by transforming the value of another X coordinate
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.X, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.X,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(try transform(other.value))
     }
 

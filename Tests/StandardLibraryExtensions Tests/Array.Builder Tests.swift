@@ -287,81 +287,81 @@ struct ArrayBuilderTests {
 
         @Test("buildExpression single element")
         func buildExpressionSingleElement() {
-            let result = Array<Int>.Builder.buildExpression(42)
+            let result = [Int].Builder.buildExpression(42)
             #expect(result == [42])
         }
 
         @Test("buildExpression array")
         func buildExpressionArray() {
-            let result = Array<Int>.Builder.buildExpression([1, 2, 3])
+            let result = [Int].Builder.buildExpression([1, 2, 3])
             #expect(result == [1, 2, 3])
         }
 
         @Test("buildExpression optional some")
         func buildExpressionOptionalSome() {
             let value: Int? = 42
-            let result = Array<Int>.Builder.buildExpression(value)
+            let result = [Int].Builder.buildExpression(value)
             #expect(result == [42])
         }
 
         @Test("buildExpression optional none")
         func buildExpressionOptionalNone() {
             let value: Int? = nil
-            let result = Array<Int>.Builder.buildExpression(value)
+            let result = [Int].Builder.buildExpression(value)
             #expect(result == [])
         }
 
         @Test("buildPartialBlock first")
         func buildPartialBlockFirst() {
-            let result = Array<Int>.Builder.buildPartialBlock(first: [1, 2, 3])
+            let result = [Int].Builder.buildPartialBlock(first: [1, 2, 3])
             #expect(result == [1, 2, 3])
         }
 
         @Test("buildPartialBlock first void")
         func buildPartialBlockFirstVoid() {
-            let result = Array<Int>.Builder.buildPartialBlock(first: ())
+            let result = [Int].Builder.buildPartialBlock(first: ())
             #expect(result == [])
         }
 
         @Test("buildPartialBlock accumulated")
         func buildPartialBlockAccumulated() {
-            let result = Array<Int>.Builder.buildPartialBlock(accumulated: [1, 2], next: [3, 4])
+            let result = [Int].Builder.buildPartialBlock(accumulated: [1, 2], next: [3, 4])
             #expect(result == [1, 2, 3, 4])
         }
 
         @Test("buildOptional some")
         func buildOptionalSome() {
-            let result = Array<Int>.Builder.buildOptional([1, 2, 3])
+            let result = [Int].Builder.buildOptional([1, 2, 3])
             #expect(result == [1, 2, 3])
         }
 
         @Test("buildOptional none")
         func buildOptionalNone() {
-            let result = Array<Int>.Builder.buildOptional(nil)
+            let result = [Int].Builder.buildOptional(nil)
             #expect(result == [])
         }
 
         @Test("buildEither first")
         func buildEitherFirst() {
-            let result = Array<Int>.Builder.buildEither(first: [1, 2])
+            let result = [Int].Builder.buildEither(first: [1, 2])
             #expect(result == [1, 2])
         }
 
         @Test("buildEither second")
         func buildEitherSecond() {
-            let result = Array<Int>.Builder.buildEither(second: [3, 4])
+            let result = [Int].Builder.buildEither(second: [3, 4])
             #expect(result == [3, 4])
         }
 
         @Test("buildArray")
         func buildArray() {
-            let result = Array<Int>.Builder.buildArray([[1, 2], [3, 4], [5, 6]])
+            let result = [Int].Builder.buildArray([[1, 2], [3, 4], [5, 6]])
             #expect(result == [1, 2, 3, 4, 5, 6])
         }
 
         @Test("buildLimitedAvailability")
         func buildLimitedAvailability() {
-            let result = Array<Int>.Builder.buildLimitedAvailability([1, 2, 3])
+            let result = [Int].Builder.buildLimitedAvailability([1, 2, 3])
             #expect(result == [1, 2, 3])
         }
     }

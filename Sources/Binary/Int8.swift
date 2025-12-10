@@ -5,7 +5,7 @@
 // // swift-standards
 // //
 // // Extensions for Swift standard library Int8
-// 
+//
 // extension Int8 {
 //     /// Creates an integer from its byte representation
 //     /// - Parameters:

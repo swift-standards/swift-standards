@@ -101,7 +101,10 @@ extension Geometry.Size {
 extension Geometry.Size {
     /// Create a size by transforming each dimension of another size
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Size<N>, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Size<N>,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         var dims = InlineArray<N, Scalar>(repeating: try transform(other.dimensions[0]))
         for i in 1..<N {
             dims[i] = try transform(other.dimensions[i])
@@ -174,6 +177,7 @@ extension Geometry.Size where Scalar: SignedNumeric {
 extension Geometry.Size where Scalar: Numeric {
     /// Multiply all dimensions by a scalar
     @inlinable
+    @_disfavoredOverload
     public static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
         var result = lhs.dimensions
         for i in 0..<N {
@@ -184,6 +188,7 @@ extension Geometry.Size where Scalar: Numeric {
 
     /// Multiply scalar by size
     @inlinable
+    @_disfavoredOverload
     public static func * (lhs: Scalar, rhs: borrowing Self) -> Self {
         rhs * lhs
     }
@@ -220,12 +225,12 @@ extension Geometry.Size where N == 2 {
         get { Geometry.Height(dimensions[1]) }
         set { dimensions[1] = newValue.value }
     }
-//
-//    /// Create a 2D size with the given dimensions (raw scalar values)
-//    @inlinable
-//    public init(width: Scalar, height: Scalar) {
-//        self.init([width, height])
-//    }
+    //
+    //    /// Create a 2D size with the given dimensions (raw scalar values)
+    //    @inlinable
+    //    public init(width: Scalar, height: Scalar) {
+    //        self.init([width, height])
+    //    }
 
     /// Create a 2D size from typed Width and Height values
     @inlinable
@@ -284,4 +289,3 @@ extension Geometry.Size {
         return Self(result)
     }
 }
-

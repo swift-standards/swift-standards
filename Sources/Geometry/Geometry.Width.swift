@@ -168,7 +168,10 @@ extension Geometry.Width: Strideable where Scalar: Strideable {
 extension Geometry.Width {
     /// Create a Width by transforming the value of another Width
     @inlinable
-    public init<U, E: Error>(_ other: borrowing Geometry<U>.Width, _ transform: (U) throws(E) -> Scalar) throws(E) {
+    public init<U, E: Error>(
+        _ other: borrowing Geometry<U>.Width,
+        _ transform: (U) throws(E) -> Scalar
+    ) throws(E) {
         self.init(try transform(other.value))
     }
 

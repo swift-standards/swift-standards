@@ -26,19 +26,25 @@ extension Result {
             }
 
             @inlinable
-            public static func buildExpression(_ expression: Result<Success, Failure>) -> Result<Success, Failure> {
+            public static func buildExpression(
+                _ expression: Result<Success, Failure>
+            ) -> Result<Success, Failure> {
                 expression
             }
 
             // MARK: - Partial Block Building
 
             @inlinable
-            public static func buildPartialBlock(first: Result<Success, Failure>) -> Result<Success, Failure> {
+            public static func buildPartialBlock(
+                first: Result<Success, Failure>
+            ) -> Result<Success, Failure> {
                 first
             }
 
             @inlinable
-            public static func buildPartialBlock(first: Result<Success, Failure>?) -> Result<Success, Failure>? {
+            public static func buildPartialBlock(
+                first: Result<Success, Failure>?
+            ) -> Result<Success, Failure>? {
                 first
             }
 
@@ -79,22 +85,30 @@ extension Result {
             // MARK: - Control Flow
 
             @inlinable
-            public static func buildOptional(_ component: Result<Success, Failure>?) -> Result<Success, Failure>? {
+            public static func buildOptional(
+                _ component: Result<Success, Failure>?
+            ) -> Result<Success, Failure>? {
                 component
             }
 
             @inlinable
-            public static func buildEither(first: Result<Success, Failure>) -> Result<Success, Failure> {
+            public static func buildEither(
+                first: Result<Success, Failure>
+            ) -> Result<Success, Failure> {
                 first
             }
 
             @inlinable
-            public static func buildEither(second: Result<Success, Failure>) -> Result<Success, Failure> {
+            public static func buildEither(
+                second: Result<Success, Failure>
+            ) -> Result<Success, Failure> {
                 second
             }
 
             @inlinable
-            public static func buildArray(_ components: [Result<Success, Failure>]) -> Result<Success, Failure>? {
+            public static func buildArray(
+                _ components: [Result<Success, Failure>]
+            ) -> Result<Success, Failure>? {
                 var lastFailure: Result<Success, Failure>?
                 for component in components {
                     switch component {
@@ -108,7 +122,9 @@ extension Result {
             }
 
             @inlinable
-            public static func buildLimitedAvailability(_ component: Result<Success, Failure>) -> Result<Success, Failure> {
+            public static func buildLimitedAvailability(
+                _ component: Result<Success, Failure>
+            ) -> Result<Success, Failure> {
                 component
             }
         }
@@ -130,19 +146,24 @@ extension Result {
             // MARK: - Expression Building
 
             @inlinable
-            public static func buildExpression(_ expression: Success) -> Result<[Success], Failure> {
+            public static func buildExpression(_ expression: Success) -> Result<[Success], Failure>
+            {
                 .success([expression])
             }
 
             @inlinable
-            public static func buildExpression(_ expression: Result<Success, Failure>) -> Result<[Success], Failure> {
+            public static func buildExpression(
+                _ expression: Result<Success, Failure>
+            ) -> Result<[Success], Failure> {
                 expression.map { [$0] }
             }
 
             // MARK: - Partial Block Building
 
             @inlinable
-            public static func buildPartialBlock(first: Result<[Success], Failure>) -> Result<[Success], Failure> {
+            public static func buildPartialBlock(
+                first: Result<[Success], Failure>
+            ) -> Result<[Success], Failure> {
                 first
             }
 
@@ -160,11 +181,11 @@ extension Result {
                 next: Result<[Success], Failure>
             ) -> Result<[Success], Failure> {
                 switch (accumulated, next) {
-                case let (.success(accValues), .success(nextValues)):
+                case (.success(let accValues), .success(let nextValues)):
                     .success(accValues + nextValues)
-                case let (.failure(error), _):
+                case (.failure(let error), _):
                     .failure(error)
-                case let (_, .failure(error)):
+                case (_, .failure(let error)):
                     .failure(error)
                 }
             }
@@ -179,28 +200,36 @@ extension Result {
             // MARK: - Control Flow
 
             @inlinable
-            public static func buildOptional(_ component: Result<[Success], Failure>?) -> Result<[Success], Failure> {
+            public static func buildOptional(
+                _ component: Result<[Success], Failure>?
+            ) -> Result<[Success], Failure> {
                 component ?? .success([])
             }
 
             @inlinable
-            public static func buildEither(first: Result<[Success], Failure>) -> Result<[Success], Failure> {
+            public static func buildEither(
+                first: Result<[Success], Failure>
+            ) -> Result<[Success], Failure> {
                 first
             }
 
             @inlinable
-            public static func buildEither(second: Result<[Success], Failure>) -> Result<[Success], Failure> {
+            public static func buildEither(
+                second: Result<[Success], Failure>
+            ) -> Result<[Success], Failure> {
                 second
             }
 
             @inlinable
-            public static func buildArray(_ components: [Result<[Success], Failure>]) -> Result<[Success], Failure> {
+            public static func buildArray(
+                _ components: [Result<[Success], Failure>]
+            ) -> Result<[Success], Failure> {
                 var collected: [Success] = []
                 for component in components {
                     switch component {
-                    case let .success(values):
+                    case .success(let values):
                         collected.append(contentsOf: values)
-                    case let .failure(error):
+                    case .failure(let error):
                         return .failure(error)
                     }
                 }
@@ -208,7 +237,9 @@ extension Result {
             }
 
             @inlinable
-            public static func buildLimitedAvailability(_ component: Result<[Success], Failure>) -> Result<[Success], Failure> {
+            public static func buildLimitedAvailability(
+                _ component: Result<[Success], Failure>
+            ) -> Result<[Success], Failure> {
                 component
             }
         }
@@ -219,17 +250,23 @@ extension Result {
 
 extension Result {
     @inlinable
-    public static func first(@Builder.First _ builder: () -> Result<Success, Failure>) -> Result<Success, Failure> {
+    public static func first(
+        @Builder.First _ builder: () -> Result<Success, Failure>
+    ) -> Result<Success, Failure> {
         builder()
     }
 
     @inlinable
-    public static func first(@Builder.First _ builder: () -> Result<Success, Failure>?) -> Result<Success, Failure>? {
+    public static func first(
+        @Builder.First _ builder: () -> Result<Success, Failure>?
+    ) -> Result<Success, Failure>? {
         builder()
     }
 
     @inlinable
-    public static func all(@Builder.All _ builder: () -> Result<[Success], Failure>) -> Result<[Success], Failure> {
+    public static func all(
+        @Builder.All _ builder: () -> Result<[Success], Failure>
+    ) -> Result<[Success], Failure> {
         builder()
     }
 }

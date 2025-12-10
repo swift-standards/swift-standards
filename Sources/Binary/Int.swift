@@ -5,7 +5,7 @@
 // // swift-standards
 // //
 // // Extensions for Swift standard library Int
-// 
+//
 // extension Int {
 //     /// Creates an integer from its byte representation
 //     /// - Parameters:

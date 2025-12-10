@@ -5,7 +5,7 @@
 // // swift-standards
 // //
 // // Extensions for Swift standard library Int16
-// 
+//
 // extension Int16 {
 //     /// Creates an integer from its byte representation
 //     /// - Parameters:
@@ -24,7 +24,7 @@
 //             self = Self(bigEndian: value)
 //         }
 //     }
-// 
+//
 //     /// Encodes integer to byte representation
 //     ///
 //     /// Completes the isomorphism between FixedWidthInteger and [UInt8].

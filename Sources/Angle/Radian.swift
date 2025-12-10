@@ -70,11 +70,13 @@ extension Radian: Numeric {
 
     /// Multiply two angles (scaling)
     @inlinable
+    @_disfavoredOverload
     public static func * (lhs: borrowing Self, rhs: borrowing Self) -> Self {
         Self(lhs.value * rhs.value)
     }
 
     @inlinable
+    @_disfavoredOverload
     public static func *= (lhs: inout Self, rhs: Self) {
         lhs.value *= rhs.value
     }
@@ -85,6 +87,7 @@ extension Radian: Numeric {
 extension Radian: SignedNumeric {
     /// Negate the angle
     @inlinable
+    @_disfavoredOverload
     public static prefix func - (value: borrowing Self) -> Self {
         Self(-value.value)
     }
@@ -100,12 +103,12 @@ extension Radian {
         Self(lhs.value / rhs)
     }
 
-    /// Divide angle by angle (returns scalar ratio)
-    @inlinable
-    @_disfavoredOverload
-    public static func / (lhs: borrowing Self, rhs: borrowing Self) -> Double {
-        lhs.value / rhs.value
-    }
+    //    /// Divide angle by angle (returns scalar ratio)
+    //    @inlinable
+    //    @_disfavoredOverload
+    //    public static func / (lhs: borrowing Self, rhs: borrowing Self) -> Double {
+    //        lhs.value / rhs.value
+    //    }
 }
 
 // MARK: - ExpressibleByFloatLiteral

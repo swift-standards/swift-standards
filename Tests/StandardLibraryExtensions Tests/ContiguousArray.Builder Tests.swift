@@ -180,7 +180,10 @@ struct ContiguousArrayBuilderTests {
 
         @Test("buildPartialBlock accumulated")
         func buildPartialBlockAccumulated() {
-            let result = ContiguousArray<Int>.Builder.buildPartialBlock(accumulated: [1, 2], next: [3, 4])
+            let result = ContiguousArray<Int>.Builder.buildPartialBlock(
+                accumulated: [1, 2],
+                next: [3, 4]
+            )
             #expect(result == [1, 2, 3, 4])
         }
 

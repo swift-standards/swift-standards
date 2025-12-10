@@ -2,10 +2,11 @@
 // Tests for Region types: Quadrant, Octant, Cardinal, Corner, Edge
 // and Geometry type: Curvature
 
-import Testing
 import Algebra
-@testable import Geometry
 import Region
+import Testing
+
+@testable import Geometry
 
 // MARK: - Quadrant Tests
 

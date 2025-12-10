@@ -159,7 +159,10 @@ struct ClosedRangeBuilderTests {
 
         @Test("buildPartialBlock accumulated")
         func buildPartialBlockAccumulated() {
-            let result = ClosedRange<Int>.Builder.buildPartialBlock(accumulated: [1...5], next: [10...15])
+            let result = ClosedRange<Int>.Builder.buildPartialBlock(
+                accumulated: [1...5],
+                next: [10...15]
+            )
             #expect(result == [1...5, 10...15])
         }
 

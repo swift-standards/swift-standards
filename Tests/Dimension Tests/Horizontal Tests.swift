@@ -1,7 +1,8 @@
 // Horizontal Tests.swift
 
-import Testing
 import Algebra
+import Testing
+
 @testable import Dimension
 
 @Suite

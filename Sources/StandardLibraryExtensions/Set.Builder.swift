@@ -39,7 +39,10 @@ extension Set {
         public static func buildPartialBlock(first: Never) -> Set<Element> {}
 
         @inlinable
-        public static func buildPartialBlock(accumulated: Set<Element>, next: Set<Element>) -> Set<Element> {
+        public static func buildPartialBlock(
+            accumulated: Set<Element>,
+            next: Set<Element>
+        ) -> Set<Element> {
             accumulated.union(next)
         }
 

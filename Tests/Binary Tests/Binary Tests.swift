@@ -1,6 +1,7 @@
 // Binary Tests.swift
 
 import Testing
+
 @testable import Binary
 
 @Suite
