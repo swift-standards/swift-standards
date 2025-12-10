@@ -1,9 +1,9 @@
 // TrigonometryTests.swift
 // Tests for trigonometric extensions on Geometry types.
 
-import Testing
 import Geometry
 import RealModule
+import Testing
 
 @Suite("Trigonometry Tests")
 struct TrigonometryTests {
@@ -116,7 +116,9 @@ struct TrigonometryTests {
 
     @Test("AffineTransform rotation from Degree")
     func affineTransformRotationDegree() {
-        let transform = Geometry<Double>.AffineTransform.rotation(Geometry<Double>.Degree.rightAngle)
+        let transform = Geometry<Double>.AffineTransform.rotation(
+            Geometry<Double>.Degree.rightAngle
+        )
         let point = Geometry<Double>.Point(x: 1.0, y: 0.0)
         let rotated = transform.apply(to: point)
 

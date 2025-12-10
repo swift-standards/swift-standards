@@ -63,7 +63,8 @@ extension Geometry.Radian: Comparable where Unit: Comparable & Copyable {
 
 // MARK: - ExpressibleByFloatLiteral
 
-extension Geometry.Radian: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral & Copyable {
+extension Geometry.Radian: ExpressibleByFloatLiteral
+where Unit: ExpressibleByFloatLiteral & Copyable {
     @inlinable
     public init(floatLiteral value: Unit.FloatLiteralType) {
         self.value = Unit(floatLiteral: value)
@@ -72,7 +73,8 @@ extension Geometry.Radian: ExpressibleByFloatLiteral where Unit: ExpressibleByFl
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Geometry.Radian: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral & Copyable {
+extension Geometry.Radian: ExpressibleByIntegerLiteral
+where Unit: ExpressibleByIntegerLiteral & Copyable {
     @inlinable
     public init(integerLiteral value: Unit.IntegerLiteralType) {
         self.value = Unit(integerLiteral: value)
@@ -96,4 +98,3 @@ extension Geometry.Radian {
         Geometry<Result>.Radian(try transform(value))
     }
 }
-

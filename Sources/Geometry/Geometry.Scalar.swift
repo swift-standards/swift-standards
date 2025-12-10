@@ -66,7 +66,8 @@ extension Geometry.Scalar: Comparable where Unit: Comparable & Copyable {
 
 // MARK: - ExpressibleByFloatLiteral
 
-extension Geometry.Scalar: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral & Copyable {
+extension Geometry.Scalar: ExpressibleByFloatLiteral
+where Unit: ExpressibleByFloatLiteral & Copyable {
     @inlinable
     public init(floatLiteral value: Unit.FloatLiteralType) {
         self.value = Unit(floatLiteral: value)
@@ -75,7 +76,8 @@ extension Geometry.Scalar: ExpressibleByFloatLiteral where Unit: ExpressibleByFl
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Geometry.Scalar: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral & Copyable {
+extension Geometry.Scalar: ExpressibleByIntegerLiteral
+where Unit: ExpressibleByIntegerLiteral & Copyable {
     @inlinable
     public init(integerLiteral value: Unit.IntegerLiteralType) {
         self.value = Unit(integerLiteral: value)

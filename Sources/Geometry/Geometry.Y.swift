@@ -65,7 +65,8 @@ extension Geometry.Y: Comparable where Unit: Comparable & Copyable {
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Geometry.Y: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral & Copyable {
+extension Geometry.Y: ExpressibleByIntegerLiteral
+where Unit: ExpressibleByIntegerLiteral & Copyable {
     @inlinable
     public init(integerLiteral value: Unit.IntegerLiteralType) {
         self.value = Unit(integerLiteral: value)

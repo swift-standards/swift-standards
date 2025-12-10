@@ -31,7 +31,12 @@ extension Geometry {
         ///   - leading: Leading inset
         ///   - bottom: Bottom inset
         ///   - trailing: Trailing inset
-        public init(top: consuming Unit, leading: consuming Unit, bottom: consuming Unit, trailing: consuming Unit) {
+        public init(
+            top: consuming Unit,
+            leading: consuming Unit,
+            bottom: consuming Unit,
+            trailing: consuming Unit
+        ) {
             self.top = top
             self.leading = leading
             self.bottom = bottom

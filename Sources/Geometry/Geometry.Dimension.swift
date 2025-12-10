@@ -56,7 +56,8 @@ extension Geometry.Dimension: Comparable where Unit: Comparable & Copyable {
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Geometry.Dimension: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral & Copyable {
+extension Geometry.Dimension: ExpressibleByIntegerLiteral
+where Unit: ExpressibleByIntegerLiteral & Copyable {
     @inlinable
     public init(integerLiteral value: Unit.IntegerLiteralType) {
         self.value = Unit(integerLiteral: value)
@@ -65,7 +66,8 @@ extension Geometry.Dimension: ExpressibleByIntegerLiteral where Unit: Expressibl
 
 // MARK: - ExpressibleByFloatLiteral
 
-extension Geometry.Dimension: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral & Copyable {
+extension Geometry.Dimension: ExpressibleByFloatLiteral
+where Unit: ExpressibleByFloatLiteral & Copyable {
     @inlinable
     public init(floatLiteral value: Unit.FloatLiteralType) {
         self.value = Unit(floatLiteral: value)

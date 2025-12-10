@@ -51,7 +51,14 @@ extension Geometry {
 
         /// Create a transform with explicit matrix components
         @inlinable
-        public init(a: consuming Unit, b: consuming Unit, c: consuming Unit, d: consuming Unit, tx: consuming Geometry.X, ty: consuming Geometry.Y) {
+        public init(
+            a: consuming Unit,
+            b: consuming Unit,
+            c: consuming Unit,
+            d: consuming Unit,
+            tx: consuming Geometry.X,
+            ty: consuming Geometry.Y
+        ) {
             self.a = a
             self.b = b
             self.c = c

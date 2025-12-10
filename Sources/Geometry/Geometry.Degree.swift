@@ -63,7 +63,8 @@ extension Geometry.Degree: Comparable where Unit: Comparable & Copyable {
 
 // MARK: - ExpressibleByFloatLiteral
 
-extension Geometry.Degree: ExpressibleByFloatLiteral where Unit: ExpressibleByFloatLiteral & Copyable {
+extension Geometry.Degree: ExpressibleByFloatLiteral
+where Unit: ExpressibleByFloatLiteral & Copyable {
     @inlinable
     public init(floatLiteral value: Unit.FloatLiteralType) {
         self.value = Unit(floatLiteral: value)
@@ -72,7 +73,8 @@ extension Geometry.Degree: ExpressibleByFloatLiteral where Unit: ExpressibleByFl
 
 // MARK: - ExpressibleByIntegerLiteral
 
-extension Geometry.Degree: ExpressibleByIntegerLiteral where Unit: ExpressibleByIntegerLiteral & Copyable {
+extension Geometry.Degree: ExpressibleByIntegerLiteral
+where Unit: ExpressibleByIntegerLiteral & Copyable {
     @inlinable
     public init(integerLiteral value: Unit.IntegerLiteralType) {
         self.value = Unit(integerLiteral: value)
@@ -96,4 +98,3 @@ extension Geometry.Degree {
         Geometry<Result>.Degree(try transform(value))
     }
 }
-

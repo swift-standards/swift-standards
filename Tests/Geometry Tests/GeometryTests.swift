@@ -1,6 +1,7 @@
 // GeometryTests.swift
 
 import Testing
+
 @testable import Geometry
 
 // MARK: - Test Unit Type
@@ -169,14 +170,14 @@ struct Vector2Tests {
     func `Vector dot product`() {
         let a: Geometry<Double>.Vector2 = .init(dx: 1, dy: 0)
         let b: Geometry<Double>.Vector2 = .init(dx: 0, dy: 1)
-        #expect(a.dot(b) == 0) // perpendicular
+        #expect(a.dot(b) == 0)  // perpendicular
     }
 
     @Test
     func `Vector cross product`() {
         let a: Geometry<Double>.Vector2 = .init(dx: 1, dy: 0)
         let b: Geometry<Double>.Vector2 = .init(dx: 0, dy: 1)
-        #expect(a.cross(b) == 1) // counter-clockwise
+        #expect(a.cross(b) == 1)  // counter-clockwise
     }
 
     @Test
