@@ -367,13 +367,21 @@ extension Array {
         let k = Scalar(4.0 / 3.0) * Scalar.tan(Scalar(halfSweep / 2))
 
         let p0 = Geometry<Scalar, Space>.Point(
-            x: Geometry<Scalar, Space>.X(arc.center.x.value + arc.radius.value * Scalar(startAngle.cos)),
-            y: Geometry<Scalar, Space>.Y(arc.center.y.value + arc.radius.value * Scalar(startAngle.sin))
+            x: Geometry<Scalar, Space>.X(
+                arc.center.x.value + arc.radius.value * Scalar(startAngle.cos)
+            ),
+            y: Geometry<Scalar, Space>.Y(
+                arc.center.y.value + arc.radius.value * Scalar(startAngle.sin)
+            )
         )
 
         let p3 = Geometry<Scalar, Space>.Point(
-            x: Geometry<Scalar, Space>.X(arc.center.x.value + arc.radius.value * Scalar(endAngle.cos)),
-            y: Geometry<Scalar, Space>.Y(arc.center.y.value + arc.radius.value * Scalar(endAngle.sin))
+            x: Geometry<Scalar, Space>.X(
+                arc.center.x.value + arc.radius.value * Scalar(endAngle.cos)
+            ),
+            y: Geometry<Scalar, Space>.Y(
+                arc.center.y.value + arc.radius.value * Scalar(endAngle.sin)
+            )
         )
 
         // Tangent directions at start and end

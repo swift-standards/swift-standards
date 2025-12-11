@@ -5,16 +5,17 @@ import Algebra_Linear
 import Angle
 import Region
 import Symmetry
-@testable import Algebra
 import Testing
 
+@testable import Algebra
 @testable import Geometry
 
 // MARK: - Test Unit Type
 
 /// A custom unit type for testing
 struct TestUnit: AdditiveArithmetic, Comparable, Codable, Hashable,
-    ExpressibleByIntegerLiteral, ExpressibleByFloatLiteral {
+    ExpressibleByIntegerLiteral, ExpressibleByFloatLiteral
+{
     let value: Double
 
     init(_ value: Double) {
@@ -384,7 +385,7 @@ struct AffineTransformTests {
 
     @Test
     func `Translation transform`() {
-        let transform: Geometry<Double, Void>.AffineTransform = .translation(x: 100, y: 50)
+        let transform: Geometry<Double, Void>.AffineTransform = .translation(dx: 100, dy: 50)
         let point: Geometry<Double, Void>.Point<2> = .init(x: 10, y: 20)
         let result = transform.apply(to: point)
 
@@ -415,7 +416,7 @@ struct AffineTransformTests {
 
     @Test
     func `Transform concatenation`() {
-        let translate: Geometry<Double, Void>.AffineTransform = .translation(x: 10, y: 0)
+        let translate: Geometry<Double, Void>.AffineTransform = .translation(dx: 10, dy: 0)
         let scale: Geometry<Double, Void>.AffineTransform = .scale(2)
 
         // Scale first, then translate
@@ -431,7 +432,7 @@ struct AffineTransformTests {
 
     @Test
     func `Transform inversion`() {
-        let transform: Geometry<Double, Void>.AffineTransform = .translation(x: 100, y: 50)
+        let transform: Geometry<Double, Void>.AffineTransform = .translation(dx: 100, dy: 50)
         let inverse = transform.inverted!
 
         let point: Geometry<Double, Void>.Point<2> = .init(x: 110, y: 70)
@@ -718,8 +719,8 @@ struct LinearTransformTests {
 
     @Test
     func `Linear from Scale`() {
-        let scale = Scale<2>(x: 2, y: 3)
-        let linear = scale.linear
+        let scale = Scale<2, Double>(x: 2, y: 3)
+        let linear: Matrix2x2 = scale.linear()
         #expect(linear.a == 2)
         #expect(linear.b == 0)
         #expect(linear.c == 0)
@@ -728,8 +729,8 @@ struct LinearTransformTests {
 
     @Test
     func `Linear from Rotation`() {
-        let rotation = Rotation<2>(angle: .halfPi)
-        let linear = rotation.matrix
+        let rotation = Rotation<2, Double>(angle: .halfPi)
+        let linear: Matrix2x2 = rotation.linear()
         #expect(abs(linear.a) < 1e-10)
         #expect(abs(linear.b + 1) < 1e-10)
         #expect(abs(linear.c - 1) < 1e-10)
@@ -775,22 +776,22 @@ struct LinearTransformTests {
 struct ScaleTransformTests {
     @Test
     func `Scale identity`() {
-        let identity = Scale<2>.identity
+        let identity = Scale<2, Double>.identity
         #expect(identity.x == 1)
         #expect(identity.y == 1)
     }
 
     @Test
     func `Scale uniform`() {
-        let uniform = Scale<2>.uniform(3)
+        let uniform = Scale<2, Double>.uniform(3)
         #expect(uniform.x == 3)
         #expect(uniform.y == 3)
     }
 
     @Test
     func `Scale composition`() {
-        let a = Scale<2>(x: 2, y: 3)
-        let b = Scale<2>(x: 4, y: 5)
+        let a = Scale<2, Double>(x: 2, y: 3)
+        let b = Scale<2, Double>(x: 4, y: 5)
         let combined = a.concatenating(b)
         #expect(combined.x == 8)
         #expect(combined.y == 15)
@@ -798,7 +799,7 @@ struct ScaleTransformTests {
 
     @Test
     func `Scale inversion`() {
-        let scale = Scale<2>(x: 2, y: 4)
+        let scale = Scale<2, Double>(x: 2, y: 4)
         let inverted = scale.inverted
         #expect(inverted.x == 0.5)
         #expect(inverted.y == 0.25)
@@ -811,33 +812,33 @@ struct ScaleTransformTests {
 struct RotationTransformTests {
     @Test
     func `Rotation identity`() {
-        let identity = Rotation<2>.identity
+        let identity = Rotation<2, Double>.identity
         #expect(identity.angle == 0)
     }
 
     @Test
     func `Rotation from angle`() {
-        let rotation = Rotation<2>(angle: .pi)
+        let rotation = Rotation<2, Double>(angle: .pi)
         #expect(abs(rotation.angle - .pi) < 1e-10)
     }
 
     @Test
     func `Rotation quarter turn`() {
-        let rotation = Rotation<2>.quarterTurn
+        let rotation = Rotation<2, Double>.quarterTurn
         #expect(abs(rotation.angle - .pi / 2) < 1e-10)
     }
 
     @Test
     func `Rotation composition`() {
-        let a = Rotation<2>(angle: .pi(over: 4))
-        let b = Rotation<2>(angle: .pi(over: 4))
+        let a = Rotation<2, Double>(angle: .pi(over: 4))
+        let b = Rotation<2, Double>(angle: .pi(over: 4))
         let combined = a.concatenating(b)
         #expect(abs(combined.angle - .pi / 2) < 1e-10)
     }
 
     @Test
     func `Rotation inversion`() {
-        let rotation = Rotation<2>(angle: .pi(over: 3))
+        let rotation = Rotation<2, Double>(angle: .pi(over: 3))
         let inverted = rotation.inverted
         #expect(abs(inverted.angle + .pi / 3) < 1e-10)
     }
@@ -847,31 +848,33 @@ struct RotationTransformTests {
 
 @Suite
 struct ShearTransformTests {
+    typealias Matrix2x2 = Linear<Double, Void>.Matrix<2, 2>
+
     @Test
     func `Shear identity`() {
-        let identity = Shear<2>.identity
+        let identity = Shear<2, Double>.identity
         #expect(identity.x == 0)
         #expect(identity.y == 0)
     }
 
     @Test
     func `Shear horizontal`() {
-        let shear = Shear<2>.horizontal(0.5)
+        let shear = Shear<2, Double>.horizontal(0.5)
         #expect(shear.x == 0.5)
         #expect(shear.y == 0)
     }
 
     @Test
     func `Shear vertical`() {
-        let shear = Shear<2>.vertical(0.5)
+        let shear = Shear<2, Double>.vertical(0.5)
         #expect(shear.x == 0)
         #expect(shear.y == 0.5)
     }
 
     @Test
     func `Shear to Linear`() {
-        let shear = Shear<2>(x: 0.5, y: 0.25)
-        let linear = shear.linear
+        let shear = Shear<2, Double>(x: 0.5, y: 0.25)
+        let linear: Matrix2x2 = shear.linear()
         #expect(linear.a == 1)
         #expect(linear.b == 0.5)
         #expect(linear.c == 0.25)

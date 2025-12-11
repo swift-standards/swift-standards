@@ -3,31 +3,33 @@
 
 public import Algebra_Linear
 
-/// An N-dimensional scale transformation.
+/// An N-dimensional scale transformation parameterized by scalar type.
 ///
-/// Represents dimensionless scaling factors that multiply coordinates. A scale of 2 doubles size regardless of whether coordinates represent points, pixels, or meters, making it independent of unit systems.
+/// Represents dimensionless scaling factors that multiply coordinates. A scale of 2 doubles
+/// size regardless of whether coordinates represent points, pixels, or meters, making it
+/// independent of unit systems.
 ///
 /// ## Example
 ///
 /// ```swift
-/// let uniform = Scale<2>.uniform(2.0)
-/// let stretch = Scale<2>(x: 1.5, y: 2.0)
+/// let uniform = Scale<2, Double>.uniform(2.0)
+/// let stretch = Scale<2, Double>(x: 1.5, y: 2.0)
 /// // (1, 1) stretched → (1.5, 2.0)
 /// ```
-public struct Scale<let N: Int>: Sendable {
+public struct Scale<let N: Int, Scalar: FloatingPoint> {
     /// Scale factors for each dimension.
-    public var factors: InlineArray<N, Double>
+    public var factors: InlineArray<N, Scalar>
 
     /// Creates a scale from an array of factors.
     @inlinable
-    public init(_ factors: consuming InlineArray<N, Double>) {
+    public init(_ factors: consuming InlineArray<N, Scalar>) {
         self.factors = factors
     }
 }
 
+extension Scale: Sendable where Scalar: Sendable {}
+
 // MARK: - Equatable
-// Note: InlineArray doesn't yet conform to Equatable/Hashable/Codable in Swift 6.2
-// We implement these manually by iterating over factors.
 
 extension Scale: Equatable {
     @inlinable
@@ -41,7 +43,7 @@ extension Scale: Equatable {
 
 // MARK: - Hashable
 
-extension Scale: Hashable {
+extension Scale: Hashable where Scalar: Hashable {
     @inlinable
     public func hash(into hasher: inout Hasher) {
         for i in 0..<N {
@@ -53,12 +55,12 @@ extension Scale: Hashable {
 // MARK: - Codable
 
 #if Codable
-    extension Scale: Codable {
+    extension Scale: Codable where Scalar: Codable {
         public init(from decoder: any Decoder) throws {
             var container = try decoder.unkeyedContainer()
-            var factors = InlineArray<N, Double>(repeating: 0)
+            var factors = InlineArray<N, Scalar>(repeating: .zero)
             for i in 0..<N {
-                factors[i] = try container.decode(Double.self)
+                factors[i] = try container.decode(Scalar.self)
             }
             self.init(factors)
         }
@@ -77,7 +79,7 @@ extension Scale: Hashable {
 extension Scale {
     /// Accesses scale factor by dimension index.
     @inlinable
-    public subscript(index: Int) -> Double {
+    public subscript(index: Int) -> Scalar {
         get { factors[index] }
         set { factors[index] = newValue }
     }
@@ -85,29 +87,31 @@ extension Scale {
 
 // MARK: - Identity and Presets
 
-extension Scale {
+extension Scale where Scalar: ExpressibleByIntegerLiteral {
     /// Identity scale with all factors equal to 1.
     @inlinable
     public static var identity: Self {
-        Self(InlineArray(repeating: 1.0))
+        Self(InlineArray(repeating: 1))
     }
 
     /// Creates a uniform scale with the same factor in all dimensions.
     @inlinable
-    public static func uniform(_ factor: Double) -> Self {
+    public static func uniform(_ factor: Scalar) -> Self {
         Self(InlineArray(repeating: factor))
     }
 
     /// Uniform 2x scale in all dimensions.
     @inlinable
     public static var double: Self {
-        Self(InlineArray(repeating: 2.0))
+        Self(InlineArray(repeating: 2))
     }
+}
 
+extension Scale where Scalar: BinaryFloatingPoint {
     /// Uniform 0.5x scale in all dimensions.
     @inlinable
     public static var half: Self {
-        Self(InlineArray(repeating: 0.5))
+        Self(InlineArray(repeating: Scalar(0.5)))
     }
 }
 
@@ -116,31 +120,15 @@ extension Scale {
 extension Scale where N == 1 {
     /// Scale factor value for 1D transformations.
     @inlinable
-    public var value: Double {
+    public var value: Scalar {
         get { factors[0] }
         set { factors[0] = newValue }
     }
 
     /// Creates a 1D scale with the given factor.
     @inlinable
-    public init(_ value: Double) {
+    public init(_ value: Scalar) {
         self.init([value])
-    }
-}
-
-// MARK: - 1D Literals
-
-extension Scale: ExpressibleByFloatLiteral where N == 1 {
-    @inlinable
-    public init(floatLiteral value: Double) {
-        self.init(value)
-    }
-}
-
-extension Scale: ExpressibleByIntegerLiteral where N == 1 {
-    @inlinable
-    public init(integerLiteral value: Int) {
-        self.init(Double(value))
     }
 }
 
@@ -149,21 +137,21 @@ extension Scale: ExpressibleByIntegerLiteral where N == 1 {
 extension Scale where N == 2 {
     /// Scale factor for the x dimension.
     @inlinable
-    public var x: Double {
+    public var x: Scalar {
         get { factors[0] }
         set { factors[0] = newValue }
     }
 
     /// Scale factor for the y dimension.
     @inlinable
-    public var y: Double {
+    public var y: Scalar {
         get { factors[1] }
         set { factors[1] = newValue }
     }
 
     /// Creates a 2D scale with the given factors.
     @inlinable
-    public init(x: Double, y: Double) {
+    public init(x: Scalar, y: Scalar) {
         self.init([x, y])
     }
 }
@@ -173,28 +161,28 @@ extension Scale where N == 2 {
 extension Scale where N == 3 {
     /// Scale factor for the x dimension.
     @inlinable
-    public var x: Double {
+    public var x: Scalar {
         get { factors[0] }
         set { factors[0] = newValue }
     }
 
     /// Scale factor for the y dimension.
     @inlinable
-    public var y: Double {
+    public var y: Scalar {
         get { factors[1] }
         set { factors[1] = newValue }
     }
 
     /// Scale factor for the z dimension.
     @inlinable
-    public var z: Double {
+    public var z: Scalar {
         get { factors[2] }
         set { factors[2] = newValue }
     }
 
     /// Creates a 3D scale with the given factors.
     @inlinable
-    public init(x: Double, y: Double, z: Double) {
+    public init(x: Scalar, y: Scalar, z: Scalar) {
         self.init([x, y, z])
     }
 }
@@ -217,7 +205,7 @@ extension Scale {
     public var inverted: Self {
         var result = factors
         for i in 0..<N {
-            result[i] = 1.0 / factors[i]
+            result[i] = 1 / factors[i]
         }
         return Self(result)
     }
@@ -225,10 +213,30 @@ extension Scale {
 
 // MARK: - Conversion to Linear
 
-extension Scale where N == 2 {
+extension Scale where N == 2, Scalar: ExpressibleByIntegerLiteral {
     /// Converts to a 2D linear transformation matrix.
     @inlinable
-    public var linear: Linear<Double, Void>.Matrix<2, 2> {
+    public func linear<Space>() -> Linear<Scalar, Space>.Matrix<2, 2> {
         .init(a: x, b: 0, c: 0, d: y)
+    }
+}
+
+// MARK: - 1D Literals
+
+extension Scale: ExpressibleByFloatLiteral where N == 1, Scalar: ExpressibleByFloatLiteral {
+    public typealias FloatLiteralType = Scalar.FloatLiteralType
+
+    @inlinable
+    public init(floatLiteral value: FloatLiteralType) {
+        self.init(Scalar(floatLiteral: value))
+    }
+}
+
+extension Scale: ExpressibleByIntegerLiteral where N == 1, Scalar: ExpressibleByIntegerLiteral {
+    public typealias IntegerLiteralType = Scalar.IntegerLiteralType
+
+    @inlinable
+    public init(integerLiteral value: IntegerLiteralType) {
+        self.init(Scalar(integerLiteral: value))
     }
 }

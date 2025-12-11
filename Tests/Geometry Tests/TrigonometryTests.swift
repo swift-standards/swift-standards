@@ -2,12 +2,13 @@
 // Tests for trigonometric extensions on Geometry types.
 
 import Angle
-@testable import Affine
-@testable import Algebra
-@testable import Algebra_Linear
 import Geometry
 import RealModule
 import Testing
+
+@testable import Affine
+@testable import Algebra
+@testable import Algebra_Linear
 
 @Suite
 struct `Trigonometry Tests` {

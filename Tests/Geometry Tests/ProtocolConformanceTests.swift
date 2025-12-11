@@ -1,10 +1,10 @@
 // ProtocolConformanceTests.swift
 // Tests for protocol conformances added to scalar wrappers and other types.
 
-@testable import Algebra
 import Testing
 
 @testable import Affine
+@testable import Algebra
 @testable import Algebra_Linear
 @testable import Geometry
 
@@ -76,7 +76,11 @@ struct `Strideable Conformance Tests` {
     @Test
     func `Width stride through`() {
         var values: [Geometry<Double, Void>.Width] = []
-        for w in stride(from: Geometry<Double, Void>.Width(0), through: Geometry<Double, Void>.Width(10), by: 2) {
+        for w in stride(
+            from: Geometry<Double, Void>.Width(0),
+            through: Geometry<Double, Void>.Width(10),
+            by: 2
+        ) {
             values.append(w)
         }
         #expect(values.count == 6)
@@ -158,8 +162,18 @@ struct `Size AdditiveArithmetic Tests` {
 struct `EdgeInsets AdditiveArithmetic Tests` {
     @Test
     func `EdgeInsets addition`() {
-        let a: Geometry<Double, Void>.EdgeInsets = .init(top: 10, leading: 20, bottom: 30, trailing: 40)
-        let b: Geometry<Double, Void>.EdgeInsets = .init(top: 5, leading: 10, bottom: 15, trailing: 20)
+        let a: Geometry<Double, Void>.EdgeInsets = .init(
+            top: 10,
+            leading: 20,
+            bottom: 30,
+            trailing: 40
+        )
+        let b: Geometry<Double, Void>.EdgeInsets = .init(
+            top: 5,
+            leading: 10,
+            bottom: 15,
+            trailing: 20
+        )
         let sum = a + b
         #expect(sum.top == 15)
         #expect(sum.leading == 30)
@@ -169,8 +183,18 @@ struct `EdgeInsets AdditiveArithmetic Tests` {
 
     @Test
     func `EdgeInsets subtraction`() {
-        let a: Geometry<Double, Void>.EdgeInsets = .init(top: 10, leading: 20, bottom: 30, trailing: 40)
-        let b: Geometry<Double, Void>.EdgeInsets = .init(top: 5, leading: 10, bottom: 15, trailing: 20)
+        let a: Geometry<Double, Void>.EdgeInsets = .init(
+            top: 10,
+            leading: 20,
+            bottom: 30,
+            trailing: 40
+        )
+        let b: Geometry<Double, Void>.EdgeInsets = .init(
+            top: 5,
+            leading: 10,
+            bottom: 15,
+            trailing: 20
+        )
         let diff = a - b
         #expect(diff.top == 5)
         #expect(diff.leading == 10)
@@ -189,8 +213,18 @@ struct `EdgeInsets AdditiveArithmetic Tests` {
 
     @Test
     func `EdgeInsets combined equals addition`() {
-        let a: Geometry<Double, Void>.EdgeInsets = .init(top: 10, leading: 20, bottom: 30, trailing: 40)
-        let b: Geometry<Double, Void>.EdgeInsets = .init(top: 5, leading: 10, bottom: 15, trailing: 20)
+        let a: Geometry<Double, Void>.EdgeInsets = .init(
+            top: 10,
+            leading: 20,
+            bottom: 30,
+            trailing: 40
+        )
+        let b: Geometry<Double, Void>.EdgeInsets = .init(
+            top: 5,
+            leading: 10,
+            bottom: 15,
+            trailing: 20
+        )
         let combined: Geometry<Double, Void>.EdgeInsets = .combined(a, b)
         let sum = a + b
         #expect(combined == sum)

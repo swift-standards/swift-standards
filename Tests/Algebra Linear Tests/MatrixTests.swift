@@ -1,8 +1,9 @@
 // MatrixTests.swift
 // Tests for Linear.Matrix
 
-@testable import Algebra
 import Testing
+
+@testable import Algebra
 @testable import Algebra_Linear
 
 @Suite("Linear.Matrix Tests")
@@ -168,9 +169,15 @@ struct MatrixTests {
         // | 7 8 9 |
         // det = 1*(5*9-6*8) - 2*(4*9-6*7) + 3*(4*8-5*7) = 1*(-3) - 2*(-6) + 3*(-3) = 0
         var m = Mat3x3.zero
-        m[0, 0] = 1; m[0, 1] = 2; m[0, 2] = 3
-        m[1, 0] = 4; m[1, 1] = 5; m[1, 2] = 6
-        m[2, 0] = 7; m[2, 1] = 8; m[2, 2] = 9
+        m[0, 0] = 1
+        m[0, 1] = 2
+        m[0, 2] = 3
+        m[1, 0] = 4
+        m[1, 1] = 5
+        m[1, 2] = 6
+        m[2, 0] = 7
+        m[2, 1] = 8
+        m[2, 2] = 9
         #expect(m.determinant == 0)
     }
 
@@ -259,12 +266,12 @@ struct MatrixTests {
         // 2x3 matrix multiplied by 3x2 gives 2x2
         let m23: Linear<Double, Void>.Matrix<2, 3> = .init(rows: [
             [1, 2, 3],
-            [4, 5, 6]
+            [4, 5, 6],
         ])
         let m32: Linear<Double, Void>.Matrix<3, 2> = .init(rows: [
             [1, 2],
             [3, 4],
-            [5, 6]
+            [5, 6],
         ])
         let result: Linear<Double, Void>.Matrix<2, 2> = m23.multiplied(by: m32)
         // [1 2 3] * [1 2]   = [1*1+2*3+3*5  1*2+2*4+3*6] = [22 28]

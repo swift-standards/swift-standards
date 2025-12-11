@@ -207,10 +207,10 @@ extension Affine.Transform where Scalar: FloatingPoint {
 // MARK: - Factory Methods
 
 extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLiteral {
-    /// Creates pure translation transform.
+    /// Creates pure translation transform from typed displacements.
     @inlinable
-    public static func translation(x: Scalar, y: Scalar) -> Self {
-        Self(linear: .identity, translation: Affine.Translation(dx: x, dy: y))
+    public static func translation(dx: Affine.Dx, dy: Affine.Dy) -> Self {
+        Self(linear: .identity, translation: Affine.Translation(dx: dx, dy: dy))
     }
 
     /// Creates translation transform from displacement vector.
@@ -219,19 +219,31 @@ extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLit
         Self(translation: Affine.Translation(vector))
     }
 
+    /// Creates translation transform from a Translation value.
+    @inlinable
+    public static func translation(_ translation: Affine.Translation) -> Self {
+        Self(linear: .identity, translation: translation)
+    }
+
     /// Creates uniform scaling transform.
+    ///
+    /// Scale factors are dimensionless ratios.
     @inlinable
     public static func scale(_ factor: Scalar) -> Self {
         Self(linear: Linear<Scalar, Space>.Matrix(a: factor, b: 0, c: 0, d: factor))
     }
 
     /// Creates non-uniform scaling transform with independent x and y factors.
+    ///
+    /// Scale factors are dimensionless ratios.
     @inlinable
     public static func scale(x: Scalar, y: Scalar) -> Self {
         Self(linear: Linear<Scalar, Space>.Matrix(a: x, b: 0, c: 0, d: y))
     }
 
     /// Creates shear transform with horizontal and vertical shear factors.
+    ///
+    /// Shear factors are dimensionless ratios.
     @inlinable
     public static func shear(x: Scalar, y: Scalar) -> Self {
         Self(linear: Linear<Scalar, Space>.Matrix(a: 1, b: x, c: y, d: 1))
@@ -246,7 +258,10 @@ extension Affine.Transform where Scalar: Real & BinaryFloatingPoint {
     public static func rotation(_ angle: Radian) -> Self {
         let c = Scalar(angle.cos)
         let s = Scalar(angle.sin)
-        return Self(linear: Linear<Scalar, Space>.Matrix(a: c, b: -s, c: s, d: c), translation: .zero)
+        return Self(
+            linear: Linear<Scalar, Space>.Matrix(a: c, b: -s, c: s, d: c),
+            translation: .zero
+        )
     }
 
     /// Creates counterclockwise rotation transform from degrees.
@@ -261,14 +276,20 @@ extension Affine.Transform where Scalar: Real & BinaryFloatingPoint {
 extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLiteral {
     /// Returns new transform with additional translation applied.
     @inlinable
-    public func translated(x: Scalar, y: Scalar) -> Self {
-        concatenating(.translation(x: x, y: y))
+    public func translated(dx: Affine.Dx, dy: Affine.Dy) -> Self {
+        concatenating(.translation(dx: dx, dy: dy))
     }
 
     /// Returns new transform with additional vector translation applied.
     @inlinable
     public func translated(by vector: Linear<Scalar, Space>.Vector<2>) -> Self {
         concatenating(.translation(vector))
+    }
+
+    /// Returns new transform with additional translation applied.
+    @inlinable
+    public func translated(by translation: Affine.Translation) -> Self {
+        concatenating(.translation(translation))
     }
 
     /// Returns new transform with additional uniform scaling applied.
@@ -347,13 +368,17 @@ extension Affine.Transform where Scalar: FloatingPoint {
 
     /// Applies linear transformation to vector, ignoring translation component.
     @inlinable
-    public func apply(to vector: Linear<Scalar, Space>.Vector<2>) -> Linear<Scalar, Space>.Vector<2> {
+    public func apply(to vector: Linear<Scalar, Space>.Vector<2>) -> Linear<Scalar, Space>.Vector<2>
+    {
         // Matrix multiplication mixes X and Y components: new_x = a*x + b*y
         let vx = vector.dx.value
         let vy = vector.dy.value
         let newDx = linear.a * vx + linear.b * vy
         let newDy = linear.c * vx + linear.d * vy
-        return Linear<Scalar, Space>.Vector(dx: Linear<Scalar, Space>.Dx(newDx), dy: Linear<Scalar, Space>.Dy(newDy))
+        return Linear<Scalar, Space>.Vector(
+            dx: Linear<Scalar, Space>.Dx(newDx),
+            dy: Linear<Scalar, Space>.Dy(newDy)
+        )
     }
 }
 

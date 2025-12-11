@@ -115,7 +115,8 @@ extension ClosedRange {
         // MARK: - Expression Building
 
         @inlinable
-        public static func buildExpression(_ expression: ClosedRange<Bound>) -> [ClosedRange<Bound>] {
+        public static func buildExpression(_ expression: ClosedRange<Bound>) -> [ClosedRange<Bound>]
+        {
             [expression]
         }
 
@@ -165,7 +166,8 @@ extension ClosedRange {
         // MARK: - Control Flow
 
         @inlinable
-        public static func buildOptional(_ component: [ClosedRange<Bound>]?) -> [ClosedRange<Bound>] {
+        public static func buildOptional(_ component: [ClosedRange<Bound>]?) -> [ClosedRange<Bound>]
+        {
             component ?? []
         }
 
@@ -180,7 +182,8 @@ extension ClosedRange {
         }
 
         @inlinable
-        public static func buildArray(_ components: [[ClosedRange<Bound>]]) -> [ClosedRange<Bound>] {
+        public static func buildArray(_ components: [[ClosedRange<Bound>]]) -> [ClosedRange<Bound>]
+        {
             components.flatMap { $0 }
         }
 

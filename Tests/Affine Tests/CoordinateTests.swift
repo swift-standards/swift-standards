@@ -1,9 +1,10 @@
 // CoordinateTests.swift
 // Tests for Affine.X and Affine.Y
 
-@testable import Algebra
 import Testing
+
 @testable import Affine
+@testable import Algebra
 
 @Suite("Affine Coordinate Tests")
 struct CoordinateTests {

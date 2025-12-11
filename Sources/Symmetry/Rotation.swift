@@ -3,79 +3,116 @@
 
 public import Algebra_Linear
 public import Angle
+import RealModule
 
 /// An N-dimensional rotation in Euclidean space.
 ///
-/// Represents an element of SO(n), the special orthogonal group. Rotations are dimensionless angular displacements stored as orthogonal matrices with determinant +1, making them independent of coordinate system units.
+/// Represents an element of SO(n), the special orthogonal group. Rotations are dimensionless
+/// angular displacements stored as orthogonal matrices with determinant +1, making them
+/// independent of coordinate system units.
 ///
 /// ## Example
 ///
 /// ```swift
-/// let rotation = Rotation<2>(angle: .pi / 4)
-/// let matrix = rotation.matrix
+/// let rotation = Rotation<2, Double>(angle: .pi / 4)
+/// let matrix = rotation.linear()
 /// // [[cos(π/4), -sin(π/4)],
 /// //  [sin(π/4),  cos(π/4)]]
 /// ```
-public struct Rotation<let N: Int>: Sendable {
+public struct Rotation<let N: Int, Scalar: BinaryFloatingPoint> {
     /// Orthogonal matrix representation with determinant +1.
-    public var matrix: Linear<Double, Void>.Matrix<N, N>
+    public var matrix: InlineArray<N, InlineArray<N, Scalar>>
 
     /// Creates a rotation from an orthogonal matrix.
     ///
     /// - Precondition: Matrix must be orthogonal with determinant +1 (not validated).
     @inlinable
-    public init(matrix: Linear<Double, Void>.Matrix<N, N>) {
+    public init(matrix: consuming InlineArray<N, InlineArray<N, Scalar>>) {
         self.matrix = matrix
     }
 }
 
+extension Rotation: Sendable where Scalar: Sendable {}
+
 // MARK: - Equatable (2D)
-// Rotation uses Linear<N> which has manual conformances for N == 2
 
 extension Rotation: Equatable where N == 2 {
     @inlinable
     public static func == (lhs: Self, rhs: Self) -> Bool {
-        lhs.matrix == rhs.matrix
+        lhs.matrix[0][0] == rhs.matrix[0][0] && lhs.matrix[0][1] == rhs.matrix[0][1]
+            && lhs.matrix[1][0] == rhs.matrix[1][0] && lhs.matrix[1][1] == rhs.matrix[1][1]
     }
 }
 
 // MARK: - Hashable (2D)
 
-extension Rotation: Hashable where N == 2 {
+extension Rotation: Hashable where N == 2, Scalar: Hashable {
     @inlinable
     public func hash(into hasher: inout Hasher) {
-        hasher.combine(matrix)
+        hasher.combine(matrix[0][0])
+        hasher.combine(matrix[0][1])
+        hasher.combine(matrix[1][0])
+        hasher.combine(matrix[1][1])
     }
 }
 
 // MARK: - Codable (2D)
 
 #if Codable
-    extension Rotation: Codable where N == 2 {
+    extension Rotation: Codable where N == 2, Scalar: Codable {
         private enum CodingKeys: String, CodingKey {
-            case matrix
+            case a, b, c, d
         }
 
         public init(from decoder: any Decoder) throws {
             let container = try decoder.container(keyedBy: CodingKeys.self)
-            let matrix = try container.decode(Linear<Double, Void>.Matrix<2, 2>.self, forKey: .matrix)
-            self.init(matrix: matrix)
+            let a = try container.decode(Scalar.self, forKey: .a)
+            let b = try container.decode(Scalar.self, forKey: .b)
+            let c = try container.decode(Scalar.self, forKey: .c)
+            let d = try container.decode(Scalar.self, forKey: .d)
+            var m = InlineArray<2, InlineArray<2, Scalar>>(
+                repeating: InlineArray<2, Scalar>(repeating: .zero)
+            )
+            m[0][0] = a
+            m[0][1] = b
+            m[1][0] = c
+            m[1][1] = d
+            self.init(matrix: m)
         }
 
         public func encode(to encoder: any Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(matrix, forKey: .matrix)
+            try container.encode(matrix[0][0], forKey: .a)
+            try container.encode(matrix[0][1], forKey: .b)
+            try container.encode(matrix[1][0], forKey: .c)
+            try container.encode(matrix[1][1], forKey: .d)
         }
     }
 #endif
 
 // MARK: - Identity
 
-extension Rotation {
+extension Rotation where Scalar: ExpressibleByIntegerLiteral {
     /// Identity rotation representing no angular displacement.
     @inlinable
     public static var identity: Self {
-        Self(matrix: .identity)
+        var m = InlineArray<N, InlineArray<N, Scalar>>(
+            repeating: InlineArray<N, Scalar>(repeating: 0)
+        )
+        for i in 0..<N {
+            m[i][i] = 1
+        }
+        return Self(matrix: m)
+    }
+}
+
+// MARK: - Conversion to Linear
+
+extension Rotation where N == 2, Scalar: ExpressibleByIntegerLiteral {
+    /// Converts to a 2D linear transformation matrix.
+    @inlinable
+    public func linear<Space>() -> Linear<Scalar, Space>.Matrix<2, 2> {
+        .init(a: matrix[0][0], b: matrix[0][1], c: matrix[1][0], d: matrix[1][1])
     }
 }
 
@@ -83,18 +120,24 @@ extension Rotation {
 
 extension Rotation where N == 2 {
     /// Rotation angle in radians.
-    @inlinable
     public var angle: Radian {
-        get { matrix.rotationAngle }
+        get { Radian(Double.atan2(y: Double(matrix[1][0]), x: Double(matrix[0][0]))) }
         set { self = Self(angle: newValue) }
     }
 
     /// Creates a 2D rotation from an angle in radians.
     @inlinable
     public init(angle: Radian) {
-        let c = angle.cos
-        let s = angle.sin
-        self.init(matrix: .init(a: c, b: -s, c: s, d: c))
+        let c = Scalar(angle.cos)
+        let s = Scalar(angle.sin)
+        var m = InlineArray<2, InlineArray<2, Scalar>>(
+            repeating: InlineArray<2, Scalar>(repeating: .zero)
+        )
+        m[0][0] = c
+        m[0][1] = -s
+        m[1][0] = s
+        m[1][1] = c
+        self.init(matrix: m)
     }
 
     /// Creates a 2D rotation from an angle in degrees.
@@ -105,29 +148,53 @@ extension Rotation where N == 2 {
 
     /// Creates a 2D rotation from precomputed cosine and sine values.
     @inlinable
-    public init(cos: Double, sin: Double) {
-        self.init(matrix: .init(a: cos, b: -sin, c: sin, d: cos))
+    public init(cos: Scalar, sin: Scalar) {
+        var m = InlineArray<2, InlineArray<2, Scalar>>(
+            repeating: InlineArray<2, Scalar>(repeating: .zero)
+        )
+        m[0][0] = cos
+        m[0][1] = -sin
+        m[1][0] = sin
+        m[1][1] = cos
+        self.init(matrix: m)
     }
 }
 
 // MARK: - Composition
 
-extension Rotation {
+extension Rotation where N == 2 {
     /// Composes two rotations by matrix multiplication.
     ///
     /// - Returns: Rotation applying `other` first, then `self`.
     @inlinable
-    public func concatenating(_ other: Self) -> Self where N == 2 {
-        Self(matrix: matrix.multiplied(by: other.matrix))
+    public func concatenating(_ other: Self) -> Self {
+        // 2x2 matrix multiplication
+        let a = matrix[0][0] * other.matrix[0][0] + matrix[0][1] * other.matrix[1][0]
+        let b = matrix[0][0] * other.matrix[0][1] + matrix[0][1] * other.matrix[1][1]
+        let c = matrix[1][0] * other.matrix[0][0] + matrix[1][1] * other.matrix[1][0]
+        let d = matrix[1][0] * other.matrix[0][1] + matrix[1][1] * other.matrix[1][1]
+        var m = InlineArray<2, InlineArray<2, Scalar>>(
+            repeating: InlineArray<2, Scalar>(repeating: .zero)
+        )
+        m[0][0] = a
+        m[0][1] = b
+        m[1][0] = c
+        m[1][1] = d
+        return Self(matrix: m)
     }
-}
 
-extension Rotation where N == 2 {
     /// Inverse rotation (matrix transpose for orthogonal matrices).
     @inlinable
     public var inverted: Self {
-        // For 2D: transpose is simple (inverse = transpose for orthogonal matrices)
-        Self(matrix: matrix.transpose)
+        // For 2D: transpose (inverse = transpose for orthogonal matrices)
+        var m = InlineArray<2, InlineArray<2, Scalar>>(
+            repeating: InlineArray<2, Scalar>(repeating: .zero)
+        )
+        m[0][0] = matrix[0][0]
+        m[0][1] = matrix[1][0]
+        m[1][0] = matrix[0][1]
+        m[1][1] = matrix[1][1]
+        return Self(matrix: m)
     }
 }
 

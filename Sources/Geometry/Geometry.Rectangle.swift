@@ -210,8 +210,7 @@ extension Geometry.Rectangle where Scalar: Comparable {
     /// Check if the rectangle contains a point
     @inlinable
     public func contains(_ point: Geometry.Point<2>) -> Bool {
-        point.x >= minX && point.x <= maxX &&
-        point.y >= minY && point.y <= maxY
+        point.x >= minX && point.x <= maxX && point.y >= minY && point.y <= maxY
     }
 
     /// Check if this rectangle contains another rectangle

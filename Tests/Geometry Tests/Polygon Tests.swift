@@ -1,10 +1,10 @@
 // Polygon Tests.swift
 // Tests for Geometry.Polygon type.
 
-@testable import Algebra
 import Testing
 
 @testable import Affine
+@testable import Algebra
 @testable import Algebra_Linear
 @testable import Geometry
 

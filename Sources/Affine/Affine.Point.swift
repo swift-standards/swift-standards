@@ -163,7 +163,10 @@ extension Affine.Point where Scalar: AdditiveArithmetic {
     /// ```
     @inlinable
     @_disfavoredOverload
-    public static func - (lhs: borrowing Self, rhs: borrowing Self) -> Linear<Scalar, Space>.Vector<N> {
+    public static func - (
+        lhs: borrowing Self,
+        rhs: borrowing Self
+    ) -> Linear<Scalar, Space>.Vector<N> {
         var result = InlineArray<N, Scalar>(repeating: lhs.coordinates[0] - rhs.coordinates[0])
         for i in 1..<N {
             result[i] = lhs.coordinates[i] - rhs.coordinates[i]
@@ -176,7 +179,10 @@ extension Affine.Point where Scalar: AdditiveArithmetic {
     /// Fundamental affine operation moving a position by a directional displacement.
     @inlinable
     @_disfavoredOverload
-    public static func + (lhs: borrowing Self, rhs: borrowing Linear<Scalar, Space>.Vector<N>) -> Self {
+    public static func + (
+        lhs: borrowing Self,
+        rhs: borrowing Linear<Scalar, Space>.Vector<N>
+    ) -> Self {
         var result = lhs.coordinates
         for i in 0..<N {
             result[i] = lhs.coordinates[i] + rhs.components[i]
@@ -187,7 +193,10 @@ extension Affine.Point where Scalar: AdditiveArithmetic {
     /// Translates point by subtracting displacement vector.
     @inlinable
     @_disfavoredOverload
-    public static func - (lhs: borrowing Self, rhs: borrowing Linear<Scalar, Space>.Vector<N>) -> Self {
+    public static func - (
+        lhs: borrowing Self,
+        rhs: borrowing Linear<Scalar, Space>.Vector<N>
+    ) -> Self {
         var result = lhs.coordinates
         for i in 0..<N {
             result[i] = lhs.coordinates[i] - rhs.components[i]
@@ -384,7 +393,11 @@ extension Affine.Point where N == 2, Scalar: FloatingPoint {
 extension Affine.Point where N == 3, Scalar: AdditiveArithmetic {
     /// Returns point translated by displacement components.
     @inlinable
-    public func translated(dx: Linear<Scalar, Space>.Dx, dy: Linear<Scalar, Space>.Dy, dz: Linear<Scalar, Space>.Dz) -> Self {
+    public func translated(
+        dx: Linear<Scalar, Space>.Dx,
+        dy: Linear<Scalar, Space>.Dy,
+        dz: Linear<Scalar, Space>.Dz
+    ) -> Self {
         Self(x: x + dx, y: y + dy, z: z + dz)
     }
 

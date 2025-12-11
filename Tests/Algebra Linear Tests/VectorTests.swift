@@ -1,8 +1,9 @@
 // VectorTests.swift
 // Tests for Linear.Vector
 
-@testable import Algebra
 import Testing
+
+@testable import Algebra
 @testable import Algebra_Linear
 
 @Suite("Linear.Vector Tests")
@@ -130,7 +131,7 @@ struct VectorTests {
     func dotProduct() {
         let a = Vec2(dx: 1, dy: 2)
         let b = Vec2(dx: 3, dy: 4)
-        #expect(a.dot(b) == 11) // 1*3 + 2*4
+        #expect(a.dot(b) == 11)  // 1*3 + 2*4
     }
 
     @Test("Perpendicular vectors have zero dot product")
@@ -147,7 +148,7 @@ struct VectorTests {
         let a = Vec2(dx: 1, dy: 0)
         let b = Vec2(dx: 0, dy: 1)
         #expect(a.cross(b) == 1)  // Counter-clockwise
-        #expect(b.cross(a) == -1) // Clockwise
+        #expect(b.cross(a) == -1)  // Clockwise
     }
 
     @Test("3D cross product")

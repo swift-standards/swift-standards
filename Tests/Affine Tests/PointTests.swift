@@ -2,8 +2,9 @@
 // Tests for Affine.Point
 
 import Testing
-@testable import Algebra
+
 @testable import Affine
+@testable import Algebra
 @testable import Algebra_Linear
 
 @Suite("Affine.Point Tests")

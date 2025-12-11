@@ -3,9 +3,9 @@
 
 import Affine
 import Algebra_Linear
-@testable import Algebra
 import Testing
 
+@testable import Algebra
 @testable import Geometry
 
 @Suite

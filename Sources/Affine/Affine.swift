@@ -85,3 +85,22 @@ extension Affine {
     /// Used in 4D homogeneous coordinates where `w=1` represents standard 3D points.
     public typealias W = Tagged<Index.W.Coordinate<Space>, Scalar>
 }
+
+// MARK: - Displacement Type Aliases
+
+extension Affine {
+    /// Horizontal displacement component.
+    ///
+    /// See ``Linear/Dx``
+    public typealias Dx = Linear<Scalar, Space>.Dx
+
+    /// Vertical displacement component.
+    ///
+    /// See ``Linear/Dy``
+    public typealias Dy = Linear<Scalar, Space>.Dy
+
+    /// Depth displacement component.
+    ///
+    /// See ``Linear/Dz``
+    public typealias Dz = Linear<Scalar, Space>.Dz
+}

@@ -1,11 +1,12 @@
 // TransformTests.swift
 // Tests for Affine.Transform
 
-@testable import Algebra
-import Testing
-@testable import Affine
-@testable import Algebra_Linear
 import Angle
+import Testing
+
+@testable import Affine
+@testable import Algebra
+@testable import Algebra_Linear
 
 @Suite("Affine.Transform Tests")
 struct TransformTests {
@@ -39,7 +40,7 @@ struct TransformTests {
 
     @Test("Translation transform")
     func translationTransform() {
-        let t = Transform.translation(x: 10, y: 20)
+        let t = Transform.translation(dx: 10, dy: 20)
         let p = Point2(x: 1, y: 2)
         let result = t.apply(to: p)
         #expect(result.x.value == 11)
@@ -114,7 +115,7 @@ struct TransformTests {
     func concatenationOrder() {
         // First scale by 2, then translate by (10, 0)
         let scale = Transform.scale(2)
-        let translate = Transform.translation(x: 10, y: 0)
+        let translate = Transform.translation(dx: 10, dy: 0)
         let combined = translate.concatenating(scale)
 
         let p = Point2(x: 1, y: 0)
@@ -129,9 +130,9 @@ struct TransformTests {
         // Note: composed applies transforms in reverse order (right-to-left matrix multiplication)
         // So [t1, t2, t3] applies t3 first, then t2, then t1
         let composed = Transform.composed(
-            .translation(x: 1, y: 0),   // Applied last
-            .scale(2),                   // Applied second
-            .translation(x: 0, y: 1)    // Applied first
+            .translation(dx: 1, dy: 0),  // Applied last
+            .scale(2),  // Applied second
+            .translation(dx: 0, dy: 1)  // Applied first
         )
         let p = Point2(x: 0, y: 0)
         let result = composed.apply(to: p)
@@ -146,7 +147,7 @@ struct TransformTests {
 
     @Test("Fluent translation")
     func fluentTranslation() {
-        let t = Transform.identity.translated(x: 10, y: 20)
+        let t = Transform.identity.translated(dx: 10, dy: 20)
         let p = Point2(x: 1, y: 2)
         let result = t.apply(to: p)
         #expect(result.x.value == 11)
@@ -190,7 +191,7 @@ struct TransformTests {
 
     @Test("Inverse transform")
     func inverseTransform() {
-        let t = Transform.translation(x: 10, y: 20).scaled(by: 2)
+        let t = Transform.translation(dx: 10, dy: 20).scaled(by: 2)
         guard let inv = t.inverted else {
             #expect(Bool(false), "Transform should be invertible")
             return
@@ -214,7 +215,7 @@ struct TransformTests {
 
     @Test("Vector transform ignores translation")
     func vectorTransformIgnoresTranslation() {
-        let t = Transform.translation(x: 100, y: 200).scaled(by: 2)
+        let t = Transform.translation(dx: 100, dy: 200).scaled(by: 2)
         let v = Vec2(dx: 3, dy: 4)
         let result = t.apply(to: v)
         // Translation should be ignored, only scaling applies
@@ -226,9 +227,9 @@ struct TransformTests {
 
     @Test("Transform equality")
     func equality() {
-        let a = Transform.translation(x: 1, y: 2)
-        let b = Transform.translation(x: 1, y: 2)
-        let c = Transform.translation(x: 1, y: 3)
+        let a = Transform.translation(dx: 1, dy: 2)
+        let b = Transform.translation(dx: 1, dy: 2)
+        let c = Transform.translation(dx: 1, dy: 3)
         #expect(a == b)
         #expect(a != c)
     }
