@@ -368,6 +368,14 @@ swift test --verbose
 
 No Foundation dependency. Pure Swift value types only.
 
+### Swift Embedded
+
+By default, the package is Swift Embedded compatible. To enable `Codable` conformances (which use `any` existentials not supported in Embedded), add the `Codable` trait:
+
+```swift
+.product(name: "Standards", package: "swift-standards", traits: ["Codable"])
+```
+
 ## Related Packages
 
 ### Swift Standards Organization
