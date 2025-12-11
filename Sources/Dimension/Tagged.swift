@@ -296,12 +296,14 @@ extension Tagged where RawValue: AdditiveArithmetic {
 
     /// Add scalar and assign
     @inlinable
+    @_disfavoredOverload
     public static func += (lhs: inout Self, rhs: RawValue) {
         lhs.rawValue = lhs.rawValue + rhs
     }
 
     /// Subtract scalar and assign
     @inlinable
+    @_disfavoredOverload
     public static func -= (lhs: inout Self, rhs: RawValue) {
         lhs.rawValue = lhs.rawValue - rhs
     }
