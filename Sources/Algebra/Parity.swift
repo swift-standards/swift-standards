@@ -1,24 +1,19 @@
 // Parity.swift
 public import Dimension
 
-// Classification of integers by divisibility by 2.
-
 /// Classification of integers as even or odd.
 ///
-/// Parity partitions integers into two equivalence classes under modulo 2.
+/// Partitions integers into two equivalence classes under modulo 2. Forms a Z₂
+/// group under addition (even + even = even, odd + odd = even). Use when tracking
+/// divisibility by 2 or implementing parity-based algorithms.
 ///
-/// ## Mathematical Properties
-///
-/// - Forms Z₂ group under addition: even + even = even, odd + odd = even, etc.
-/// - Multiplication: even × anything = even, odd × odd = odd
-/// - `opposite` is identity for even, swaps for odd under certain operations
-///
-/// ## Tagged Values
-///
-/// Use `Parity.Value<T>` to pair a value with its known parity:
+/// ## Example
 ///
 /// ```swift
-/// let evenCount: Parity.Value<Int> = .init(.even, 42)
+/// let p = Parity(42)
+/// print(p)                       // even
+/// print(p.adding(.odd))          // odd
+/// print(p.multiplying(.odd))     // even
 /// ```
 public enum Parity: Sendable, Hashable, Codable, CaseIterable {
     /// Divisible by 2 (remainder 0).
@@ -31,7 +26,7 @@ public enum Parity: Sendable, Hashable, Codable, CaseIterable {
 // MARK: - Opposite
 
 extension Parity {
-    /// The opposite parity.
+    /// Opposite parity (even↔odd).
     @inlinable
     public var opposite: Parity {
         switch self {
@@ -50,7 +45,7 @@ extension Parity {
 // MARK: - Arithmetic Properties
 
 extension Parity {
-    /// The parity resulting from adding two values with known parities.
+    /// Parity of adding two values with these parities (e+e=e, o+o=e, e+o=o).
     @inlinable
     public func adding(_ other: Parity) -> Parity {
         switch (self, other) {
@@ -59,7 +54,7 @@ extension Parity {
         }
     }
 
-    /// The parity resulting from multiplying two values with known parities.
+    /// Parity of multiplying two values with these parities (o×o=o, else e).
     @inlinable
     public func multiplying(_ other: Parity) -> Parity {
         switch (self, other) {

@@ -4,10 +4,9 @@
 // Attosecond representation as a refinement type
 
 extension Time {
-    /// An attosecond (0-999)
+    /// Attosecond component (0-999).
     ///
-    /// This is a refinement type - an integer constrained to the valid range.
-    /// Represents 10^-18 seconds (quintillionths of a second).
+    /// Represents 10^-18 seconds. Refinement type for type-safe sub-second precision.
     public struct Attosecond: Sendable, Equatable, Hashable, Comparable {
         /// The attosecond value (0-999)
         public let value: Int

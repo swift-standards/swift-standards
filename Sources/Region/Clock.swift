@@ -5,76 +5,67 @@ public import Algebra
 public import Dimension
 
 extension Region {
-    /// Clock position (30-degree angular sector).
+    /// Twelve angular sectors dividing a circle like clock positions.
     ///
-    /// The twelve regions dividing a circle into equal 30° sectors,
-    /// numbered like clock positions starting from 12 o'clock.
+    /// Clock represents twelve equal 30° sectors numbered like a clock face, starting at 12 o'clock at the top. Use it for fine-grained directional logic, analog time visualization, or 30° angular partitioning. Forms a cyclic group (Z₁₂) under rotation.
     ///
-    /// ## Convention
-    ///
-    /// Uses clock notation where 12 is at the top (positive y-axis in screen
-    /// coordinates, or the direction one would call "up").
-    ///
-    /// - twelve: 345° to 15° (centered on positive y in screen coords)
-    /// - one: 15° to 45°
-    /// - two: 45° to 75°
-    /// - ...continuing clockwise...
-    /// - eleven: 315° to 345°
-    ///
-    /// ## Mathematical Properties
-    ///
-    /// - Forms Z12 group under 30 degree rotation
-    /// - Useful for compass directions, clock faces, and fine angular division
-    /// - Each position spans 30°
-    ///
-    /// ## Tagged Values
-    ///
-    /// Use `Clock.Value<T>` to pair a value with its clock position:
+    /// ## Example
     ///
     /// ```swift
-    /// let direction: Region.Clock.Value<Velocity> = .init(.three, v)
+    ///         12
+    ///      11  |  1
+    ///   10     |     2
+    ///  9 ------+------ 3
+    ///   8      |     4
+    ///      7   |  5
+    ///          6
+    ///
+    /// let pos: Region.Clock = .three       // East (right)
+    /// let next = pos.clockwise             // .four
+    /// let opposite = !pos                  // .nine (West)
+    /// let cardinal = pos.nearestCardinal   // .east
     /// ```
     public enum Clock: Int, Sendable, Hashable, Codable, CaseIterable {
-        /// 12 o'clock position (top center).
+        /// 12 o'clock (top, north).
         case twelve = 12
 
-        /// 1 o'clock position.
+        /// 1 o'clock (upper right).
         case one = 1
 
-        /// 2 o'clock position.
+        /// 2 o'clock (right of north).
         case two = 2
 
-        /// 3 o'clock position (right center).
+        /// 3 o'clock (right, east).
         case three = 3
 
-        /// 4 o'clock position.
+        /// 4 o'clock (lower right of east).
         case four = 4
 
-        /// 5 o'clock position.
+        /// 5 o'clock (right of south).
         case five = 5
 
-        /// 6 o'clock position (bottom center).
+        /// 6 o'clock (bottom, south).
         case six = 6
 
-        /// 7 o'clock position.
+        /// 7 o'clock (lower left).
         case seven = 7
 
-        /// 8 o'clock position.
+        /// 8 o'clock (left of south).
         case eight = 8
 
-        /// 9 o'clock position (left center).
+        /// 9 o'clock (left, west).
         case nine = 9
 
-        /// 10 o'clock position.
+        /// 10 o'clock (upper left of west).
         case ten = 10
 
-        /// 11 o'clock position.
+        /// 11 o'clock (left of north).
         case eleven = 11
 
-        /// All cases in clockwise order starting from twelve.
+        /// All clock positions in clockwise order starting from twelve.
         public static let allCases: [Clock] = [
             .twelve, .one, .two, .three, .four, .five,
-            .six, .seven, .eight, .nine, .ten, .eleven
+            .six, .seven, .eight, .nine, .ten, .eleven,
         ]
     }
 }
@@ -82,34 +73,34 @@ extension Region {
 // MARK: - Rotation
 
 extension Region.Clock {
-    /// The next clock position (30 degrees clockwise).
+    /// Next clock position (30° clockwise rotation).
     @inlinable
     public var clockwise: Region.Clock {
         let next = rawValue % 12 + 1
         return Region.Clock(rawValue: next == 0 ? 12 : next)!
     }
 
-    /// The previous clock position (30 degrees counterclockwise).
+    /// Previous clock position (30° counterclockwise rotation).
     @inlinable
     public var counterclockwise: Region.Clock {
         let prev = rawValue - 1
         return Region.Clock(rawValue: prev == 0 ? 12 : prev)!
     }
 
-    /// The opposite clock position (180 degree rotation).
+    /// Opposite clock position (180° rotation).
     @inlinable
     public var opposite: Region.Clock {
         let opp = (rawValue + 5) % 12 + 1
         return Region.Clock(rawValue: opp == 0 ? 12 : opp)!
     }
 
-    /// Returns the opposite clock position.
+    /// Returns the opposite clock position (180° rotation).
     @inlinable
     public static prefix func ! (value: Region.Clock) -> Region.Clock {
         value.opposite
     }
 
-    /// Advance by n positions clockwise.
+    /// Advances by `n` positions clockwise (or counterclockwise if negative).
     @inlinable
     public func advanced(by n: Int) -> Region.Clock {
         let result = ((rawValue - 1 + n) % 12 + 12) % 12 + 1
@@ -120,9 +111,7 @@ extension Region.Clock {
 // MARK: - Quadrant
 
 extension Region.Clock {
-    /// The quadrant containing this clock position.
-    ///
-    /// Note: Uses screen coordinates where y increases downward.
+    /// Quadrant containing this clock position (screen coordinates, y-down).
     @inlinable
     public var quadrant: Region.Quadrant {
         switch self {
@@ -133,7 +122,7 @@ extension Region.Clock {
         }
     }
 
-    /// The cardinal direction closest to this clock position.
+    /// Cardinal direction closest to this clock position.
     @inlinable
     public var nearestCardinal: Region.Cardinal {
         switch self {
@@ -148,7 +137,7 @@ extension Region.Clock {
 // MARK: - Properties
 
 extension Region.Clock {
-    /// True if this is a cardinal position (12, 3, 6, or 9 o'clock).
+    /// Whether this is a cardinal position (12, 3, 6, or 9 o'clock).
     @inlinable
     public var isCardinal: Bool {
         switch self {
@@ -157,7 +146,7 @@ extension Region.Clock {
         }
     }
 
-    /// True if this is an ordinal position (diagonal: 1:30, 4:30, 7:30, 10:30).
+    /// Whether this is a non-cardinal position (all except 12, 3, 6, 9).
     @inlinable
     public var isOrdinal: Bool {
         switch self {
@@ -166,7 +155,7 @@ extension Region.Clock {
         }
     }
 
-    /// True if this position is in the upper half (10, 11, 12, 1, 2).
+    /// Whether this position is in the upper half (10, 11, 12, 1, 2).
     @inlinable
     public var isUpperHalf: Bool {
         switch self {
@@ -175,7 +164,7 @@ extension Region.Clock {
         }
     }
 
-    /// True if this position is in the right half (1, 2, 3, 4, 5).
+    /// Whether this position is in the right half (1, 2, 3, 4, 5).
     @inlinable
     public var isRightHalf: Bool {
         switch self {

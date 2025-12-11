@@ -4,56 +4,52 @@
 // Extensions for Swift standard library Result
 
 extension Result {
-    /// Extracts success value if present
+    /// The success value if the result is successful, otherwise `nil`.
     ///
-    /// Partial projection from Either to Maybe.
-    /// Right projection: Either(E, A) → Maybe(A)
+    /// ## Example
     ///
-    /// Category theory: Natural transformation from Either to Maybe
-    /// η: Either(E, A) → Maybe(A) where Right(a) ↦ Some(a), Left(_) ↦ None
-    ///
-    /// Example:
     /// ```swift
     /// let result: Result<Int, Error> = .success(42)
-    /// result.success  // Optional(42)
+    /// result.success  // 42
+    ///
+    /// let failed: Result<Int, Error> = .failure(MyError.failed)
+    /// failed.success  // nil
     /// ```
     public var success: Success? {
         guard case .success(let value) = self else { return nil }
         return value
     }
 
-    /// Extracts failure value if present
+    /// The failure error if the result is a failure, otherwise `nil`.
     ///
-    /// Partial projection from Either to Maybe.
-    /// Left projection: Either(E, A) → Maybe(E)
+    /// ## Example
     ///
-    /// Category theory: Natural transformation from Either to Maybe
-    /// η: Either(E, A) → Maybe(E) where Left(e) ↦ Some(e), Right(_) ↦ None
-    ///
-    /// Example:
     /// ```swift
-    /// let result: Result<Int, Error> = .failure(MyError.failed)
-    /// result.failure  // Optional(MyError.failed)
+    /// let failed: Result<Int, Error> = .failure(MyError.failed)
+    /// failed.failure  // MyError.failed
+    ///
+    /// let result: Result<Int, Error> = .success(42)
+    /// result.failure  // nil
     /// ```
     public var failure: Failure? {
         guard case .failure(let error) = self else { return nil }
         return error
     }
 
-    /// Combines two results into tuple of successes
+    /// Combines two results into a single result containing a tuple of both successes.
     ///
-    /// Product in category of Result types.
-    /// Categorical product preserving error semantics: fails if either fails.
+    /// Returns a success containing both values if both results are successful.
+    /// If either result is a failure, returns the first failure encountered.
     ///
-    /// Category theory: Product in Either monad
-    /// zip: Either(E, A) × Either(E, B) → Either(E, A × B)
-    /// Left-biased: returns first error encountered
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// let r1: Result<Int, Error> = .success(1)
     /// let r2: Result<String, Error> = .success("hello")
-    /// r1.zip(r2)  // Result.success((1, "hello"))
+    /// r1.zip(r2)  // .success((1, "hello"))
+    ///
+    /// let r3: Result<Int, Error> = .failure(MyError.failed)
+    /// r1.zip(r3)  // .failure(MyError.failed)
     /// ```
     public func zip<OtherSuccess>(
         _ other: Result<OtherSuccess, Failure>
@@ -68,19 +64,17 @@ extension Result {
         }
     }
 
-    /// Combines results with binary operation on successes
+    /// Combines two results by applying a transformation to both success values.
     ///
-    /// Applicative combination of two computations.
-    /// Lifts binary operation into Result context.
+    /// Returns a success containing the combined result if both results are successful.
+    /// If either result is a failure, returns the first failure encountered.
     ///
-    /// Category theory: Applicative functor combination
-    /// liftA2: (A → B → C) → Either(E, A) → Either(E, B) → Either(E, C)
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// let r1: Result<Int, Error> = .success(2)
     /// let r2: Result<Int, Error> = .success(3)
-    /// r1.zip(r2, with: +)  // Result.success(5)
+    /// r1.zip(r2, with: +)  // .success(5)
     /// ```
     public func zip<OtherSuccess, Combined>(
         _ other: Result<OtherSuccess, Failure>,

@@ -4,39 +4,31 @@
 // Calendar system as a first-class value
 
 extension Time {
-    /// A calendar system with its rules and algorithms
+    /// A calendar system as a first-class value.
     ///
-    /// This represents a calendar system as a first-class value that can be
-    /// passed around and used polymorphically. Different calendar systems
-    /// (Gregorian, Julian, Islamic, etc.) are represented as instances.
+    /// Represents calendar systems polymorphically through their defining algorithms.
+    /// Use this to perform calendar calculations that work with different calendar systems.
     ///
-    /// ## Design Notes
+    /// ## Example
     ///
-    /// Calendar is a value type containing the essential algorithms that define
-    /// a calendar system: leap year calculation and days per month.
+    /// ```swift
+    /// let calendar = Time.Calendar.gregorian
+    /// let year = Time.Year(2024)
+    /// let isLeap = calendar.isLeapYear(year) // true
     ///
-    /// Uses refined types (Time.Year, Time.Month) for type safety.
-    ///
-    /// ## Available Calendars
-    ///
-    /// - `Time.Calendar.gregorian`: The Gregorian calendar (current international standard)
-    ///
-    /// ## Category Theory
-    ///
-    /// This represents calendars as **morphisms** (functions) rather than data,
-    /// making them composable and allowing for polymorphic calendar operations.
+    /// let month = try Time.Month(2)
+    /// let days = calendar.daysInMonth(year, month) // 29
+    /// ```
     public struct Calendar: Sendable {
-        /// Determine if a year is a leap year
+        /// Determines if a year is a leap year
         public let isLeapYear: @Sendable (Time.Year) -> Bool
 
-        /// Get the number of days in a specific month
+        /// Returns the number of days in a specific month
         public let daysInMonth: @Sendable (Time.Year, Time.Month) -> Int
 
-        /// Create a calendar with custom algorithms
+        /// Creates a calendar with custom algorithms.
         ///
-        /// - Parameters:
-        ///   - isLeapYear: Function to determine if a year is a leap year
-        ///   - daysInMonth: Function to get days in a month (year, month) -> days
+        /// Define a calendar system by providing its leap year and days-in-month logic.
         public init(
             isLeapYear: @escaping @Sendable (Time.Year) -> Bool,
             daysInMonth: @escaping @Sendable (Time.Year, Time.Month) -> Int
@@ -50,25 +42,19 @@ extension Time {
 // MARK: - Standard Calendars
 
 extension Time.Calendar {
-    /// The Gregorian calendar
+    /// The Gregorian calendar (established 1582, current international standard).
     ///
-    /// The internationally accepted civil calendar, established by Pope Gregory XIII in 1582.
+    /// Implements leap year rules: divisible by 4, except century years unless divisible by 400.
     ///
-    /// ## Leap Year Rules
-    ///
-    /// - Divisible by 4: leap year
-    /// - EXCEPT divisible by 100: not leap year
-    /// - EXCEPT divisible by 400: leap year
-    ///
-    /// ## Usage
+    /// ## Example
     ///
     /// ```swift
     /// let calendar = Time.Calendar.gregorian
     /// let year = Time.Year(2024)
-    /// calendar.isLeapYear(year)  // true
+    /// calendar.isLeapYear(year) // true
     ///
     /// let month = try Time.Month(2)
-    /// calendar.daysInMonth(year, month)  // 29
+    /// calendar.daysInMonth(year, month) // 29
     /// ```
     public static let gregorian = Time.Calendar(
         isLeapYear: Time.Calendar.Gregorian.isLeapYear,

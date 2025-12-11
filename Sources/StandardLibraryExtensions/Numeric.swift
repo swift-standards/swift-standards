@@ -4,20 +4,14 @@
 // Extensions for Swift standard library Numeric protocol
 
 extension Sequence where Element: Numeric {
-    /// Computes product of all elements
+    /// Returns the product of all elements in the sequence.
     ///
-    /// Monoid fold operation using multiplicative identity and multiplication.
-    /// Reduces sequence via left fold with one as identity element.
+    /// ## Example
     ///
-    /// Category theory: Fold morphism in multiplicative monoid (M, ·, 1)
-    /// product: Seq(M) → M where product = foldr (·) 1
-    /// Satisfies: product([]) = 1, product([a]) = a, product(xs ++ ys) = product(xs) · product(ys)
-    ///
-    /// Example:
     /// ```swift
     /// [1, 2, 3, 4, 5].product()  // 120
     /// [2, 3, 4].product()        // 24
-    /// [].product()               // 1 (identity)
+    /// [].product()               // 1
     /// ```
     public func product() -> Element {
         reduce(1, *)
@@ -25,18 +19,13 @@ extension Sequence where Element: Numeric {
 }
 
 extension Sequence where Element: BinaryInteger {
-    /// Computes arithmetic mean of elements
+    /// Returns the arithmetic mean of all elements, or `nil` for empty sequences.
     ///
-    /// Average value via sum divided by count.
-    /// Returns nil for empty sequences to maintain totality.
+    /// ## Example
     ///
-    /// Category theory: Composition of sum with scalar division
-    /// mean: Seq(ℤ) → Maybe(ℤ) where mean(xs) = sum(xs) / |xs|
-    ///
-    /// Example:
     /// ```swift
-    /// [1, 2, 3, 4, 5].mean()  // Optional(3)
-    /// [10, 20, 30].mean()     // Optional(20)
+    /// [1, 2, 3, 4, 5].mean()  // 3
+    /// [10, 20, 30].mean()     // 20
     /// [].mean()               // nil
     /// ```
     public func mean() -> Element? {
@@ -47,19 +36,14 @@ extension Sequence where Element: BinaryInteger {
 }
 
 extension Sequence where Element: BinaryFloatingPoint {
-    /// Computes arithmetic mean of elements
+    /// Returns the arithmetic mean of all elements, or `nil` for empty sequences.
     ///
-    /// Average value via sum divided by count.
-    /// Returns nil for empty sequences to maintain totality.
+    /// ## Example
     ///
-    /// Category theory: Composition of sum with scalar division
-    /// mean: Seq(ℝ) → Maybe(ℝ) where mean(xs) = sum(xs) / |xs|
-    ///
-    /// Example:
     /// ```swift
-    /// [1.0, 2.0, 3.0, 4.0, 5.0].mean()  // Optional(3.0)
-    /// [10.5, 20.5, 30.5].mean()         // Optional(20.5)
-    /// [].mean()                          // nil
+    /// [1.0, 2.0, 3.0, 4.0, 5.0].mean()  // 3.0
+    /// [10.5, 20.5, 30.5].mean()         // 20.5
+    /// [].mean()                         // nil
     /// ```
     public func mean() -> Element? {
         var sum: Element = 0

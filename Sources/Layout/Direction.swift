@@ -5,19 +5,27 @@
 public typealias Direction = Layout<Never>.Direction
 
 extension Layout {
-    /// Layout direction for text and content flow.
+    /// Text and content flow direction for internationalization.
     ///
-    /// Determines how "leading" and "trailing" map to "left" and "right".
+    /// Determines how layout-relative terms (leading/trailing) map to absolute
+    /// directions (left/right). Essential for properly supporting right-to-left
+    /// languages like Arabic, Hebrew, and Persian.
     ///
-    /// ## Convention
+    /// ## Example
     ///
-    /// - `.leftToRight`: leading = left, trailing = right (e.g., English)
-    /// - `.rightToLeft`: leading = right, trailing = left (e.g., Arabic, Hebrew)
+    /// ```swift
+    /// let direction: Direction = .leftToRight  // English, Spanish, etc.
+    /// let rtl: Direction = .rightToLeft        // Arabic, Hebrew, etc.
+    ///
+    /// // Leading adapts based on direction:
+    /// // LTR: leading = left, trailing = right
+    /// // RTL: leading = right, trailing = left
+    /// ```
     public enum Direction: Sendable, Hashable, Codable, CaseIterable {
-        /// Left-to-right layout (leading = left).
+        /// Left-to-right layout (English, Spanish, French, etc.)
         case leftToRight
 
-        /// Right-to-left layout (leading = right).
+        /// Right-to-left layout (Arabic, Hebrew, Persian, etc.)
         case rightToLeft
     }
 }
@@ -25,17 +33,17 @@ extension Layout {
 // MARK: - Aliases
 
 extension Layout.Direction {
-    /// Left-to-right layout.
+    /// Shorthand for left-to-right layout
     public static var ltr: Self { .leftToRight }
 
-    /// Right-to-left layout.
+    /// Shorthand for right-to-left layout
     public static var rtl: Self { .rightToLeft }
 }
 
 // MARK: - Opposite
 
 extension Layout.Direction {
-    /// The opposite layout direction.
+    /// Returns the opposite layout direction.
     @inlinable
     public var opposite: Layout.Direction {
         switch self {

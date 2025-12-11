@@ -4,10 +4,9 @@
 // Zeptosecond representation as a refinement type
 
 extension Time {
-    /// A zeptosecond (0-999)
+    /// Zeptosecond component (0-999).
     ///
-    /// This is a refinement type - an integer constrained to the valid range.
-    /// Represents 10^-21 seconds (sextillionths of a second).
+    /// Represents 10^-21 seconds. Refinement type for type-safe sub-second precision.
     public struct Zeptosecond: Sendable, Equatable, Hashable, Comparable {
         /// The zeptosecond value (0-999)
         public let value: Int
@@ -55,6 +54,6 @@ extension Time.Zeptosecond {
 }
 
 extension Time.Zeptosecond {
-    /// Zero nanoseconds
+    /// Zero zeptoseconds
     public static let zero = Time.Zeptosecond(unchecked: 0)
 }

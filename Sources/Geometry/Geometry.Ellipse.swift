@@ -1,10 +1,10 @@
 // Ellipse.swift
 // An ellipse defined by center, semi-axes, and rotation.
 
-public import Angle
-public import Algebra
 public import Affine
+public import Algebra
 public import Algebra_Linear
+public import Angle
 public import Dimension
 
 extension Geometry {
@@ -56,7 +56,7 @@ extension Geometry.Ellipse: Hashable where Scalar: Hashable {}
 
 // MARK: - Codable
 #if Codable
-extension Geometry.Ellipse: Codable where Scalar: Codable {}
+    extension Geometry.Ellipse: Codable where Scalar: Codable {}
 #endif
 // MARK: - Convenience Initializers
 

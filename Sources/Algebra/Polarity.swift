@@ -1,27 +1,18 @@
 // Polarity.swift
 public import Dimension
 
-// Electric-style polarity.
-
 /// Polarity: positive, negative, or neutral.
 ///
-/// Three-valued classification commonly used for:
-/// - Electric charge
-/// - Magnetic poles
-/// - Electrode designation
+/// Three-valued classification for electric charge, magnetic poles, or electrode
+/// designation. Similar to `Sign` but with domain-specific semantics where neutral
+/// is distinct from zero magnitude. Use in physics and electrical contexts.
 ///
-/// ## Mathematical Properties
-///
-/// - Similar to Sign but with domain-specific semantics
-/// - Neutral is distinct from zero magnitude
-/// - Opposite swaps positive/negative, preserves neutral
-///
-/// ## Tagged Values
-///
-/// Use `Polarity.Value<T>` to pair a magnitude with its polarity:
+/// ## Example
 ///
 /// ```swift
-/// let charge: Polarity.Value<Double> = .init(.positive, 1.6e-19)
+/// let charge: Polarity = .positive
+/// print(charge.opposite)     // negative
+/// print(charge.isCharged)    // true
 /// ```
 public enum Polarity: Sendable, Hashable, Codable, CaseIterable {
     /// Positive polarity (anode, north-seeking).
@@ -37,7 +28,7 @@ public enum Polarity: Sendable, Hashable, Codable, CaseIterable {
 // MARK: - Opposite
 
 extension Polarity {
-    /// The opposite polarity.
+    /// Opposite polarity (swaps positive↔negative, preserves neutral).
     @inlinable
     public var opposite: Polarity {
         switch self {
@@ -57,19 +48,19 @@ extension Polarity {
 // MARK: - Properties
 
 extension Polarity {
-    /// True if charged (not neutral).
+    /// Whether the polarity is charged (not `.neutral`).
     @inlinable
     public var isCharged: Bool { self != .neutral }
 
-    /// True if positive.
+    /// Whether the polarity is `.positive`.
     @inlinable
     public var isPositive: Bool { self == .positive }
 
-    /// True if negative.
+    /// Whether the polarity is `.negative`.
     @inlinable
     public var isNegative: Bool { self == .negative }
 
-    /// True if neutral.
+    /// Whether the polarity is `.neutral`.
     @inlinable
     public var isNeutral: Bool { self == .neutral }
 }

@@ -4,10 +4,6 @@
 // MARK: - Axis.Direction typealias
 
 extension Axis {
-    /// Direction along an axis.
-    ///
-    /// This is a typealias to `Direction`, so `Axis<2>.Direction` and
-    /// `Axis<3>.Direction` are the same type - as they should be,
-    /// since direction is a dimension-independent concept.
+    /// Direction along an axis (dimension-independent typealias).
     public typealias Direction = Dimension.Direction
 }

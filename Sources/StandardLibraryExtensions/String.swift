@@ -6,12 +6,13 @@
 // String trimming has been moved to swift-incits-4-1986
 
 extension String {
-    /// Case-insensitive string wrapper for use as dictionary keys and comparisons
+    /// A case-insensitive string wrapper for use as dictionary keys and in comparisons.
     ///
-    /// Provides case-insensitive hashing and equality checking, enabling
-    /// case-insensitive lookups in dictionaries and sets.
+    /// Provides case-insensitive hashing and equality checking, enabling case-insensitive lookups in dictionaries and sets.
+    /// Use this when you need to treat strings like "Content-Type" and "content-type" as equal.
     ///
-    /// Example:
+    /// ## Example
+    ///
     /// ```swift
     /// var headers: [String.CaseInsensitive: String] = [:]
     /// headers["Content-Type".caseInsensitive] = "text/html"
@@ -37,7 +38,7 @@ extension String {
         }
     }
 
-    /// Returns a case-insensitive wrapper for this string
+    /// A case-insensitive wrapper for the string.
     public var caseInsensitive: CaseInsensitive {
         CaseInsensitive(self)
     }
@@ -46,18 +47,18 @@ extension String {
 // ASCII validation methods have been moved to swift-incits-4-1986
 
 extension String {
-    /// String case style for formatting
+    /// A case transformation style for string formatting.
     ///
-    /// This struct allows for extensible case transformations. Third parties can
-    /// create custom case formats by providing a closure that transforms strings.
+    /// Represents different ways to transform string casing (upper, lower, title, sentence).
+    /// Extensible design allows custom case transformations by providing a closure.
     ///
-    /// Example:
+    /// ## Example
+    ///
     /// ```swift
     /// let customCase = String.Case { string in
-    ///     // Custom transformation logic
-    ///     return string.map { $0.isLetter ? $0.uppercased() : $0.lowercased() }.joined()
+    ///     string.map { $0.isLetter ? $0.uppercased() : $0.lowercased() }.joined()
     /// }
-    /// let result = "hello world".formatted(as: customCase)
+    /// let result = customCase.transform("hello world")
     /// ```
     public struct Case: Sendable {
         let transform: @Sendable (String) -> String
@@ -66,13 +67,13 @@ extension String {
             self.transform = transform
         }
 
-        /// Convert to uppercase (HELLO WORLD)
+        /// Uppercase transformation (HELLO WORLD).
         public static let upper = Case { $0.uppercased() }
 
-        /// Convert to lowercase (hello world)
+        /// Lowercase transformation (hello world).
         public static let lower = Case { $0.lowercased() }
 
-        /// Convert to title case (Hello World)
+        /// Title case transformation (Hello World).
         public static let title = Case { string in
             string.split(separator: " ")
                 .map { word in
@@ -82,7 +83,7 @@ extension String {
                 .joined(separator: " ")
         }
 
-        /// Convert to sentence case (Hello world)
+        /// Sentence case transformation (Hello world).
         public static let sentence = Case { string in
             guard let first = string.first else { return string }
             return first.uppercased() + string.dropFirst().lowercased()
@@ -94,33 +95,25 @@ extension String {
 // StringProtocol extensions have been moved to StringProtocol.swift
 
 extension String {
-    /// Splits string into lines
+    /// The string split into separate lines.
     ///
-    /// Homomorphism respecting line structure.
-    /// Decomposes text into line-separated components.
+    /// ## Example
     ///
-    /// Category theory: List homomorphism decomposing concatenated structure
-    /// lines: String → [String] where concat ∘ lines ≈ id (modulo separators)
-    ///
-    /// Example:
     /// ```swift
     /// "hello\nworld\ntest".lines  // ["hello", "world", "test"]
+    /// "single line".lines         // ["single line"]
     /// ```
     public var lines: [String] {
         split(whereSeparator: \.isNewline).map(String.init)
     }
 
-    /// Splits string into words
+    /// The string split into separate words.
     ///
-    /// Tokenization via whitespace separation.
-    /// Decomposes text into word tokens.
+    /// ## Example
     ///
-    /// Category theory: List homomorphism via whitespace quotient
-    /// words: String → [String] factoring through String/~
-    ///
-    /// Example:
     /// ```swift
     /// "hello world test".words  // ["hello", "world", "test"]
+    /// "single".words            // ["single"]
     /// ```
     public var words: [String] {
         split(whereSeparator: \.isWhitespace).map(String.init)

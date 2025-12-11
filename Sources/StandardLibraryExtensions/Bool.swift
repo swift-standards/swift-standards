@@ -4,15 +4,10 @@
 // Extensions for Swift standard library Bool
 
 extension Bool {
-    /// Numeric representation as integer
+    /// The integer representation of the boolean value (1 for `true`, 0 for `false`).
     ///
-    /// Natural embedding 𝔹 → ℤ/2ℤ into integers mod 2.
-    /// Maps Boolean algebra into ring structure.
+    /// ## Example
     ///
-    /// Category theory: Ring homomorphism from (𝔹, ∧, ∨) to (ℤ/2ℤ, ·, +)
-    /// where true ↦ 1, false ↦ 0
-    ///
-    /// Example:
     /// ```swift
     /// true.int   // 1
     /// false.int  // 0

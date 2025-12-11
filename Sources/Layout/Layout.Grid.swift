@@ -4,29 +4,38 @@
 extension Layout {
     /// A two-dimensional arrangement of content in rows and columns.
     ///
-    /// Grid arranges content in a regular 2D structure with specified
-    /// row and column spacing. Each cell can have its own alignment.
+    /// Arranges content in a regular table-like structure with configurable spacing
+    /// and alignment. Ideal for data tables, image galleries, form layouts, or any
+    /// content requiring precise row/column alignment.
     ///
     /// ## Example
     ///
     /// ```swift
-    /// let grid: Layout<Double>.Grid<[[Element]]> = .init(
-    ///     spacing: .init(row: 10.0, column: 8.0),
+    /// // Photo gallery grid
+    /// let gallery = Layout<Double>.Grid<[[Photo]]>(
+    ///     spacing: .init(row: 16.0, column: 16.0),
     ///     alignment: .center,
-    ///     content: rows
+    ///     content: photoRows
+    /// )
+    ///
+    /// // Form with uniform spacing
+    /// let form = Layout<Double>.Grid<[[Field]]>.uniform(
+    ///     spacing: 12.0,
+    ///     alignment: .leading,
+    ///     content: formRows
     /// )
     /// ```
     public struct Grid<Content> {
-        /// The spacing between rows and columns.
+        /// Spacing between rows and columns
         public var spacing: Gaps
 
-        /// Alignment within each cell.
+        /// Alignment within each grid cell
         public var alignment: Alignment
 
-        /// The grid content (typically `[[Element]]` or similar 2D structure).
+        /// Grid content (typically a 2D array or similar structure)
         public var content: Content
 
-        /// Create a grid with the given configuration.
+        /// Creates a grid with the specified configuration.
         @inlinable
         public init(
             spacing: consuming Gaps,
@@ -43,17 +52,18 @@ extension Layout {
 // MARK: - Gaps
 
 extension Layout.Grid {
-    /// Spacing configuration for a grid.
+    /// Spacing configuration for rows and columns in a grid.
     ///
-    /// Defines the spacing between rows (vertical) and columns (horizontal).
+    /// Separately controls vertical spacing between rows and horizontal spacing
+    /// between columns.
     public struct Gaps {
-        /// Spacing between rows (vertical spacing).
+        /// Spacing between rows (vertical gap)
         public var row: Spacing
 
-        /// Spacing between columns (horizontal spacing).
+        /// Spacing between columns (horizontal gap)
         public var column: Spacing
 
-        /// Create spacing with the given row and column values.
+        /// Creates spacing with the specified row and column values.
         @inlinable
         public init(row: Spacing, column: Spacing) {
             self.row = row
@@ -66,11 +76,11 @@ extension Layout.Grid.Gaps: Sendable where Spacing: Sendable {}
 extension Layout.Grid.Gaps: Equatable where Spacing: Equatable {}
 extension Layout.Grid.Gaps: Hashable where Spacing: Hashable {}
 #if Codable
-extension Layout.Grid.Gaps: Codable where Spacing: Codable {}
+    extension Layout.Grid.Gaps: Codable where Spacing: Codable {}
 #endif
 
 extension Layout.Grid.Gaps where Spacing: AdditiveArithmetic {
-    /// Create uniform spacing (same for rows and columns).
+    /// Creates uniform spacing (identical for rows and columns).
     @inlinable
     public static func uniform(_ value: Spacing) -> Self {
         Self(row: value, column: value)
@@ -91,13 +101,13 @@ extension Layout.Grid: Hashable where Spacing: Hashable, Content: Hashable {}
 
 // MARK: - Codable
 #if Codable
-extension Layout.Grid: Codable where Spacing: Codable, Content: Codable {}
+    extension Layout.Grid: Codable where Spacing: Codable, Content: Codable {}
 #endif
 
 // MARK: - Convenience Initializers
 
 extension Layout.Grid {
-    /// Create a grid with default center alignment.
+    /// Creates a grid with default center alignment.
     @inlinable
     public init(
         spacing: consuming Gaps,
@@ -112,7 +122,7 @@ extension Layout.Grid {
 }
 
 extension Layout.Grid where Spacing: AdditiveArithmetic {
-    /// Create a grid with uniform spacing in both directions.
+    /// Creates a grid with uniform spacing (same for rows and columns).
     @inlinable
     public static func uniform(
         spacing: Spacing,
@@ -130,7 +140,7 @@ extension Layout.Grid where Spacing: AdditiveArithmetic {
 // MARK: - Functorial Map
 
 extension Layout.Grid {
-    /// Create a grid by transforming the spacing of another grid.
+    /// Creates a grid by transforming the spacing unit of another grid.
     @inlinable
     public init<U, E: Error>(
         transforming other: borrowing Layout<U>.Grid<Content>,
@@ -148,11 +158,11 @@ extension Layout.Grid {
 }
 
 extension Layout.Grid {
-    /// Namespace for functorial map operations.
+    /// Namespace for functorial transformation operations.
     @inlinable
     public var map: Map { Map(grid: self) }
 
-    /// Functorial map operations for Grid.
+    /// Functorial transformation operations for `Grid`.
     public struct Map {
         @usableFromInline
         let grid: Layout<Spacing>.Grid<Content>
@@ -162,7 +172,7 @@ extension Layout.Grid {
             self.grid = grid
         }
 
-        /// Transform the spacing using the given closure.
+        /// Transforms the spacing type using the given closure.
         @inlinable
         public func spacing<Result, E: Error>(
             _ transform: (Spacing) throws(E) -> Result
@@ -177,7 +187,7 @@ extension Layout.Grid {
             )
         }
 
-        /// Transform the content using the given closure.
+        /// Transforms the content using the given closure.
         @inlinable
         public func content<Result, E: Error>(
             _ transform: (Content) throws(E) -> Result

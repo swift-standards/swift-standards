@@ -4,10 +4,9 @@
 // Femtosecond representation as a refinement type
 
 extension Time {
-    /// A femtosecond (0-999)
+    /// Femtosecond component (0-999).
     ///
-    /// This is a refinement type - an integer constrained to the valid range.
-    /// Represents 10^-15 seconds (quadrillionths of a second).
+    /// Represents 10^-15 seconds. Refinement type for type-safe sub-second precision.
     public struct Femtosecond: Sendable, Equatable, Hashable, Comparable {
         /// The femtosecond value (0-999)
         public let value: Int

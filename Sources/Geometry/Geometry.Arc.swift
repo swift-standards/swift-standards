@@ -1,10 +1,10 @@
 // Arc.swift
 // A circular arc defined by center, radius, and angle range.
 
-public import Angle
-public import Algebra
 public import Affine
+public import Algebra
 public import Algebra_Linear
+public import Angle
 public import RealModule
 
 extension Geometry {
@@ -60,7 +60,7 @@ extension Geometry.Arc: Hashable where Scalar: Hashable {}
 
 // MARK: - Codable
 #if Codable
-extension Geometry.Arc: Codable where Scalar: Codable {}
+    extension Geometry.Arc: Codable where Scalar: Codable {}
 #endif
 // MARK: - Factory Methods
 

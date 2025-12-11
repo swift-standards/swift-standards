@@ -36,10 +36,19 @@
 public import Algebra
 public import Dimension
 
-/// The Affine namespace for affine space primitives.
+/// Namespace for affine space primitives parameterized by scalar type.
 ///
-/// Parameterized by the scalar type (field) used for coordinates.
-/// Supports both copyable and non-copyable scalar types.
+/// Affine spaces represent geometry where points have position but no canonical origin.
+/// This differs from vector spaces which have a distinguished zero point.
+///
+/// ## Example
+///
+/// ```swift
+/// typealias Point2D = Affine<Double>.Point<2>
+/// let p = Point2D(x: 1, y: 2)
+/// let q = Point2D(x: 4, y: 6)
+/// let displacement = q - p  // Vector, not another Point
+/// ```
 public enum Affine<Scalar: ~Copyable>: ~Copyable {}
 
 extension Affine: Copyable where Scalar: Copyable {}
@@ -48,26 +57,23 @@ extension Affine: Sendable where Scalar: Sendable {}
 // MARK: - Coordinate Type Aliases
 
 extension Affine {
-    /// A type-safe horizontal coordinate (x-position).
+    /// Type-safe horizontal coordinate representing absolute position on the x-axis.
     ///
-    /// Coordinates are point components, distinct from displacements.
-    /// Use for horizontal positions or point X-components.
+    /// Distinguishes position coordinates from displacement vectors for type safety.
     public typealias X = Tagged<Index.X.Coordinate, Scalar>
 
-    /// A type-safe vertical coordinate (y-position).
+    /// Type-safe vertical coordinate representing absolute position on the y-axis.
     ///
-    /// Coordinates are point components, distinct from displacements.
-    /// Use for vertical positions or point Y-components.
+    /// Distinguishes position coordinates from displacement vectors for type safety.
     public typealias Y = Tagged<Index.Y.Coordinate, Scalar>
 
-    /// A type-safe depth coordinate (z-position).
+    /// Type-safe depth coordinate representing absolute position on the z-axis.
     ///
-    /// Coordinates are point components, distinct from displacements.
-    /// Use for depth positions or point Z-components.
+    /// Distinguishes position coordinates from displacement vectors for type safety.
     public typealias Z = Tagged<Index.Z.Coordinate, Scalar>
 
-    /// A type-safe homogeneous coordinate (w-position).
+    /// Type-safe homogeneous coordinate for projective transformations.
     ///
-    /// Coordinates are point components, distinct from displacements.
+    /// Used in 4D homogeneous coordinates where `w=1` represents standard 3D points.
     public typealias W = Tagged<Index.W.Coordinate, Scalar>
 }

@@ -3,50 +3,33 @@
 
 public import Algebra
 public import Algebra_Linear
-public import Dimension
 public import Angle
+public import Dimension
 public import RealModule
 
 extension Affine {
-    /// A 2D affine transformation.
+    /// Two-dimensional affine transformation combining linear transformation and translation.
     ///
-    /// An affine transformation consists of:
-    /// - A **linear** part (rotation, scale, shear) - dimensionless
-    /// - A **translation** part - in coordinate system units
-    ///
-    /// The matrix representation is:
-    /// ```
-    /// | a  b  tx |     | linear    translation |
-    /// | c  d  ty |  =  |                       |
-    /// | 0  0  1  |     | 0  0  1               |
-    /// ```
-    ///
-    /// ## Dimensional Analysis
-    ///
-    /// For a point transformation `(x', y') = (x, y) * M + (tx, ty)`:
-    /// ```
-    /// x' = a*x + c*y + tx
-    /// y' = b*x + d*y + ty
-    /// ```
-    /// - Linear coefficients `(a, b, c, d)` are dimensionless ratios
-    /// - Translation `(tx, ty)` has the same units as coordinates
+    /// Represents composition of dimensionless linear operations (rotation, scale, shear) with
+    /// coordinate-space translation, enabling complete 2D geometric transformations.
     ///
     /// ## Example
     ///
     /// ```swift
-    /// let transform = Affine<Double>.Transform(
-    ///     linear: .identity,
-    ///     translation: .init(x: 100, y: 50)
-    /// )
+    /// let transform = Affine<Double>.Transform
+    ///     .rotation(.degrees(45))
+    ///     .scaled(by: 2.0)
+    ///     .translated(x: 100, y: 50)
+    /// let transformed = transform.apply(to: point)
     /// ```
     public struct Transform {
-        /// The linear transformation (rotation, scale, shear) as a 2x2 matrix
+        /// Linear transformation matrix for rotation, scale, and shear operations.
         public var linear: Linear<Scalar>.Matrix<2, 2>
 
-        /// The translation (displacement)
+        /// Translation displacement applied after linear transformation.
         public var translation: Translation
 
-        /// Create an affine transform from linear and translation components
+        /// Creates affine transform from linear and translation components.
         @inlinable
         public init(linear: Linear<Scalar>.Matrix<2, 2>, translation: Translation) {
             self.linear = linear
@@ -62,38 +45,38 @@ extension Affine.Transform: Hashable where Scalar: Hashable {}
 // MARK: - Codable
 
 #if Codable
-extension Affine.Transform: Codable where Scalar: Codable {
-    private enum CodingKeys: String, CodingKey {
-        case a, b, c, d, tx, ty
-    }
+    extension Affine.Transform: Codable where Scalar: Codable {
+        private enum CodingKeys: String, CodingKey {
+            case a, b, c, d, tx, ty
+        }
 
-    public init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let a = try container.decode(Scalar.self, forKey: .a)
-        let b = try container.decode(Scalar.self, forKey: .b)
-        let c = try container.decode(Scalar.self, forKey: .c)
-        let d = try container.decode(Scalar.self, forKey: .d)
-        let tx = try container.decode(Scalar.self, forKey: .tx)
-        let ty = try container.decode(Scalar.self, forKey: .ty)
-        self.init(a: a, b: b, c: c, d: d, tx: tx, ty: ty)
-    }
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let a = try container.decode(Scalar.self, forKey: .a)
+            let b = try container.decode(Scalar.self, forKey: .b)
+            let c = try container.decode(Scalar.self, forKey: .c)
+            let d = try container.decode(Scalar.self, forKey: .d)
+            let tx = try container.decode(Scalar.self, forKey: .tx)
+            let ty = try container.decode(Scalar.self, forKey: .ty)
+            self.init(a: a, b: b, c: c, d: d, tx: tx, ty: ty)
+        }
 
-    public func encode(to encoder: any Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(a, forKey: .a)
-        try container.encode(b, forKey: .b)
-        try container.encode(c, forKey: .c)
-        try container.encode(d, forKey: .d)
-        try container.encode(tx.value, forKey: .tx)
-        try container.encode(ty.value, forKey: .ty)
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(a, forKey: .a)
+            try container.encode(b, forKey: .b)
+            try container.encode(c, forKey: .c)
+            try container.encode(d, forKey: .d)
+            try container.encode(tx.value, forKey: .tx)
+            try container.encode(ty.value, forKey: .ty)
+        }
     }
-}
 #endif
 
 // MARK: - Identity
 
 extension Affine.Transform where Scalar: AdditiveArithmetic & ExpressibleByIntegerLiteral {
-    /// The identity transform (no transformation)
+    /// Identity transform that leaves points unchanged.
     @inlinable
     public static var identity: Self {
         Self(linear: .identity, translation: .zero)
@@ -103,7 +86,7 @@ extension Affine.Transform where Scalar: AdditiveArithmetic & ExpressibleByInteg
 // MARK: - Convenience Initializers
 
 extension Affine.Transform where Scalar: AdditiveArithmetic {
-    /// Create from just a linear transformation (no translation)
+    /// Creates transform with linear transformation and zero translation.
     @inlinable
     public init(linear: Linear<Scalar>.Matrix<2, 2>) {
         self.init(linear: linear, translation: .zero)
@@ -111,7 +94,7 @@ extension Affine.Transform where Scalar: AdditiveArithmetic {
 }
 
 extension Affine.Transform where Scalar: AdditiveArithmetic & ExpressibleByIntegerLiteral {
-    /// Create from just a translation (identity linear)
+    /// Creates transform with translation and identity linear transformation.
     @inlinable
     public init(translation: Affine.Translation) {
         self.init(linear: .identity, translation: translation)
@@ -121,42 +104,42 @@ extension Affine.Transform where Scalar: AdditiveArithmetic & ExpressibleByInteg
 // MARK: - Component Access (Standard Notation)
 
 extension Affine.Transform {
-    /// Linear coefficient a (row 0, col 0)
+    /// Matrix element at row 0, column 0.
     @inlinable
     public var a: Scalar {
         get { linear.a }
         set { linear.a = newValue }
     }
 
-    /// Linear coefficient b (row 0, col 1)
+    /// Matrix element at row 0, column 1.
     @inlinable
     public var b: Scalar {
         get { linear.b }
         set { linear.b = newValue }
     }
 
-    /// Linear coefficient c (row 1, col 0)
+    /// Matrix element at row 1, column 0.
     @inlinable
     public var c: Scalar {
         get { linear.c }
         set { linear.c = newValue }
     }
 
-    /// Linear coefficient d (row 1, col 1)
+    /// Matrix element at row 1, column 1.
     @inlinable
     public var d: Scalar {
         get { linear.d }
         set { linear.d = newValue }
     }
 
-    /// Translation x component (type-safe)
+    /// Horizontal translation displacement component.
     @inlinable
     public var tx: Linear<Scalar>.Dx {
         get { translation.dx }
         set { translation.dx = newValue }
     }
 
-    /// Translation y component (type-safe)
+    /// Vertical translation displacement component.
     @inlinable
     public var ty: Linear<Scalar>.Dy {
         get { translation.dy }
@@ -167,24 +150,31 @@ extension Affine.Transform {
 // MARK: - Raw Component Initializer
 
 extension Affine.Transform {
-    /// Create an affine transform with raw matrix components
+    /// Creates transform from raw matrix components.
     ///
     /// - Parameters:
-    ///   - a, b, c, d: Dimensionless linear transformation coefficients
-    ///   - tx, ty: Translation in coordinate units (raw scalar values)
+    ///   - a, b, c, d: Linear transformation coefficients
+    ///   - tx, ty: Translation displacement components
     @inlinable
     public init(a: Scalar, b: Scalar, c: Scalar, d: Scalar, tx: Scalar, ty: Scalar) {
         self.linear = Linear<Scalar>.Matrix(a: a, b: b, c: c, d: d)
         self.translation = Affine.Translation(dx: tx, dy: ty)
     }
 
-    /// Create an affine transform with typed translation components
+    /// Creates transform from matrix components with type-safe translation.
     ///
     /// - Parameters:
-    ///   - a, b, c, d: Dimensionless linear transformation coefficients
-    ///   - tx, ty: Translation in coordinate units (type-safe)
+    ///   - a, b, c, d: Linear transformation coefficients
+    ///   - tx, ty: Type-safe translation displacement components
     @inlinable
-    public init(a: Scalar, b: Scalar, c: Scalar, d: Scalar, tx: Linear<Scalar>.Dx, ty: Linear<Scalar>.Dy) {
+    public init(
+        a: Scalar,
+        b: Scalar,
+        c: Scalar,
+        d: Scalar,
+        tx: Linear<Scalar>.Dx,
+        ty: Linear<Scalar>.Dy
+    ) {
         self.linear = Linear<Scalar>.Matrix(a: a, b: b, c: c, d: d)
         self.translation = Affine.Translation(dx: tx, dy: ty)
     }
@@ -193,9 +183,9 @@ extension Affine.Transform {
 // MARK: - Composition
 
 extension Affine.Transform where Scalar: FloatingPoint {
-    /// Concatenate with another transform (self * other)
+    /// Composes this transform with another, applying `other` first then `self`.
     ///
-    /// The resulting transform applies `other` first, then `self`.
+    /// Matrix composition follows right-to-left application order.
     @inlinable
     public func concatenating(_ other: Self) -> Self {
         // Linear part: matrix multiplication
@@ -217,31 +207,31 @@ extension Affine.Transform where Scalar: FloatingPoint {
 // MARK: - Factory Methods
 
 extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLiteral {
-    /// Create a translation transform
+    /// Creates pure translation transform.
     @inlinable
     public static func translation(x: Scalar, y: Scalar) -> Self {
         Self(linear: .identity, translation: Affine.Translation(dx: x, dy: y))
     }
 
-    /// Create a translation transform from a vector
+    /// Creates translation transform from displacement vector.
     @inlinable
     public static func translation(_ vector: Linear<Scalar>.Vector<2>) -> Self {
         Self(translation: Affine.Translation(vector))
     }
 
-    /// Create a uniform scaling transform
+    /// Creates uniform scaling transform.
     @inlinable
     public static func scale(_ factor: Scalar) -> Self {
         Self(linear: Linear<Scalar>.Matrix(a: factor, b: 0, c: 0, d: factor))
     }
 
-    /// Create a non-uniform scaling transform
+    /// Creates non-uniform scaling transform with independent x and y factors.
     @inlinable
     public static func scale(x: Scalar, y: Scalar) -> Self {
         Self(linear: Linear<Scalar>.Matrix(a: x, b: 0, c: 0, d: y))
     }
 
-    /// Create a shear transform
+    /// Creates shear transform with horizontal and vertical shear factors.
     @inlinable
     public static func shear(x: Scalar, y: Scalar) -> Self {
         Self(linear: Linear<Scalar>.Matrix(a: 1, b: x, c: y, d: 1))
@@ -251,7 +241,7 @@ extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLit
 // MARK: - Rotation Factory (Real & BinaryFloatingPoint)
 
 extension Affine.Transform where Scalar: Real & BinaryFloatingPoint {
-    /// Create a rotation transform
+    /// Creates counterclockwise rotation transform around origin.
     @inlinable
     public static func rotation(_ angle: Radian) -> Self {
         let c = Scalar(angle.cos)
@@ -259,7 +249,7 @@ extension Affine.Transform where Scalar: Real & BinaryFloatingPoint {
         return Self(linear: Linear<Scalar>.Matrix(a: c, b: -s, c: s, d: c), translation: .zero)
     }
 
-    /// Create a rotation transform from degrees
+    /// Creates counterclockwise rotation transform from degrees.
     @inlinable
     public static func rotation(_ angle: Degree) -> Self {
         rotation(angle.radians)
@@ -269,25 +259,25 @@ extension Affine.Transform where Scalar: Real & BinaryFloatingPoint {
 // MARK: - Fluent Modifiers
 
 extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLiteral {
-    /// Return a new transform with translation applied
+    /// Returns new transform with additional translation applied.
     @inlinable
     public func translated(x: Scalar, y: Scalar) -> Self {
         concatenating(.translation(x: x, y: y))
     }
 
-    /// Return a new transform with translation applied
+    /// Returns new transform with additional vector translation applied.
     @inlinable
     public func translated(by vector: Linear<Scalar>.Vector<2>) -> Self {
         concatenating(.translation(vector))
     }
 
-    /// Return a new transform with uniform scaling applied
+    /// Returns new transform with additional uniform scaling applied.
     @inlinable
     public func scaled(by factor: Scalar) -> Self {
         concatenating(.scale(factor))
     }
 
-    /// Return a new transform with non-uniform scaling applied
+    /// Returns new transform with additional non-uniform scaling applied.
     @inlinable
     public func scaled(x: Scalar, y: Scalar) -> Self {
         concatenating(.scale(x: x, y: y))
@@ -295,13 +285,13 @@ extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLit
 }
 
 extension Affine.Transform where Scalar: Real & BinaryFloatingPoint {
-    /// Return a new transform with rotation applied
+    /// Returns new transform with additional rotation applied.
     @inlinable
     public func rotated(by angle: Radian) -> Self {
         concatenating(.rotation(angle))
     }
 
-    /// Return a new transform with rotation applied
+    /// Returns new transform with additional rotation in degrees applied.
     @inlinable
     public func rotated(by angle: Degree) -> Self {
         concatenating(.rotation(angle))
@@ -311,19 +301,19 @@ extension Affine.Transform where Scalar: Real & BinaryFloatingPoint {
 // MARK: - Inversion
 
 extension Affine.Transform where Scalar: FloatingPoint {
-    /// The determinant of the linear part
+    /// Determinant of the linear transformation matrix.
     @inlinable
     public var determinant: Scalar {
         linear.determinant
     }
 
-    /// Whether this transform is invertible
+    /// Whether transform can be inverted.
     @inlinable
     public var isInvertible: Bool {
         determinant != 0
     }
 
-    /// The inverse transform, or nil if not invertible
+    /// Inverse transform that reverses this transformation, or `nil` if singular.
     @inlinable
     public var inverted: Self? {
         guard let invLinear = linear.inverse else { return nil }
@@ -344,7 +334,7 @@ extension Affine.Transform where Scalar: FloatingPoint {
 // MARK: - Apply Transform
 
 extension Affine.Transform where Scalar: FloatingPoint {
-    /// Apply transform to a point
+    /// Applies transformation to a point, returning transformed position.
     @inlinable
     public func apply(to point: Affine.Point<2>) -> Affine.Point<2> {
         let px = point.x.value
@@ -356,7 +346,7 @@ extension Affine.Transform where Scalar: FloatingPoint {
         return Affine.Point(x: Affine.X(newX), y: Affine.Y(newY))
     }
 
-    /// Apply transform to a vector (ignores translation)
+    /// Applies linear transformation to vector, ignoring translation component.
     @inlinable
     public func apply(to vector: Linear<Scalar>.Vector<2>) -> Linear<Scalar>.Vector<2> {
         // Matrix multiplication mixes X and Y components: new_x = a*x + b*y
@@ -371,18 +361,26 @@ extension Affine.Transform where Scalar: FloatingPoint {
 // MARK: - Monoid
 
 extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLiteral {
-    /// Compose multiple transforms into a single transform.
+    /// Composes multiple transforms into single transform via reduction.
     ///
-    /// Due to right-to-left matrix multiplication, transforms are applied
-    /// in **reverse** order: the last transform in the array is applied first.
+    /// Transforms apply in array order: first transform applies first, last applies last.
     ///
-    /// For forward-order application, reverse the array before calling.
+    /// ## Example
+    ///
+    /// ```swift
+    /// let combined = Transform.composed([
+    ///     .rotation(.degrees(45)),
+    ///     .scale(2.0),
+    ///     .translation(x: 100, y: 50)
+    /// ])
+    /// // Applies: rotate, then scale, then translate
+    /// ```
     @inlinable
     public static func composed(_ transforms: [Self]) -> Self {
         transforms.reduce(.identity) { $0.concatenating($1) }
     }
 
-    /// Compose multiple transforms into a single transform
+    /// Composes variadic transforms into single transform.
     @inlinable
     public static func composed(_ transforms: Self...) -> Self {
         composed(transforms)

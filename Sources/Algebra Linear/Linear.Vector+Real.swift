@@ -9,7 +9,7 @@ public import RealModule
 // MARK: - Angle from Vector
 
 extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
-    /// The angle of this vector from the positive x-axis
+    /// The angle of this vector from the positive X-axis.
     @inlinable
     public var angle: Radian {
         .atan2(y: Double(dy.value), x: Double(dx.value))
@@ -19,13 +19,13 @@ extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
 // MARK: - Scalar Vector at Angle
 
 extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
-    /// Create a unit vector at the given angle
+    /// Creates a unit vector at the given angle from the positive X-axis.
     @inlinable
     public static func unit(at angle: Radian) -> Self {
         Self(dx: Linear.Dx(Scalar(angle.cos)), dy: Linear.Dy(Scalar(angle.sin)))
     }
 
-    /// Create a vector with given length at the given angle (polar coordinates)
+    /// Creates a vector from polar coordinates (length and angle).
     @inlinable
     public static func polar(length: Scalar, angle: Radian) -> Self {
         Self(
@@ -38,9 +38,9 @@ extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
 // MARK: - Angle Between Vectors
 
 extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
-    /// The angle between this vector and another (always positive).
+    /// Computes the unsigned angle between this vector and another.
     ///
-    /// Returns the unsigned angle in [0, π].
+    /// Returns an angle in the range [0, π].
     @inlinable
     public func angle(to other: Self) -> Radian {
         let dotProduct = self.dot(other)
@@ -49,9 +49,9 @@ extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
         return .acos(Double(dotProduct / magnitudes))
     }
 
-    /// The signed angle from this vector to another.
+    /// Computes the signed angle from this vector to another.
     ///
-    /// Returns the angle in (-π, π], positive for counter-clockwise rotation.
+    /// Returns an angle in (-π, π], positive for counter-clockwise rotation.
     @inlinable
     public func signedAngle(to other: Self) -> Radian {
         let cross = self.cross(other)
@@ -63,7 +63,7 @@ extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
 // MARK: - Rotation
 
 extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
-    /// Rotate this vector by an angle
+    /// Rotates this vector by an angle in radians.
     @inlinable
     public func rotated(by angle: Radian) -> Self {
         let c = Scalar(angle.cos)
@@ -76,7 +76,7 @@ extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
         )
     }
 
-    /// Rotate this vector by an angle in degrees
+    /// Rotates this vector by an angle in degrees.
     @inlinable
     public func rotated(by angle: Degree) -> Self {
         rotated(by: angle.radians)

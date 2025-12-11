@@ -1,76 +1,67 @@
-/// A namespace for formatting functionality.
+/// Namespace containing formatting types and protocols.
 ///
-/// The `Formatting` namespace provides protocols and extensions for type-safe formatting
-/// of values to strings and parsing strings back to values.
-///
-/// ## Overview
-///
-/// This package provides the core protocols that enable the `.formatted()` API pattern:
-///
-/// ```swift
-/// let value = 42.0
-/// let formatted = value.formatted(.number)
-/// ```
-///
-/// Extension packages can provide specific format styles:
-/// - swift-numeric-formatting-standard: Numeric formatting
-/// - swift-percent: Percentage formatting
-/// - swift-iso-8601: ISO 8601 date formatting
-/// - swift-measurement: Unit and measurement formatting
-public enum Format {}
-
-// MARK: - FormatStyle Protocol
-
-/// A type that can convert a value to a formatted output.
-///
-/// Conform to this protocol to create custom formatting styles that work
-/// with the `.formatted(_:)` API.
+/// Use this namespace to access format styles for converting values to strings. Provides built-in support for integers (decimal, binary, octal) and floating-point numbers (decimal, percentage). Additional format styles can be created by conforming to `FormatStyle`.
 ///
 /// ## Example
 ///
 /// ```swift
-/// struct MyStyle: FormatStyle {
+/// 42.formatted(.binary)            // "0b101010"
+/// 0.75.formatted(.percent)         // "75%"
+/// 3.14159.formatted(.number)       // "3.14159"
+/// ```
+public enum Format {}
+
+// MARK: - FormatStyle Protocol
+
+/// Protocol for types that convert values to formatted output.
+///
+/// Conform to this protocol to create custom format styles that work with the `.formatted(_:)` API. Define the input and output types, then implement the `format(_:)` method with your formatting logic.
+///
+/// ## Example
+///
+/// ```swift
+/// struct CurrencyStyle: FormatStyle {
 ///     typealias FormatInput = Double
 ///     typealias FormatOutput = String
 ///
 ///     func format(_ value: Double) -> String {
-///         // Custom formatting logic
+///         "$\(String(format: "%.2f", value))"
 ///     }
 /// }
 ///
-/// let result = 42.0.formatted(MyStyle())
+/// 42.5.formatted(CurrencyStyle())  // "$42.50"
 /// ```
 public protocol FormatStyle<FormatInput, FormatOutput>: Sendable {
-    /// The type of value this style can format
+    /// Input value type accepted by this format style
     associatedtype FormatInput
 
-    /// The type of output produced by formatting
+    /// Output type produced by formatting
     associatedtype FormatOutput
 
-    /// Format a value to the output type
+    /// Converts a value to the formatted output type.
     ///
-    /// - Parameter value: The value to format
-    /// - Returns: The formatted output
+    /// - Parameter value: Value to format
+    /// - Returns: Formatted output
     func format(_ value: FormatInput) -> FormatOutput
 }
 
 // MARK: - BinaryFloatingPoint + formatted()
 
 extension BinaryFloatingPoint {
-    /// Format this value using the given format style.
+    /// Converts this value to formatted output using the specified format style.
     ///
-    /// - Parameter format: The format style to use
-    /// - Returns: The formatted output
+    /// - Parameter format: Format style to apply
+    /// - Returns: Formatted output
     @inlinable
     public func formatted<S>(_ format: S) -> S.FormatOutput
     where Self == S.FormatInput, S: FormatStyle {
         format.format(self)
     }
 
-    /// Format this value using the given format style, converting to the style's input type.
+    /// Converts this value to formatted output, converting to the format's input type first.
     ///
-    /// - Parameter format: The format style to use
-    /// - Returns: The formatted output
+    /// - Parameter format: Format style to apply
+    /// - Returns: Formatted output
     @inlinable
     public func formatted<S>(_ format: S) -> S.FormatOutput
     where S: FormatStyle, S.FormatInput: BinaryFloatingPoint {
@@ -81,20 +72,20 @@ extension BinaryFloatingPoint {
 // MARK: - BinaryInteger + formatted()
 
 extension BinaryInteger {
-    /// Format this value using the given format style.
+    /// Converts this value to formatted output using the specified format style.
     ///
-    /// - Parameter format: The format style to use
-    /// - Returns: The formatted output
+    /// - Parameter format: Format style to apply
+    /// - Returns: Formatted output
     @inlinable
     public func formatted<S>(_ format: S) -> S.FormatOutput
     where Self == S.FormatInput, S: FormatStyle {
         format.format(self)
     }
 
-    /// Format this value using the given format style, converting to the style's input type.
+    /// Converts this value to formatted output, converting to the format's input type first.
     ///
-    /// - Parameter format: The format style to use
-    /// - Returns: The formatted output
+    /// - Parameter format: Format style to apply
+    /// - Returns: Formatted output
     @inlinable
     public func formatted<S>(_ format: S) -> S.FormatOutput
     where S: FormatStyle, S.FormatInput: BinaryInteger {

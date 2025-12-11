@@ -2,15 +2,17 @@
 // Polar coordinates and rotation for 2D points with Real scalar types.
 
 public import Algebra
-public import Dimension
 import Algebra_Linear
 public import Angle
+public import Dimension
 public import RealModule
 
 // MARK: - Polar Coordinates
 
 extension Affine.Point where N == 2, Scalar: Real & BinaryFloatingPoint {
-    /// Create a point at polar coordinates from the origin
+    /// Creates point at polar coordinates relative to origin.
+    ///
+    /// Converts polar coordinates `(r, θ)` to Cartesian coordinates `(x, y)`.
     @inlinable
     public static func polar(radius: Scalar, angle: Radian) -> Self {
         Self(
@@ -19,13 +21,13 @@ extension Affine.Point where N == 2, Scalar: Real & BinaryFloatingPoint {
         )
     }
 
-    /// The angle from the origin to this point
+    /// Angular direction from origin to this point in radians.
     @inlinable
     public var angle: Radian {
         .atan2(y: Double(y.value), x: Double(x.value))
     }
 
-    /// The distance from the origin (radius in polar coordinates)
+    /// Distance from origin to this point.
     @inlinable
     public var radius: Scalar {
         Scalar.sqrt(x.value * x.value + y.value * y.value)
@@ -35,7 +37,7 @@ extension Affine.Point where N == 2, Scalar: Real & BinaryFloatingPoint {
 // MARK: - Rotation
 
 extension Affine.Point where N == 2, Scalar: Real & BinaryFloatingPoint {
-    /// Rotate this point around the origin by an angle
+    /// Rotates point counterclockwise around origin by specified angle.
     @inlinable
     public func rotated(by angle: Radian) -> Self {
         let c = Scalar(angle.cos)
@@ -48,7 +50,7 @@ extension Affine.Point where N == 2, Scalar: Real & BinaryFloatingPoint {
         )
     }
 
-    /// Rotate this point around a center point by an angle
+    /// Rotates point counterclockwise around specified center by angle.
     @inlinable
     public func rotated(by angle: Radian, around center: Self) -> Self {
         let translated = Self(
@@ -62,13 +64,13 @@ extension Affine.Point where N == 2, Scalar: Real & BinaryFloatingPoint {
         )
     }
 
-    /// Rotate this point around the origin by an angle in degrees
+    /// Rotates point counterclockwise around origin by angle in degrees.
     @inlinable
     public func rotated(by angle: Degree) -> Self {
         rotated(by: angle.radians)
     }
 
-    /// Rotate this point around a center point by an angle in degrees
+    /// Rotates point counterclockwise around specified center by angle in degrees.
     @inlinable
     public func rotated(by angle: Degree, around center: Self) -> Self {
         rotated(by: angle.radians, around: center)

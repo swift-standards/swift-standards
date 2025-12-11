@@ -29,10 +29,20 @@
 public import Algebra
 public import Dimension
 
-/// The Linear namespace for vector space primitives.
+/// A namespace for type-safe vector spaces and linear transformations.
 ///
-/// Parameterized by the scalar type (field) used for coordinates.
-/// Supports both copyable and non-copyable scalar types.
+/// `Linear` provides compile-time dimension checking for vectors and matrices, parameterized by scalar type. Use it to build collision-free 2D/3D math with strong guarantees about dimensions and units.
+///
+/// ## Example
+///
+/// ```swift
+/// typealias Vec2 = Linear<Double>.Vector<2>
+/// typealias Mat2 = Linear<Double>.Matrix2x2
+///
+/// let v = Vec2(dx: .init(3), dy: .init(4))
+/// let length = v.length  // 5.0
+/// let rotated = v.rotated(by: .degrees(90))
+/// ```
 public enum Linear<Scalar: ~Copyable>: ~Copyable {}
 
 extension Linear: Copyable where Scalar: Copyable {}
@@ -41,36 +51,28 @@ extension Linear: Sendable where Scalar: Sendable {}
 // MARK: - Displacement Type Aliases
 
 extension Linear {
-    /// A type-safe horizontal displacement (vector X-component).
+    /// A horizontal displacement (vector X-component).
     ///
-    /// Displacements are vector components, distinct from coordinates.
-    /// Use for widths, horizontal changes, or vector X-components.
+    /// Use for widths, horizontal changes, or vector X-axis values. Distinct from coordinates.
     public typealias Dx = Tagged<Index.X.Displacement, Scalar>
 
-    /// A type-safe vertical displacement (vector Y-component).
+    /// A vertical displacement (vector Y-component).
     ///
-    /// Displacements are vector components, distinct from coordinates.
-    /// Use for heights, vertical changes, or vector Y-components.
+    /// Use for heights, vertical changes, or vector Y-axis values. Distinct from coordinates.
     public typealias Dy = Tagged<Index.Y.Displacement, Scalar>
 
-    /// A type-safe depth displacement (vector Z-component).
+    /// A depth displacement (vector Z-component).
     ///
-    /// Displacements are vector components, distinct from coordinates.
-    /// Use for depths, Z-axis changes, or vector Z-components.
+    /// Use for depths, Z-axis changes, or vector Z-axis values. Distinct from coordinates.
     public typealias Dz = Tagged<Index.Z.Displacement, Scalar>
 
-    /// A type-safe homogeneous displacement (vector W-component).
+    /// A homogeneous displacement (vector W-component).
     ///
-    /// Displacements are vector components, distinct from coordinates.
+    /// Use for 4D vector W-axis values in homogeneous coordinates. Distinct from coordinates.
     public typealias Dw = Tagged<Index.W.Displacement, Scalar>
 
-    /// A scalar magnitude (length, distance, radius).
+    /// A non-directional scalar magnitude.
     ///
-    /// Magnitudes are non-directional scalar quantities representing the "size"
-    /// of something: vector norms (`vector.length`), distances between points,
-    /// radii, arc lengths, line thicknesses, etc.
-    ///
-    /// Unlike displacements which have direction (X, Y, Z), magnitudes are
-    /// the result of "collapsing" directional information into a scalar.
+    /// Use for lengths, distances, radii, or any scalar size measurement without direction. Unlike displacements which have axis identity, magnitudes represent pure scalar quantities.
     public typealias Magnitude = Tagged<Index.Magnitude, Scalar>
 }

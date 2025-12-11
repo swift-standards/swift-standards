@@ -5,50 +5,41 @@ public import Algebra
 public import Dimension
 
 extension Region {
-    /// Sextant of the plane (60-degree angular sector).
+    /// Six angular sectors dividing a circle into 60° slices.
     ///
-    /// The six regions dividing a circle into equal 60° sectors, starting
-    /// from the positive x-axis and proceeding counterclockwise.
+    /// Sextant represents six equal 60° sectors of a circle, numbered counterclockwise from the positive x-axis. Use it for hexagonal grid logic, triangular tessellations, or 60° angular partitioning. Forms a cyclic group (Z₆) under rotation.
     ///
-    /// ## Convention
-    ///
-    /// - I: 0° to 60° (including positive x-axis)
-    /// - II: 60° to 120°
-    /// - III: 120° to 180° (including negative x-axis upper half)
-    /// - IV: 180° to 240°
-    /// - V: 240° to 300°
-    /// - VI: 300° to 360°
-    ///
-    /// ## Mathematical Properties
-    ///
-    /// - Forms Z6 group under 60 degree rotation
-    /// - Useful for hexagonal grids and triangular tessellations
-    /// - Each sextant corresponds to one "slice" of a regular hexagon
-    ///
-    /// ## Tagged Values
-    ///
-    /// Use `Sextant.Value<T>` to pair a point with its sextant:
+    /// ## Example
     ///
     /// ```swift
-    /// let point: Region.Sextant.Value<Point> = .init(.I, p)
+    ///       III    II
+    ///         \  /
+    ///    IV----+----I   (I starts at 0°, positive x-axis)
+    ///         /  \
+    ///        V    VI
+    ///
+    /// let sect: Region.Sextant = .I    // 0° to 60°
+    /// let next = sect.next             // .II (60° CCW)
+    /// let opposite = !sect             // .IV (180°)
+    /// let quad = sect.quadrant         // .I
     /// ```
     public enum Sextant: Int, Sendable, Hashable, Codable, CaseIterable {
-        /// First sextant: 0° to 60°.
+        /// First sextant (0° to 60°, positive x-axis).
         case I = 1
 
-        /// Second sextant: 60° to 120°.
+        /// Second sextant (60° to 120°).
         case II = 2
 
-        /// Third sextant: 120° to 180°.
+        /// Third sextant (120° to 180°, positive y-axis).
         case III = 3
 
-        /// Fourth sextant: 180° to 240°.
+        /// Fourth sextant (180° to 240°, negative x-axis).
         case IV = 4
 
-        /// Fifth sextant: 240° to 300°.
+        /// Fifth sextant (240° to 300°).
         case V = 5
 
-        /// Sixth sextant: 300° to 360°.
+        /// Sixth sextant (300° to 360°, negative y-axis).
         case VI = 6
     }
 }
@@ -56,25 +47,25 @@ extension Region {
 // MARK: - Rotation
 
 extension Region.Sextant {
-    /// The next sextant (60 degrees counterclockwise).
+    /// Next sextant (60° counterclockwise rotation).
     @inlinable
     public var next: Region.Sextant {
         Region.Sextant(rawValue: (rawValue % 6) + 1)!
     }
 
-    /// The previous sextant (60 degrees clockwise).
+    /// Previous sextant (60° clockwise rotation).
     @inlinable
     public var previous: Region.Sextant {
         Region.Sextant(rawValue: ((rawValue + 4) % 6) + 1)!
     }
 
-    /// The opposite sextant (180 degree rotation).
+    /// Opposite sextant (180° rotation).
     @inlinable
     public var opposite: Region.Sextant {
         Region.Sextant(rawValue: ((rawValue + 2) % 6) + 1)!
     }
 
-    /// Returns the opposite sextant.
+    /// Returns the opposite sextant (180° rotation).
     @inlinable
     public static prefix func ! (value: Region.Sextant) -> Region.Sextant {
         value.opposite
@@ -84,7 +75,7 @@ extension Region.Sextant {
 // MARK: - Quadrant
 
 extension Region.Sextant {
-    /// The quadrant containing this sextant.
+    /// Quadrant containing this sextant.
     @inlinable
     public var quadrant: Region.Quadrant {
         switch self {
@@ -101,7 +92,7 @@ extension Region.Sextant {
 // MARK: - Sign Properties
 
 extension Region.Sextant {
-    /// True if the sextant is in the upper half-plane (y > 0).
+    /// Whether the sextant is in the upper half-plane (y > 0).
     @inlinable
     public var isUpperHalf: Bool {
         switch self {
@@ -110,7 +101,7 @@ extension Region.Sextant {
         }
     }
 
-    /// True if the sextant is in the right half-plane (x > 0).
+    /// Whether the sextant is in the right half-plane (x > 0).
     @inlinable
     public var isRightHalf: Bool {
         switch self {

@@ -5,43 +5,44 @@ public import Algebra
 public import Dimension
 
 extension Region {
-    /// Octant of 3D Cartesian space.
+    /// Eight regions of 3D Cartesian space separated by coordinate planes.
     ///
-    /// The eight regions defined by the x, y, and z planes, analogous to
-    /// quadrants in 2D.
+    /// Octant divides 3D space into eight regions defined by the signs of x, y, and z coordinates, analogous to quadrants in 2D. Use it for spatial partitioning in three dimensions, 3D collision detection, or coordinate sign analysis. Forms the group Z₂³ under axis reflections.
     ///
-    /// ## Convention
-    ///
-    /// Named by signs: PPP means x > 0, y > 0, z > 0.
-    ///
-    /// ## Mathematical Properties
-    ///
-    /// - 8 regions = 2^3 (three binary sign choices)
-    /// - Reflection through origin maps octant to opposite
-    ///
-    /// ## Tagged Values
-    ///
-    /// Use `Octant.Value<T>` to pair a point with its octant:
+    /// ## Example
     ///
     /// ```swift
-    /// let point: Region.Octant.Value<Point3D> = .init(.ppp, p)
+    /// //        +z     npp  |  ppp
+    /// //         ↑     npn  |  ppn
+    /// //         |  nnp     | pnp
+    /// //         | nnn      |/ pnn
+    /// //         +-----→ +x
+    /// //        /
+    /// //       +y
+    ///
+    /// let oct: Region.Octant = .ppp      // x > 0, y > 0, z > 0
+    /// let reflected = !oct               // .nnn (origin reflection)
+    ///
+    /// // Check coordinate signs
+    /// oct.hasPositiveX  // true
+    /// oct.hasPositiveZ  // true
     /// ```
     public enum Octant: Sendable, Hashable, Codable, CaseIterable {
-        /// x > 0, y > 0, z > 0
+        /// Octant with x > 0, y > 0, z > 0.
         case ppp
-        /// x > 0, y > 0, z < 0
+        /// Octant with x > 0, y > 0, z < 0.
         case ppn
-        /// x > 0, y < 0, z > 0
+        /// Octant with x > 0, y < 0, z > 0.
         case pnp
-        /// x > 0, y < 0, z < 0
+        /// Octant with x > 0, y < 0, z < 0.
         case pnn
-        /// x < 0, y > 0, z > 0
+        /// Octant with x < 0, y > 0, z > 0.
         case npp
-        /// x < 0, y > 0, z < 0
+        /// Octant with x < 0, y > 0, z < 0.
         case npn
-        /// x < 0, y < 0, z > 0
+        /// Octant with x < 0, y < 0, z > 0.
         case nnp
-        /// x < 0, y < 0, z < 0
+        /// Octant with x < 0, y < 0, z < 0.
         case nnn
     }
 }
@@ -49,7 +50,7 @@ extension Region {
 // MARK: - Opposite
 
 extension Region.Octant {
-    /// The opposite octant (reflection through origin).
+    /// Opposite octant (reflection through origin, flipping all axis signs).
     @inlinable
     public var opposite: Region.Octant {
         switch self {
@@ -64,7 +65,7 @@ extension Region.Octant {
         }
     }
 
-    /// Returns the opposite octant.
+    /// Returns the opposite octant (origin reflection).
     @inlinable
     public static prefix func ! (value: Region.Octant) -> Region.Octant {
         value.opposite
@@ -74,7 +75,7 @@ extension Region.Octant {
 // MARK: - Sign Properties
 
 extension Region.Octant {
-    /// True if x is positive in this octant.
+    /// Whether x is positive in this octant.
     @inlinable
     public var hasPositiveX: Bool {
         switch self {
@@ -83,7 +84,7 @@ extension Region.Octant {
         }
     }
 
-    /// True if y is positive in this octant.
+    /// Whether y is positive in this octant.
     @inlinable
     public var hasPositiveY: Bool {
         switch self {
@@ -92,7 +93,7 @@ extension Region.Octant {
         }
     }
 
-    /// True if z is positive in this octant.
+    /// Whether z is positive in this octant.
     @inlinable
     public var hasPositiveZ: Bool {
         switch self {

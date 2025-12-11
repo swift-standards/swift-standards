@@ -1,23 +1,18 @@
 // Gradient.swift
 public import Dimension
 
-// Direction of change.
-
 /// Direction of change: ascending or descending.
 ///
-/// Binary classification of whether values are increasing or decreasing.
+/// Binary classification of whether values are increasing or decreasing. Related
+/// to the sign of the first derivative. Forms a Z₂ group under reversal. Use
+/// when tracking directional trends in ordered data.
 ///
-/// ## Mathematical Properties
-///
-/// - Forms Z₂ group under reversal
-/// - Related to sign of first derivative
-///
-/// ## Tagged Values
-///
-/// Use `Gradient.Value<T>` to pair a slope with its direction:
+/// ## Example
 ///
 /// ```swift
-/// let slope: Gradient.Value<Double> = .init(.ascending, 0.5)
+/// let trend: Gradient = .ascending
+/// print(trend.opposite)      // descending
+/// print(!trend)              // descending
 /// ```
 public enum Gradient: Sendable, Hashable, Codable, CaseIterable {
     /// Values are increasing (positive slope).
@@ -30,7 +25,7 @@ public enum Gradient: Sendable, Hashable, Codable, CaseIterable {
 // MARK: - Opposite
 
 extension Gradient {
-    /// The opposite gradient direction.
+    /// Opposite gradient direction (ascending↔descending).
     @inlinable
     public var opposite: Gradient {
         switch self {

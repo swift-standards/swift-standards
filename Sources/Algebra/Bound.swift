@@ -1,23 +1,17 @@
 // Bound.swift
 public import Dimension
 
-// Interval endpoint position.
-
 /// Position of an interval endpoint: lower or upper.
 ///
-/// Identifies which end of an interval a value represents.
+/// Identifies which end of an interval or range a value represents. Forms a
+/// Z₂ group under swap. Use when distinguishing minimum/maximum positions.
 ///
-/// ## Mathematical Properties
-///
-/// - Forms Z₂ group under swap
-/// - Related to min/max operations
-///
-/// ## Tagged Values
-///
-/// Use `Bound.Value<T>` to pair a value with its bound position:
+/// ## Example
 ///
 /// ```swift
-/// let limit: Bound.Value<Double> = .init(.lower, 0.0)
+/// let limit: Bound = .lower
+/// print(limit.opposite)     // upper
+/// print(!limit)             // upper
 /// ```
 public enum Bound: Sendable, Hashable, Codable, CaseIterable {
     /// Lower bound (minimum, left endpoint).
@@ -30,7 +24,7 @@ public enum Bound: Sendable, Hashable, Codable, CaseIterable {
 // MARK: - Opposite
 
 extension Bound {
-    /// The opposite bound.
+    /// Opposite bound (lower↔upper).
     @inlinable
     public var opposite: Bound {
         switch self {

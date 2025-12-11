@@ -6,12 +6,15 @@ public import Dimension
 // MARK: - Baseline
 
 extension Vertical {
-    /// Text baseline position.
+    /// Text baseline position for typography-aware alignment.
+    ///
+    /// Use this for aligning text elements by their baseline rather than
+    /// their bounding box, creating visually consistent typography layouts.
     public enum Baseline: Sendable, Hashable, Codable, CaseIterable {
-        /// The first line's baseline.
+        /// First line's baseline (top baseline for multi-line text)
         case first
 
-        /// The last line's baseline.
+        /// Last line's baseline (bottom baseline for multi-line text)
         case last
     }
 }
@@ -19,28 +22,36 @@ extension Vertical {
 // MARK: - Alignment
 
 extension Vertical {
-    /// Vertical alignment within a container.
+    /// Vertical alignment for content positioning.
     ///
-    /// Used for positioning content along the vertical axis.
+    /// Aligns content along the vertical axis, with special support for
+    /// typography-aware baseline alignment. Use baseline alignment when
+    /// horizontally arranging text labels to maintain consistent visual rhythm.
     ///
-    /// ## Semantic Meaning
+    /// ## Example
     ///
-    /// - `.top`: Top edge
-    /// - `.center`: Vertical center
-    /// - `.bottom`: Bottom edge
-    /// - `.baseline(.first)`: Align to first line of text baseline
-    /// - `.baseline(.last)`: Align to last line of text baseline
+    /// ```swift
+    /// // Top-aligned header
+    /// let header: Vertical.Alignment = .top
+    ///
+    /// // Vertically centered button
+    /// let button: Vertical.Alignment = .center
+    ///
+    /// // Text labels aligned by first baseline
+    /// let labels: Vertical.Alignment = .firstBaseline
+    /// // Creates clean typography alignment despite different font sizes
+    /// ```
     public enum Alignment: Sendable, Hashable, Codable {
-        /// Align to the top edge.
+        /// Align to the top edge
         case top
 
-        /// Align to the vertical center.
+        /// Align to the vertical center
         case center
 
-        /// Align to the bottom edge.
+        /// Align to the bottom edge
         case bottom
 
-        /// Align to a text baseline.
+        /// Align to a text baseline (first or last line)
         case baseline(Vertical.Baseline)
     }
 }
@@ -48,11 +59,11 @@ extension Vertical {
 // MARK: - Alignment Convenience
 
 extension Vertical.Alignment {
-    /// Align to the first text baseline (for text content).
+    /// Aligns to the first text baseline (top baseline for multi-line text)
     @inlinable
     public static var firstBaseline: Self { .baseline(.first) }
 
-    /// Align to the last text baseline (for text content).
+    /// Aligns to the last text baseline (bottom baseline for multi-line text)
     @inlinable
     public static var lastBaseline: Self { .baseline(.last) }
 }

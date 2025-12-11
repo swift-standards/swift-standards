@@ -4,30 +4,27 @@
 // Day-of-month representation as a dependent refinement type
 
 extension Time.Month {
-    /// A day within a month (1-31, validated against month/year)
+    /// Day within a month (1-31, validated against month/year).
     ///
-    /// This is a **dependent refinement type** - the valid range depends on
-    /// the month and year (e.g., February has 28 or 29 days).
+    /// Dependent refinement type—valid range depends on the month and year context.
+    /// For example, February 29 is only valid in leap years.
     ///
-    /// Category Theory: This represents a dependent product type where
-    /// the day value depends on (month, year) for its validity.
+    /// ## Example
     ///
-    /// Note: Does not conform to `RawRepresentable` because validity depends
-    /// on context (month/year), not just the raw value itself.
+    /// ```swift
+    /// let year = Time.Year(2024)
+    /// let feb = Time.Month.february
+    /// let day = try Time.Month.Day(29, in: feb, year: year) // Valid in leap year
+    /// ```
     public struct Day: Sendable, Equatable, Hashable, Comparable {
-        /// The day value (1-31)
+        /// Day value (1-31)
         public let rawValue: Int
 
-        /// Create a day with validation against month and year
+        /// Creates a day with validation against month and year.
         ///
-        /// This validates that the day is in the valid range for the given month/year.
-        /// For example, February 29 is only valid in leap years.
+        /// Validates that the day exists in the given month/year combination.
         ///
-        /// - Parameters:
-        ///   - value: Day value (1-31)
-        ///   - month: The month
-        ///   - year: The year
-        /// - Throws: `Day.Error` if day is invalid for the month/year
+        /// - Throws: `Day.Error.invalidDay` if day is invalid for the month/year
         public init(_ value: Int, in month: Time.Month, year: Time.Year) throws(Error) {
             let maxDay = month.days(in: year)
             guard (1...maxDay).contains(value) else {
@@ -41,9 +38,9 @@ extension Time.Month {
 // MARK: - Error
 
 extension Time.Month.Day {
-    /// Errors that can occur when creating a day
+    /// Validation errors for day values.
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// Day must be valid for the given month and year
+        /// Day value is not valid for the given month and year
         case invalidDay(Int, month: Time.Month, year: Time.Year)
     }
 }
@@ -51,7 +48,7 @@ extension Time.Month.Day {
 // MARK: - Unchecked Initialization
 
 extension Time.Month.Day {
-    /// Create a day without validation (internal use only)
+    /// Creates a day without validation (internal use only).
     ///
     /// - Warning: Only use when value is known to be valid for the context
     internal init(unchecked value: Int) {

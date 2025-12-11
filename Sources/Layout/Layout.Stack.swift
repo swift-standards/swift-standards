@@ -5,47 +5,43 @@ public import Dimension
 import Geometry
 
 extension Layout {
-    /// A sequential arrangement of content along an axis.
+    /// A linear arrangement of content along a horizontal or vertical axis.
     ///
-    /// Stack arranges its content sequentially along either the primary (horizontal)
-    /// or secondary (vertical) axis. The cross-axis alignment determines how
-    /// items are positioned perpendicular to the main axis.
+    /// Arranges items sequentially with consistent spacing, similar to CSS flexbox
+    /// or SwiftUI's `HStack`/`VStack`. Use this for navigation bars, button groups,
+    /// form layouts, or any linear content arrangement.
     ///
     /// ## Example
     ///
     /// ```swift
-    /// let vstack: Layout<Double>.Stack<[Element]> = .vertical(
-    ///     spacing: 10.0,
-    ///     alignment: .leading,
-    ///     content: elements
+    /// // Vertical form fields
+    /// let form = Layout<Double>.Stack<[Field]>.vertical(
+    ///     spacing: 12.0,
+    ///     alignment: .leading,  // Left-aligned fields
+    ///     content: formFields
     /// )
     ///
-    /// let hstack: Layout<Double>.Stack<[Element]> = .horizontal(
+    /// // Horizontal toolbar buttons
+    /// let toolbar = Layout<Double>.Stack<[Button]>.horizontal(
     ///     spacing: 8.0,
-    ///     alignment: .center,
-    ///     content: elements
+    ///     alignment: .center,  // Vertically centered buttons
+    ///     content: actions
     /// )
     /// ```
     public struct Stack<Content> {
-        /// The axis along which content is arranged.
-        ///
-        /// - `.primary`: Horizontal arrangement (left to right)
-        /// - `.secondary`: Vertical arrangement (top to bottom)
+        /// Axis along which content flows (`.primary` for horizontal, `.secondary` for vertical)
         public var axis: Axis<2>
 
-        /// The spacing between adjacent items.
+        /// Spacing between adjacent items
         public var spacing: Spacing
 
-        /// The alignment along the cross axis.
-        ///
-        /// For a horizontal stack, this controls vertical alignment.
-        /// For a vertical stack, this controls horizontal alignment.
+        /// Cross-axis alignment (vertical for horizontal stack, horizontal for vertical stack)
         public var alignment: Cross.Alignment
 
-        /// The content to arrange.
+        /// Content to arrange
         public var content: Content
 
-        /// Create a stack with the given configuration.
+        /// Creates a stack with the specified configuration.
         @inlinable
         public init(
             axis: consuming Axis<2>,
@@ -75,12 +71,12 @@ extension Layout.Stack: Hashable where Spacing: Hashable, Content: Hashable {}
 
 // MARK: - Codable
 #if Codable
-extension Layout.Stack: Codable where Spacing: Codable, Content: Codable {}
+    extension Layout.Stack: Codable where Spacing: Codable, Content: Codable {}
 #endif
 // MARK: - Convenience Initializers
 
 extension Layout.Stack {
-    /// Create a vertical stack (items arranged top to bottom).
+    /// Creates a vertical stack (items flow top to bottom).
     @inlinable
     public static func vertical(
         spacing: Spacing,
@@ -90,7 +86,7 @@ extension Layout.Stack {
         Self(axis: .secondary, spacing: spacing, alignment: alignment, content: content)
     }
 
-    /// Create a horizontal stack (items arranged leading to trailing).
+    /// Creates a horizontal stack (items flow leading to trailing).
     @inlinable
     public static func horizontal(
         spacing: Spacing,
@@ -104,7 +100,7 @@ extension Layout.Stack {
 // MARK: - Functorial Map
 
 extension Layout.Stack {
-    /// Create a stack by transforming the spacing of another stack.
+    /// Creates a stack by transforming the spacing unit of another stack.
     @inlinable
     public init<U, E: Error>(
         transforming other: borrowing Layout<U>.Stack<Content>,
@@ -120,11 +116,11 @@ extension Layout.Stack {
 }
 
 extension Layout.Stack {
-    /// Namespace for functorial map operations.
+    /// Namespace for functorial transformation operations.
     @inlinable
     public var map: Map { Map(stack: self) }
 
-    /// Functorial map operations for Stack.
+    /// Functorial transformation operations for `Stack`.
     public struct Map {
         @usableFromInline
         let stack: Layout<Spacing>.Stack<Content>
@@ -134,7 +130,7 @@ extension Layout.Stack {
             self.stack = stack
         }
 
-        /// Transform the spacing using the given closure.
+        /// Transforms the spacing type using the given closure.
         @inlinable
         public func spacing<Result, E: Error>(
             _ transform: (Spacing) throws(E) -> Result
@@ -147,7 +143,7 @@ extension Layout.Stack {
             )
         }
 
-        /// Transform the content using the given closure.
+        /// Transforms the content using the given closure.
         @inlinable
         public func content<Result, E: Error>(
             _ transform: (Content) throws(E) -> Result

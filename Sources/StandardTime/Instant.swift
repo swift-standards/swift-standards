@@ -3,17 +3,12 @@
 //
 // Point on the UTC timeline
 
-/// A point on the UTC timeline
+/// A point on the UTC timeline.
 ///
-/// Represents an absolute moment in time as seconds and nanoseconds since
-/// Unix epoch (1970-01-01 00:00:00 UTC). Suitable for:
-/// - Timeline arithmetic (adding/subtracting durations)
-/// - Comparisons (before/after)
-/// - Serialization (compact representation)
+/// Represents an absolute moment as seconds and nanoseconds since Unix epoch (1970-01-01 00:00:00 UTC).
+/// Use for timeline arithmetic, comparisons, and compact serialization. For calendar operations, convert to `Time`.
 ///
-/// For calendar operations (year, month, day), convert to `Time`.
-///
-/// ## Usage
+/// ## Example
 ///
 /// ```swift
 /// // Timeline arithmetic
@@ -28,24 +23,14 @@
 /// ```
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 public struct Instant: Sendable, Equatable, Hashable, Comparable, Codable {
-    /// Seconds since Unix epoch (1970-01-01 00:00:00 UTC)
-    ///
-    /// Uses Int64 (not Int) for platform-independent serialization and to avoid
-    /// Year 2038 overflow on 32-bit platforms. Time uses Int for internal calendar
-    /// calculations, but converts to Int64 here for wire format portability.
+    /// Seconds since Unix epoch (Int64 for platform portability)
     public let secondsSinceUnixEpoch: Int64
 
-    /// Nanosecond fraction within the second (0-999,999,999)
-    ///
-    /// Uses Int32 for compact representation (4 bytes). Range 0-999,999,999
-    /// fits comfortably in Int32 (max ~2.1 billion). Total Instant: 12 bytes.
+    /// Nanosecond fraction within the second (0-999,999,999, Int32 for compact 12-byte total)
     public let nanosecondFraction: Int32
 
-    /// Create an instant from seconds and nanoseconds
+    /// Creates an instant from seconds and nanoseconds.
     ///
-    /// - Parameters:
-    ///   - secondsSinceUnixEpoch: Seconds since Unix epoch (1970-01-01 00:00:00 UTC)
-    ///   - nanosecondFraction: Nanosecond fraction within the second (0-999,999,999)
     /// - Throws: `Instant.Error.nanosecondOutOfRange` if nanosecondFraction is not in valid range
     public init(
         secondsSinceUnixEpoch: Int64,
@@ -63,9 +48,9 @@ public struct Instant: Sendable, Equatable, Hashable, Comparable, Codable {
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 extension Instant {
-    /// Errors that can occur when creating an Instant
+    /// Validation errors for instant values.
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// Nanosecond fraction must be 0-999,999,999
+        /// Nanosecond fraction is not in valid range (0-999,999,999)
         case nanosecondOutOfRange(Int32)
     }
 }
@@ -74,16 +59,11 @@ extension Instant {
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 extension Instant {
-    /// Create an instant without validation (internal use only)
+    /// Creates an instant without validation (internal use only).
     ///
-    /// Bypasses nanosecond range validation. Only use when values are guaranteed
-    /// valid by construction (e.g., from arithmetic normalization).
+    /// Bypasses nanosecond validation. Only use when values are guaranteed valid by construction.
     ///
     /// - Warning: Caller must ensure nanosecondFraction is in [0, 1_000_000_000)
-    /// - Parameters:
-    ///   - secondsSinceUnixEpoch: Seconds since Unix epoch (UTC)
-    ///   - nanosecondFraction: Nanosecond fraction (must be 0-999,999,999)
-    /// - Returns: Instant with unchecked values
     internal static func unchecked(
         secondsSinceUnixEpoch: Int64,
         nanosecondFraction: Int32
@@ -111,11 +91,9 @@ extension Instant {
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 extension Instant {
 
-    /// Create instant from Time
+    /// Creates instant from time.
     ///
-    /// Transforms calendar representation to timeline representation.
-    ///
-    /// - Parameter time: The time to convert
+    /// Converts calendar representation to timeline representation.
     public init(_ time: Time) {
         self.secondsSinceUnixEpoch = Int64(time.secondsSinceEpoch)
         self.nanosecondFraction = Int32(time.totalNanoseconds)
@@ -138,17 +116,9 @@ extension Instant {
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 extension Instant {
-    /// Add a duration to an instant
+    /// Adds a duration to an instant.
     ///
-    /// Timeline arithmetic - adds a fixed duration on the UTC timeline.
-    ///
-    /// Note: Duration has attosecond precision (10^-18), but Instant stores
-    /// nanoseconds (10^-9). Sub-nanosecond precision is lost.
-    ///
-    /// - Parameters:
-    ///   - lhs: The instant
-    ///   - rhs: The duration to add
-    /// - Returns: A new instant advanced by the duration
+    /// Sub-nanosecond precision is lost (Duration has attosecond precision, Instant has nanosecond).
     @inlinable
     @_disfavoredOverload
     public static func + (lhs: Instant, rhs: Duration) -> Instant {
@@ -179,15 +149,9 @@ extension Instant {
         )
     }
 
-    /// Subtract a duration from an instant
+    /// Subtracts a duration from an instant.
     ///
-    /// Note: Duration has attosecond precision (10^-18), but Instant stores
-    /// nanoseconds (10^-9). Sub-nanosecond precision is lost.
-    ///
-    /// - Parameters:
-    ///   - lhs: The instant
-    ///   - rhs: The duration to subtract
-    /// - Returns: A new instant moved back by the duration
+    /// Sub-nanosecond precision is lost (Duration has attosecond precision, Instant has nanosecond).
     @inlinable
     @_disfavoredOverload
     public static func - (lhs: Instant, rhs: Duration) -> Instant {
@@ -217,12 +181,9 @@ extension Instant {
         )
     }
 
-    /// Calculate duration between two instants
+    /// Calculates duration between two instants.
     ///
-    /// - Parameters:
-    ///   - lhs: The later instant
-    ///   - rhs: The earlier instant
-    /// - Returns: Duration from rhs to lhs (positive if lhs > rhs)
+    /// Returns positive duration if lhs > rhs, negative if lhs < rhs.
     public static func - (lhs: Instant, rhs: Instant) -> Duration {
         let secondsDiff = lhs.secondsSinceUnixEpoch - rhs.secondsSinceUnixEpoch
         let nanosDiff = lhs.nanosecondFraction - rhs.nanosecondFraction

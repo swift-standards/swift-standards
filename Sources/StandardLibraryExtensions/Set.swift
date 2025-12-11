@@ -4,16 +4,13 @@
 // Extensions for Swift standard library Set
 
 extension Set {
-    /// Partitions set into two disjoint sets based on predicate
+    /// Splits the set into two disjoint sets based on a predicate.
     ///
-    /// Decomposes set via characteristic function into coproduct.
-    /// Creates disjoint union where elements satisfying predicate go to first set.
+    /// Returns a tuple where the first set contains elements that satisfy the predicate,
+    /// and the second set contains elements that don't. Use this to categorize set elements.
     ///
-    /// Category theory: Coproduct decomposition via χ: S → 𝔹
-    /// partition: (A → Bool) → Set(A) → Set(A) ⊕ Set(A)
-    /// Satisfies: satisfying ∪ failing = original, satisfying ∩ failing = ∅
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// let numbers: Set = [1, 2, 3, 4, 5, 6]
     /// let (evens, odds) = numbers.partition(where: { $0.isMultiple(of: 2) })
@@ -36,20 +33,17 @@ extension Set {
         return (satisfying, failing)
     }
 
-    /// Generates all k-sized subsets
+    /// Returns all possible subsets of the specified size.
     ///
-    /// Computes combinations C(n, k) via binomial coefficient.
-    /// Returns empty set for invalid k values.
+    /// Generates all combinations of k elements from the set. Returns an empty set for invalid sizes (k < 0 or k > count).
+    /// Use this for combinatorial operations and subset analysis.
     ///
-    /// Category theory: Power set restriction to fixed cardinality
-    /// subsets: ℕ → 𝒫(S) → 𝒫(𝒫(S)) where |each subset| = k
-    /// Count satisfies: |subsets(k)| = C(n, k) = n! / (k!(n-k)!)
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// let set: Set = [1, 2, 3]
     /// set.subsets(ofSize: 2)  // [[1, 2], [1, 3], [2, 3]]
-    /// set.subsets(ofSize: 0)  // [[]] (empty set)
+    /// set.subsets(ofSize: 0)  // [[]]
     /// ```
     public func subsets(ofSize k: Int) -> Set<Set<Element>> {
         guard k >= 0 else { return [] }
@@ -83,17 +77,13 @@ extension Set {
         return result
     }
 
-    /// Computes Cartesian product with another set
+    /// Returns all ordered pairs combining elements from both sets.
     ///
-    /// Forms product set of all ordered pairs.
-    /// Fundamental construction in category of sets.
-    /// Returns array since tuple Hashable conformance is limited.
+    /// Generates all combinations where the first element comes from this set and the second from the other set.
+    /// Use this to create all possible pairings between two sets.
     ///
-    /// Category theory: Categorical product S × T
-    /// cartesianProduct: Set(A) × Set(B) → Array(A × B)
-    /// Satisfies: |S × T| = |S| · |T|, π₁ ∘ product and π₂ ∘ product are projections
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// let a: Set = [1, 2]
     /// let b: Set = ["x", "y"]
@@ -112,14 +102,13 @@ extension Set {
         return result
     }
 
-    /// Cartesian product with itself (self-product)
+    /// Returns all ordered pairs combining elements from the set with itself.
     ///
-    /// Special case of Cartesian product where both sets are identical.
-    /// Useful for generating all pairs from a single set.
+    /// Equivalent to `cartesianProduct(self)`. Generates all possible ordered pairs including pairs like (1, 1).
+    /// Use this to generate all possible pairings within a single set.
     ///
-    /// Category theory: Diagonal product Δ: S → S × S
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// let set: Set = [1, 2, 3]
     /// set.cartesianSquare()  // [(1,1), (1,2), (1,3), (2,1), (2,2), (2,3), (3,1), (3,2), (3,3)]

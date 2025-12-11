@@ -4,11 +4,9 @@
 // Yoctosecond representation as a refinement type
 
 extension Time {
-    /// A yoctosecond (0-999)
+    /// Yoctosecond component (0-999).
     ///
-    /// This is a refinement type - an integer constrained to the valid range.
-    /// Represents 10^-24 seconds (septillionths of a second).
-    /// This is the smallest SI time unit.
+    /// Represents 10^-24 seconds (smallest SI time unit). Refinement type for type-safe sub-second precision.
     public struct Yoctosecond: Sendable, Equatable, Hashable, Comparable {
         /// The yoctosecond value (0-999)
         public let value: Int
@@ -56,6 +54,6 @@ extension Time.Yoctosecond {
 }
 
 extension Time.Yoctosecond {
-    /// Zero nanoseconds
+    /// Zero yoctoseconds
     public static let zero = Time.Yoctosecond(unchecked: 0)
 }

@@ -4,53 +4,31 @@
 // Type-safe timezone offset representation
 
 extension Time {
-    /// Timezone offset from UTC
+    /// Timezone offset from UTC in seconds.
     ///
-    /// Represents the offset from UTC in seconds. Positive values indicate
-    /// timezones east of UTC (ahead), negative values indicate west (behind).
+    /// Positive values represent timezones east of UTC (ahead), negative values west (behind).
+    /// Construct from hours/minutes or raw seconds.
     ///
-    /// ## Examples
+    /// ## Example
     ///
     /// ```swift
-    /// // UTC
     /// let utc = Time.TimezoneOffset.utc
-    ///
-    /// // EST (UTC-5)
-    /// let est = Time.TimezoneOffset(hours: -5)
-    ///
-    /// // IST (UTC+5:30)
-    /// let ist = Time.TimezoneOffset(hours: 5, minutes: 30)
-    ///
-    /// // From raw seconds
-    /// let offset = Time.TimezoneOffset(seconds: 19800)  // +5:30
+    /// let est = Time.TimezoneOffset(hours: -5) // EST: -5:00
+    /// let ist = Time.TimezoneOffset(hours: 5, minutes: 30) // IST: +5:30
+    /// print(ist.description) // "+05:30"
     /// ```
     public struct TimezoneOffset: Sendable, Equatable, Hashable, Codable {
-        /// Offset in seconds from UTC
-        ///
-        /// Positive values are east of UTC (ahead), negative values are west (behind).
-        /// Example: +0500 = 18000, -0800 = -28800
+        /// Offset in seconds from UTC (positive = east, negative = west)
         public let seconds: Int
 
-        /// Creates a timezone offset from seconds
-        ///
-        /// - Parameter seconds: Offset in seconds (positive = east, negative = west)
+        /// Creates timezone offset from seconds.
         public init(seconds: Int) {
             self.seconds = seconds
         }
 
-        /// Creates a timezone offset from hours and minutes
+        /// Creates timezone offset from hours and minutes.
         ///
-        /// - Parameters:
-        ///   - hours: Hours offset (positive = east, negative = west)
-        ///   - minutes: Additional minutes offset (0-59, sign follows hours)
-        ///
-        /// ## Examples
-        ///
-        /// ```swift
-        /// Time.TimezoneOffset(hours: -5)           // EST: -5:00
-        /// Time.TimezoneOffset(hours: 5, minutes: 30)  // IST: +5:30
-        /// Time.TimezoneOffset(hours: -3, minutes: 30) // NST: -3:30
-        /// ```
+        /// Sign of minutes follows the sign of hours.
         public init(hours: Int, minutes: Int = 0) {
             let sign = hours < 0 ? -1 : 1
             self.seconds =
@@ -58,21 +36,21 @@ extension Time {
                 * Time.Calendar.Gregorian.TimeConstants.secondsPerMinute
         }
 
-        /// UTC timezone offset (zero offset)
+        /// UTC timezone offset (zero)
         public static let utc = TimezoneOffset(seconds: 0)
 
-        /// Returns the hour component of the offset
+        /// Hour component of the offset
         public var hours: Int {
             seconds / Time.Calendar.Gregorian.TimeConstants.secondsPerHour
         }
 
-        /// Returns the minute component of the offset (0-59)
+        /// Minute component of the offset (0-59)
         public var minutes: Int {
             abs(seconds % Time.Calendar.Gregorian.TimeConstants.secondsPerHour)
                 / Time.Calendar.Gregorian.TimeConstants.secondsPerMinute
         }
 
-        /// Returns true if this is UTC (zero offset)
+        /// Whether this is UTC (zero offset)
         public var isUTC: Bool {
             seconds == 0
         }
@@ -82,7 +60,7 @@ extension Time {
 // MARK: - CustomStringConvertible
 
 extension Time.TimezoneOffset: CustomStringConvertible {
-    /// Format as +HH:MM or -HH:MM
+    /// Formats as +HH:MM or -HH:MM.
     public var description: String {
         if seconds == 0 {
             return "+00:00"

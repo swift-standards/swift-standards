@@ -3,40 +3,27 @@
 
 /// Rotational winding direction: clockwise or counterclockwise.
 ///
-/// Describes the direction of rotation around an axis, commonly used
-/// in geometry, graphics, and physics.
+/// `Winding` specifies the direction of rotation around an axis. Use it for polygon vertex ordering, angular velocities, or any clockwise/counterclockwise distinction.
 ///
-/// ## Convention
-///
-/// The interpretation depends on viewing direction:
-/// - In 2D: looking at the XY plane from +Z
-/// - In 3D: depends on the axis of rotation and handedness
-///
-/// ## Mathematical Properties
-///
-/// - Forms Z₂ group under reversal
-/// - Related to sign of angular velocity
-/// - Determines polygon vertex order (convexity tests)
-///
-/// ## Paired Values
-///
-/// Use `Winding.Value<T>` to pair a rotation with its direction:
+/// ## Example
 ///
 /// ```swift
-/// let rotation: Winding.Value<Angle> = .init(.counterclockwise, .degrees(45))
+/// let rotation: Winding = .counterclockwise  // Positive angular direction
+/// let reversed = !rotation                   // .clockwise
+/// let angle: Winding.Value<Double> = Pair(.ccw, 45.0)
 /// ```
 public enum Winding: Sendable, Hashable, Codable, CaseIterable {
-    /// Rotation in the direction of clock hands (negative angular direction).
+    /// Rotation in the direction of clock hands.
     case clockwise
 
-    /// Rotation opposite to clock hands (positive angular direction).
+    /// Rotation opposite to clock hands.
     case counterclockwise
 }
 
 // MARK: - Opposite
 
 extension Winding {
-    /// The opposite winding direction.
+    /// Returns the opposite winding direction.
     @inlinable
     public var opposite: Winding {
         switch self {
@@ -45,7 +32,7 @@ extension Winding {
         }
     }
 
-    /// Returns the opposite winding direction.
+    /// Returns the opposite winding direction (prefix negation).
     @inlinable
     public static prefix func ! (value: Winding) -> Winding {
         value.opposite
@@ -55,16 +42,16 @@ extension Winding {
 // MARK: - Aliases
 
 extension Winding {
-    /// Alias for clockwise (CW).
+    /// Clockwise (CW) abbreviation.
     public static var cw: Winding { .clockwise }
 
-    /// Alias for counterclockwise (CCW).
+    /// Counterclockwise (CCW) abbreviation.
     public static var ccw: Winding { .counterclockwise }
 }
 
 // MARK: - Paired Value
 
 extension Winding {
-    /// A value paired with its winding direction.
+    /// Value paired with winding direction.
     public typealias Value<Payload> = Pair<Winding, Payload>
 }

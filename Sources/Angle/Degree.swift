@@ -1,23 +1,26 @@
 // Degree.swift
 // An angle measured in degrees (dimensionless).
 
-/// An angle measured in degrees.
+/// An angle measured in degrees (1/360 of a full rotation).
 ///
-/// Degrees are dimensionless - they represent a fraction of a full rotation.
-/// Like radians, a rotation by 45° is the same abstract rotation regardless
-/// of coordinate system.
+/// Degrees provide an intuitive unit for angles familiar to most users, with 360° representing a complete circle. Use degrees for user-facing values, UI controls, and when working with geographic coordinates or navigation.
 ///
 /// ## Example
 ///
 /// ```swift
 /// let rightAngle = Degree(90)
-/// let inRadians = rightAngle.radians  // π/2
+/// print(rightAngle.radians)         // Radian(π/2)
+/// print(rightAngle.sin)             // 1.0
+///
+/// // Arithmetic operations
+/// let rotation = rightAngle * 2     // Degree(180)
+/// let half = rightAngle / 2         // Degree(45)
 /// ```
 public struct Degree: Sendable, Hashable, Codable {
-    /// The angle value in degrees
+    /// Angle value (degrees)
     public var value: Double
 
-    /// Create a degree angle from a raw value
+    /// Creates an angle from a degree value.
     @inlinable
     public init(_ value: Double) {
         self.value = value
@@ -66,7 +69,7 @@ extension Degree: Numeric {
         self.value = value
     }
 
-    /// Multiply two angles (scaling)
+    /// Multiplies two angles (scalar scaling).
     @inlinable
     public static func * (lhs: borrowing Self, rhs: borrowing Self) -> Self {
         Self(lhs.value * rhs.value)
@@ -81,7 +84,7 @@ extension Degree: Numeric {
 // MARK: - SignedNumeric
 
 extension Degree: SignedNumeric {
-    /// Negate the angle
+    /// Negates the angle (reverses direction).
     @inlinable
     public static prefix func - (value: borrowing Self) -> Self {
         Self(-value.value)
@@ -91,14 +94,14 @@ extension Degree: SignedNumeric {
 // MARK: - Division
 
 extension Degree {
-    /// Divide by a scalar
+    /// Divides the angle by a scalar value.
     @inlinable
     @_disfavoredOverload
     public static func / (lhs: borrowing Self, rhs: Double) -> Self {
         Self(lhs.value / rhs)
     }
 
-    /// Divide angle by angle (returns scalar ratio)
+    /// Divides one angle by another, returning their scalar ratio.
     @inlinable
     @_disfavoredOverload
     public static func / (lhs: borrowing Self, rhs: borrowing Self) -> Double {
@@ -127,35 +130,49 @@ extension Degree: ExpressibleByIntegerLiteral {
 // MARK: - Common Angles
 
 extension Degree {
-    /// 90° (right angle)
+    /// Right angle (90°)
     public static let rightAngle = Self(90)
 
-    /// 180° (straight angle)
+    /// Straight angle (180°)
     public static let straight = Self(180)
 
-    /// 360° (full circle)
+    /// Full circle (360°)
     public static let fullCircle = Self(360)
 
-    /// 45°
+    /// Forty-five degrees (45°)
     public static let fortyFive = Self(45)
 
-    /// 60°
+    /// Sixty degrees (60°)
     public static let sixty = Self(60)
 
-    /// 30°
+    /// Thirty degrees (30°)
     public static let thirty = Self(30)
 }
 
 // MARK: - Conversion
 
 extension Degree {
-    /// Create from radians
+    /// Creates a degree angle from radians.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let rad = Radian(.pi / 2)
+    /// let deg = Degree(radians: rad)  // Degree(90.0)
+    /// ```
     @inlinable
     public init(radians: Radian) {
         self.value = radians.value * 180 / Double.pi
     }
 
-    /// Convert to radians
+    /// Converts to radians.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let deg = Degree(180)
+    /// print(deg.radians)  // Radian(π)
+    /// ```
     @inlinable
     public var radians: Radian {
         Radian(degrees: self)
@@ -165,15 +182,15 @@ extension Degree {
 // MARK: - Trigonometry (via Radian)
 
 extension Degree {
-    /// Sine of the angle
+    /// Sine of the angle.
     @inlinable
     public var sin: Double { radians.sin }
 
-    /// Cosine of the angle
+    /// Cosine of the angle.
     @inlinable
     public var cos: Double { radians.cos }
 
-    /// Tangent of the angle
+    /// Tangent of the angle.
     @inlinable
     public var tan: Double { radians.tan }
 }

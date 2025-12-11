@@ -1,24 +1,18 @@
 // Monotonicity.swift
 public import Dimension
 
-// Function monotonic behavior.
-
 /// Monotonic behavior: increasing, decreasing, or constant.
 ///
-/// Describes how a function's output changes relative to its input.
+/// Describes how a function's output changes relative to its input. Monotone
+/// functions preserve or reverse order. Use when classifying functions or
+/// sequences by their ordering properties.
 ///
-/// ## Mathematical Properties
-///
-/// - Monotone functions preserve or reverse order
-/// - Composition of monotonic functions is monotonic
-/// - Constant is identity for this classification
-///
-/// ## Tagged Values
-///
-/// Use `Monotonicity.Value<T>` to pair a function with its behavior:
+/// ## Example
 ///
 /// ```swift
-/// let trend: Monotonicity.Value<Slope> = .init(.increasing, 0.5)
+/// let behavior: Monotonicity = .increasing
+/// print(behavior.reversed)         // decreasing
+/// print(behavior.isNonDecreasing)  // true
 /// ```
 public enum Monotonicity: Sendable, Hashable, Codable, CaseIterable {
     /// Output increases as input increases.
@@ -34,7 +28,7 @@ public enum Monotonicity: Sendable, Hashable, Codable, CaseIterable {
 // MARK: - Reversal
 
 extension Monotonicity {
-    /// The reversed monotonicity (as if input were negated).
+    /// Reversed monotonicity (swaps increasing↔decreasing, preserves constant).
     @inlinable
     public var reversed: Monotonicity {
         switch self {
@@ -54,7 +48,7 @@ extension Monotonicity {
 // MARK: - Composition
 
 extension Monotonicity {
-    /// The monotonicity of composing two monotonic functions.
+    /// Monotonicity of composing two monotonic functions (f ∘ g).
     @inlinable
     public func composing(_ other: Monotonicity) -> Monotonicity {
         switch (self, other) {
@@ -68,23 +62,23 @@ extension Monotonicity {
 // MARK: - Properties
 
 extension Monotonicity {
-    /// True if strictly increasing.
+    /// Whether the monotonicity is strictly `.increasing`.
     @inlinable
     public var isIncreasing: Bool { self == .increasing }
 
-    /// True if strictly decreasing.
+    /// Whether the monotonicity is strictly `.decreasing`.
     @inlinable
     public var isDecreasing: Bool { self == .decreasing }
 
-    /// True if constant.
+    /// Whether the monotonicity is `.constant`.
     @inlinable
     public var isConstant: Bool { self == .constant }
 
-    /// True if non-decreasing (increasing or constant).
+    /// Whether the monotonicity is non-decreasing (`.increasing` or `.constant`).
     @inlinable
     public var isNonDecreasing: Bool { self != .decreasing }
 
-    /// True if non-increasing (decreasing or constant).
+    /// Whether the monotonicity is non-increasing (`.decreasing` or `.constant`).
     @inlinable
     public var isNonIncreasing: Bool { self != .increasing }
 }

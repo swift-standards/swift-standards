@@ -4,17 +4,13 @@
 // Extensions for Swift standard library Sequence
 
 extension Sequence {
-    /// Counts elements satisfying predicate
+    /// Returns the number of elements that satisfy the predicate.
     ///
-    /// Measures cardinality of preimage under characteristic function.
-    /// Computes |f⁻¹(true)| where f: A → Bool is the predicate.
+    /// ## Example
     ///
-    /// Category theory: Composition of characteristic function with cardinality:
-    /// count: (A → Bool) → Seq(A) → ℕ where count(p, s) = |{x ∈ s : p(x)}|
-    ///
-    /// Example:
     /// ```swift
     /// [1, 2, 3, 4, 5].count(where: { $0.isMultiple(of: 2) })  // 2
+    /// ["a", "bb", "ccc"].count(where: { $0.count > 1 })       // 2
     /// ```
     public func count(where predicate: (Element) throws -> Bool) rethrows -> Int {
         try reduce(0) { try predicate($1) ? $0 + 1 : $0 }
@@ -23,18 +19,16 @@ extension Sequence {
 }
 
 extension Sequence where Element: Hashable {
-    /// Computes frequency distribution of elements
+    /// Returns a dictionary mapping each unique element to its frequency count.
     ///
-    /// Histogram operation counting element occurrences.
-    /// Maps each unique element to its multiplicity in the sequence.
+    /// Counts how many times each element appears in the sequence.
+    /// Use this to analyze element distribution or find duplicates.
     ///
-    /// Category theory: Homomorphism from free monoid to commutative monoid
-    /// frequencies: Seq(A) → Map(A, ℕ) where frequencies preserves concatenation
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// [1, 2, 2, 3, 1, 4, 2].frequencies()  // [1: 2, 2: 3, 3: 1, 4: 1]
-    /// "hello".frequencies()  // ["h": 1, "e": 1, "l": 2, "o": 1]
+    /// "hello".frequencies()                // ["h": 1, "e": 1, "l": 2, "o": 1]
     /// ```
     public func frequencies() -> [Element: Int] {
         reduce(into: [:]) { counts, element in
@@ -44,15 +38,10 @@ extension Sequence where Element: Hashable {
 }
 
 extension Sequence where Element: Comparable {
-    /// Tests if sequence is sorted in ascending order
+    /// Returns `true` if the sequence is sorted in ascending order.
     ///
-    /// Verifies monotonicity property via pairwise comparison.
-    /// Checks if sequence respects total order relation.
+    /// ## Example
     ///
-    /// Category theory: Tests if sequence is monotone morphism
-    /// isSorted: Seq(A) → Bool where ∀i: aᵢ ≤ aᵢ₊₁
-    ///
-    /// Example:
     /// ```swift
     /// [1, 2, 3, 4, 5].isSorted()     // true
     /// [1, 3, 2, 4, 5].isSorted()     // false
@@ -71,15 +60,10 @@ extension Sequence where Element: Comparable {
         return true
     }
 
-    /// Tests if sequence is sorted using custom comparator
+    /// Returns `true` if the sequence is sorted according to the given comparator.
     ///
-    /// Generalized monotonicity test with explicit order relation.
-    /// Verifies sequence respects provided partial order.
+    /// ## Example
     ///
-    /// Category theory: Tests monotonicity under arbitrary order
-    /// isSorted: (A × A → Bool) → Seq(A) → Bool
-    ///
-    /// Example:
     /// ```swift
     /// [5, 4, 3, 2, 1].isSorted(by: >)  // true (descending)
     /// ["a", "bb", "ccc"].isSorted(by: { $0.count < $1.count })  // true
@@ -99,17 +83,13 @@ extension Sequence where Element: Comparable {
         return true
     }
 
-    /// Returns N largest elements
+    /// Returns the N largest elements in descending order.
     ///
-    /// Partial order selection via top-N filter.
-    /// Selects maximal elements up to specified count.
+    /// ## Example
     ///
-    /// Category theory: Order-preserving projection to prefix:
-    /// max: ℕ → Seq(A) → Seq(A) where result is ordered maximum subset
-    ///
-    /// Example:
     /// ```swift
     /// [3, 1, 4, 1, 5, 9, 2].max(count: 3)  // [9, 5, 4]
+    /// [1, 2, 3].max(count: 5)              // [3, 2, 1]
     /// ```
     public func max(count: Int) -> [Element] {
         guard count > 0 else { return [] }
@@ -128,17 +108,13 @@ extension Sequence where Element: Comparable {
         return result
     }
 
-    /// Returns N smallest elements
+    /// Returns the N smallest elements in ascending order.
     ///
-    /// Dual to max(count:), selects minimal elements.
-    /// Partial order selection via bottom-N filter.
+    /// ## Example
     ///
-    /// Category theory: Order-reversing variant of max:
-    /// min: ℕ → Seq(A) → Seq(A) where min ≡ max ∘ reverse_order
-    ///
-    /// Example:
     /// ```swift
     /// [3, 1, 4, 1, 5, 9, 2].min(count: 3)  // [1, 1, 2]
+    /// [1, 2, 3].min(count: 5)              // [1, 2, 3]
     /// ```
     public func min(count: Int) -> [Element] {
         guard count > 0 else { return [] }

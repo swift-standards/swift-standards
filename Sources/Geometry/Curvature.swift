@@ -3,39 +3,29 @@
 
 public import Algebra
 
-/// Curvature direction: convex or concave.
+/// Direction a curve bends: convex or concave.
 ///
-/// Describes which way a curve bends relative to a reference.
+/// Use this to describe which way a curve bends relative to a reference direction.
+/// Forms a Z₂ group under reflection (opposite direction).
 ///
-/// ## Convention
-///
-/// - Convex: curves outward (like the outside of a circle)
-/// - Concave: curves inward (like the inside of a bowl)
-///
-/// ## Mathematical Properties
-///
-/// - Related to second derivative sign
-/// - Forms Z₂ group under reflection
-///
-/// ## Tagged Values
-///
-/// Use `Curvature.Value<T>` to pair a curvature magnitude with its sign:
+/// ## Example
 ///
 /// ```swift
-/// let curve: Curvature.Value<Double> = .init(.convex, 0.5)
+/// let direction: Curvature = .convex
+/// let opposite = !direction  // .concave
 /// ```
 public enum Curvature: Sendable, Hashable, Codable, CaseIterable {
-    /// Curves outward (positive curvature in standard convention).
+    /// Curves outward, like the outside of a circle.
     case convex
 
-    /// Curves inward (negative curvature in standard convention).
+    /// Curves inward, like the inside of a bowl.
     case concave
 }
 
 // MARK: - Opposite
 
 extension Curvature {
-    /// The opposite curvature.
+    /// Opposite curvature direction.
     @inlinable
     public var opposite: Curvature {
         switch self {
@@ -44,7 +34,7 @@ extension Curvature {
         }
     }
 
-    /// Returns the opposite curvature.
+    /// Returns opposite curvature direction.
     @inlinable
     public static prefix func ! (value: Curvature) -> Curvature {
         value.opposite
@@ -54,6 +44,12 @@ extension Curvature {
 // MARK: - Paired Value
 
 extension Curvature {
-    /// A value paired with its curvature direction.
+    /// Value paired with its curvature direction.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let curve: Curvature.Value<Double> = .init(.convex, 0.5)
+    /// ```
     public typealias Value<Payload> = Pair<Curvature, Payload>
 }

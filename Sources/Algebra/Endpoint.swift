@@ -1,24 +1,18 @@
 // Endpoint.swift
 public import Dimension
 
-// Sequence endpoint position.
-
 /// Position in a sequence: start or end.
 ///
-/// Identifies the beginning or ending position of a sequence,
-/// range, or similar linear structure.
+/// Identifies the beginning or ending position of a sequence, range, or linear
+/// structure. Forms a Z₂ group under swap. Use when distinguishing first/last
+/// positions in ordered collections.
 ///
-/// ## Mathematical Properties
-///
-/// - Forms Z₂ group under swap
-/// - Related to first/last operations
-///
-/// ## Tagged Values
-///
-/// Use `Endpoint.Value<T>` to pair an index with its position:
+/// ## Example
 ///
 /// ```swift
-/// let position: Endpoint.Value<Index> = .init(.start, index)
+/// let position: Endpoint = .start
+/// print(position.opposite)   // end
+/// print(!position)           // end
 /// ```
 public enum Endpoint: Sendable, Hashable, Codable, CaseIterable {
     /// Beginning of the sequence.
@@ -31,7 +25,7 @@ public enum Endpoint: Sendable, Hashable, Codable, CaseIterable {
 // MARK: - Opposite
 
 extension Endpoint {
-    /// The opposite endpoint.
+    /// Opposite endpoint (start↔end).
     @inlinable
     public var opposite: Endpoint {
         switch self {

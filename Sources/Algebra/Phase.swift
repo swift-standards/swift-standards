@@ -1,26 +1,20 @@
 // Phase.swift
 public import Dimension
 
-// Discrete rotational phases (Z₄ group).
-
 /// Discrete rotational phases: 0°, 90°, 180°, 270°.
 ///
-/// Represents the cyclic group Z₄ of quarter-turn rotations.
+/// Represents the cyclic group Z₄ of quarter-turn rotations. Forms a group under
+/// composition with identity `zero`. Use when working with discrete rotations,
+/// quadrant indexing, or cyclic patterns with period 4.
 ///
-/// ## Mathematical Properties
-///
-/// - Forms Z₄ group under composition
-/// - Identity is `zero` (0°)
-/// - Each element has order dividing 4
-/// - `opposite` is 180° rotation from current
-/// - `next`/`previous` rotate by 90°
-///
-/// ## Tagged Values
-///
-/// Use `Phase.Value<T>` to pair a value with a phase:
+/// ## Example
 ///
 /// ```swift
-/// let signal: Phase.Value<Complex> = .init(.quarter, z)
+/// let phase: Phase = .quarter
+/// print(phase.degrees)           // 90
+/// print(phase.next)              // half
+/// print(phase.opposite)          // threeQuarter
+/// print(phase.composed(with: .half))  // threeQuarter
 /// ```
 public enum Phase: Int, Sendable, Hashable, Codable, CaseIterable {
     /// 0° (identity, no rotation).
@@ -39,19 +33,19 @@ public enum Phase: Int, Sendable, Hashable, Codable, CaseIterable {
 // MARK: - Rotation
 
 extension Phase {
-    /// The next phase (90° counterclockwise).
+    /// Next phase (90° counterclockwise rotation).
     @inlinable
     public var next: Phase {
         Phase(rawValue: (rawValue + 1) % 4)!
     }
 
-    /// The previous phase (90° clockwise).
+    /// Previous phase (90° clockwise rotation).
     @inlinable
     public var previous: Phase {
         Phase(rawValue: (rawValue + 3) % 4)!
     }
 
-    /// The opposite phase (180° rotation).
+    /// Opposite phase (180° rotation).
     @inlinable
     public var opposite: Phase {
         Phase(rawValue: (rawValue + 2) % 4)!
@@ -67,13 +61,13 @@ extension Phase {
 // MARK: - Composition
 
 extension Phase {
-    /// Composes two phases (adds rotations).
+    /// Composes two phases by adding rotations (modulo 4).
     @inlinable
     public func composed(with other: Phase) -> Phase {
         Phase(rawValue: (rawValue + other.rawValue) % 4)!
     }
 
-    /// The inverse phase (rotation that undoes this one).
+    /// Inverse phase (rotation that reverses this rotation).
     @inlinable
     public var inverse: Phase {
         Phase(rawValue: (4 - rawValue) % 4)!
@@ -83,13 +77,13 @@ extension Phase {
 // MARK: - Angle
 
 extension Phase {
-    /// The phase angle in degrees.
+    /// Phase angle in degrees (0, 90, 180, or 270).
     @inlinable
     public var degrees: Int {
         rawValue * 90
     }
 
-    /// Creates a phase from degrees (must be multiple of 90).
+    /// Creates a phase from degrees (returns `nil` if not a multiple of 90).
     @inlinable
     public init?(degrees: Int) {
         let normalized = ((degrees % 360) + 360) % 360

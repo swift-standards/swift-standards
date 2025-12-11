@@ -1,28 +1,18 @@
 // Boundary.swift
 public import Dimension
 
-// Interval endpoint inclusivity.
-
 /// Inclusivity of an interval endpoint: open or closed.
 ///
-/// Determines whether an endpoint value is included in the interval.
+/// Determines whether an endpoint value is included in the interval. Closed
+/// means included (≤ or ≥), open means excluded (< or >). Forms a Z₂ group
+/// under toggle. Combine with `Bound` for complete endpoint specification.
 ///
-/// ## Convention
-///
-/// - Closed: endpoint included (≤ or ≥)
-/// - Open: endpoint excluded (< or >)
-///
-/// ## Mathematical Properties
-///
-/// - Forms Z₂ group under toggle
-/// - Combines with Bound for full endpoint specification
-///
-/// ## Tagged Values
-///
-/// Use `Boundary.Value<T>` to pair a value with its inclusivity:
+/// ## Example
 ///
 /// ```swift
-/// let endpoint: Boundary.Value<Double> = .init(.closed, 1.0)
+/// let boundary: Boundary = .closed
+/// print(boundary.isInclusive)   // true
+/// print(boundary.opposite)      // open
 /// ```
 public enum Boundary: Sendable, Hashable, Codable, CaseIterable {
     /// Endpoint is included (≤ or ≥).
@@ -35,7 +25,7 @@ public enum Boundary: Sendable, Hashable, Codable, CaseIterable {
 // MARK: - Opposite
 
 extension Boundary {
-    /// The opposite boundary type.
+    /// Opposite boundary type (closed↔open).
     @inlinable
     public var opposite: Boundary {
         switch self {
@@ -50,7 +40,7 @@ extension Boundary {
         value.opposite
     }
 
-    /// Alias for opposite.
+    /// Opposite boundary type (closed↔open).
     @inlinable
     public var toggled: Boundary { opposite }
 }
@@ -58,11 +48,11 @@ extension Boundary {
 // MARK: - Properties
 
 extension Boundary {
-    /// True if the boundary is inclusive.
+    /// Whether the boundary is inclusive (endpoint included in interval).
     @inlinable
     public var isInclusive: Bool { self == .closed }
 
-    /// True if the boundary is exclusive.
+    /// Whether the boundary is exclusive (endpoint excluded from interval).
     @inlinable
     public var isExclusive: Bool { self == .open }
 }

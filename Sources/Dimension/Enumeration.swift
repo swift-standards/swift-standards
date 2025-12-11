@@ -1,30 +1,16 @@
 // Enumeration.swift
 // Zero-allocation sequence over Enumerable types.
 
-/// A lazy, zero-allocation sequence over an ``Enumerable`` type.
+/// A zero-allocation, lazy sequence over an `Enumerable` type.
 ///
-/// `Enumeration` provides efficient iteration over any enumerable type without
-/// allocating an intermediate array. It conforms to `RandomAccessCollection`,
-/// enabling O(1) subscript access.
+/// `Enumeration` provides efficient iteration with O(1) subscript access, conforming to `RandomAccessCollection`. It's a zero-size type with no stored properties—all information comes from the `Element` type's static properties.
 ///
-/// ## Zero-Size Type
-///
-/// `Enumeration` contains no stored properties — it's a zero-size type.
-/// All information comes from the `Element` type's static properties.
-///
-/// ## Usage
-///
-/// This type is typically used indirectly through `CaseIterable`:
+/// ## Example
 ///
 /// ```swift
-/// for value in MyEnumerableType.allCases {
-///     // Enumeration provides the iteration
-/// }
-///
-/// // Random access works
-/// let third = MyEnumerableType.allCases[2]
+/// for value in MyEnumerableType.allCases { ... }
+/// let third = MyEnumerableType.allCases[2]  // O(1) random access
 /// ```
-///
 public struct Enumeration<Element: Enumerable>: Sequence, Sendable {
     /// Creates a sequence over all values of the element type.
     @inlinable
@@ -36,7 +22,7 @@ public struct Enumeration<Element: Enumerable>: Sequence, Sendable {
         Iterator()
     }
 
-    /// An iterator that lazily produces each value in index order.
+    /// Iterator that lazily produces each value in index order.
     public struct Iterator: IteratorProtocol, Sendable {
         @usableFromInline
         var index: Int = 0
@@ -44,7 +30,7 @@ public struct Enumeration<Element: Enumerable>: Sequence, Sendable {
         @inlinable
         init() {}
 
-        /// Returns the next value, or nil if exhausted.
+        /// Returns the next value, or `nil` if exhausted.
         @inlinable
         public mutating func next() -> Element? {
             guard index < Element.caseCount else { return nil }
@@ -57,11 +43,11 @@ public struct Enumeration<Element: Enumerable>: Sequence, Sendable {
 // MARK: - Enumeration: Collection
 
 extension Enumeration: Collection {
-    /// The position of the first element (always 0).
+    /// Position of the first element (always 0).
     @inlinable
     public var startIndex: Int { 0 }
 
-    /// The position past the last element.
+    /// Position past the last element.
     @inlinable
     public var endIndex: Int { Element.caseCount }
 
@@ -95,7 +81,7 @@ extension Enumeration: BidirectionalCollection {
 // MARK: - Enumeration: RandomAccessCollection
 
 extension Enumeration: RandomAccessCollection {
-    /// The number of elements.
+    /// Number of elements.
     @inlinable
     public var count: Int { Element.caseCount }
 

@@ -4,18 +4,18 @@
 // Extensions for Swift standard library Array
 
 extension Array {
-    /// Non-mutating element removal at index
+    /// Returns a new array with the element at the specified index removed.
     ///
-    /// Produces new array with element removed, preserving original.
-    /// Represents deletion morphism in free monoid of sequences.
+    /// Creates a copy of the array without the element at the given index, leaving the original array unchanged.
+    /// Use this when you need an immutable operation that preserves the original array.
     ///
-    /// Category theory: Morphism in category of finite sequences
-    /// delete: Seq(A) × ℕ → Seq(A) where |delete(s, i)| = |s| - 1
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
-    /// let array = [1, 2, 3, 4, 5]
-    /// array.removing(at: 2)  // [1, 2, 4, 5]
+    /// let numbers = [1, 2, 3, 4, 5]
+    /// let result = numbers.removing(at: 2)
+    /// // result == [1, 2, 4, 5]
+    /// // numbers == [1, 2, 3, 4, 5]
     /// ```
     public func removing(at index: Int) -> [Element] {
         var result = self
@@ -23,18 +23,18 @@ extension Array {
         return result
     }
 
-    /// Non-mutating element insertion at index
+    /// Returns a new array with the element inserted at the specified index.
     ///
-    /// Produces new array with element inserted, preserving original.
-    /// Represents insertion morphism in free monoid of sequences.
+    /// Creates a copy of the array with the given element inserted at the specified position, leaving the original array unchanged.
+    /// Use this when you need an immutable insertion that preserves the original array.
     ///
-    /// Category theory: Morphism in category of finite sequences
-    /// insert: Seq(A) × A × ℕ → Seq(A) where |insert(s, a, i)| = |s| + 1
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
-    /// let array = [1, 2, 4, 5]
-    /// array.inserting(3, at: 2)  // [1, 2, 3, 4, 5]
+    /// let numbers = [1, 2, 4, 5]
+    /// let result = numbers.inserting(3, at: 2)
+    /// // result == [1, 2, 3, 4, 5]
+    /// // numbers == [1, 2, 4, 5]
     /// ```
     public func inserting(_ element: Element, at index: Int) -> [Element] {
         var result = self
@@ -42,18 +42,18 @@ extension Array {
         return result
     }
 
-    /// Safe subscript access with range
+    /// Safely accesses the array slice at the specified range, returning `nil` for invalid ranges.
     ///
-    /// Extends safe indexing to range projections.
-    /// Natural transformation lifting partial range operations into Maybe.
+    /// Returns the array slice for valid ranges, or `nil` if the range is out of bounds or invalid.
+    /// Use this to avoid crashes when accessing potentially invalid array ranges.
     ///
-    /// Category theory: η: Array × Range → Maybe(ArraySlice)
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
-    /// let array = [1, 2, 3, 4, 5]
-    /// array[safe: 1..<3]   // Optional([2, 3])
-    /// array[safe: 3..<10]  // nil
+    /// let numbers = [1, 2, 3, 4, 5]
+    /// numbers[safe: 1..<3]   // [2, 3]
+    /// numbers[safe: 3..<10]  // nil
+    /// numbers[safe: -1..<2]  // nil
     /// ```
     public subscript(safe range: Range<Int>) -> ArraySlice<Element>? {
         guard range.lowerBound >= 0,
@@ -63,18 +63,18 @@ extension Array {
         return self[range]
     }
 
-    /// Safe subscript access with closed range
+    /// Safely accesses the array slice at the specified closed range, returning `nil` for invalid ranges.
     ///
-    /// Closed range variant of safe subscripting.
-    /// Includes upper bound in result.
+    /// Returns the array slice for valid closed ranges (including upper bound), or `nil` if the range is out of bounds or invalid.
+    /// Use this to avoid crashes when accessing potentially invalid array ranges.
     ///
-    /// Category theory: η: Array × ClosedRange → Maybe(ArraySlice)
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
-    /// let array = [1, 2, 3, 4, 5]
-    /// array[safe: 1...3]   // Optional([2, 3, 4])
-    /// array[safe: 3...10]  // nil
+    /// let numbers = [1, 2, 3, 4, 5]
+    /// numbers[safe: 1...3]   // [2, 3, 4]
+    /// numbers[safe: 3...10]  // nil
+    /// numbers[safe: -1...2]  // nil
     /// ```
     public subscript(safe range: ClosedRange<Int>) -> ArraySlice<Element>? {
         guard range.lowerBound >= 0,

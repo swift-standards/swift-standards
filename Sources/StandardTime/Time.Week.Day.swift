@@ -9,25 +9,22 @@ extension Time {
 }
 
 extension Time.Week {
-    /// Day of the week
+    /// Day of the week (Sunday through Saturday).
     ///
-    /// Represents the seven days of the week as an abstract semantic value,
-    /// independent of any numbering convention or naming system.
+    /// Format-agnostic representation of weekdays. Calculate from calendar dates using
+    /// Zeller's congruence algorithm. Numbering and localized names are format-specific.
     ///
-    /// This is **pure, format-agnostic representation**. Format-specific
-    /// interpretations (numbering systems, localized names, etc.) are defined
-    /// in format packages (RFC 5322, ISO 8601, etc.) via extensions.
-    ///
-    /// ## Examples
+    /// ## Example
     ///
     /// ```swift
-    /// // Calculate weekday from a Gregorian calendar date
     /// let weekday = try Time.Weekday(year: 2024, month: 1, day: 15)
-    /// // weekday == .monday
+    /// print(weekday) // .monday
     ///
-    /// // Format-specific extensions provide numbering/names:
-    /// // RFC_5322.DateTime.weekdayNumber(weekday) -> 1
-    /// // ISO_8601.DateTime.weekdayNumber(weekday) -> 1
+    /// // Or with refined types
+    /// let year = Time.Year(2024)
+    /// let month = try Time.Month(1)
+    /// let day = try Time.Month.Day(15, in: month, year: year)
+    /// let weekday2 = Time.Weekday(year: year, month: month, day: day)
     /// ```
     public enum Day: Sendable, Equatable, Hashable, CaseIterable {
         case sunday
@@ -41,37 +38,21 @@ extension Time.Week {
 }
 
 extension Time.Week.Day {
-    /// Errors that can occur when calculating weekday from date components
+    /// Validation errors when calculating weekday from date components.
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// Month must be 1-12
+        /// Month value is not in valid range (1-12)
         case invalidMonth(Int)
 
-        /// Day must be valid for the given month and year
+        /// Day value is not valid for the given month and year
         case invalidDay(Int, month: Int, year: Int)
     }
 }
 
 extension Time.Weekday {
 
-    /// Calculate the weekday for a given Gregorian calendar date using refined types
+    /// Calculates the weekday for a given date using Zeller's congruence.
     ///
-    /// Uses Zeller's congruence algorithm to determine the day of the week.
-    /// This initializer is total (cannot fail) because all parameters are already validated.
-    ///
-    /// - Parameters:
-    ///   - year: The year (validated Time.Year)
-    ///   - month: The month (validated Time.Month, 1-12)
-    ///   - day: The day of the month (validated Time.Month.Day, 1-31)
-    ///
-    /// ## Example
-    ///
-    /// ```swift
-    /// let year = Time.Year(2024)
-    /// let month = try Time.Month(1)
-    /// let day = try Time.Month.Day(15, in: month, year: year)
-    /// let weekday = Time.Weekday(year: year, month: month, day: day)
-    /// // weekday == .monday
-    /// ```
+    /// Cannot fail because all parameters are pre-validated refined types.
     public init(
         year: Time.Year,
         month: Time.Month,
@@ -108,23 +89,11 @@ extension Time.Weekday {
         }
     }
 
-    /// Calculate the weekday for a given Gregorian calendar date using raw integers
+    /// Calculates the weekday for a given date from raw integers.
     ///
-    /// Convenience initializer for when you have raw integer values.
-    /// Validates the date components and constructs refined types.
+    /// Validates date components before calculating weekday.
     ///
-    /// - Parameters:
-    ///   - year: The year value
-    ///   - month: The month value (1-12)
-    ///   - day: The day of the month (1-31, validated against month/year)
     /// - Throws: `Time.Weekday.Error` if date components are invalid
-    ///
-    /// ## Example
-    ///
-    /// ```swift
-    /// let weekday = try Time.Weekday(year: 2024, month: 1, day: 15)
-    /// // weekday == .monday
-    /// ```
     public init(year: Int, month: Int, day: Int) throws(Error) {
         let y = Time.Year(year)
 

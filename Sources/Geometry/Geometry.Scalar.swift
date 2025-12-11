@@ -2,21 +2,21 @@
 // A generic scalar value.
 
 extension Geometry {
-    /// A generic scalar value.
+    /// Generic scalar value wrapper.
     ///
-    /// `Scalar` wraps a value of the geometry's unit type,
-    /// providing type safety for measurements in different coordinate systems.
+    /// Wraps a value of the geometry's scalar type for type safety across different coordinate systems.
     ///
     /// ## Example
     ///
     /// ```swift
-    /// let value: Geometry<Double>.Scalar = .init(72.0)
+    /// let value = Geometry<Double>.Scalar(72.0)
+    /// // value.value == 72.0
     /// ```
     public struct Scalar {
-        /// The underlying value
+        /// Underlying scalar value.
         public var value: Scalar
 
-        /// Create a scalar with the given value
+        /// Creates a scalar with the given value.
         @inlinable
         public init(_ value: consuming Scalar) {
             self.value = value
@@ -30,12 +30,12 @@ extension Geometry.Scalar: Hashable where Scalar: Hashable {}
 
 // MARK: - Codable
 #if Codable
-extension Geometry.Scalar: Codable where Scalar: Codable {}
+    extension Geometry.Scalar: Codable where Scalar: Codable {}
 #endif
 // MARK: - Zero
 
 extension Geometry.Scalar where Scalar: AdditiveArithmetic {
-    /// Zero scalar
+    /// Zero scalar value.
     @inlinable
     public static var zero: Self { Self(.zero) }
 }
@@ -87,7 +87,7 @@ extension Geometry.Scalar: ExpressibleByIntegerLiteral where Scalar: Expressible
 // MARK: - Negation (SignedNumeric)
 
 extension Geometry.Scalar where Scalar: SignedNumeric {
-    /// Negate
+    /// Negates the scalar value.
     @inlinable
     public static prefix func - (value: borrowing Self) -> Self {
         Self(-value.value)
@@ -97,7 +97,7 @@ extension Geometry.Scalar where Scalar: SignedNumeric {
 // MARK: - Functorial Map
 
 extension Geometry.Scalar {
-    /// Create a scalar by transforming the value of another scalar
+    /// Creates a scalar by transforming another scalar's value.
     @inlinable
     public init<U, E: Error>(
         _ other: borrowing Geometry<U>.Scalar,
@@ -106,7 +106,7 @@ extension Geometry.Scalar {
         self.init(try transform(other.value))
     }
 
-    /// Transform the value using the given closure
+    /// Transforms the value using the given closure.
     @inlinable
     public func map<Result, E: Error>(
         _ transform: (Scalar) throws(E) -> Result
@@ -118,21 +118,21 @@ extension Geometry.Scalar {
 // MARK: - Multiplication/Division (FloatingPoint)
 
 extension Geometry.Scalar where Scalar: FloatingPoint {
-    /// Multiply by a scalar
+    /// Multiplies by a scalar.
     @inlinable
     @_disfavoredOverload
     public static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
         Self(lhs.value * rhs)
     }
 
-    /// Multiply scalar by value
+    /// Multiplies scalar by value.
     @inlinable
     @_disfavoredOverload
     public static func * (lhs: Scalar, rhs: borrowing Self) -> Self {
         Self(lhs * rhs.value)
     }
 
-    /// Divide by a scalar
+    /// Divides by a scalar.
     @inlinable
     @_disfavoredOverload
     public static func / (lhs: borrowing Self, rhs: Scalar) -> Self {

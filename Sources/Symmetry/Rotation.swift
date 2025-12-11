@@ -4,30 +4,25 @@
 public import Algebra_Linear
 public import Angle
 
-/// An N-dimensional rotation.
+/// An N-dimensional rotation in Euclidean space.
 ///
-/// Rotations are dimensionless - they represent an angular displacement
-/// independent of any coordinate system's units. An element of SO(n),
-/// the special orthogonal group.
-///
-/// Internally stored as an orthogonal matrix with determinant +1.
-/// For 2D, convenience constructors accept an angle directly.
-/// For 3D, quaternion or axis-angle representations can be used.
+/// Represents an element of SO(n), the special orthogonal group. Rotations are dimensionless angular displacements stored as orthogonal matrices with determinant +1, making them independent of coordinate system units.
 ///
 /// ## Example
 ///
 /// ```swift
-/// let rotation2D = Rotation<2>(angle: .pi / 4)  // 45° rotation
-/// let matrix = rotation2D.matrix  // Get the 2×2 rotation matrix
+/// let rotation = Rotation<2>(angle: .pi / 4)
+/// let matrix = rotation.matrix
+/// // [[cos(π/4), -sin(π/4)],
+/// //  [sin(π/4),  cos(π/4)]]
 /// ```
 public struct Rotation<let N: Int>: Sendable {
-    /// The rotation matrix (orthogonal, determinant = +1)
+    /// Orthogonal matrix representation with determinant +1.
     public var matrix: Linear<Double>.Matrix<N, N>
 
-    /// Create a rotation from an orthogonal matrix
+    /// Creates a rotation from an orthogonal matrix.
     ///
-    /// - Precondition: The matrix should be orthogonal with determinant +1.
-    ///   This is not validated for performance reasons.
+    /// - Precondition: Matrix must be orthogonal with determinant +1 (not validated).
     @inlinable
     public init(matrix: Linear<Double>.Matrix<N, N>) {
         self.matrix = matrix
@@ -56,28 +51,28 @@ extension Rotation: Hashable where N == 2 {
 // MARK: - Codable (2D)
 
 #if Codable
-extension Rotation: Codable where N == 2 {
-    private enum CodingKeys: String, CodingKey {
-        case matrix
-    }
+    extension Rotation: Codable where N == 2 {
+        private enum CodingKeys: String, CodingKey {
+            case matrix
+        }
 
-    public init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let matrix = try container.decode(Linear<Double>.Matrix<2, 2>.self, forKey: .matrix)
-        self.init(matrix: matrix)
-    }
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let matrix = try container.decode(Linear<Double>.Matrix<2, 2>.self, forKey: .matrix)
+            self.init(matrix: matrix)
+        }
 
-    public func encode(to encoder: any Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(matrix, forKey: .matrix)
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(matrix, forKey: .matrix)
+        }
     }
-}
 #endif
 
 // MARK: - Identity
 
 extension Rotation {
-    /// The identity rotation (no rotation)
+    /// Identity rotation representing no angular displacement.
     @inlinable
     public static var identity: Self {
         Self(matrix: .identity)
@@ -87,20 +82,14 @@ extension Rotation {
 // MARK: - 2D Rotation
 
 extension Rotation where N == 2 {
-    /// The rotation angle
-    ///
-    /// For a 2D rotation matrix:
-    /// ```
-    /// | cos(θ)  -sin(θ) |
-    /// | sin(θ)   cos(θ) |
-    /// ```
+    /// Rotation angle in radians.
     @inlinable
     public var angle: Radian {
         get { matrix.rotationAngle }
         set { self = Self(angle: newValue) }
     }
 
-    /// Create a 2D rotation from an angle
+    /// Creates a 2D rotation from an angle in radians.
     @inlinable
     public init(angle: Radian) {
         let c = angle.cos
@@ -108,13 +97,13 @@ extension Rotation where N == 2 {
         self.init(matrix: .init(a: c, b: -s, c: s, d: c))
     }
 
-    /// Create a 2D rotation from an angle in degrees
+    /// Creates a 2D rotation from an angle in degrees.
     @inlinable
     public init(degrees: Degree) {
         self.init(angle: degrees.radians)
     }
 
-    /// Create a 2D rotation from cos and sin values
+    /// Creates a 2D rotation from precomputed cosine and sine values.
     @inlinable
     public init(cos: Double, sin: Double) {
         self.init(matrix: .init(a: cos, b: -sin, c: sin, d: cos))
@@ -124,9 +113,9 @@ extension Rotation where N == 2 {
 // MARK: - Composition
 
 extension Rotation {
-    /// Compose two rotations
+    /// Composes two rotations by matrix multiplication.
     ///
-    /// The resulting rotation applies `other` first, then `self`.
+    /// - Returns: Rotation applying `other` first, then `self`.
     @inlinable
     public func concatenating(_ other: Self) -> Self where N == 2 {
         Self(matrix: matrix.multiplied(by: other.matrix))
@@ -134,9 +123,7 @@ extension Rotation {
 }
 
 extension Rotation where N == 2 {
-    /// The inverse rotation
-    ///
-    /// For orthogonal matrices, the inverse equals the transpose.
+    /// Inverse rotation (matrix transpose for orthogonal matrices).
     @inlinable
     public var inverted: Self {
         // For 2D: transpose is simple (inverse = transpose for orthogonal matrices)
@@ -147,13 +134,13 @@ extension Rotation where N == 2 {
 // MARK: - 2D Convenience Operations
 
 extension Rotation where N == 2 {
-    /// Rotate by an additional angle
+    /// Rotates by an additional angle in radians.
     @inlinable
     public func rotated(by angle: Radian) -> Self {
         concatenating(Self(angle: angle))
     }
 
-    /// Rotate by an additional angle in degrees
+    /// Rotates by an additional angle in degrees.
     @inlinable
     public func rotated(by degrees: Degree) -> Self {
         rotated(by: degrees.radians)
@@ -163,17 +150,17 @@ extension Rotation where N == 2 {
 // MARK: - Common 2D Rotations
 
 extension Rotation where N == 2 {
-    /// 90° counter-clockwise rotation
+    /// 90-degree counter-clockwise rotation.
     public static var quarterTurn: Self {
         Self(angle: .halfPi)
     }
 
-    /// 180° rotation
+    /// 180-degree rotation.
     public static var halfTurn: Self {
         Self(angle: .pi)
     }
 
-    /// 90° clockwise rotation
+    /// 90-degree clockwise rotation.
     public static var quarterTurnClockwise: Self {
         Self(angle: -.halfPi)
     }

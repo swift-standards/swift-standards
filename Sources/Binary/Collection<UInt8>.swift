@@ -4,19 +4,24 @@
 // MARK: - Byte Collection Trimming
 
 extension Collection<UInt8> {
-    /// Trims bytes from both ends of a collection (authoritative implementation).
+    /// Trims bytes from both ends of a collection matching a predicate.
+    ///
+    /// Returns a zero-copy view of the original collection with matching bytes
+    /// removed from the start and end. Use this for efficient prefix/suffix removal
+    /// without allocating new memory.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let bytes: [UInt8] = [0x20, 0x48, 0x69, 0x20]
+    /// let trimmed = [UInt8].trimming(bytes, where: { $0 == 0x20 })
+    /// // [0x48, 0x69]
+    /// ```
     ///
     /// - Parameters:
     ///   - bytes: The byte collection to trim
-    ///   - predicate: A closure that returns `true` for bytes to trim
+    ///   - predicate: Returns `true` for bytes to remove
     /// - Returns: A subsequence with matching bytes trimmed from both ends
-    ///
-    /// This method returns a zero-copy view (SubSequence) of the original collection.
-    ///
-    /// Example:
-    /// ```swift
-    /// [UInt8].trimming([0x20, 0x48, 0x69, 0x20], where: { $0 == 0x20 })  // [0x48, 0x69]
-    /// ```
     public static func trimming<C: Collection>(
         _ bytes: C,
         where predicate: (UInt8) -> Bool
@@ -48,11 +53,11 @@ extension Collection<UInt8> {
         return bytes[start..<end]
     }
 
-    /// Trims bytes from both ends of a collection.
+    /// Trims specific bytes from both ends of a collection.
     ///
     /// - Parameters:
     ///   - bytes: The byte collection to trim
-    ///   - byteSet: The set of bytes to trim
+    ///   - byteSet: The set of bytes to remove
     /// - Returns: A subsequence with the specified bytes trimmed from both ends
     public static func trimming<C: Collection>(
         _ bytes: C,
@@ -61,17 +66,17 @@ extension Collection<UInt8> {
         trimming(bytes, where: byteSet.contains)
     }
 
-    /// Trims bytes matching a predicate from both ends of the collection.
+    /// Trims bytes matching a predicate from both ends.
     ///
-    /// - Parameter predicate: A closure that returns `true` for bytes to trim
+    /// - Parameter predicate: Returns `true` for bytes to remove
     /// - Returns: A subsequence with matching bytes trimmed from both ends
     public func trimming(where predicate: (UInt8) -> Bool) -> SubSequence {
         Self.trimming(self, where: predicate)
     }
 
-    /// Trims bytes from both ends of the collection.
+    /// Trims specific bytes from both ends.
     ///
-    /// - Parameter byteSet: The set of bytes to trim
+    /// - Parameter byteSet: The set of bytes to remove
     /// - Returns: A subsequence with the specified bytes trimmed from both ends
     public func trimming(_ byteSet: Set<UInt8>) -> SubSequence {
         Self.trimming(self, of: byteSet)
@@ -84,7 +89,7 @@ extension Collection<UInt8> {
     /// Finds the first occurrence of a byte subsequence.
     ///
     /// - Parameter needle: The byte sequence to search for
-    /// - Returns: Index of the first occurrence, or nil if not found
+    /// - Returns: Index of the first occurrence, or `nil` if not found
     public func firstIndex<C: Collection>(of needle: C) -> Index?
     where C.Element == UInt8 {
         guard !needle.isEmpty else { return startIndex }
@@ -119,7 +124,7 @@ extension Collection<UInt8> {
     /// Finds the last occurrence of a byte subsequence.
     ///
     /// - Parameter needle: The byte sequence to search for
-    /// - Returns: Index of the last occurrence, or nil if not found
+    /// - Returns: Index of the last occurrence, or `nil` if not found
     public func lastIndex<C: Collection>(of needle: C) -> Index?
     where C.Element == UInt8 {
         guard !needle.isEmpty else { return endIndex }
@@ -140,7 +145,7 @@ extension Collection<UInt8> {
     /// Checks if the collection contains a byte subsequence.
     ///
     /// - Parameter needle: The byte sequence to search for
-    /// - Returns: True if the subsequence is found, false otherwise
+    /// - Returns: `true` if the subsequence is found, `false` otherwise
     public func contains<C: Collection>(_ needle: C) -> Bool
     where C.Element == UInt8 {
         firstIndex(of: needle) != nil

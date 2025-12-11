@@ -3,11 +3,12 @@
 //
 // Duration type alias for timeline arithmetic
 
-/// Duration for timeline arithmetic
+/// Duration for timeline arithmetic.
 ///
-/// Type alias for Swift.Duration, used with Instant for timeline operations.
+/// Type alias for `Swift.Duration`. Use with `Instant` for timeline operations
+/// (adding/subtracting time intervals).
 ///
-/// ## Usage
+/// ## Example
 ///
 /// ```swift
 /// let duration = Duration.seconds(3600)

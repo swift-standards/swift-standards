@@ -4,27 +4,29 @@
 // Year representation as a refinement type
 
 extension Time {
-    /// A year in the Gregorian calendar
+    /// A year in the Gregorian calendar.
     ///
-    /// This is a newtype wrapper providing type safety for year values.
-    /// No range restrictions - supports any integer year (including BC years as negative).
+    /// Type-safe wrapper for year values. No range restrictions—supports any integer
+    /// (negative values represent BC/BCE years).
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let year = Time.Year(2024)
+    /// print(year.isLeapYear) // true
+    ///
+    /// let ancient = Time.Year(-44) // 44 BC
+    /// ```
     public struct Year: RawRepresentable, Sendable, Equatable, Hashable, Comparable {
-        /// The year value
+        /// Year value
         public let rawValue: Int
 
-        /// Create a year
-        ///
-        /// No validation - any integer year is allowed.
-        /// Negative years represent BC/BCE years.
-        ///
-        /// - Parameter rawValue: The year value
+        /// Creates a year.
         public init(rawValue: Int) {
             self.rawValue = rawValue
         }
 
-        /// Create a year (convenience)
-        ///
-        /// - Parameter value: The year value
+        /// Creates a year (convenience).
         public init(_ value: Int) {
             self.rawValue = value
         }
@@ -42,7 +44,7 @@ extension Time.Year {
 // MARK: - Convenience
 
 extension Time.Year {
-    /// Check if this year is a leap year in the Gregorian calendar
+    /// Whether this year is a leap year in the Gregorian calendar
     public var isLeapYear: Bool {
         Time.Calendar.Gregorian.isLeapYear(self)
     }

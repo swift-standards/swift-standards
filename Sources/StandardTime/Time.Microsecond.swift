@@ -4,10 +4,9 @@
 // Microsecond representation as a refinement type
 
 extension Time {
-    /// A microsecond (0-999)
+    /// Microsecond component (0-999).
     ///
-    /// This is a refinement type - an integer constrained to the valid range.
-    /// Represents 10^-6 seconds (millionths of a second).
+    /// Represents 10^-6 seconds. Refinement type for type-safe sub-second precision.
     public struct Microsecond: Sendable, Equatable, Hashable, Comparable {
         /// The microsecond value (0-999)
         public let value: Int

@@ -2,9 +2,9 @@
 // Decimal separator display strategies for numeric formatting.
 
 extension Format.Numeric {
-    /// Decimal separator display strategy
+    /// Strategy controlling when the decimal separator is displayed.
     ///
-    /// Controls when the decimal separator (.) is shown.
+    /// Use this to force the decimal point to appear even for whole numbers, or to only show it when fractional digits are present. Useful for maintaining consistent formatting in tables or UI displays.
     ///
     /// ## Example
     ///
@@ -13,10 +13,10 @@ extension Format.Numeric {
     /// 42.5.formatted(.number.decimalSeparator(strategy: .always))  // "42.5"
     /// ```
     public enum DecimalSeparatorStrategy: Sendable, Equatable {
-        /// Show decimal separator only when there are fraction digits (default)
+        /// Displays decimal point only when fractional digits exist (default behavior)
         case automatic
 
-        /// Always show decimal separator, even for whole numbers
+        /// Forces decimal point to display even for whole numbers
         case always
     }
 }

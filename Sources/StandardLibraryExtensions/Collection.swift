@@ -4,36 +4,32 @@
 // Pure Swift collection utilities
 
 extension Collection {
-    /// Safe element access via functorial projection into Maybe monad
+    /// Safely accesses the element at the specified index, returning `nil` for invalid indices.
     ///
-    /// Lifts partial indexing into total function space by projecting into Optional.
-    /// This natural transformation from Collection to Maybe encodes indexing failure
-    /// as None rather than trapping.
+    /// Returns the element if the index is valid, or `nil` if the index is out of bounds.
+    /// Use this to avoid crashes when accessing potentially invalid indices.
     ///
-    /// Category theory: Natural transformation η: Collection → Maybe where
-    /// η(collection)[index] = Some(element) if index ∈ indices, None otherwise
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// let array = [1, 2, 3]
-    /// array[safe: 1]   // Optional(2)
+    /// array[safe: 1]   // 2
     /// array[safe: 10]  // nil
     /// ```
     public subscript(safe index: Index) -> Element? {
         indices.contains(index) ? self[index] : nil
     }
 
-    /// Safe range access with totalization via Maybe monad
+    /// Safely accesses the subsequence at the specified range, returning `nil` for invalid ranges.
     ///
-    /// Extends safe indexing to range projections, lifting partial range operations
-    /// into total functions via the Maybe natural transformation.
+    /// Returns the subsequence if the range is valid, or `nil` if the range is out of bounds or invalid.
+    /// Use this to avoid crashes when accessing potentially invalid ranges.
     ///
-    /// Category theory: η: Collection × Range → Maybe(SubSequence)
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// let array = [1, 2, 3, 4, 5]
-    /// array[safe: 1..<3]   // Optional([2, 3])
+    /// array[safe: 1..<3]   // [2, 3]
     /// array[safe: 3..<10]  // nil
     /// ```
     public subscript(safe range: Range<Index>) -> SubSequence? {
@@ -44,18 +40,16 @@ extension Collection {
         return self[range]
     }
 
-    /// Partitions collection into fixed-size chunks
+    /// Splits the collection into arrays of the specified size.
     ///
-    /// List homomorphism preserving structure through equipartition.
-    /// Maps collection into product space [SubSequence]^n where each component
-    /// has cardinality ≤ size.
+    /// Returns an array of arrays, where each sub-array contains up to `size` elements. The last chunk may contain fewer elements.
+    /// Use this to process large collections in manageable batches.
     ///
-    /// Category theory: Morphism in category of collections that preserves
-    /// concatenation structure: chunks(size) ∘ concat ≡ concat ∘ chunks(size)
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// [1, 2, 3, 4, 5].chunked(into: 2)  // [[1, 2], [3, 4], [5]]
+    /// [1, 2, 3].chunked(into: 5)        // [[1, 2, 3]]
     /// ```
     public func chunked(into size: Int) -> [[Element]] {
         guard size > 0 else { return [] }
@@ -79,15 +73,13 @@ extension Collection {
         return chunks
     }
 
-    /// Partitions collection at specified index
+    /// Splits the collection into two subsequences at the specified index.
     ///
-    /// Canonical decomposition into coproduct (prefix, suffix).
-    /// Exhibits collection as sum of two subcollections.
+    /// Returns a tuple containing the prefix (elements before the index) and suffix (elements from the index onward).
+    /// Use this to divide a collection at a specific point.
     ///
-    /// Category theory: Coproduct injection establishing isomorphism
-    /// Collection ≅ Prefix ⊕ Suffix in category of sequences
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// let (prefix, suffix) = [1, 2, 3, 4, 5].split(at: 2)
     /// // prefix: [1, 2], suffix: [3, 4, 5]

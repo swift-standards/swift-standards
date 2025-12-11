@@ -3,15 +3,24 @@
 extension TernaryLogic {
     /// Namespace for ternary logic result builders.
     ///
-    /// These builders implement Strong Kleene three-valued logic where:
-    /// - `unknown` propagates through operations
-    /// - Short-circuit evaluation still applies where possible
+    /// Provides result builders (`All`, `Any`, `None`) that implement Strong Kleene three-valued logic with Swift's result builder syntax. Use these to combine multiple ternary conditions declaratively.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let result = TernaryLogic.all {
+    ///     true
+    ///     nil  // unknown
+    ///     true
+    /// }
+    /// // result = nil (unknown propagates)
+    /// ```
     public enum Builder<T: TernaryLogic.`Protocol`> {
-        /// A result builder that combines ternary conditions with AND semantics (Strong Kleene).
+        /// A result builder that combines ternary conditions with AND semantics.
         ///
-        /// Returns `false` if any condition is `false` (short-circuits),
-        /// `unknown` if any condition is `unknown` and none are `false`,
-        /// `true` only if all conditions are `true`.
+        /// Returns `false` if any condition is `false` (short-circuits), `unknown` if any condition is `unknown` and none are `false`, or `true` only if all conditions are `true`.
+        ///
+        /// ## Example
         ///
         /// ```swift
         /// let result = TernaryLogic.all {
@@ -99,11 +108,11 @@ extension TernaryLogic {
             }
         }
 
-        /// A result builder that combines ternary conditions with OR semantics (Strong Kleene).
+        /// A result builder that combines ternary conditions with OR semantics.
         ///
-        /// Returns `true` if any condition is `true` (short-circuits),
-        /// `unknown` if any condition is `unknown` and none are `true`,
-        /// `false` only if all conditions are `false`.
+        /// Returns `true` if any condition is `true` (short-circuits), `unknown` if any condition is `unknown` and none are `true`, or `false` only if all conditions are `false`.
+        ///
+        /// ## Example
         ///
         /// ```swift
         /// let result = TernaryLogic.any {
@@ -190,11 +199,19 @@ extension TernaryLogic {
             }
         }
 
-        /// A result builder that requires no conditions to be true (Strong Kleene NOR).
+        /// A result builder that requires no conditions to be true (NOR semantics).
         ///
-        /// Returns `true` if all conditions are `false`,
-        /// `unknown` if any condition is `unknown` and none are `true`,
-        /// `false` if any condition is `true`.
+        /// Returns `true` if all conditions are `false`, `unknown` if any condition is `unknown` and none are `true`, or `false` if any condition is `true`.
+        ///
+        /// ## Example
+        ///
+        /// ```swift
+        /// let result = TernaryLogic.none {
+        ///     false
+        ///     false
+        /// }
+        /// // result = true (none are true)
+        /// ```
         @resultBuilder
         public enum None {
             @inlinable
@@ -287,25 +304,55 @@ extension TernaryLogic {
 // MARK: - Convenience Entry Points
 
 extension TernaryLogic {
-    /// Returns the Strong Kleene AND of all conditions in the builder.
+    /// Combines ternary conditions with AND semantics using a result builder.
     ///
-    /// - Returns: `false` if any is false, `nil` (unknown) if any unknown and none false, `true` if all true.
+    /// Returns `false` if any is `false`, `unknown` if any is `unknown` and none are `false`, or `true` if all are `true`.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let result = TernaryLogic.all {
+    ///     true
+    ///     nil
+    /// }
+    /// // result = nil (unknown)
+    /// ```
     @inlinable
     public static func all<T: TernaryLogic.`Protocol`>(@Builder<T>.All _ builder: () -> T) -> T {
         builder()
     }
 
-    /// Returns the Strong Kleene OR of all conditions in the builder.
+    /// Combines ternary conditions with OR semantics using a result builder.
     ///
-    /// - Returns: `true` if any is true, `nil` (unknown) if any unknown and none true, `false` if all false.
+    /// Returns `true` if any is `true`, `unknown` if any is `unknown` and none are `true`, or `false` if all are `false`.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let result = TernaryLogic.any {
+    ///     false
+    ///     nil
+    /// }
+    /// // result = nil (unknown)
+    /// ```
     @inlinable
     public static func any<T: TernaryLogic.`Protocol`>(@Builder<T>.`Any` _ builder: () -> T) -> T {
         builder()
     }
 
-    /// Returns true if no conditions are true (Strong Kleene NOR).
+    /// Combines ternary conditions with NOR semantics using a result builder.
     ///
-    /// - Returns: `true` if all false, `nil` (unknown) if any unknown and none true, `false` if any true.
+    /// Returns `true` if all are `false`, `unknown` if any is `unknown` and none are `true`, or `false` if any is `true`.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let result = TernaryLogic.none {
+    ///     false
+    ///     false
+    /// }
+    /// // result = true (none are true)
+    /// ```
     @inlinable
     public static func none<T: TernaryLogic.`Protocol`>(@Builder<T>.None _ builder: () -> T) -> T {
         builder()
@@ -315,25 +362,55 @@ extension TernaryLogic {
 // MARK: - Bool? Convenience (Type-level Entry Points)
 
 extension Optional where Wrapped == Bool {
-    /// Returns the Strong Kleene AND of all conditions in the builder.
+    /// Combines `Bool?` conditions with AND semantics using a result builder.
     ///
-    /// - Returns: `false` if any is false, `nil` (unknown) if any unknown and none false, `true` if all true.
+    /// Returns `false` if any is `false`, `nil` (unknown) if any is `nil` and none are `false`, or `true` if all are `true`.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let result = Bool?.all {
+    ///     true
+    ///     nil
+    /// }
+    /// // result = nil (unknown)
+    /// ```
     @inlinable
     public static func all(@TernaryLogic.Builder<Bool?>.All _ builder: () -> Bool?) -> Bool? {
         builder()
     }
 
-    /// Returns the Strong Kleene OR of all conditions in the builder.
+    /// Combines `Bool?` conditions with OR semantics using a result builder.
     ///
-    /// - Returns: `true` if any is true, `nil` (unknown) if any unknown and none true, `false` if all false.
+    /// Returns `true` if any is `true`, `nil` (unknown) if any is `nil` and none are `true`, or `false` if all are `false`.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let result = Bool?.any {
+    ///     false
+    ///     nil
+    /// }
+    /// // result = nil (unknown)
+    /// ```
     @inlinable
     public static func any(@TernaryLogic.Builder<Bool?>.`Any` _ builder: () -> Bool?) -> Bool? {
         builder()
     }
 
-    /// Returns true if no conditions are true (Strong Kleene NOR).
+    /// Combines `Bool?` conditions with NOR semantics using a result builder.
     ///
-    /// - Returns: `true` if all false, `nil` (unknown) if any unknown and none true, `false` if any true.
+    /// Returns `true` if all are `false`, `nil` (unknown) if any is `nil` and none are `true`, or `false` if any is `true`.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let result = Bool?.none {
+    ///     false
+    ///     false
+    /// }
+    /// // result = true (none are true)
+    /// ```
     @inlinable
     public static func none(@TernaryLogic.Builder<Bool?>.None _ builder: () -> Bool?) -> Bool? {
         builder()

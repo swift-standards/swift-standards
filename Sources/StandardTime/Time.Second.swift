@@ -4,18 +4,17 @@
 // Second representation as a refinement type
 
 extension Time {
-    /// A second in a minute (0-60, allowing leap second)
+    /// Second of minute (0-60, allowing leap second).
     ///
-    /// This is a refinement type - an integer constrained to the valid range.
-    /// The range is 0-60 to accommodate leap seconds (60th second).
+    /// Refinement type constraining integers to valid second range.
+    /// Range is 0-60 to accommodate leap seconds.
     public struct Second: Sendable, Equatable, Hashable, Comparable {
-        /// The second value (0-60)
+        /// Second value (0-60)
         public let value: Int
 
-        /// Create a second with validation
+        /// Creates a second with validation.
         ///
-        /// - Parameter value: Second value (0-60, allowing leap second)
-        /// - Throws: `Second.Error` if value is not 0-60
+        /// - Throws: `Second.Error.invalidSecond` if value is not 0-60
         public init(_ value: Int) throws(Error) {
             guard (0...60).contains(value) else {
                 throw Error.invalidSecond(value)
@@ -28,9 +27,9 @@ extension Time {
 // MARK: - Error
 
 extension Time.Second {
-    /// Errors that can occur when creating a second
+    /// Validation errors for second values.
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// Second must be 0-60 (allowing leap second)
+        /// Second value is not in valid range (0-60, allowing leap second)
         case invalidSecond(Int)
     }
 }
@@ -38,7 +37,7 @@ extension Time.Second {
 // MARK: - Unchecked Initialization
 
 extension Time.Second {
-    /// Create a second without validation (internal use only)
+    /// Creates a second without validation (internal use only).
     ///
     /// - Warning: Only use when value is known to be valid (0-60)
     internal init(unchecked value: Int) {
@@ -55,6 +54,6 @@ extension Time.Second {
 }
 
 extension Time.Second {
-    /// Zero nanoseconds
+    /// Zero seconds
     public static let zero = Time.Second(unchecked: 0)
 }

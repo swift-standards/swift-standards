@@ -1,42 +1,30 @@
 // Horizontal.swift
 // Horizontal (X) axis orientation and oriented values.
 
-/// Horizontal (X) axis orientation.
+/// X-axis orientation: rightward or leftward.
 ///
-/// `Horizontal` is an enum representing pure X-axis orientation, with a nested
-/// `Value` struct for oriented magnitudes.
+/// `Horizontal` specifies which direction along the X-axis is considered positive. Use it to express coordinate system conventions (rightward is standard) or to pair scalar values with explicit horizontal direction via `Horizontal.Value<T>`.
 ///
-/// ## Pure Orientation
-///
-/// Use `Horizontal` directly for coordinate system conventions:
+/// ## Example
 ///
 /// ```swift
-/// let h: Horizontal = .rightward
-/// switch h {
-/// case .rightward: print("X increases right")
-/// case .leftward: print("X increases left")
-/// }
-/// ```
+/// let system: Horizontal = .rightward  // Standard: X increases right
 ///
-/// ## Oriented Values
-///
-/// Use `Horizontal.Value<Scalar>` for values with explicit direction:
-///
-/// ```swift
-/// let offset = Horizontal.Value(direction: .rightward, value: 10.0)
+/// // Oriented value with direction
+/// let offset = Horizontal.Value(.rightward, 10.0)
 /// ```
 public enum Horizontal: Sendable, Hashable, Codable {
-    /// X axis increases rightward (standard convention).
+    /// X-axis increases rightward (standard convention).
     case rightward
 
-    /// X axis increases leftward.
+    /// X-axis increases leftward.
     case leftward
 }
 
 // MARK: - Orientation Conformance
 
 extension Horizontal: Orientation {
-    /// The underlying canonical direction.
+    /// Returns the canonical direction representation.
     @inlinable
     public var direction: Direction {
         switch self {
@@ -54,7 +42,7 @@ extension Horizontal: Orientation {
         }
     }
 
-    /// The opposite orientation.
+    /// Returns the opposite orientation.
     @inlinable
     public var opposite: Horizontal {
         switch self {
@@ -63,18 +51,18 @@ extension Horizontal: Orientation {
         }
     }
 
-    /// All cases.
+    /// All horizontal orientations.
     public static let allCases: [Horizontal] = [.rightward, .leftward]
 }
 
 // MARK: - Pattern Matching Support
 
 extension Horizontal {
-    /// Whether this is rightward orientation.
+    /// Whether orientation is rightward.
     @inlinable
     public var isRightward: Bool { self == .rightward }
 
-    /// Whether this is leftward orientation.
+    /// Whether orientation is leftward.
     @inlinable
     public var isLeftward: Bool { self == .leftward }
 }

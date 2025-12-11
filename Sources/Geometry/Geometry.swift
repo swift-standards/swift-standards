@@ -37,17 +37,25 @@
 // typealias Transform = Geometry<Points>.AffineTransform
 // ```
 
-public import Algebra
 public import Affine
+public import Algebra
 public import Algebra_Linear
-public import Dimension
 import Angle
+public import Dimension
 import Region
 
-/// The Geometry namespace for affine geometry primitives.
+/// Namespace for affine geometry primitives.
 ///
-/// Parameterized by the scalar type used for coordinates and measurements.
+/// All geometry types are parameterized by scalar type for coordinates and measurements.
 /// Supports both copyable and non-copyable scalar types.
+///
+/// ## Example
+///
+/// ```swift
+/// typealias Points = Double
+/// let rect = Geometry<Points>.Rectangle(x: 0, y: 0, width: 100, height: 200)
+/// let circle = Geometry<Points>.Circle(center: .init(x: 50, y: 50), radius: 25)
+/// ```
 public enum Geometry<Scalar: ~Copyable>: ~Copyable {}
 
 extension Geometry: Copyable where Scalar: Copyable {}
@@ -56,34 +64,30 @@ extension Geometry: Sendable where Scalar: Sendable {}
 // MARK: - Type Aliases (Canonical types from Affine/Linear)
 
 extension Geometry {
-    /// Type-safe X coordinate - typealias to `Affine<Scalar>.X`
+    /// See ``Affine/X``
     public typealias X = Affine<Scalar>.X
 
-    /// Type-safe Y coordinate - typealias to `Affine<Scalar>.Y`
+    /// See ``Affine/Y``
     public typealias Y = Affine<Scalar>.Y
 
-    /// Type-safe width (horizontal displacement) - typealias to `Linear<Scalar>.Dx`
+    /// See ``Linear/Dx``
     public typealias Width = Linear<Scalar>.Dx
 
-    /// Type-safe height (vertical displacement) - typealias to `Linear<Scalar>.Dy`
+    /// See ``Linear/Dy``
     public typealias Height = Linear<Scalar>.Dy
 
-    /// A scalar magnitude (length, distance, radius) - typealias to `Linear<Scalar>.Magnitude`
-    ///
-    /// Use for measurements that aren't specifically horizontal or vertical,
-    /// such as distances, radii, arc lengths, or line thicknesses.
+    /// See ``Linear/Magnitude``
     public typealias Length = Linear<Scalar>.Magnitude
 
-    /// A 2D translation - typealias to `Affine<Scalar>.Translation`
+    /// See ``Affine/Translation``
     public typealias Translation = Affine<Scalar>.Translation
 
-    /// A 2D affine transformation - typealias to `Affine<Scalar>.Transform`
+    /// See ``Affine/Transform``
     public typealias AffineTransform = Affine<Scalar>.Transform
 
-    /// An N-dimensional point - typealias to `Affine<Scalar>.Point<N>`
+    /// See ``Affine/Point``
     public typealias Point<let N: Int> = Affine<Scalar>.Point<N>
 
-    /// An N-dimensional vector - typealias to `Linear<Scalar>.Vector<N>`
+    /// See ``Linear/Vector``
     public typealias Vector<let N: Int> = Linear<Scalar>.Vector<N>
 }
-

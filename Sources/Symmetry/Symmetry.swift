@@ -1,27 +1,26 @@
 // Symmetry.swift
 // Namespace for Lie group elements acting on Euclidean space.
 
-/// Namespace for symmetry transformations.
+/// Namespace for dimensionless geometric transformations.
 ///
-/// Symmetry types represent elements of Lie groups that act on
-/// Euclidean space. They are dimensionless (ratios/angles) and
-/// independent of any coordinate system's units.
+/// Symmetry provides types representing Lie group elements that act on Euclidean space. All transformations are dimensionless—they use ratios and angles rather than absolute units, making them independent of coordinate system scale.
+///
+/// ## Example
+///
+/// ```swift
+/// let rotation = Rotation<2>(angle: .pi / 4)
+/// let scale = Scale<2>(x: 2.0, y: 1.5)
+/// let shear = Shear<2>(x: 0.5, y: 0)
+/// // (0, 1) rotated 45° → (-√2/2, √2/2)
+/// ```
 ///
 /// ## Types
 ///
-/// - ``Rotation``: Element of SO(n), the special orthogonal group
-/// - ``Scale``: Diagonal scaling transformation
-/// - ``Shear``: Off-diagonal shear transformation
+/// - ``Rotation``: Elements of SO(n), the special orthogonal group
+/// - ``Scale``: Diagonal scaling transformations forming (ℝ⁺)ⁿ
+/// - ``Shear``: Off-diagonal shear transformations
 ///
-/// ## Mathematical Background
+/// ## Note
 ///
-/// These transformations form groups under composition:
-/// - Rotations form SO(n) (compact, non-abelian for n > 1)
-/// - Scales form (ℝ⁺)ⁿ under component-wise multiplication
-/// - Together with shear, they generate GL⁺(n) (orientation-preserving linear maps)
-///
-/// ## Relationship to Geometry
-///
-/// Symmetry types act on ``Geometry`` types via linear transformation.
-/// The affine group Aff(n) = GL(n) ⋊ ℝⁿ combines these with translations.
+/// Together these types generate GL⁺(n), the orientation-preserving linear maps. When combined with translations they form the affine group Aff(n) = GL(n) ⋊ ℝⁿ.
 public enum Symmetry {}

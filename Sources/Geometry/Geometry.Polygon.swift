@@ -1,8 +1,8 @@
 // Polygon.swift
 // A polygon defined by an ordered sequence of vertices.
 
-public import Algebra
 public import Affine
+public import Algebra
 public import Algebra_Linear
 public import Dimension
 
@@ -44,7 +44,7 @@ extension Geometry.Polygon: Hashable where Scalar: Hashable {}
 
 // MARK: - Codable
 #if Codable
-extension Geometry.Polygon: Codable where Scalar: Codable {}
+    extension Geometry.Polygon: Codable where Scalar: Codable {}
 #endif
 // MARK: - Basic Properties
 

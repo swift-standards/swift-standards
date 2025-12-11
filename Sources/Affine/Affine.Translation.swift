@@ -6,25 +6,26 @@ public import Algebra_Linear
 public import Dimension
 
 extension Affine {
-    /// A 2D translation (displacement) in an affine space.
+    /// Two-dimensional displacement in coordinate space.
     ///
-    /// Translation is parameterized by the scalar type because it represents
-    /// an actual displacement in the coordinate system - unlike rotation or
-    /// scale which are dimensionless.
+    /// Represents directional offset rather than absolute position, distinguishing it from `Point`.
+    /// Translation carries coordinate system units, unlike dimensionless transformations like rotation or scale.
     ///
     /// ## Example
     ///
     /// ```swift
-    /// let offset: Affine<Double>.Translation = .init(dx: 72, dy: 144)
+    /// let offset = Affine<Double>.Translation(dx: 72, dy: 144)
+    /// let point = Affine<Double>.Point(x: 10, y: 20)
+    /// let translated = point.translated(by: offset.vector)  // (82, 164)
     /// ```
     public struct Translation {
-        /// Horizontal displacement
+        /// Horizontal displacement component.
         public var dx: Linear<Scalar>.Dx
 
-        /// Vertical displacement
+        /// Vertical displacement component.
         public var dy: Linear<Scalar>.Dy
 
-        /// Create a translation with typed displacement components
+        /// Creates translation from type-safe displacement components.
         @inlinable
         public init(dx: Linear<Scalar>.Dx, dy: Linear<Scalar>.Dy) {
             self.dx = dx
@@ -38,20 +39,20 @@ extension Affine.Translation: Equatable where Scalar: Equatable {}
 extension Affine.Translation: Hashable where Scalar: Hashable {}
 
 #if Codable
-extension Affine.Translation: Codable where Scalar: Codable {}
+    extension Affine.Translation: Codable where Scalar: Codable {}
 #endif
 
 // MARK: - Convenience Initializers
 
 extension Affine.Translation {
-    /// Create a translation from raw scalar values
+    /// Creates translation from raw scalar displacement values.
     @inlinable
     public init(dx: Scalar, dy: Scalar) {
         self.dx = Linear<Scalar>.Dx(dx)
         self.dy = Linear<Scalar>.Dy(dy)
     }
 
-    /// Create a translation from a vector
+    /// Creates translation from 2D displacement vector.
     @inlinable
     public init(_ vector: Linear<Scalar>.Vector<2>) {
         self.dx = vector.dx
@@ -62,7 +63,7 @@ extension Affine.Translation {
 // MARK: - Zero
 
 extension Affine.Translation where Scalar: AdditiveArithmetic {
-    /// Zero translation (no displacement)
+    /// Identity translation with no displacement.
     @inlinable
     public static var zero: Self {
         Self(dx: .zero, dy: .zero)
@@ -88,7 +89,7 @@ extension Affine.Translation: AdditiveArithmetic where Scalar: AdditiveArithmeti
 // MARK: - Negation
 
 extension Affine.Translation where Scalar: SignedNumeric {
-    /// Negate the translation
+    /// Negates translation direction.
     @inlinable
     public static prefix func - (value: borrowing Self) -> Self {
         Self(dx: -value.dx, dy: -value.dy)
@@ -98,7 +99,7 @@ extension Affine.Translation where Scalar: SignedNumeric {
 // MARK: - Conversion to Vector
 
 extension Affine.Translation {
-    /// Convert to a 2D vector
+    /// Converts translation to 2D displacement vector.
     @inlinable
     public var vector: Linear<Scalar>.Vector<2> {
         Linear<Scalar>.Vector(dx: dx, dy: dy)

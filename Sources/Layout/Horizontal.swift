@@ -1,31 +1,44 @@
 // Horizontal.swift
 // Horizontal axis namespace.
 
-/// Horizontal axis namespace.
+/// Namespace for horizontal axis layout concepts.
 ///
-/// Contains types related to the horizontal axis.
+/// Provides types for horizontal alignment and positioning that adapt to
+/// text direction (LTR/RTL). Use `Horizontal.Alignment` for layout-relative
+/// positioning that mirrors correctly in right-to-left locales.
 public import Dimension
 
 // MARK: - Alignment
 
 extension Horizontal {
-    /// Horizontal alignment within a container.
+    /// Horizontal alignment for content positioning.
     ///
-    /// Used for positioning content along the horizontal axis.
+    /// Aligns content along the horizontal axis using layout-relative terms
+    /// that automatically adapt to text direction. Use this for UI elements
+    /// that should mirror in RTL languages.
     ///
-    /// ## Semantic Meaning
+    /// ## Example
     ///
-    /// - `.leading`: Start edge (left in LTR, right in RTL)
-    /// - `.center`: Horizontal center
-    /// - `.trailing`: End edge (right in LTR, left in RTL)
+    /// ```swift
+    /// // Menu button aligned to leading edge
+    /// let menuAlignment: Horizontal.Alignment = .leading
+    /// // Left in LTR (English), right in RTL (Arabic)
+    ///
+    /// // Title centered
+    /// let titleAlignment: Horizontal.Alignment = .center
+    ///
+    /// // User profile aligned to trailing edge
+    /// let profileAlignment: Horizontal.Alignment = .trailing
+    /// // Right in LTR (English), left in RTL (Arabic)
+    /// ```
     public enum Alignment: Sendable, Hashable, Codable, CaseIterable {
-        /// Align to the leading edge (left in LTR, right in RTL).
+        /// Align to the leading edge (left in LTR, right in RTL)
         case leading
 
-        /// Align to the horizontal center.
+        /// Align to the horizontal center
         case center
 
-        /// Align to the trailing edge (right in LTR, left in RTL).
+        /// Align to the trailing edge (right in LTR, left in RTL)
         case trailing
     }
 }

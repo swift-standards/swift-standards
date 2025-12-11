@@ -1,73 +1,41 @@
 // Orientation.swift
 // The abstract theory of binary orientation.
 
-/// A type with exactly two values that are opposites of each other.
+/// A binary type with exactly two opposite values.
 ///
-/// `Orientation` captures the abstract structure shared by all binary
-/// orientation types: `Direction`, `Horizontal`, `Vertical`, `Depth`,
-/// and `Temporal`. Mathematically, any `Orientation` is isomorphic to:
-/// - `Bool` (true/false)
-/// - Z/2Z (integers mod 2)
-/// - The multiplicative group {-1, +1}
-/// - The finite set 2 = {0, 1}
+/// `Orientation` represents any type with two mutually opposite states: `Direction`, `Horizontal`, `Vertical`, `Depth`, and `Temporal` all conform. Mathematically, any orientation type is isomorphic to Bool, Z/2Z, or the multiplicative group {-1, +1}.
 ///
-/// ## The Theory
+/// All orientation types can convert to/from the canonical `Direction` type, making their isomorphism explicit. Use `opposite` or the `!` prefix operator to flip between the two states.
 ///
-/// An orientation type has exactly two inhabitants that are each other's
-/// opposite. This gives us:
-/// - `opposite`: The other value
-/// - `!`: Prefix negation operator (alias for opposite)
-/// - Involution law: `x.opposite.opposite == x`
+/// ## Example
 ///
-/// ## Relationship to Direction
-///
-/// `Direction` is the **canonical** orientation - it represents pure
-/// polarity without domain-specific interpretation. Other orientations
-/// interpret Direction in specific contexts:
-/// - `Horizontal`: positive → rightward, negative → leftward
-/// - `Vertical`: positive → upward, negative → downward
-/// - `Depth`: positive → forward, negative → backward
-/// - `Temporal`: positive → future, negative → past
-///
-/// All orientations can convert to/from `Direction`, making the
-/// isomorphism explicit.
-///
-/// ## Category Theory
-///
-/// This protocol defines a **theory** (in the sense of categorical
-/// semantics). Conforming types are **models** of this theory.
-/// `Direction` is the **initial model** (free algebra), while the
-/// struct-based orientations are models with additional semantic meaning.
-///
+/// ```swift
+/// let h: Horizontal = .rightward
+/// let flipped = !h                    // .leftward
+/// let dir = h.direction               // .positive
+/// let v = Vertical(direction: dir)    // .upward
+/// ```
 public protocol Orientation: Sendable, Hashable, CaseIterable where AllCases == [Self] {
-    /// The opposite orientation.
-    ///
-    /// This is an involution: `x.opposite.opposite == x`
+    /// Returns the opposite orientation (involution: `x.opposite.opposite == x`).
     var opposite: Self { get }
 
-    /// The underlying canonical direction.
-    ///
-    /// This makes the isomorphism `Self ≅ Direction` explicit.
+    /// Returns the canonical direction representation.
     var direction: Direction { get }
 
     /// Creates an orientation from a canonical direction.
-    ///
-    /// This is the inverse of `direction`, completing the isomorphism.
     init(direction: Direction)
 }
 
 // MARK: - Default Implementations
 
 extension Orientation {
-    /// Returns the opposite orientation.
-    ///
-    /// Uses the `!` prefix operator, mirroring `Bool` negation.
+    /// Returns the opposite orientation (prefix negation, mirroring Bool).
     @inlinable
     public static prefix func ! (value: Self) -> Self {
         value.opposite
     }
 
-    /// All cases, derived from Direction's cases.
+    /// All cases, derived from `Direction.allCases`.
     @inlinable
     public static var allCases: [Self] {
         Direction.allCases.map { Self(direction: $0) }
@@ -77,21 +45,21 @@ extension Orientation {
 // MARK: - Generic Operations
 
 extension Orientation {
-    /// Returns `positive` if the condition is true, `negative` otherwise.
+    /// Creates an orientation from a boolean condition.
     ///
-    /// This is the isomorphism `Bool → Orientation`.
+    /// - Returns: Positive orientation if `true`, negative if `false`.
     @inlinable
     public init(_ condition: Bool) {
         self.init(direction: condition ? Direction.positive : Direction.negative)
     }
 
-    /// Whether this is the "positive" orientation.
+    /// Whether orientation maps to positive direction.
     @inlinable
     public var isPositive: Bool {
         direction == Direction.positive
     }
 
-    /// Whether this is the "negative" orientation.
+    /// Whether orientation maps to negative direction.
     @inlinable
     public var isNegative: Bool {
         direction == Direction.negative
@@ -100,17 +68,15 @@ extension Orientation {
 
 /// A value paired with an orientation.
 ///
-/// `Oriented` is a specialization of `Pair` for orientation types.
-/// Access the orientation via `.0` and the scalar via `.1`.
+/// `Oriented` pairs an orientation with a scalar payload. Access the orientation via `.first` or `.0`, and the scalar via `.second` or `.1`.
 ///
-/// ## Usage
+/// ## Example
 ///
 /// ```swift
-/// let velocity: Oriented<Vertical, Double> = Product(.upward, 9.8)
-/// print(velocity.0)  // .upward
-/// print(velocity.1)  // 9.8
+/// let velocity: Oriented<Vertical, Double> = Pair(.upward, 9.8)
+/// print(velocity.first)   // .upward
+/// print(velocity.second)  // 9.8
 /// ```
-///
 public typealias Oriented<O: Orientation, Scalar> = Pair<O, Scalar>
 
 extension Orientation {

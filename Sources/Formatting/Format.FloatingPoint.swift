@@ -4,29 +4,18 @@
 import StandardLibraryExtensions
 
 extension Format {
-    /// A format for formatting any FloatingPoint value.
+    /// Format style for converting floating-point values to strings with optional percentage and precision control.
     ///
-    /// This categorical format works for all FloatingPoint types (Double, Float, etc.).
-    /// It provides operations specific to the FloatingPoint category:
-    /// - Percentage formatting
-    /// - Precision control
-    /// - Rounding strategies
+    /// Use this format to display decimal numbers or percentages. Works with all `FloatingPoint` types including `Double`, `Float`, and others. Chain methods to configure rounding and decimal precision.
     ///
-    /// Note: This is a generic categorical formatter that operates across the FloatingPoint category.
-    /// It does not conform to `FormatStyle` as it works with multiple input types, not a single FormatInput.
+    /// Does not conform to `FormatStyle` because it works across multiple input types within the FloatingPoint category, not a single FormatInput type.
     ///
-    /// Use static properties to access predefined formats:
+    /// ## Example
     ///
     /// ```swift
-    /// 0.75.formatted(.percent)  // "75%"
-    /// Float(0.5).formatted(.percent)  // "50%"
-    /// ```
-    ///
-    /// Chain methods to configure the format:
-    ///
-    /// ```swift
-    /// 0.75.formatted(.percent.rounded())        // "75%"
-    /// 0.755.formatted(.percent.precision(2))    // "75.50%"
+    /// 0.75.formatted(.percent)                   // "75%"
+    /// 0.755.formatted(.percent.precision(2))     // "75.50%"
+    /// 3.14159.formatted(.number.precision(2))    // "3.14"
     /// ```
     public struct FloatingPoint: Sendable {
         let isPercent: Bool
@@ -50,9 +39,10 @@ extension Format {
 // MARK: - Format.FloatingPoint Format Method
 
 extension Format.FloatingPoint {
-    /// Formats a floating point value.
+    /// Converts the floating-point value to a string using this format's configuration.
     ///
-    /// This is a generic method that works across all FloatingPoint types.
+    /// - Parameter value: Floating-point value to format
+    /// - Returns: Formatted string representation
     public func format<T: Swift.FloatingPoint>(_ value: T) -> String {
         var workingValue = value
 
@@ -83,7 +73,9 @@ extension Format.FloatingPoint {
 // MARK: - Format.FloatingPoint Static Properties
 
 extension Format.FloatingPoint {
-    /// Formats the floating point value as a number.
+    /// Standard decimal format for floating-point values
+    ///
+    /// ## Example
     ///
     /// ```swift
     /// 3.14159.formatted(.number)  // "3.14159"
@@ -92,7 +84,7 @@ extension Format.FloatingPoint {
         .init(isPercent: false, shouldRound: false, precisionDigits: nil)
     }
 
-    /// Formats the floating point value as a percentage.
+    /// Percentage format that multiplies by 100 and appends "%" symbol
     public static var percent: Self {
         .init(isPercent: true, shouldRound: false, precisionDigits: nil)
     }
@@ -101,19 +93,23 @@ extension Format.FloatingPoint {
 // MARK: - Format.FloatingPoint Chaining Methods
 
 extension Format.FloatingPoint {
-    /// Rounds the value when formatting.
+    /// Returns a format that rounds to the nearest whole number.
+    ///
+    /// ## Example
     ///
     /// ```swift
-    /// 0.755.formatted(Format.FloatingPoint.percent.rounded())  // "76%"
+    /// 0.755.formatted(.percent.rounded())  // "76%"
     /// ```
     public func rounded() -> Self {
         .init(isPercent: isPercent, shouldRound: true, precisionDigits: precisionDigits)
     }
 
-    /// Sets the precision (decimal places) for the formatted value.
+    /// Returns a format that displays the specified number of decimal places.
+    ///
+    /// ## Example
     ///
     /// ```swift
-    /// 0.12345.formatted(Format.FloatingPoint.percent.precision(2))  // "12.35%"
+    /// 0.12345.formatted(.percent.precision(2))  // "12.35%"
     /// ```
     public func precision(_ digits: Int) -> Self {
         .init(isPercent: isPercent, shouldRound: shouldRound, precisionDigits: digits)
@@ -123,18 +119,18 @@ extension Format.FloatingPoint {
 // MARK: - FloatingPoint Extension
 
 extension Swift.FloatingPoint {
-    /// Formats this floating point value using the specified format.
+    /// Converts this floating-point value to a string using the specified format.
     ///
-    /// Use this method with static format properties:
+    /// ## Example
     ///
     /// ```swift
-    /// let result = 0.75.formatted(.percent)               // "75%"
-    /// let result = Float(0.5).formatted(.percent)         // "50%"
-    /// let result = 0.755.formatted(.percent.precision(2)) // "75.50%"
+    /// 0.75.formatted(.percent)                 // "75%"
+    /// Float(0.5).formatted(.percent)           // "50%"
+    /// 0.755.formatted(.percent.precision(2))   // "75.50%"
     /// ```
     ///
-    /// - Parameter format: The floating point format to use.
-    /// - Returns: The formatted representation of this floating point value.
+    /// - Parameter format: Format style to apply
+    /// - Returns: Formatted string representation
     public func formatted(_ format: Format.FloatingPoint) -> String {
         format.format(self)
     }

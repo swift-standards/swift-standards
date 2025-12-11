@@ -1,10 +1,10 @@
 // Bezier.swift
 // Bezier curves of arbitrary degree.
 
-public import Angle
+public import Affine
 public import Algebra
 public import Algebra_Linear
-public import Affine
+public import Angle
 
 extension Geometry {
     /// A Bezier curve defined by control points.
@@ -44,7 +44,7 @@ extension Geometry.Bezier: Hashable where Scalar: Hashable {}
 
 // MARK: - Codable
 #if Codable
-extension Geometry.Bezier: Codable where Scalar: Codable {}
+    extension Geometry.Bezier: Codable where Scalar: Codable {}
 #endif
 // MARK: - Basic Properties
 
@@ -158,7 +158,10 @@ extension Geometry.Bezier where Scalar: FloatingPoint {
         }
 
         guard let p = points.first else { return nil }
-        return Geometry.Vector(dx: Geometry.Width(n * p.x.value), dy: Geometry.Height(n * p.y.value))
+        return Geometry.Vector(
+            dx: Geometry.Width(n * p.x.value),
+            dy: Geometry.Height(n * p.y.value)
+        )
     }
 
     /// Get the tangent direction (normalized) at parameter t.
@@ -181,7 +184,10 @@ extension Geometry.Bezier where Scalar: FloatingPoint {
     public func normal(at t: Scalar) -> Geometry.Vector<2>? {
         guard let tang = tangent(at: t) else { return nil }
         // Rotate 90° counter-clockwise
-        return Geometry.Vector(dx: Geometry.Width(-tang.dy.value), dy: Geometry.Height(tang.dx.value))
+        return Geometry.Vector(
+            dx: Geometry.Width(-tang.dy.value),
+            dy: Geometry.Height(tang.dx.value)
+        )
     }
 }
 

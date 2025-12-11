@@ -1,70 +1,59 @@
 // Dimension.swift
 // Phantom types for coordinate dimensions and their semantic roles.
-//
-// This module provides type-safe phantom types for distinguishing:
-// - Dimensions (X, Y, Z, W)
-// - Roles (Coordinate vs Displacement)
-//
-// ## Mathematical Foundation
-//
-// In affine geometry:
-// - **Coordinates** are components of points (positions in affine space)
-// - **Displacements** are components of vectors (elements of vector space)
-//
-// These are fundamentally different: you can add displacements,
-// but adding coordinates is meaningless.
-//
-// ## Usage
-//
-// Use with `Tagged` to create type-safe scalar wrappers:
-//
-// ```swift
-// typealias XCoordinate = Tagged<Index.X.Coordinate, Double>
-// typealias Width = Tagged<Index.X.Displacement, Double>
-// ```
 
-/// Phantom types for coordinate dimension indices and their semantic roles.
+/// Phantom type tags for coordinate dimensions and their semantic roles.
 ///
-/// `Index` provides phantom types for the X, Y, Z, W dimensions, each with
-/// `Coordinate` and `Displacement` subtypes to distinguish positions from vectors.
+/// `Index` provides zero-cost phantom type tags that distinguish coordinate positions from displacement vectors in affine geometry. Use these tags with `Tagged` to create type-safe scalar values that prevent mixing incompatible quantities.
+///
+/// In affine geometry, coordinates (points in affine space) and displacements (vectors) are fundamentally different: you can add displacements, but adding two coordinates is mathematically meaningless. These phantom types enforce this distinction at compile time with zero runtime overhead.
+///
+/// ## Example
+///
+/// ```swift
+/// typealias XCoordinate = Tagged<Index.X.Coordinate, Double>
+/// typealias Width = Tagged<Index.X.Displacement, Double>
+///
+/// let x: XCoordinate = 10.0
+/// let width: Width = 5.0
+/// let newX = x + width  // OK: Coordinate + Displacement = Coordinate
+/// // let sum = x + x    // Error: cannot add two coordinates
+/// ```
 public enum Index {
 
-    /// Phantom types for the X (horizontal) dimension.
+    /// Phantom type tags for the X (horizontal) dimension.
     public enum X {
-        /// Tag for X coordinates (horizontal position).
+        /// Horizontal position in affine space.
         public enum Coordinate {}
-        /// Tag for X displacements (horizontal extent/change).
+        /// Horizontal extent or displacement.
         public enum Displacement {}
     }
 
-    /// Phantom types for the Y (vertical) dimension.
+    /// Phantom type tags for the Y (vertical) dimension.
     public enum Y {
-        /// Tag for Y coordinates (vertical position).
+        /// Vertical position in affine space.
         public enum Coordinate {}
-        /// Tag for Y displacements (vertical extent/change).
+        /// Vertical extent or displacement.
         public enum Displacement {}
     }
 
-    /// Phantom types for the Z (depth) dimension.
+    /// Phantom type tags for the Z (depth) dimension.
     public enum Z {
-        /// Tag for Z coordinates (depth position).
+        /// Depth position in affine space.
         public enum Coordinate {}
-        /// Tag for Z displacements (depth extent/change).
+        /// Depth extent or displacement.
         public enum Displacement {}
     }
 
-    /// Phantom types for the W (homogeneous) dimension.
+    /// Phantom type tags for the W (homogeneous/temporal) dimension.
     public enum W {
-        /// Tag for W coordinates.
+        /// Fourth-dimension position.
         public enum Coordinate {}
-        /// Tag for W displacements.
+        /// Fourth-dimension displacement.
         public enum Displacement {}
     }
 
-    /// Phantom type for scalar magnitudes (lengths, distances, radii).
+    /// Phantom type tag for scalar magnitudes.
     ///
-    /// Unlike coordinates (positions) and displacements (directed extents),
-    /// magnitudes are non-directional scalar quantities representing the
-    /// "size" of something: vector norms, distances between points, radii, etc.
+    /// Unlike coordinates (positions) and displacements (directed extents), magnitudes are non-directional scalar quantities: vector norms, distances, radii, and lengths.
     public enum Magnitude {}
 }

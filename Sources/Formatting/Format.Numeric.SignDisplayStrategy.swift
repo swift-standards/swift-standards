@@ -2,9 +2,9 @@
 // Sign display strategies for numeric formatting.
 
 extension Format.Numeric {
-    /// Sign display strategy for numeric formatting
+    /// Strategy controlling when and how plus/minus signs are displayed.
     ///
-    /// Controls when and how the sign (+/-) is displayed.
+    /// Use this to show positive signs explicitly, hide negative signs, or use the default behavior (negative only). Configure whether zero is treated as positive when always showing signs.
     ///
     /// ## Example
     ///
@@ -13,15 +13,15 @@ extension Format.Numeric {
     /// (-42).formatted(.number.sign(strategy: .never))     // "42"
     /// ```
     public enum SignDisplayStrategy: Sendable, Equatable {
-        /// Show sign for negative numbers only (default)
+        /// Displays minus sign for negatives, no sign for positives (default behavior)
         case automatic
 
-        /// Never show sign
+        /// Hides sign for all numbers, even negatives
         case never
 
-        /// Always show sign (+ for positive, - for negative)
+        /// Shows sign for all numbers: plus for positives, minus for negatives
         ///
-        /// - Parameter includingZero: If true, zero displays as "+0"
+        /// - Parameter includingZero: When `true`, zero displays as "+0"; when `false`, zero has no sign
         case always(includingZero: Bool = false)
     }
 }

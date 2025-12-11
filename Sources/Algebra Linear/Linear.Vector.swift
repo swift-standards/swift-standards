@@ -5,25 +5,22 @@ public import Algebra
 public import Dimension
 
 extension Linear {
-    /// A fixed-size displacement vector with compile-time known dimensions.
+    /// A fixed-size vector with compile-time dimension checking.
     ///
-    /// `Vector` represents a displacement or direction in a vector space.
-    /// This is a linear algebra primitive - the underlying element of Vect.
-    ///
-    /// Uses Swift 6.2 integer generic parameters (SE-0452) for type-safe
-    /// dimension checking at compile time.
+    /// Represents a displacement, direction, or point in N-dimensional vector space. Use it for physics quantities (velocity, force), geometry (positions, normals), or any linear algebra needs.
     ///
     /// ## Example
     ///
     /// ```swift
-    /// let velocity: Linear<Double>.Vector<2> = .init(dx: 10, dy: 5)
-    /// let velocity3D: Linear<Double>.Vector<3> = .init(dx: 1, dy: 2, dz: 3)
+    /// let velocity = Linear<Double>.Vector<2>(dx: .init(10), dy: .init(5))
+    /// let speed = velocity.length  // 11.18...
+    /// let normalized = velocity.normalized  // unit vector
     /// ```
     public struct Vector<let N: Int> {
-        /// The vector components stored inline
+        /// The vector components as an inline array.
         public var components: InlineArray<N, Scalar>
 
-        /// Create a vector from an inline array of components
+        /// Creates a vector from component values.
         @inlinable
         public init(_ components: consuming InlineArray<N, Scalar>) {
             self.components = components
@@ -61,42 +58,42 @@ extension Linear.Vector: Hashable where Scalar: Hashable {
 // MARK: - Typealiases
 
 extension Linear {
-    /// A 2D vector
+    /// A 2-dimensional vector.
     public typealias Vector2 = Vector<2>
 
-    /// A 3D vector
+    /// A 3-dimensional vector.
     public typealias Vector3 = Vector<3>
 
-    /// A 4D vector
+    /// A 4-dimensional vector.
     public typealias Vector4 = Vector<4>
 }
 
 // MARK: - Codable
 
 #if Codable
-extension Linear.Vector: Codable where Scalar: Codable {
-    public init(from decoder: any Decoder) throws {
-        var container = try decoder.unkeyedContainer()
-        var components = InlineArray<N, Scalar>(repeating: try container.decode(Scalar.self))
-        for i in 1..<N {
-            components[i] = try container.decode(Scalar.self)
+    extension Linear.Vector: Codable where Scalar: Codable {
+        public init(from decoder: any Decoder) throws {
+            var container = try decoder.unkeyedContainer()
+            var components = InlineArray<N, Scalar>(repeating: try container.decode(Scalar.self))
+            for i in 1..<N {
+                components[i] = try container.decode(Scalar.self)
+            }
+            self.components = components
         }
-        self.components = components
-    }
 
-    public func encode(to encoder: any Encoder) throws {
-        var container = encoder.unkeyedContainer()
-        for i in 0..<N {
-            try container.encode(components[i])
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.unkeyedContainer()
+            for i in 0..<N {
+                try container.encode(components[i])
+            }
         }
     }
-}
 #endif
 
 // MARK: - Subscript
 
 extension Linear.Vector {
-    /// Access component by index
+    /// Accesses the component at the given index.
     @inlinable
     public subscript(index: Int) -> Scalar {
         get { components[index] }
@@ -107,7 +104,7 @@ extension Linear.Vector {
 // MARK: - Functorial Map
 
 extension Linear.Vector {
-    /// Create a vector by transforming each component of another vector
+    /// Creates a vector by transforming components from another vector.
     @inlinable
     public init<U, E: Error>(
         _ other: borrowing Linear<U>.Vector<N>,
@@ -120,7 +117,7 @@ extension Linear.Vector {
         self.init(comps)
     }
 
-    /// Transform each component using the given closure
+    /// Transforms each component and returns a new vector.
     @inlinable
     public func map<Result, E: Error>(
         _ transform: (Scalar) throws(E) -> Result
@@ -136,7 +133,7 @@ extension Linear.Vector {
 // MARK: - Zero
 
 extension Linear.Vector where Scalar: AdditiveArithmetic {
-    /// The zero vector
+    /// The zero vector (all components are zero).
     @inlinable
     public static var zero: Self {
         Self(InlineArray(repeating: .zero))
@@ -146,7 +143,7 @@ extension Linear.Vector where Scalar: AdditiveArithmetic {
 // MARK: - AdditiveArithmetic
 
 extension Linear.Vector: AdditiveArithmetic where Scalar: AdditiveArithmetic {
-    /// Add two vectors
+    /// Adds two vectors component-wise.
     @inlinable
     @_disfavoredOverload
     public static func + (lhs: borrowing Self, rhs: borrowing Self) -> Self {
@@ -157,7 +154,7 @@ extension Linear.Vector: AdditiveArithmetic where Scalar: AdditiveArithmetic {
         return Self(result)
     }
 
-    /// Subtract two vectors
+    /// Subtracts two vectors component-wise.
     @inlinable
     @_disfavoredOverload
     public static func - (lhs: borrowing Self, rhs: borrowing Self) -> Self {
@@ -172,7 +169,7 @@ extension Linear.Vector: AdditiveArithmetic where Scalar: AdditiveArithmetic {
 // MARK: - Negation (SignedNumeric)
 
 extension Linear.Vector where Scalar: SignedNumeric {
-    /// Negate vector
+    /// Negates the vector (flips direction).
     @inlinable
     @_disfavoredOverload
     public static prefix func - (value: borrowing Self) -> Self {
@@ -187,7 +184,7 @@ extension Linear.Vector where Scalar: SignedNumeric {
 // MARK: - Scalar Operations (FloatingPoint)
 
 extension Linear.Vector where Scalar: FloatingPoint {
-    /// Scale vector by a scalar
+    /// Scales the vector by a scalar multiplier.
     @inlinable
     @_disfavoredOverload
     public static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
@@ -198,7 +195,7 @@ extension Linear.Vector where Scalar: FloatingPoint {
         return Self(result)
     }
 
-    /// Scale vector by a scalar
+    /// Scales the vector by a scalar multiplier.
     @inlinable
     @_disfavoredOverload
     public static func * (lhs: Scalar, rhs: borrowing Self) -> Self {
@@ -209,7 +206,7 @@ extension Linear.Vector where Scalar: FloatingPoint {
         return Self(result)
     }
 
-    /// Divide vector by a scalar
+    /// Divides the vector by a scalar divisor.
     @inlinable
     @_disfavoredOverload
     public static func / (lhs: borrowing Self, rhs: Scalar) -> Self {
@@ -224,9 +221,9 @@ extension Linear.Vector where Scalar: FloatingPoint {
 // MARK: - Properties (FloatingPoint)
 
 extension Linear.Vector where Scalar: FloatingPoint {
-    /// The squared length of the vector
+    /// The squared length of the vector.
     ///
-    /// Use this when comparing magnitudes to avoid the sqrt computation.
+    /// Use when comparing magnitudes to avoid the square root computation.
     @inlinable
     public var lengthSquared: Scalar {
         var sum = Scalar.zero
@@ -236,15 +233,15 @@ extension Linear.Vector where Scalar: FloatingPoint {
         return sum
     }
 
-    /// The length (magnitude) of the vector
+    /// The length (magnitude) of the vector.
     @inlinable
     public var length: Scalar {
         lengthSquared.squareRoot()
     }
 
-    /// A unit vector in the same direction
+    /// A unit vector in the same direction.
     ///
-    /// Returns zero vector if this vector has zero length.
+    /// Returns the zero vector if this vector has zero length.
     @inlinable
     public var normalized: Self {
         let len = length
@@ -256,7 +253,7 @@ extension Linear.Vector where Scalar: FloatingPoint {
 // MARK: - Operations (FloatingPoint)
 
 extension Linear.Vector where Scalar: FloatingPoint {
-    /// Dot product of two vectors
+    /// Computes the dot product with another vector.
     @inlinable
     public func dot(_ other: borrowing Self) -> Scalar {
         var sum = Scalar.zero
@@ -266,12 +263,9 @@ extension Linear.Vector where Scalar: FloatingPoint {
         return sum
     }
 
-    /// Project this vector onto another vector.
+    /// Projects this vector onto another vector.
     ///
-    /// Returns the component of `self` that lies in the direction of `other`.
-    ///
-    /// - Parameter other: The vector to project onto
-    /// - Returns: The projection of `self` onto `other`, or zero if `other` has zero length
+    /// Returns the component of this vector in the direction of `other`, or zero if `other` has zero length.
     @inlinable
     public func projection(onto other: borrowing Self) -> Self {
         let otherLenSq = other.lengthSquared
@@ -280,22 +274,15 @@ extension Linear.Vector where Scalar: FloatingPoint {
         return other * scale
     }
 
-    /// The rejection (orthogonal component) of this vector from another vector.
+    /// Computes the rejection (orthogonal component) from another vector.
     ///
-    /// Returns the component of `self` that is perpendicular to `other`.
-    /// `self = projection(onto: other) + rejection(from: other)`
-    ///
-    /// - Parameter other: The vector to reject from
-    /// - Returns: The component of `self` perpendicular to `other`
+    /// Returns the component of this vector perpendicular to `other`. Satisfies: `self = projection(onto: other) + rejection(from: other)`.
     @inlinable
     public func rejection(from other: borrowing Self) -> Self {
         self - projection(onto: other)
     }
 
-    /// The distance between the tips of two vectors (when both start at origin).
-    ///
-    /// - Parameter other: Another vector
-    /// - Returns: The distance between the endpoints
+    /// Computes the distance between vector endpoints.
     @inlinable
     public func distance(to other: borrowing Self) -> Scalar {
         (self - other).length
@@ -305,21 +292,21 @@ extension Linear.Vector where Scalar: FloatingPoint {
 // MARK: - 2D Convenience
 
 extension Linear.Vector where N == 2 {
-    /// The x component (horizontal displacement) - type-safe
+    /// The X-component (horizontal displacement).
     @inlinable
     public var dx: Linear.Dx {
         get { Linear.Dx(components[0]) }
         set { components[0] = newValue.value }
     }
 
-    /// The y component (vertical displacement) - type-safe
+    /// The Y-component (vertical displacement).
     @inlinable
     public var dy: Linear.Dy {
         get { Linear.Dy(components[1]) }
         set { components[1] = newValue.value }
     }
 
-    /// Create a 2D vector from typed components
+    /// Creates a 2D vector from typed displacement components.
     @inlinable
     public init(dx: Linear.Dx, dy: Linear.Dy) {
         self.init([dx.value, dy.value])
@@ -329,10 +316,9 @@ extension Linear.Vector where N == 2 {
 // MARK: - 2D Cross Product (SignedNumeric)
 
 extension Linear.Vector where N == 2, Scalar: SignedNumeric {
-    /// 2D cross product (returns scalar z-component)
+    /// Computes the 2D cross product (signed Z-component).
     ///
-    /// This is the signed area of the parallelogram formed by the two vectors.
-    /// Positive if `other` is counter-clockwise from `self`.
+    /// Returns the signed area of the parallelogram formed by the vectors. Positive if `other` is counter-clockwise from `self`.
     @inlinable
     public func cross(_ other: borrowing Self) -> Scalar {
         dx * other.dy - dy * other.dx
@@ -345,34 +331,34 @@ extension Linear.Vector where N == 2, Scalar: SignedNumeric {
 // MARK: - 3D Convenience
 
 extension Linear.Vector where N == 3 {
-    /// The x component - type-safe
+    /// The X-component.
     @inlinable
     public var dx: Linear.Dx {
         get { Linear.Dx(components[0]) }
         set { components[0] = newValue.value }
     }
 
-    /// The y component - type-safe
+    /// The Y-component.
     @inlinable
     public var dy: Linear.Dy {
         get { Linear.Dy(components[1]) }
         set { components[1] = newValue.value }
     }
 
-    /// The z component - type-safe
+    /// The Z-component.
     @inlinable
     public var dz: Linear.Dz {
         get { Linear.Dz(components[2]) }
         set { components[2] = newValue.value }
     }
 
-    /// Create a 3D vector with typed components
+    /// Creates a 3D vector from typed displacement components.
     @inlinable
     public init(dx: Linear.Dx, dy: Linear.Dy, dz: Linear.Dz) {
         self.init([dx.value, dy.value, dz.value])
     }
 
-    /// Create a 3D vector from a 2D vector with z component
+    /// Creates a 3D vector from a 2D vector by adding a Z-component.
     @inlinable
     public init(_ vector2: Linear.Vector<2>, dz: Linear.Dz) {
         self.init([vector2.dx.value, vector2.dy.value, dz.value])
@@ -382,7 +368,7 @@ extension Linear.Vector where N == 3 {
 // MARK: - 3D Cross Product (SignedNumeric)
 
 extension Linear.Vector where N == 3, Scalar: SignedNumeric {
-    /// 3D cross product
+    /// Computes the 3D cross product with another vector.
     @inlinable
     public func cross(_ other: borrowing Self) -> Self {
         Self(
@@ -396,41 +382,41 @@ extension Linear.Vector where N == 3, Scalar: SignedNumeric {
 // MARK: - 4D Convenience
 
 extension Linear.Vector where N == 4 {
-    /// The x component - type-safe
+    /// The X-component.
     @inlinable
     public var dx: Linear.Dx {
         get { Linear.Dx(components[0]) }
         set { components[0] = newValue.value }
     }
 
-    /// The y component - type-safe
+    /// The Y-component.
     @inlinable
     public var dy: Linear.Dy {
         get { Linear.Dy(components[1]) }
         set { components[1] = newValue.value }
     }
 
-    /// The z component - type-safe
+    /// The Z-component.
     @inlinable
     public var dz: Linear.Dz {
         get { Linear.Dz(components[2]) }
         set { components[2] = newValue.value }
     }
 
-    /// The w component - type-safe
+    /// The W-component.
     @inlinable
     public var dw: Linear.Dw {
         get { Linear.Dw(components[3]) }
         set { components[3] = newValue.value }
     }
 
-    /// Create a 4D vector with typed components
+    /// Creates a 4D vector from typed displacement components.
     @inlinable
     public init(dx: Linear.Dx, dy: Linear.Dy, dz: Linear.Dz, dw: Linear.Dw) {
         self.init([dx.value, dy.value, dz.value, dw.value])
     }
 
-    /// Create a 4D vector from a 3D vector with w component
+    /// Creates a 4D vector from a 3D vector by adding a W-component.
     @inlinable
     public init(_ vector3: Linear.Vector<3>, dw: Linear.Dw) {
         self.init([vector3.dx.value, vector3.dy.value, vector3.dz.value, dw.value])
@@ -440,7 +426,7 @@ extension Linear.Vector where N == 4 {
 // MARK: - Zip
 
 extension Linear.Vector {
-    /// Combine two vectors component-wise
+    /// Combines two vectors component-wise using a closure.
     @inlinable
     public static func zip(_ a: Self, _ b: Self, _ combine: (Scalar, Scalar) -> Scalar) -> Self {
         var result = a.components

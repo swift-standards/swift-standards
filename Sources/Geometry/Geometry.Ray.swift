@@ -1,8 +1,8 @@
 // Ray.swift
 // A half-line (ray) extending from an origin in a direction.
 
-public import Algebra
 public import Affine
+public import Algebra
 public import Algebra_Linear
 public import Dimension
 
@@ -43,7 +43,7 @@ extension Geometry.Ray: Hashable where Scalar: Hashable {}
 
 // MARK: - Codable
 #if Codable
-extension Geometry.Ray: Codable where Scalar: Codable {}
+    extension Geometry.Ray: Codable where Scalar: Codable {}
 #endif
 // MARK: - Factory Methods
 

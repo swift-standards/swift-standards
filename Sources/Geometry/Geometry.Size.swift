@@ -70,23 +70,23 @@ extension Geometry {
 // MARK: - Codable
 
 #if Codable
-extension Geometry.Size: Codable where Scalar: Codable {
-    public init(from decoder: any Decoder) throws {
-        var container = try decoder.unkeyedContainer()
-        var dimensions = InlineArray<N, Scalar>(repeating: try container.decode(Scalar.self))
-        for i in 1..<N {
-            dimensions[i] = try container.decode(Scalar.self)
+    extension Geometry.Size: Codable where Scalar: Codable {
+        public init(from decoder: any Decoder) throws {
+            var container = try decoder.unkeyedContainer()
+            var dimensions = InlineArray<N, Scalar>(repeating: try container.decode(Scalar.self))
+            for i in 1..<N {
+                dimensions[i] = try container.decode(Scalar.self)
+            }
+            self.dimensions = dimensions
         }
-        self.dimensions = dimensions
-    }
 
-    public func encode(to encoder: any Encoder) throws {
-        var container = encoder.unkeyedContainer()
-        for i in 0..<N {
-            try container.encode(dimensions[i])
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.unkeyedContainer()
+            for i in 0..<N {
+                try container.encode(dimensions[i])
+            }
         }
     }
-}
 #endif
 
 // MARK: - Subscript

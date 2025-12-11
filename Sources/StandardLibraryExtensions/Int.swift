@@ -1,14 +1,18 @@
+// Int.swift
+// swift-standards
 //
-//  File.swift
-//  swift-standards
-//
-//  Created by Coen ten Thije Boonkkamp on 07/12/2025.
-//
+// Extensions for Swift standard library Int
 
 extension Int {
-    public init(
-        _ bool: Bool
-    ) {
+    /// Creates an integer from a boolean value (1 for `true`, 0 for `false`).
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// Int(true)   // 1
+    /// Int(false)  // 0
+    /// ```
+    public init(_ bool: Bool) {
         self = bool ? 1 : 0
     }
 }

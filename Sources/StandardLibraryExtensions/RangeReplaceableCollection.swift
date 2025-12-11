@@ -1,22 +1,19 @@
+// RangeReplaceableCollection.swift
+// swift-standards
 //
-//  File.swift
-//  swift-standards
-//
-//  Created by Coen ten Thije Boonkkamp on 25/11/2025.
-//
+// Extensions for Swift standard library RangeReplaceableCollection
 
 extension RangeReplaceableCollection {
-    /// Non-mutating element prepending
+    /// Returns a new collection with the element inserted at the beginning.
     ///
-    /// Adds element to beginning, preserving existing structure.
-    /// Left unit operation for list construction.
+    /// Creates a copy of the collection with the given element prepended, leaving the original unchanged.
+    /// Use this for immutable operations that add to the start of a collection.
     ///
-    /// Category theory: Cons operation in list algebra,
-    /// prepend(x, xs) ≡ [x] ⊕ xs
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
-    /// let result = [2, 3, 4].prepending(1)  // [1, 2, 3, 4]
+    /// [2, 3, 4].prepending(1)  // [1, 2, 3, 4]
+    /// "ello".prepending("h")   // "hello"
     /// ```
     public func prepending(_ element: Element) -> Self {
         var result = self
@@ -26,17 +23,16 @@ extension RangeReplaceableCollection {
 }
 
 extension RangeReplaceableCollection where Element: Hashable {
-    /// Removes duplicate elements preserving first occurrence order
+    /// Returns a new collection with duplicate elements removed, preserving first occurrence order.
     ///
-    /// Implements idempotent operation: f ∘ f = f
-    /// Projects collection onto its image under inclusion, removing redundancy.
+    /// Keeps only the first occurrence of each element. Use this to remove duplicates while maintaining order.
+    /// More efficient than converting to Set and back when order matters.
     ///
-    /// Category theory: Retraction morphism r: Collection → Set → Collection
-    /// satisfying r ∘ r = r (idempotent endomorphism)
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// [1, 2, 2, 3, 1, 4].removingDuplicates()  // [1, 2, 3, 4]
+    /// "hello".removingDuplicates()             // "helo"
     /// ```
     public func removingDuplicates() -> Self {
         var seen: Set<Element> = []

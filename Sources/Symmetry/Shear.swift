@@ -3,31 +3,26 @@
 
 public import Algebra_Linear
 
-/// A 2D shear transformation.
+/// An N-dimensional shear transformation.
 ///
-/// Shear factors are dimensionless - they represent the amount by which
-/// coordinates in one axis are shifted proportionally to the other axis.
-///
-/// In 2D, a shear transforms coordinates as:
-/// - x' = x + shearX * y
-/// - y' = shearY * x + y
+/// Represents dimensionless shear factors that shift coordinates in one axis proportionally to another axis. In 2D, shearing transforms rectangles into parallelograms while preserving area.
 ///
 /// ## Example
 ///
 /// ```swift
-/// let horizontalShear = Shear<2>(x: 0.5, y: 0)  // Shear along x-axis
+/// let shear = Shear<2>(x: 0.5, y: 0)
+/// // (1, 1) sheared → (1.5, 1)
+/// // (0, 2) sheared → (1.0, 2)
 /// ```
 ///
-/// - Note: For N > 2, shear becomes more complex (N*(N-1) parameters).
-///   This implementation focuses on 2D and 3D cases.
+/// ## Note
+///
+/// For N dimensions, shear has N*(N-1) off-diagonal parameters. This implementation focuses on 2D and 3D cases.
 public struct Shear<let N: Int>: Sendable {
-    /// The shear factors.
-    ///
-    /// For 2D: [shearX, shearY] where shearX affects x based on y, and vice versa.
-    /// For 3D: [xy, xz, yx, yz, zx, zy] - 6 off-diagonal terms.
+    /// Off-diagonal shear factors as an N×N matrix.
     public var factors: InlineArray<N, InlineArray<N, Double>>
 
-    /// Create a shear from a matrix of factors (off-diagonal elements)
+    /// Creates a shear from a matrix of off-diagonal factors.
     @inlinable
     public init(_ factors: consuming InlineArray<N, InlineArray<N, Double>>) {
         self.factors = factors
@@ -59,30 +54,30 @@ extension Shear: Hashable where N == 2 {
 // MARK: - Codable (2D)
 
 #if Codable
-extension Shear: Codable where N == 2 {
-    private enum CodingKeys: String, CodingKey {
-        case x, y
-    }
+    extension Shear: Codable where N == 2 {
+        private enum CodingKeys: String, CodingKey {
+            case x, y
+        }
 
-    public init(from decoder: any Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        let x = try container.decode(Double.self, forKey: .x)
-        let y = try container.decode(Double.self, forKey: .y)
-        self.init(x: x, y: y)
-    }
+        public init(from decoder: any Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            let x = try container.decode(Double.self, forKey: .x)
+            let y = try container.decode(Double.self, forKey: .y)
+            self.init(x: x, y: y)
+        }
 
-    public func encode(to encoder: any Encoder) throws {
-        var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(x, forKey: .x)
-        try container.encode(y, forKey: .y)
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(x, forKey: .x)
+            try container.encode(y, forKey: .y)
+        }
     }
-}
 #endif
 
 // MARK: - Identity
 
 extension Shear {
-    /// Identity shear (no shearing, all off-diagonal factors = 0)
+    /// Identity shear with all off-diagonal factors equal to 0.
     @inlinable
     public static var identity: Self {
         Self(InlineArray(repeating: InlineArray(repeating: 0.0)))
@@ -92,25 +87,25 @@ extension Shear {
 // MARK: - 2D Convenience
 
 extension Shear where N == 2 {
-    /// Shear factor: how much x shifts per unit y
+    /// Shear factor for x displacement per unit y.
     @inlinable
     public var x: Double {
         get { factors[0][1] }
         set { factors[0][1] = newValue }
     }
 
-    /// Shear factor: how much y shifts per unit x
+    /// Shear factor for y displacement per unit x.
     @inlinable
     public var y: Double {
         get { factors[1][0] }
         set { factors[1][0] = newValue }
     }
 
-    /// Create a 2D shear with the given factors
+    /// Creates a 2D shear with the given factors.
     ///
     /// - Parameters:
-    ///   - x: How much x shifts per unit y
-    ///   - y: How much y shifts per unit x
+    ///   - x: Shear factor for x displacement per unit y
+    ///   - y: Shear factor for y displacement per unit x
     @inlinable
     public init(x: Double, y: Double) {
         var matrix = InlineArray<2, InlineArray<2, Double>>(
@@ -121,13 +116,13 @@ extension Shear where N == 2 {
         self.init(matrix)
     }
 
-    /// Create a horizontal shear (x shifts based on y)
+    /// Creates a horizontal shear displacing x based on y.
     @inlinable
     public static func horizontal(_ factor: Double) -> Self {
         Self(x: factor, y: 0)
     }
 
-    /// Create a vertical shear (y shifts based on x)
+    /// Creates a vertical shear displacing y based on x.
     @inlinable
     public static func vertical(_ factor: Double) -> Self {
         Self(x: 0, y: factor)
@@ -137,7 +132,7 @@ extension Shear where N == 2 {
 // MARK: - Conversion to Linear
 
 extension Shear where N == 2 {
-    /// Convert to a 2D linear transformation matrix
+    /// Converts to a 2D linear transformation matrix.
     @inlinable
     public var linear: Linear<Double>.Matrix<2, 2> {
         .init(a: 1, b: x, c: y, d: 1)

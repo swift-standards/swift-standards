@@ -1,14 +1,15 @@
-// TernaryLogic.swift
-// Namespace and protocol for three-valued logic types.
-
-// Namespace for ternary (three-valued) logic types and operations.
-//
-// Ternary logic extends classical boolean logic with a third value
-// representing "unknown" or "indeterminate".
-//
-// The canonical ternary logic type is `Bool?`, which conforms to
-// `TernaryLogic.Protocol`.
-// public enum TernaryLogic {}
+/// Namespace for ternary (three-valued) logic types and operations.
+///
+/// Ternary logic extends classical boolean logic with a third value representing "unknown" or "indeterminate". Use this to handle computations where truth values may not be fully determined, such as database null handling, partial evaluations, or SQL-like three-valued logic.
+///
+/// ## Example
+///
+/// ```swift
+/// let a: Bool? = true
+/// let b: Bool? = nil  // unknown
+/// let result = a && b
+/// // result = nil (unknown, because b is unknown)
+/// ```
 public enum TernaryLogic {}
 
 // MARK: - Protocol
@@ -16,14 +17,9 @@ public enum TernaryLogic {}
 extension TernaryLogic {
     /// A type that represents three-valued (ternary) logic.
     ///
-    /// Ternary logic extends classical boolean logic with a third value
-    /// representing "unknown" or "indeterminate". Conforming types provide
-    /// three distinct states and gain all Strong Kleene logic operators
-    /// through protocol extensions.
+    /// Ternary logic extends classical boolean logic with a third value representing "unknown" or "indeterminate". Conforming types gain all Strong Kleene logic operators (`&&`, `||`, `!`, `^`, `!&&`, `!||`, `!^`) through protocol extensions, enabling SQL-like three-valued reasoning.
     ///
-    /// ## Conforming to TernaryLogic.Protocol
-    ///
-    /// To conform, provide the three static values and conversions to/from `Bool?`:
+    /// ## Example
     ///
     /// ```swift
     /// enum Tribool: TernaryLogic.Protocol {
@@ -33,26 +29,28 @@ extension TernaryLogic {
     ///     static var `false`: Tribool { .no }
     ///     static var unknown: Tribool { .maybe }
     ///
-    ///     var boolValue: Bool? {
-    ///         switch self {
+    ///     static func from(_ value: Tribool) -> Bool? {
+    ///         switch value {
     ///         case .yes: true
     ///         case .no: false
     ///         case .maybe: nil
     ///         }
     ///     }
     ///
-    ///     init(boolValue: Bool?) {
-    ///         switch boolValue {
+    ///     init(_ bool: Bool?) {
+    ///         switch bool {
     ///         case true: self = .yes
     ///         case false: self = .no
     ///         case nil: self = .maybe
     ///         }
     ///     }
     /// }
-    /// ```
     ///
-    /// Conforming types automatically receive all logic operators:
-    /// `&&`, `||`, `!`, `^`, `!&&`, `!||`, `!^`
+    /// let a = Tribool.yes
+    /// let b = Tribool.maybe
+    /// let result = a && b
+    /// // result = .maybe (unknown)
+    /// ```
     public protocol `Protocol` {
         /// The true value.
         static var `true`: Self { get }
@@ -63,22 +61,30 @@ extension TernaryLogic {
         /// The unknown/indeterminate value.
         static var unknown: Self { get }
 
+        /// Converts the ternary value to its optional Bool representation.
         static func from(_ self: Self) -> Bool?
 
         /// Creates a ternary value from an optional Bool.
         ///
-        /// - Parameter boolValue: `true`, `false`, or `nil` for unknown.
+        /// - Parameter bool: `true`, `false`, or `nil` for unknown.
         init(_ bool: Bool?)
     }
 }
 
 // MARK: - AND Operator
 
-/// Strong Kleene three-valued logic AND for any `TernaryLogic.Protocol` type.
+/// Performs Strong Kleene three-valued logic AND.
 ///
-/// Returns `false` if either operand is `false` (short-circuit),
-/// `nil` if either operand is unknown and neither is `false`,
-/// `true` only if both operands are `true`.
+/// Returns `false` if either operand is `false` (short-circuits), `unknown` if either operand is `unknown` and neither is `false`, or `true` only if both operands are `true`.
+///
+/// ## Example
+///
+/// ```swift
+/// let a: Bool? = true
+/// let b: Bool? = nil
+/// let result = a && b
+/// // result = nil (unknown)
+/// ```
 @inlinable
 public func && <T: TernaryLogic.`Protocol`>(
     lhs: T,
@@ -93,11 +99,18 @@ public func && <T: TernaryLogic.`Protocol`>(
 
 // MARK: - OR Operator
 
-/// Strong Kleene three-valued logic OR for any `TernaryLogic.Protocol` type.
+/// Performs Strong Kleene three-valued logic OR.
 ///
-/// Returns `true` if either operand is `true` (short-circuit),
-/// unknown if either operand is unknown and neither is `true`,
-/// `false` only if both operands are `false`.
+/// Returns `true` if either operand is `true` (short-circuits), `unknown` if either operand is `unknown` and neither is `true`, or `false` only if both operands are `false`.
+///
+/// ## Example
+///
+/// ```swift
+/// let a: Bool? = false
+/// let b: Bool? = nil
+/// let result = a || b
+/// // result = nil (unknown)
+/// ```
 @inlinable
 public func || <T: TernaryLogic.`Protocol`>(
     lhs: T,
@@ -112,9 +125,17 @@ public func || <T: TernaryLogic.`Protocol`>(
 
 // MARK: - NOT Operator
 
-/// Strong Kleene three-valued logic NOT for any `TernaryLogic.Protocol` type.
+/// Performs Strong Kleene three-valued logic NOT.
 ///
-/// Returns unknown if the operand is unknown, otherwise returns the negation.
+/// Returns `unknown` if the operand is `unknown`, otherwise returns the logical negation.
+///
+/// ## Example
+///
+/// ```swift
+/// let a: Bool? = nil
+/// let result = !a
+/// // result = nil (unknown)
+/// ```
 @inlinable
 public prefix func ! <T: TernaryLogic.`Protocol`>(value: T) -> T {
     switch T.from(value) {
@@ -126,10 +147,18 @@ public prefix func ! <T: TernaryLogic.`Protocol`>(value: T) -> T {
 
 // MARK: - XOR Operator
 
-/// Strong Kleene three-valued logic XOR for any `TernaryLogic.Protocol` type.
+/// Performs Strong Kleene three-valued logic XOR (exclusive OR).
 ///
-/// Returns unknown if either operand is unknown,
-/// otherwise returns `true` if exactly one operand is `true`.
+/// Returns `unknown` if either operand is `unknown`, otherwise returns `true` if exactly one operand is `true`.
+///
+/// ## Example
+///
+/// ```swift
+/// let a: Bool? = true
+/// let b: Bool? = nil
+/// let result = a ^ b
+/// // result = nil (unknown)
+/// ```
 @inlinable
 public func ^ <T: TernaryLogic.`Protocol`>(lhs: T, rhs: T) -> T {
     guard let l = T.from(lhs), let r = T.from(rhs) else { return .unknown }
@@ -141,9 +170,18 @@ public func ^ <T: TernaryLogic.`Protocol`>(lhs: T, rhs: T) -> T {
 // Custom infix operator for NAND
 infix operator !&& : LogicalConjunctionPrecedence
 
-/// Strong Kleene three-valued logic NAND for any `TernaryLogic.Protocol` type.
+/// Performs Strong Kleene three-valued logic NAND (NOT AND).
 ///
 /// Returns the negation of the AND result.
+///
+/// ## Example
+///
+/// ```swift
+/// let a: Bool? = true
+/// let b: Bool? = true
+/// let result = a !&& b
+/// // result = false (negation of true AND true)
+/// ```
 @inlinable
 public func !&& <T: TernaryLogic.`Protocol`>(
     lhs: T,
@@ -157,9 +195,18 @@ public func !&& <T: TernaryLogic.`Protocol`>(
 // Custom infix operator for NOR
 infix operator !|| : LogicalDisjunctionPrecedence
 
-/// Strong Kleene three-valued logic NOR for any `TernaryLogic.Protocol` type.
+/// Performs Strong Kleene three-valued logic NOR (NOT OR).
 ///
 /// Returns the negation of the OR result.
+///
+/// ## Example
+///
+/// ```swift
+/// let a: Bool? = false
+/// let b: Bool? = false
+/// let result = a !|| b
+/// // result = true (negation of false OR false)
+/// ```
 @inlinable
 public func !|| <T: TernaryLogic.`Protocol`>(
     lhs: T,
@@ -173,10 +220,18 @@ public func !|| <T: TernaryLogic.`Protocol`>(
 // Custom infix operator for XNOR
 infix operator !^ : ComparisonPrecedence
 
-/// Strong Kleene three-valued logic XNOR for any `TernaryLogic.Protocol` type.
+/// Performs Strong Kleene three-valued logic XNOR (equivalence).
 ///
-/// Returns unknown if either operand is unknown,
-/// otherwise returns `true` if both operands have the same value.
+/// Returns `unknown` if either operand is `unknown`, otherwise returns `true` if both operands have the same value.
+///
+/// ## Example
+///
+/// ```swift
+/// let a: Bool? = true
+/// let b: Bool? = true
+/// let result = a !^ b
+/// // result = true (both are true)
+/// ```
 @inlinable
 public func !^ <T: TernaryLogic.`Protocol`>(lhs: T, rhs: T) -> T {
     guard let l = T.from(lhs), let r = T.from(rhs) else { return .unknown }

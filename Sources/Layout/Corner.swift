@@ -4,26 +4,30 @@
 public import Dimension
 public import Region
 
-/// A layout-aware corner of a rectangle.
+/// A layout-relative corner of a rectangle that adapts to text direction.
 ///
-/// Uses leading/trailing terminology which adapts to layout direction.
-/// For absolute left/right corners, see `Region.Corner`.
+/// Represents corners using leading/trailing terminology that automatically
+/// adapts to left-to-right or right-to-left layouts. Use this for UI elements
+/// that should mirror in RTL locales (Arabic, Hebrew, etc.).
 ///
-/// ## Resolving to Absolute Corners
+/// ## Example
 ///
 /// ```swift
-/// let corner: Corner = .topLeading
-/// let absolute = Region.Corner(corner, direction: .leftToRight)  // .topLeft
-/// let rtl = Region.Corner(corner, direction: .rightToLeft)       // .topRight
+/// // Define a notification badge position
+/// let badge = Corner.topTrailing  // Top-right in LTR, top-left in RTL
+///
+/// // Convert to absolute coordinates
+/// let absolute = Region.Corner(badge, direction: .leftToRight)  // .topRight
+/// let rtl = Region.Corner(badge, direction: .rightToLeft)       // .topLeft
 /// ```
 public struct Corner: Sendable, Hashable, Codable {
-    /// The horizontal side (leading or trailing).
+    /// Horizontal side (leading or trailing)
     public var horizontal: Horizontal.Alignment.Side
 
-    /// The vertical side (top or bottom).
+    /// Vertical side (top or bottom)
     public var vertical: Vertical.Alignment.Side
 
-    /// Create a corner from horizontal and vertical sides.
+    /// Creates a corner from horizontal and vertical sides.
     @inlinable
     public init(horizontal: Horizontal.Alignment.Side, vertical: Vertical.Alignment.Side) {
         self.horizontal = horizontal
@@ -34,14 +38,16 @@ public struct Corner: Sendable, Hashable, Codable {
 // MARK: - Horizontal Side
 
 extension Horizontal.Alignment {
-    /// A horizontal side (without center).
+    /// A horizontal edge of a rectangle (leading or trailing).
+    ///
+    /// Excludes center, representing only the two horizontal edges.
     public enum Side: Sendable, Hashable, Codable, CaseIterable {
-        /// The leading side (left in LTR, right in RTL).
+        /// Leading edge (left in LTR, right in RTL)
         case leading
-        /// The trailing side (right in LTR, left in RTL).
+        /// Trailing edge (right in LTR, left in RTL)
         case trailing
 
-        /// The opposite side.
+        /// Returns the opposite side.
         @inlinable
         public var opposite: Side {
             switch self {
@@ -55,7 +61,7 @@ extension Horizontal.Alignment {
 // MARK: - Horizontal from Side
 
 extension Horizontal {
-    /// Create from a layout-relative side and direction.
+    /// Creates an absolute horizontal direction from a layout-relative side.
     @inlinable
     public init(_ side: Horizontal.Alignment.Side, direction: Direction) {
         switch (side, direction) {
@@ -70,14 +76,16 @@ extension Horizontal {
 // MARK: - Vertical Side
 
 extension Vertical.Alignment {
-    /// A vertical side (without center).
+    /// A vertical edge of a rectangle (top or bottom).
+    ///
+    /// Excludes center, representing only the two vertical edges.
     public enum Side: Sendable, Hashable, Codable, CaseIterable {
-        /// The top side.
+        /// Top edge
         case top
-        /// The bottom side.
+        /// Bottom edge
         case bottom
 
-        /// The opposite side.
+        /// Returns the opposite side.
         @inlinable
         public var opposite: Side {
             switch self {
@@ -91,7 +99,7 @@ extension Vertical.Alignment {
 // MARK: - Vertical from Side
 
 extension Vertical {
-    /// Create from a layout-relative side.
+    /// Creates a vertical direction from a vertical side.
     @inlinable
     public init(_ side: Vertical.Alignment.Side) {
         switch side {
@@ -104,16 +112,16 @@ extension Vertical {
 // MARK: - Named Corners
 
 extension Corner {
-    /// Top-leading corner (top-left in LTR, top-right in RTL).
+    /// Top-leading corner (top-left in LTR, top-right in RTL)
     public static let topLeading = Corner(horizontal: .leading, vertical: .top)
 
-    /// Top-trailing corner (top-right in LTR, top-left in RTL).
+    /// Top-trailing corner (top-right in LTR, top-left in RTL)
     public static let topTrailing = Corner(horizontal: .trailing, vertical: .top)
 
-    /// Bottom-leading corner (bottom-left in LTR, bottom-right in RTL).
+    /// Bottom-leading corner (bottom-left in LTR, bottom-right in RTL)
     public static let bottomLeading = Corner(horizontal: .leading, vertical: .bottom)
 
-    /// Bottom-trailing corner (bottom-right in LTR, bottom-left in RTL).
+    /// Bottom-trailing corner (bottom-right in LTR, bottom-left in RTL)
     public static let bottomTrailing = Corner(horizontal: .trailing, vertical: .bottom)
 }
 
@@ -128,7 +136,7 @@ extension Corner: CaseIterable {
 // MARK: - Opposite
 
 extension Corner {
-    /// The diagonally opposite corner.
+    /// Diagonally opposite corner
     @inlinable
     public var opposite: Corner {
         Corner(horizontal: horizontal.opposite, vertical: vertical.opposite)
@@ -144,19 +152,19 @@ extension Corner {
 // MARK: - Properties
 
 extension Corner {
-    /// True if this is a top corner.
+    /// Whether this corner is on the top edge
     @inlinable
     public var isTop: Bool { vertical == .top }
 
-    /// True if this is a bottom corner.
+    /// Whether this corner is on the bottom edge
     @inlinable
     public var isBottom: Bool { vertical == .bottom }
 
-    /// True if this is a leading corner.
+    /// Whether this corner is on the leading edge
     @inlinable
     public var isLeading: Bool { horizontal == .leading }
 
-    /// True if this is a trailing corner.
+    /// Whether this corner is on the trailing edge
     @inlinable
     public var isTrailing: Bool { horizontal == .trailing }
 }
@@ -164,13 +172,13 @@ extension Corner {
 // MARK: - Adjacent Corners
 
 extension Corner {
-    /// The corner horizontally adjacent to this one.
+    /// Corner horizontally adjacent along the same edge
     @inlinable
     public var horizontalAdjacent: Corner {
         Corner(horizontal: horizontal.opposite, vertical: vertical)
     }
 
-    /// The corner vertically adjacent to this one.
+    /// Corner vertically adjacent along the same edge
     @inlinable
     public var verticalAdjacent: Corner {
         Corner(horizontal: horizontal, vertical: vertical.opposite)
@@ -180,7 +188,7 @@ extension Corner {
 // MARK: - Region.Corner from Layout.Corner
 
 extension Region.Corner {
-    /// Create from a layout-relative corner and direction.
+    /// Creates an absolute corner from a layout-relative corner.
     @inlinable
     public init(_ corner: Corner, direction: Direction) {
         self.init(

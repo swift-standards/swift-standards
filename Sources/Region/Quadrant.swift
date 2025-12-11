@@ -5,41 +5,36 @@ public import Algebra
 public import Dimension
 
 extension Region {
-    /// Quadrant of the Cartesian plane.
+    /// Four regions of the 2D Cartesian plane separated by coordinate axes.
     ///
-    /// The four regions defined by the x and y axes, numbered counterclockwise
-    /// starting from the positive x, positive y region.
+    /// Quadrant divides the plane into four regions defined by axis signs, numbered counterclockwise from the upper-right in standard mathematical convention. Use it for spatial partitioning, sign analysis, or coordinate-based logic. Forms a cyclic group (Z₄) under 90° rotation.
     ///
-    /// ## Convention
-    ///
-    /// - I: x > 0, y > 0 (upper right)
-    /// - II: x < 0, y > 0 (upper left)
-    /// - III: x < 0, y < 0 (lower left)
-    /// - IV: x > 0, y < 0 (lower right)
-    ///
-    /// ## Mathematical Properties
-    ///
-    /// - Forms Z4 group under 90 degree rotation
-    /// - Reflection swaps horizontally (I<->II, III<->IV) or vertically (I<->IV, II<->III)
-    ///
-    /// ## Tagged Values
-    ///
-    /// Use `Quadrant.Value<T>` to pair a point with its quadrant:
+    /// ## Example
     ///
     /// ```swift
-    /// let point: Region.Quadrant.Value<Point> = .init(.I, p)
+    /// //      II (+y) | I
+    /// //    -----------+----------- (+x)
+    /// //     III       | IV (-y)
+    ///
+    /// let q: Region.Quadrant = .I        // x > 0, y > 0
+    /// let rotated = q.next               // .II (90° CCW)
+    /// let opposite = !q                  // .III (180°)
+    ///
+    /// // Check axis signs
+    /// q.hasPositiveX  // true
+    /// q.hasPositiveY  // true
     /// ```
     public enum Quadrant: Int, Sendable, Hashable, Codable, CaseIterable {
-        /// First quadrant: x > 0, y > 0.
+        /// First quadrant (x > 0, y > 0, upper right).
         case I = 1
 
-        /// Second quadrant: x < 0, y > 0.
+        /// Second quadrant (x < 0, y > 0, upper left).
         case II = 2
 
-        /// Third quadrant: x < 0, y < 0.
+        /// Third quadrant (x < 0, y < 0, lower left).
         case III = 3
 
-        /// Fourth quadrant: x > 0, y < 0.
+        /// Fourth quadrant (x > 0, y < 0, lower right).
         case IV = 4
     }
 }
@@ -47,25 +42,25 @@ extension Region {
 // MARK: - Rotation
 
 extension Region.Quadrant {
-    /// The next quadrant (90 degrees counterclockwise).
+    /// Next quadrant (90° counterclockwise rotation).
     @inlinable
     public var next: Region.Quadrant {
         Region.Quadrant(rawValue: (rawValue % 4) + 1)!
     }
 
-    /// The previous quadrant (90 degrees clockwise).
+    /// Previous quadrant (90° clockwise rotation).
     @inlinable
     public var previous: Region.Quadrant {
         Region.Quadrant(rawValue: ((rawValue + 2) % 4) + 1)!
     }
 
-    /// The opposite quadrant (180 degree rotation).
+    /// Opposite quadrant (180° rotation).
     @inlinable
     public var opposite: Region.Quadrant {
         Region.Quadrant(rawValue: ((rawValue + 1) % 4) + 1)!
     }
 
-    /// Returns the opposite quadrant.
+    /// Returns the opposite quadrant (180° rotation).
     @inlinable
     public static prefix func ! (value: Region.Quadrant) -> Region.Quadrant {
         value.opposite
@@ -75,13 +70,13 @@ extension Region.Quadrant {
 // MARK: - Sign Properties
 
 extension Region.Quadrant {
-    /// True if x is positive in this quadrant.
+    /// Whether x is positive in this quadrant.
     @inlinable
     public var hasPositiveX: Bool {
         self == .I || self == .IV
     }
 
-    /// True if y is positive in this quadrant.
+    /// Whether y is positive in this quadrant.
     @inlinable
     public var hasPositiveY: Bool {
         self == .I || self == .II

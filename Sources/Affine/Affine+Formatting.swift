@@ -8,10 +8,7 @@ public import Formatting
 // MARK: - Tagged<Index.X.Coordinate, _> + formatted()
 
 extension Tagged where Tag == Index.X.Coordinate, RawValue: BinaryFloatingPoint {
-    /// Format this X coordinate using the given format style.
-    ///
-    /// - Parameter format: The format style to use
-    /// - Returns: The formatted output
+    /// Formats horizontal coordinate using specified format style.
     ///
     /// ## Example
     ///
@@ -30,10 +27,7 @@ extension Tagged where Tag == Index.X.Coordinate, RawValue: BinaryFloatingPoint 
 // MARK: - Tagged<Index.Y.Coordinate, _> + formatted()
 
 extension Tagged where Tag == Index.Y.Coordinate, RawValue: BinaryFloatingPoint {
-    /// Format this Y coordinate using the given format style.
-    ///
-    /// - Parameter format: The format style to use
-    /// - Returns: The formatted output
+    /// Formats vertical coordinate using specified format style.
     ///
     /// ## Example
     ///
@@ -51,10 +45,7 @@ extension Tagged where Tag == Index.Y.Coordinate, RawValue: BinaryFloatingPoint 
 // MARK: - Tagged<Index.Z.Coordinate, _> + formatted()
 
 extension Tagged where Tag == Index.Z.Coordinate, RawValue: BinaryFloatingPoint {
-    /// Format this Z coordinate using the given format style.
-    ///
-    /// - Parameter format: The format style to use
-    /// - Returns: The formatted output
+    /// Formats depth coordinate using specified format style.
     @inlinable
     public func formatted<S>(_ format: S) -> S.FormatOutput
     where S: FormatStyle, S.FormatInput: BinaryFloatingPoint {

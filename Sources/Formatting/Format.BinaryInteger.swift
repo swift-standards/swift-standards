@@ -2,29 +2,18 @@
 // Formatting for BinaryInteger types.
 
 extension Format {
-    /// A format for formatting BinaryInteger values.
+    /// Format style for converting integers to decimal, binary, or octal strings.
     ///
-    /// This categorical format works for all BinaryInteger types (Int, UInt, Int8, etc.).
-    /// Provides decimal, binary, and octal representations.
+    /// Use this format to display integer values in different number bases. Works with all `BinaryInteger` types including `Int`, `UInt`, `Int8`, and others. Chain methods to configure sign display and zero padding.
     ///
-    /// For hexadecimal formatting, use RFC 4648:
-    /// ```swift
-    /// import RFC_4648
-    /// String(hex: 255)  // "0xff"
-    /// ```
+    /// For hexadecimal formatting, use the RFC 4648 package instead.
     ///
-    /// Use static properties to access predefined formats:
+    /// ## Example
     ///
     /// ```swift
-    /// 42.formatted(.binary)  // "0b101010"
-    /// 63.formatted(.octal)   // "0o77"
-    /// 42.formatted(.decimal) // "42"
-    /// ```
-    ///
-    /// Chain methods to configure the format:
-    ///
-    /// ```swift
-    /// 42.formatted(.binary.sign(strategy: .always))  // "+0b101010"
+    /// 42.formatted(.binary)                          // "0b101010"
+    /// 63.formatted(.octal)                           // "0o77"
+    /// 42.formatted(.decimal.sign(strategy: .always)) // "+42"
     /// 5.formatted(.decimal.zeroPadded(width: 3))     // "005"
     /// ```
     public struct BinaryInteger: Sendable {
@@ -57,6 +46,16 @@ extension Format {
 // MARK: - Format.BinaryInteger.SignDisplayStrategy
 
 extension Format.BinaryInteger {
+    /// Strategy controlling sign display for formatted integers.
+    ///
+    /// Determines whether to show plus signs for positive numbers, only minus signs for negatives, or always show both. Use the static properties `.automatic` and `.always` to configure.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// 42.formatted(.decimal.sign(strategy: .always))    // "+42"
+    /// (-5).formatted(.decimal.sign(strategy: .always))  // "-5"
+    /// ```
     public struct SignDisplayStrategy: Sendable {
         private let _shouldAlwaysShowSign: @Sendable () -> Bool
 
@@ -73,12 +72,12 @@ extension Format.BinaryInteger {
 // MARK: - Format.BinaryInteger.SignDisplayStrategy Static Properties
 
 extension Format.BinaryInteger.SignDisplayStrategy {
-    /// Shows sign only for negative numbers.
+    /// Displays minus sign for negatives only, no sign for positives
     public static var automatic: Self {
         .init { false }
     }
 
-    /// Always shows sign for positive and negative numbers.
+    /// Shows sign for all numbers: plus for positives, minus for negatives
     public static var always: Self {
         .init { true }
     }
@@ -87,9 +86,10 @@ extension Format.BinaryInteger.SignDisplayStrategy {
 // MARK: - Format.BinaryInteger Format Method
 
 extension Format.BinaryInteger {
-    /// Formats a binary integer value.
+    /// Converts the integer to a string using this format's configuration.
     ///
-    /// This is a generic method that works across all BinaryInteger types.
+    /// - Parameter value: Integer value to format
+    /// - Returns: Formatted string representation
     public func format<T: Swift.BinaryInteger>(_ value: T) -> String {
         let absValue = value.magnitude
         var digits = String(absValue, radix: radix)
@@ -116,9 +116,11 @@ extension Format.BinaryInteger {
 // MARK: - Format.BinaryInteger Static Properties
 
 extension Format.BinaryInteger {
-    /// Formats the binary integer as a number (decimal, base 10).
+    /// Decimal format (base 10) for integers
     ///
-    /// This is the default numeric format, equivalent to `.decimal`.
+    /// Equivalent to `.decimal`. Use this as the standard numeric format.
+    ///
+    /// ## Example
     ///
     /// ```swift
     /// 42.formatted(.number)  // "42"
@@ -127,19 +129,17 @@ extension Format.BinaryInteger {
         .decimal
     }
 
-    /// Formats the binary integer as decimal (base 10).
+    /// Standard decimal format (base 10) without prefix
     public static var decimal: Self {
         .init(radix: 10, prefix: "", signStrategy: .automatic, minWidth: nil)
     }
 
-    /// Formats the binary integer as binary (base 2).
-    /// Binary is not defined by any RFC - this is a general-purpose formatter.
+    /// Binary format (base 2) with "0b" prefix
     public static var binary: Self {
         .init(radix: 2, prefix: "0b", signStrategy: .automatic, minWidth: nil)
     }
 
-    /// Formats the binary integer as octal (base 8).
-    /// Octal is not defined by any RFC - this is a general-purpose formatter.
+    /// Octal format (base 8) with "0o" prefix
     public static var octal: Self {
         .init(radix: 8, prefix: "0o", signStrategy: .automatic, minWidth: nil)
     }
@@ -148,17 +148,21 @@ extension Format.BinaryInteger {
 // MARK: - Format.BinaryInteger Chaining Methods
 
 extension Format.BinaryInteger {
-    /// Configures the sign display strategy.
+    /// Returns a format with the specified sign display strategy.
+    ///
+    /// ## Example
     ///
     /// ```swift
-    /// 42.formatted(Format.BinaryInteger.decimal.sign(strategy: .always))  // "+42"
-    /// (-42).formatted(Format.BinaryInteger.decimal.sign(strategy: .always))  // "-42"
+    /// 42.formatted(.decimal.sign(strategy: .always))   // "+42"
+    /// (-42).formatted(.decimal.sign(strategy: .always))  // "-42"
     /// ```
     public func sign(strategy: SignDisplayStrategy) -> Self {
         .init(radix: radix, prefix: prefix, signStrategy: strategy, minWidth: minWidth)
     }
 
-    /// Pads the number with leading zeros to reach the specified width.
+    /// Returns a format that pads with leading zeros to the specified width.
+    ///
+    /// ## Example
     ///
     /// ```swift
     /// 5.formatted(.decimal.zeroPadded(width: 2))   // "05"
@@ -172,24 +176,18 @@ extension Format.BinaryInteger {
 // MARK: - BinaryInteger Extension
 
 extension Swift.BinaryInteger {
-    /// Formats this binary integer using the specified format.
+    /// Converts this integer to a string using the specified format.
     ///
-    /// Use this method with static format properties:
+    /// ## Example
     ///
     /// ```swift
-    /// let result = 42.formatted(.binary)           // "0b101010"
-    /// let result = 63.formatted(.octal)            // "0o77"
-    /// let result = 42.formatted(.decimal)          // "42"
+    /// 42.formatted(.binary)   // "0b101010"
+    /// 63.formatted(.octal)    // "0o77"
+    /// 42.formatted(.decimal)  // "42"
     /// ```
     ///
-    /// For hexadecimal, use RFC 4648:
-    /// ```swift
-    /// import RFC_4648
-    /// let result = String(hex: 255)  // "0xff"
-    /// ```
-    ///
-    /// - Parameter format: The binary integer format to use.
-    /// - Returns: The formatted representation of this binary integer.
+    /// - Parameter format: Format style to apply
+    /// - Returns: Formatted string representation
     public func formatted(_ format: Format.BinaryInteger) -> String {
         format.format(self)
     }

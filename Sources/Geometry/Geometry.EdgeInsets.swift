@@ -51,7 +51,7 @@ extension Geometry.EdgeInsets: Hashable where Scalar: Hashable {}
 
 // MARK: - Codable
 #if Codable
-extension Geometry.EdgeInsets: Codable where Scalar: Codable {}
+    extension Geometry.EdgeInsets: Codable where Scalar: Codable {}
 #endif
 // MARK: - Convenience Initializers
 

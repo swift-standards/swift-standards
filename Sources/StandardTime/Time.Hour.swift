@@ -4,17 +4,23 @@
 // Hour representation as a refinement type
 
 extension Time {
-    /// An hour in a 24-hour day (0-23)
+    /// Hour of day (0-23).
     ///
-    /// This is a refinement type - an integer constrained to the valid range.
+    /// Refinement type constraining integers to valid hour range.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let hour = try Time.Hour(14) // 2 PM
+    /// let midnight = Time.Hour.zero
+    /// ```
     public struct Hour: Sendable, Equatable, Hashable, Comparable {
-        /// The hour value (0-23)
+        /// Hour value (0-23)
         public let value: Int
 
-        /// Create an hour with validation
+        /// Creates an hour with validation.
         ///
-        /// - Parameter value: Hour value (0-23)
-        /// - Throws: `Hour.Error` if value is not 0-23
+        /// - Throws: `Hour.Error.invalidHour` if value is not 0-23
         public init(_ value: Int) throws(Error) {
             guard (0...23).contains(value) else {
                 throw Error.invalidHour(value)
@@ -27,9 +33,9 @@ extension Time {
 // MARK: - Error
 
 extension Time.Hour {
-    /// Errors that can occur when creating an hour
+    /// Validation errors for hour values.
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// Hour must be 0-23
+        /// Hour value is not in valid range (0-23)
         case invalidHour(Int)
     }
 }
@@ -37,7 +43,7 @@ extension Time.Hour {
 // MARK: - Unchecked Initialization
 
 extension Time.Hour {
-    /// Create an hour without validation (internal use only)
+    /// Creates an hour without validation (internal use only).
     ///
     /// - Warning: Only use when value is known to be valid (0-23)
     internal init(unchecked value: Int) {
@@ -56,6 +62,6 @@ extension Time.Hour {
 // MARK: - Constants
 
 extension Time.Hour {
-    /// Zero nanoseconds
+    /// Zero hours (midnight)
     public static let zero = Time.Hour(unchecked: 0)
 }

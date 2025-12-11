@@ -4,16 +4,13 @@
 // Extensions for Swift standard library Dictionary
 
 extension Dictionary {
-    /// Transforms dictionary keys while preserving values
+    /// Returns a new dictionary by transforming the keys while preserving values.
     ///
-    /// Functorial mapping over key component of dictionary.
-    /// Maps keys via injective function, maintaining dictionary structure.
+    /// Applies the transformation to each key. If multiple keys transform to the same value, only the last one is preserved.
+    /// Use this to change key types or normalize keys.
     ///
-    /// Category theory: Functor operation on key component
-    /// mapKeys: (K → K') → Dict(K, V) → Dict(K', V)
-    /// Note: Non-injective functions may cause key collisions
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// let dict = [1: "one", 2: "two"]
     /// dict.mapKeys { "key\($0)" }  // ["key1": "one", "key2": "two"]
@@ -26,18 +23,16 @@ extension Dictionary {
         }
     }
 
-    /// Transforms dictionary keys with optional results
+    /// Returns a new dictionary by transforming keys and filtering out `nil` results.
     ///
-    /// Partial key transformation lifting failures into Maybe.
-    /// Filters out None results, preserving only successful transformations.
+    /// Applies the transformation to each key, keeping only the entries where the transformation returns a non-`nil` value.
+    /// Use this to selectively transform and filter dictionary keys.
     ///
-    /// Category theory: Natural transformation composed with filter
-    /// compactMapKeys: (K → Maybe(K')) → Dict(K, V) → Dict(K', V)
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
-    /// let dict = [1: "one", 2: "two"]
-    /// dict.compactMapKeys { $0 > 1 ? $0 : nil }  // [2: "two"]
+    /// let dict = [1: "one", 2: "two", 3: "three"]
+    /// dict.compactMapKeys { $0 > 1 ? $0 : nil }  // [2: "two", 3: "three"]
     /// ```
     public func compactMapKeys<NewKey: Hashable>(
         _ transform: (Key) throws -> NewKey?
@@ -67,16 +62,13 @@ extension Dictionary {
 }
 
 extension Dictionary where Value: Equatable {
-    /// Inverts dictionary, swapping keys and values
+    /// Returns a new dictionary with keys and values swapped.
     ///
-    /// Represents bijective inverse when values are unique.
-    /// For non-unique values, last occurrence wins.
+    /// If multiple keys have the same value, only the last key-value pair is preserved in the result.
+    /// Use this to create a reverse lookup dictionary.
     ///
-    /// Category theory: Categorical dual (when values form set)
-    /// invert: Dict(K, V) → Dict(V, K)
-    /// Note: Only true inverse when V → K is injective
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// let dict = ["a": 1, "b": 2]
     /// dict.inverted()  // [1: "a", 2: "b"]

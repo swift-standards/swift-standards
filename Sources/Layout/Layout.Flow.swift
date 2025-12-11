@@ -4,44 +4,41 @@
 public import Dimension
 
 extension Layout {
-    /// A wrapping layout that flows content to the next line when full.
+    /// A wrapping layout that reflows content to the next line when space runs out.
     ///
-    /// Flow arranges items along the primary axis (horizontally), wrapping
-    /// to a new line when the available space is exhausted. This is similar
-    /// to CSS flexbox with `flex-wrap: wrap`.
+    /// Arranges items horizontally until the container width is exhausted, then
+    /// wraps to a new line. Ideal for tag clouds, toolbar items that overflow,
+    /// or responsive content that adapts to container width. Similar to CSS flexbox
+    /// with `flex-wrap: wrap`.
     ///
     /// ## Example
     ///
     /// ```swift
-    /// let flow: Layout<Double>.Flow<[Tag]> = .init(
+    /// // Tag cloud with wrapping
+    /// let tags = Layout<Double>.Flow<[Tag]>(
     ///     spacing: .init(item: 8.0, line: 12.0),
     ///     alignment: .leading,
-    ///     content: tags
+    ///     line: .top,
+    ///     content: ["Swift", "Concurrency", "Performance", ...]
     /// )
-    /// ```
-    ///
-    /// ## Visual Example
-    ///
-    /// Given tags `[A, B, C, D, E]` in a narrow container:
-    ///
-    /// ```
-    /// [A] [B] [C]
-    /// [D] [E]
+    /// // Renders as:
+    /// // [Swift] [Concurrency] [Performance]
+    /// // [Memory] [Safety]
     /// ```
     public struct Flow<Content> {
-        /// The spacing between items and lines.
+        /// Spacing between items and between lines
         public var spacing: Gaps
 
-        /// Alignment of items within each line.
+        /// Horizontal alignment of items within each line
         public var alignment: Horizontal.Alignment
 
-        /// Vertical alignment of lines within the container.
+        /// Vertical alignment of lines within the container
         public var line: Line
 
-        /// The content to flow.
+        /// Content to arrange
         public var content: Content
 
-        /// Create a flow layout with the given configuration.
+        /// Creates a flow layout with the specified configuration.
         @inlinable
         public init(
             spacing: consuming Gaps,
@@ -60,17 +57,18 @@ extension Layout {
 // MARK: - Gaps
 
 extension Layout.Flow {
-    /// Spacing configuration for a flow layout.
+    /// Spacing configuration for horizontal and vertical gaps in a flow layout.
     ///
-    /// Defines the spacing between items on the same line and between lines.
+    /// Separately controls spacing between items on the same line (horizontal)
+    /// and spacing between lines (vertical).
     public struct Gaps {
-        /// Spacing between items on the same line.
+        /// Spacing between items on the same line (horizontal gap)
         public var item: Spacing
 
-        /// Spacing between lines.
+        /// Spacing between lines (vertical gap)
         public var line: Spacing
 
-        /// Create spacing with the given item and line values.
+        /// Creates spacing with the specified item and line values.
         @inlinable
         public init(item: Spacing, line: Spacing) {
             self.item = item
@@ -83,11 +81,11 @@ extension Layout.Flow.Gaps: Sendable where Spacing: Sendable {}
 extension Layout.Flow.Gaps: Equatable where Spacing: Equatable {}
 extension Layout.Flow.Gaps: Hashable where Spacing: Hashable {}
 #if Codable
-extension Layout.Flow.Gaps: Codable where Spacing: Codable {}
+    extension Layout.Flow.Gaps: Codable where Spacing: Codable {}
 #endif
 
 extension Layout.Flow.Gaps where Spacing: AdditiveArithmetic {
-    /// Create uniform spacing (same for items and lines).
+    /// Creates uniform spacing (identical for items and lines).
     @inlinable
     public static func uniform(_ value: Spacing) -> Self {
         Self(item: value, line: value)
@@ -97,12 +95,12 @@ extension Layout.Flow.Gaps where Spacing: AdditiveArithmetic {
 // MARK: - Line
 
 extension Layout.Flow {
-    /// Line configuration for a flow layout.
+    /// Line configuration controlling vertical alignment in a flow layout.
     public struct Line: Sendable, Hashable, Codable {
-        /// Vertical alignment of lines within the container.
+        /// Vertical alignment of wrapped lines within the container
         public var alignment: Vertical.Alignment
 
-        /// Create line configuration with the given alignment.
+        /// Creates line configuration with the specified alignment.
         @inlinable
         public init(alignment: Vertical.Alignment) {
             self.alignment = alignment
@@ -111,15 +109,15 @@ extension Layout.Flow {
 }
 
 extension Layout.Flow.Line {
-    /// Top-aligned lines.
+    /// Aligns lines to the top of the container
     @inlinable
     public static var top: Self { Self(alignment: .top) }
 
-    /// Center-aligned lines.
+    /// Centers lines vertically within the container
     @inlinable
     public static var center: Self { Self(alignment: .center) }
 
-    /// Bottom-aligned lines.
+    /// Aligns lines to the bottom of the container
     @inlinable
     public static var bottom: Self { Self(alignment: .bottom) }
 }
@@ -138,13 +136,13 @@ extension Layout.Flow: Hashable where Spacing: Hashable, Content: Hashable {}
 
 // MARK: - Codable
 #if Codable
-extension Layout.Flow: Codable where Spacing: Codable, Content: Codable {}
+    extension Layout.Flow: Codable where Spacing: Codable, Content: Codable {}
 #endif
 
 // MARK: - Convenience Initializers
 
 extension Layout.Flow {
-    /// Create a flow layout with default alignments.
+    /// Creates a flow layout with default alignments (leading, top).
     @inlinable
     public init(
         spacing: consuming Gaps,
@@ -160,7 +158,7 @@ extension Layout.Flow {
 }
 
 extension Layout.Flow where Spacing: AdditiveArithmetic {
-    /// Create a flow layout with uniform spacing.
+    /// Creates a flow layout with uniform spacing (same for items and lines).
     @inlinable
     public static func uniform(
         spacing: Spacing,
@@ -179,7 +177,7 @@ extension Layout.Flow where Spacing: AdditiveArithmetic {
 // MARK: - Functorial Map
 
 extension Layout.Flow {
-    /// Create a flow by transforming the spacing of another flow.
+    /// Creates a flow by transforming the spacing unit of another flow.
     @inlinable
     public init<U, E: Error>(
         transforming other: borrowing Layout<U>.Flow<Content>,
@@ -198,11 +196,11 @@ extension Layout.Flow {
 }
 
 extension Layout.Flow {
-    /// Namespace for functorial map operations.
+    /// Namespace for functorial transformation operations.
     @inlinable
     public var map: Map { Map(flow: self) }
 
-    /// Functorial map operations for Flow.
+    /// Functorial transformation operations for `Flow`.
     public struct Map {
         @usableFromInline
         let flow: Layout<Spacing>.Flow<Content>
@@ -212,7 +210,7 @@ extension Layout.Flow {
             self.flow = flow
         }
 
-        /// Transform the spacing using the given closure.
+        /// Transforms the spacing type using the given closure.
         @inlinable
         public func spacing<Result, E: Error>(
             _ transform: (Spacing) throws(E) -> Result
@@ -228,7 +226,7 @@ extension Layout.Flow {
             )
         }
 
-        /// Transform the content using the given closure.
+        /// Transforms the content using the given closure.
         @inlinable
         public func content<Result, E: Error>(
             _ transform: (Content) throws(E) -> Result

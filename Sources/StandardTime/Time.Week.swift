@@ -1,10 +1,11 @@
+// Time.Week.swift
+// Time
 //
-//  File.swift
-//  swift-standards
-//
-//  Created by Coen ten Thije Boonkkamp on 18/11/2025.
-//
+// Week namespace for week-related types
 
 extension Time {
+    /// Namespace for week-related types.
+    ///
+    /// Contains `Time.Week.Day` (weekday enumeration).
     public enum Week {}
 }

@@ -1,46 +1,40 @@
 // Product.swift
 // The n-ary cartesian product type.
 
-/// The n-ary cartesian product of types.
+/// N-ary cartesian product of types.
 ///
-/// `Product` represents the general cartesian product `A × B × C × ...`
-/// using Swift's parameter packs. This is the categorical product in
-/// the category of types.
+/// Represents the product `A × B × C × ...` using Swift's parameter packs.
+/// Use this when you need a named tuple type with dynamic member lookup.
 ///
-/// ## Examples
+/// ## Example
 ///
 /// ```swift
 /// let pair = Product(1, "hello")           // Product<Int, String>
 /// let triple = Product(1, "hello", true)   // Product<Int, String, Bool>
 ///
-/// // Access values via the tuple
 /// print(pair.values.0)    // 1
-/// print(pair.values.1)    // "hello"
+/// print(pair.0)           // 1 (via dynamic member lookup)
 /// ```
 ///
-/// ## Mathematical Background
+/// ## Note
 ///
-/// In category theory, the product of objects A₁, A₂, ..., Aₙ is an
-/// object P together with projection morphisms πᵢ: P → Aᵢ satisfying
-/// the universal property: for any object X with morphisms fᵢ: X → Aᵢ,
-/// there exists a unique morphism f: X → P such that πᵢ ∘ f = fᵢ.
-///
-/// For types, this is simply the tuple `(A₁, A₂, ..., Aₙ)`.
+/// This is the categorical product in the category of types. For practical
+/// purposes, it's a named wrapper around Swift tuples with convenient access.
 ///
 @dynamicMemberLookup
 public struct Product<each Element> {
-    /// The tuple of values.
+    /// Tuple of component values.
     public var values: (repeat each Element)
 
-    /// Creates a product from the given values.
+    /// Creates a product from component values.
     @inlinable
     public init(_ values: repeat each Element) {
         self.values = (repeat each values)
     }
 
-    /// Provides direct access to tuple elements via key paths.
+    /// Direct access to tuple elements via key paths.
     ///
-    /// This allows `product.0` instead of `product.values.0`.
+    /// Enables `product.0` instead of `product.values.0`.
     @inlinable
     public subscript<T>(dynamicMember keyPath: KeyPath<(repeat each Element), T>) -> T {
         values[keyPath: keyPath]

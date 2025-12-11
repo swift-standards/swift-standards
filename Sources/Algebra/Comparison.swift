@@ -1,24 +1,19 @@
 // Comparison.swift
 public import Dimension
 
-// Three-way comparison result.
-
-/// Result of a three-way comparison: less, equal, or greater.
+/// Result of three-way comparison: less, equal, or greater.
 ///
-/// Represents the outcome of comparing two ordered values.
+/// Represents the outcome of comparing two ordered values. Corresponds to the
+/// signum of (a - b). Use when you need to capture all three ordering outcomes
+/// in a single value, such as implementing custom comparison logic.
 ///
-/// ## Mathematical Properties
-///
-/// - Antisymmetric: if a < b then b > a
-/// - `reversed` swaps less/greater, preserves equal
-/// - Corresponds to the signum of (a - b)
-///
-/// ## Tagged Values
-///
-/// Use `Comparison.Value<T>` to pair a value with a comparison result:
+/// ## Example
 ///
 /// ```swift
-/// let delta: Comparison.Value<Int> = .init(.less, -5)
+/// let result = Comparison(5, 10)
+/// print(result)              // less
+/// print(result.reversed)     // greater
+/// print(result.isLess)       // true
 /// ```
 public enum Comparison: Sendable, Hashable, Codable, CaseIterable {
     /// First value is less than second.
@@ -34,7 +29,7 @@ public enum Comparison: Sendable, Hashable, Codable, CaseIterable {
 // MARK: - Reversal
 
 extension Comparison {
-    /// The reversed comparison (as if operands were swapped).
+    /// Reversed comparison (swaps less↔greater, preserves equal).
     @inlinable
     public var reversed: Comparison {
         switch self {
@@ -54,7 +49,7 @@ extension Comparison {
 // MARK: - From Comparable
 
 extension Comparison {
-    /// Compares two values and returns the result.
+    /// Creates a comparison from two comparable values.
     @inlinable
     public init<T: Comparable>(_ lhs: T, _ rhs: T) {
         if lhs < rhs {
@@ -70,23 +65,23 @@ extension Comparison {
 // MARK: - Boolean Properties
 
 extension Comparison {
-    /// True if the comparison is less than.
+    /// Whether the comparison is `.less`.
     @inlinable
     public var isLess: Bool { self == .less }
 
-    /// True if the comparison is equal.
+    /// Whether the comparison is `.equal`.
     @inlinable
     public var isEqual: Bool { self == .equal }
 
-    /// True if the comparison is greater than.
+    /// Whether the comparison is `.greater`.
     @inlinable
     public var isGreater: Bool { self == .greater }
 
-    /// True if the comparison is less than or equal.
+    /// Whether the comparison is `.less` or `.equal`.
     @inlinable
     public var isLessOrEqual: Bool { self != .greater }
 
-    /// True if the comparison is greater than or equal.
+    /// Whether the comparison is `.greater` or `.equal`.
     @inlinable
     public var isGreaterOrEqual: Bool { self != .less }
 }

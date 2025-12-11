@@ -3,62 +3,56 @@
 //
 // Absolute UTC time value with nanosecond precision
 
-/// Absolute UTC time with nanosecond precision
+/// Absolute UTC time with nanosecond precision.
 ///
-/// Represents a specific moment in time using Gregorian calendar components.
-/// All fields are validated using refined types. Format-agnostic foundation
-/// for standards like ISO-8601 and RFC 5322.
+/// Represents a specific moment in time using Gregorian calendar components with complete type safety.
+/// Use this for calendar-based operations (year, month, day). For timeline arithmetic, convert to `Instant`.
 ///
-/// ## Design Notes
+/// ## Example
 ///
-/// - Uses refined types for complete type safety
-/// - Sub-second precision to nanosecond (10^-9) via cascading fields
-/// - Format packages (RFC 5322, ISO 8601) can wrap this with additional fields
-/// - Primary initializer uses refined types and cannot fail (total function)
-/// - Convenience initializer accepts raw integers and validates
+/// ```swift
+/// // Type-safe construction with validated components
+/// let year = Time.Year(2024)
+/// let month = try Time.Month(11)
+/// let day = try Time.Month.Day(22, in: month, year: year)
+/// let time = Time(year: year, month: month, day: day, hour: .zero, minute: .zero, second: .zero)
+///
+/// // Convenience with raw integers
+/// let time2 = try Time(year: 2024, month: 11, day: 22, hour: 14, minute: 30, second: 0)
+/// print(time2.weekday) // .friday
+/// ```
 public struct Time: Sendable, Equatable, Hashable {
-    /// Year
+    /// Year value
     public let year: Time.Year
 
-    /// Month (1-12)
+    /// Month value (1-12)
     public let month: Time.Month
 
-    /// Day (1-31, validated for month/year)
+    /// Day of month (1-31, validated for month/year)
     public let day: Time.Month.Day
 
-    /// Hour (0-23)
+    /// Hour of day (0-23)
     public let hour: Time.Hour
 
-    /// Minute (0-59)
+    /// Minute of hour (0-59)
     public let minute: Time.Minute
 
-    /// Second (0-60, allowing leap second)
+    /// Second of minute (0-60, allowing leap second)
     public let second: Time.Second
 
-    /// Millisecond (0-999)
+    /// Millisecond component (0-999)
     public let millisecond: Time.Millisecond
 
-    /// Microsecond (0-999)
+    /// Microsecond component (0-999)
     public let microsecond: Time.Microsecond
 
-    /// Nanosecond (0-999)
+    /// Nanosecond component (0-999)
     public let nanosecond: Time.Nanosecond
 
-    /// Creates date components with refined types (total function)
+    /// Creates time from pre-validated components.
     ///
-    /// This initializer cannot fail because all parameters are pre-validated refined types.
-    /// This is a **total function** - always succeeds.
-    ///
-    /// - Parameters:
-    ///   - year: Year (validated Time.Year)
-    ///   - month: Month (validated Time.Month, 1-12)
-    ///   - day: Day (validated Time.Month.Day, 1-31 for month/year)
-    ///   - hour: Hour (validated Time.Hour, 0-23)
-    ///   - minute: Minute (validated Time.Minute, 0-59)
-    ///   - second: Second (validated Time.Second, 0-60)
-    ///   - millisecond: Millisecond (validated Time.Millisecond, 0-999)
-    ///   - microsecond: Microsecond (validated Time.Microsecond, 0-999)
-    ///   - nanosecond: Nanosecond (validated Time.Nanosecond, 0-999)
+    /// Cannot fail because all parameters are refined types that guarantee validity.
+    /// Use the throwing initializer if you have raw integer values.
     public init(
         year: Time.Year,
         month: Time.Month,
@@ -85,41 +79,12 @@ public struct Time: Sendable, Equatable, Hashable {
 // MARK: - Unchecked Initialization
 
 extension Time {
-    /// Creates time value without validation (internal use only)
+    /// Creates time without validation (internal use only).
     ///
-    /// This static method bypasses validation and should only be used when component values
-    /// are known to be valid (e.g., computed from epoch seconds).
+    /// Bypasses all validation checks. Only use when values are guaranteed valid by construction
+    /// (e.g., computed from epoch seconds).
     ///
-    /// - Warning: Using this with invalid values will create an invalid Time instance.
-    ///   Only use when values are guaranteed valid by construction.
-    ///
-    /// ## Usage
-    ///
-    /// ```swift
-    /// let components = Time.unchecked(
-    ///     year: 1970,
-    ///     month: 1,
-    ///     day: 1,
-    ///     hour: 0,
-    ///     minute: 0,
-    ///     second: 0,
-    ///     millisecond: 0,
-    ///     microsecond: 0,
-    ///     nanosecond: 0
-    /// )
-    /// ```
-    ///
-    /// - Parameters:
-    ///   - year: Year (unchecked)
-    ///   - month: Month (unchecked)
-    ///   - day: Day (unchecked)
-    ///   - hour: Hour (unchecked)
-    ///   - minute: Minute (unchecked)
-    ///   - second: Second (unchecked)
-    ///   - millisecond: Millisecond (unchecked)
-    ///   - microsecond: Microsecond (unchecked)
-    ///   - nanosecond: Nanosecond (unchecked)
-    /// - Returns: Time with unchecked values
+    /// - Warning: Invalid values will create an invalid `Time` instance
     internal static func unchecked(
         year: Int,
         month: Int,
@@ -148,21 +113,11 @@ extension Time {
 // MARK: - Convenience Initializers
 
 extension Time {
-    /// Creates date components from raw integers with validation (partial function)
+    /// Creates time from raw integer values with validation.
     ///
-    /// Convenience initializer for when you have raw integer values.
-    /// Validates the date components and constructs refined types.
+    /// Validates all components and constructs refined types. Use this when you have
+    /// unvalidated integer values instead of pre-constructed refined types.
     ///
-    /// - Parameters:
-    ///   - year: Year value
-    ///   - month: Month value (1-12)
-    ///   - day: Day value (1-31, validated for month/year)
-    ///   - hour: Hour (0-23)
-    ///   - minute: Minute (0-59)
-    ///   - second: Second (0-60, allowing leap second)
-    ///   - millisecond: Millisecond (0-999)
-    ///   - microsecond: Microsecond (0-999)
-    ///   - nanosecond: Nanosecond (0-999)
     /// - Throws: `Time.Error` if any component is out of valid range
     public init(
         year: Int,
@@ -225,11 +180,9 @@ extension Time {
 
 extension Time {
 
-    /// Create date components from seconds since Unix epoch
+    /// Creates time from seconds since Unix epoch.
     ///
-    /// Transformation: Int (epoch seconds) → DateComponents
-    ///
-    /// - Parameter secondsSinceEpoch: Seconds since Unix epoch (UTC)
+    /// Converts Unix timestamp to calendar components. Sub-second precision is set to zero.
     public init(secondsSinceEpoch: Int) {
         let (year, month, day, hour, minute, second) = Time.Epoch.Conversion
             .componentsRaw(fromSecondsSinceEpoch: secondsSinceEpoch)
@@ -248,12 +201,12 @@ extension Time {
         )
     }
 
-    /// Create date components from seconds since Unix epoch with nanosecond precision
+    /// Creates time from seconds since Unix epoch with nanosecond precision.
     ///
-    /// Transformation: (Int, Int) → DateComponents
+    /// Converts Unix timestamp with nanosecond fraction to calendar components.
     ///
     /// - Parameters:
-    ///   - secondsSinceEpoch: Seconds since Unix epoch (UTC)
+    ///   - secondsSinceEpoch: Seconds since Unix epoch
     ///   - nanoseconds: Nanosecond fraction (0-999,999,999)
     /// - Throws: `Time.Error.nanosecondOutOfRange` if nanoseconds is invalid
     public init(secondsSinceEpoch: Int, nanoseconds: Int) throws(Error) {
@@ -284,12 +237,9 @@ extension Time {
         )
     }
 
-    /// Create date components from seconds and nanoseconds (internal unchecked)
+    /// Creates time from seconds and nanoseconds without validation (internal use only).
     ///
     /// - Warning: Only use when nanoseconds is known to be valid (0-999,999,999)
-    /// - Parameters:
-    ///   - secondsSinceEpoch: Seconds since Unix epoch (UTC)
-    ///   - nanoseconds: Nanosecond fraction (unchecked, must be 0-999,999,999)
     internal static func unchecked(secondsSinceEpoch: Int, nanoseconds: Int) -> Time {
         let (year, month, day, hour, minute, second) = Time.Epoch.Conversion
             .componentsRaw(fromSecondsSinceEpoch: secondsSinceEpoch)
@@ -318,30 +268,30 @@ extension Time {
 // MARK: - Error
 
 extension Time {
-    /// Errors that can occur when creating date components from raw integers
+    /// Validation errors for time components.
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// Month must be 1-12
+        /// Month value is not in valid range (1-12)
         case monthOutOfRange(Int)
 
-        /// Day must be valid for the given month and year
+        /// Day value is not valid for the given month and year
         case dayOutOfRange(Int, month: Int, year: Int)
 
-        /// Hour must be 0-23
+        /// Hour value is not in valid range (0-23)
         case hourOutOfRange(Int)
 
-        /// Minute must be 0-59
+        /// Minute value is not in valid range (0-59)
         case minuteOutOfRange(Int)
 
-        /// Second must be 0-60 (allowing leap second)
+        /// Second value is not in valid range (0-60, allowing leap second)
         case secondOutOfRange(Int)
 
-        /// Millisecond must be 0-999
+        /// Millisecond value is not in valid range (0-999)
         case millisecondOutOfRange(Int)
 
-        /// Microsecond must be 0-999
+        /// Microsecond value is not in valid range (0-999)
         case microsecondOutOfRange(Int)
 
-        /// Nanosecond must be 0-999
+        /// Nanosecond value is not in valid range (0-999)
         case nanosecondOutOfRange(Int)
     }
 }
@@ -349,46 +299,40 @@ extension Time {
 // MARK: - Computed Properties
 
 extension Time {
-    /// Total nanoseconds within the current second
+    /// Total nanoseconds within the current second (0-999,999,999).
     ///
-    /// Computes the total fractional second as nanoseconds (0-999,999,999).
-    /// Calculated from cascading millisecond, microsecond, and nanosecond fields.
-    ///
-    /// - Returns: Total nanoseconds (0-999,999,999)
+    /// Combines millisecond, microsecond, and nanosecond fields into a single value.
     public var totalNanoseconds: Int {
         millisecond.value * 1_000_000 + microsecond.value * 1000 + nanosecond.value
     }
 
-    /// The day of the week for this time
+    /// Day of the week for this date.
     ///
-    /// Calculates the weekday using Zeller's congruence algorithm.
+    /// Calculated using Zeller's congruence algorithm.
     ///
     /// ## Example
     ///
     /// ```swift
     /// let time = try Time(year: 2024, month: 1, day: 15, hour: 10, minute: 30, second: 0)
-    /// print(time.weekday)  // Time.Weekday.monday
+    /// print(time.weekday) // .monday
     /// ```
     public var weekday: Time.Weekday {
         Time.Weekday(year: year, month: month, day: day)
     }
 
-    /// Seconds since Unix epoch (1970-01-01 00:00:00 UTC)
+    /// Seconds since Unix epoch (1970-01-01 00:00:00 UTC).
     ///
-    /// Calculates the number of seconds from the Unix epoch to this time.
-    /// Uses O(1) algorithm based on Gregorian calendar cycle structure.
-    ///
-    /// Note: This only includes whole seconds. Use `totalNanoseconds` to get
-    /// the sub-second component.
+    /// Calculates using O(1) algorithm based on Gregorian calendar cycle structure.
+    /// Use `totalNanoseconds` for the sub-second component.
     ///
     /// ## Example
     ///
     /// ```swift
     /// let time = try Time(year: 1970, month: 1, day: 1, hour: 0, minute: 0, second: 0)
-    /// print(time.secondsSinceEpoch)  // 0
+    /// print(time.secondsSinceEpoch) // 0
     ///
     /// let time2 = try Time(year: 2024, month: 1, day: 1, hour: 0, minute: 0, second: 0)
-    /// print(time2.secondsSinceEpoch)  // 1704067200
+    /// print(time2.secondsSinceEpoch) // 1704067200
     /// ```
     public var secondsSinceEpoch: Int {
         Time.Epoch.Conversion.secondsSinceEpoch(from: self)
@@ -399,12 +343,9 @@ extension Time {
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 extension Time {
-    /// Create Time from Instant
+    /// Creates time from instant.
     ///
-    /// Transforms timeline representation to calendar representation.
-    /// Preserves full nanosecond precision.
-    ///
-    /// - Parameter instant: The instant to convert
+    /// Converts timeline representation to calendar representation with full nanosecond precision.
     public init(_ instant: Instant) {
         // SAFE: Instant guarantees nanosecondFraction is in valid range [0, 1_000_000_000)
         self = .unchecked(
@@ -417,15 +358,15 @@ extension Time {
 // MARK: - Codable
 
 #if Codable
-@available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
-extension Time: Codable {
-    public init(from decoder: any Decoder) throws {
-        let instant = try Instant(from: decoder)
-        self.init(instant)
-    }
+    @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
+    extension Time: Codable {
+        public init(from decoder: any Decoder) throws {
+            let instant = try Instant(from: decoder)
+            self.init(instant)
+        }
 
-    public func encode(to encoder: any Encoder) throws {
-        try Instant(self).encode(to: encoder)
+        public func encode(to encoder: any Encoder) throws {
+            try Instant(self).encode(to: encoder)
+        }
     }
-}
 #endif

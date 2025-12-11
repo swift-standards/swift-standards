@@ -5,21 +5,10 @@
 // Extracted from RFC 5322 and ISO 8601 common logic
 
 extension Time.Epoch {
-    /// Unix epoch conversion algorithms
+    /// Unix epoch conversion algorithms.
     ///
-    /// This contains optimized algorithms for converting between
-    /// Unix epoch seconds (1970-01-01 00:00:00 UTC) and calendar components.
-    ///
-    /// ## Performance
-    ///
-    /// All algorithms are O(1) - constant time with no loops over years.
-    /// Uses pure arithmetic based on Gregorian calendar cycle structure.
-    ///
-    /// ## Design Notes
-    ///
-    /// - Epoch: January 1, 1970 00:00:00 UTC
-    /// - 400-year Gregorian cycle: exactly 146097 days
-    /// - Special handling for century boundaries (1970 epoch offset)
+    /// Optimized O(1) algorithms for converting between Unix epoch seconds (1970-01-01 00:00:00 UTC)
+    /// and calendar components. Uses pure arithmetic based on Gregorian calendar cycle structure.
     public enum Conversion {
         // Empty - all functionality in extensions
     }
@@ -28,15 +17,9 @@ extension Time.Epoch {
 // MARK: - Type-Safe Public API
 
 extension Time.Epoch.Conversion {
-    /// Calculate seconds since Unix epoch from DateComponents (type-safe)
+    /// Calculates seconds since Unix epoch from time components.
     ///
-    /// Transformation: DateComponents → Int (epoch seconds)
-    ///
-    /// Note: This only includes whole seconds, not fractional seconds.
-    /// Use `dateComponents.totalNanoseconds` to get the sub-second component.
-    ///
-    /// - Parameter components: The date-time components
-    /// - Returns: Seconds since Unix epoch
+    /// Returns whole seconds only. Use `components.totalNanoseconds` for sub-second precision.
     public static func secondsSinceEpoch(from components: Time) -> Int {
         secondsSinceEpoch(
             year: components.year,
@@ -52,19 +35,9 @@ extension Time.Epoch.Conversion {
 // MARK: - Internal Type-Safe Implementation
 
 extension Time.Epoch.Conversion {
-    /// Calculate seconds since epoch from components (internal type-safe version)
+    /// Calculates seconds since epoch from refined type components (internal).
     ///
-    /// Uses refined types throughout for maximum type safety.
-    /// Only unwraps when doing arithmetic.
-    ///
-    /// - Parameters:
-    ///   - year: The year
-    ///   - month: The month (guaranteed 1-12 by type)
-    ///   - day: The day (guaranteed valid for month/year by type)
-    ///   - hour: The hour (guaranteed 0-23 by type)
-    ///   - minute: The minute (guaranteed 0-59 by type)
-    ///   - second: The second (guaranteed 0-60 by type)
-    /// - Returns: Seconds since Unix epoch
+    /// Type-safe version that guarantees all values are pre-validated.
     internal static func secondsSinceEpoch(
         year: Time.Year,
         month: Time.Month,
@@ -80,13 +53,9 @@ extension Time.Epoch.Conversion {
             * Time.Calendar.Gregorian.TimeConstants.secondsPerMinute + second.value
     }
 
-    /// Extract date-time components from seconds since epoch (internal raw version)
+    /// Extracts date-time components from seconds since epoch (internal).
     ///
-    /// Internal performance primitive that returns raw tuple.
-    /// Values are guaranteed valid by algorithmic construction.
-    ///
-    /// - Parameter secondsSinceEpoch: Seconds since Unix epoch (UTC)
-    /// - Returns: Tuple of (year, month, day, hour, minute, second) - all values valid by construction
+    /// Returns raw tuple with values guaranteed valid by algorithmic construction.
     internal static func componentsRaw(
         fromSecondsSinceEpoch secondsSinceEpoch: Int
     ) -> (year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int) {
@@ -124,25 +93,9 @@ extension Time.Epoch.Conversion {
 // MARK: - Year and Days Calculation (Internal)
 
 extension Time.Epoch.Conversion {
-    /// Optimized O(1) calculation of year and remaining days from days since epoch
+    /// Calculates year and remaining days from days since epoch (internal).
     ///
-    /// Uses pure arithmetic based on Gregorian calendar structure.
-    /// The Gregorian calendar has a 400-year cycle with exactly 146097 days.
-    ///
-    /// ## Algorithm Details
-    ///
-    /// The 400-year cycle contains:
-    /// - 97 leap years and 303 common years
-    /// - 100-year periods vary in length due to leap year rules
-    ///
-    /// Since 1970 is 30 years into the 1600-2000 cycle, the centuries are:
-    /// - 1970-2069 (includes year 2000): 36525 days (25 leap years)
-    /// - 2070-2169 (year 2100): 36524 days (24 leap years)
-    /// - 2170-2269 (year 2200): 36524 days (24 leap years)
-    /// - 2270-2369 (year 2300): 36524 days (24 leap years)
-    ///
-    /// - Parameter days: Days since Unix epoch (can be negative)
-    /// - Returns: Tuple of (year, remainingDays) where remainingDays is 0-365
+    /// O(1) algorithm using Gregorian calendar's 400-year cycle structure (exactly 146,097 days).
     internal static func yearAndDays(
         fromDaysSinceEpoch days: Int
     ) -> (year: Int, remainingDays: Int) {
@@ -206,18 +159,9 @@ extension Time.Epoch.Conversion {
 // MARK: - Days Since Epoch Calculation (Internal)
 
 extension Time.Epoch.Conversion {
-    /// Calculate days since Unix epoch for a given date (type-safe)
+    /// Calculates days since Unix epoch for a given date (internal).
     ///
-    /// Optimized calculation avoiding year-by-year iteration.
-    /// Uses formula for counting leap years in a range.
-    ///
-    /// Uses refined types for maximum type safety - array indexing guaranteed safe.
-    ///
-    /// - Parameters:
-    ///   - year: The year
-    ///   - month: The month (guaranteed 1-12 by type)
-    ///   - day: The day (guaranteed valid for month/year by type)
-    /// - Returns: Days since epoch (1970-01-01)
+    /// O(1) algorithm using leap year counting formula (no year-by-year iteration).
     internal static func daysSinceEpoch(
         year: Time.Year,
         month: Time.Month,

@@ -1,47 +1,31 @@
 // Depth.swift
 // Depth (Z) axis orientation and oriented values.
 
-/// Depth (Z) axis orientation.
+/// Z-axis orientation: forward or backward.
 ///
-/// `Depth` is an enum representing pure Z-axis orientation, with a nested
-/// `Value` struct for oriented magnitudes.
+/// `Depth` specifies which direction along the Z-axis is considered positive. Forward is left-handed (DirectX, Metal) with Z into the screen, while backward is right-handed (OpenGL, math) with Z out of the screen.
 ///
-/// ## Pure Orientation
-///
-/// Use `Depth` directly for coordinate system conventions:
+/// ## Example
 ///
 /// ```swift
-/// let d: Depth = .forward
-/// switch d {
-/// case .forward: print("Z into screen")
-/// case .backward: print("Z out of screen")
-/// }
-/// ```
+/// let leftHanded: Depth = .forward    // DirectX, Metal: Z into screen
+/// let rightHanded: Depth = .backward  // OpenGL, math: Z out of screen
 ///
-/// ## Coordinate System Conventions
-///
-/// - **Forward** (left-handed, DirectX, Metal): Z into the screen
-/// - **Backward** (right-handed, OpenGL, mathematics): Z out of screen
-///
-/// ## Oriented Values
-///
-/// Use `Depth.Value<Scalar>` for values with explicit direction:
-///
-/// ```swift
-/// let offset = Depth.Value(direction: .forward, value: 10.0)
+/// // Oriented value with direction
+/// let offset = Depth.Value(.forward, 10.0)
 /// ```
 public enum Depth: Sendable, Hashable, Codable {
-    /// Z axis increases away from viewer (into the screen).
+    /// Z-axis increases away from viewer (left-handed systems).
     case forward
 
-    /// Z axis increases toward viewer (out of the screen).
+    /// Z-axis increases toward viewer (right-handed systems).
     case backward
 }
 
 // MARK: - Orientation Conformance
 
 extension Depth: Orientation {
-    /// The underlying canonical direction.
+    /// Returns the canonical direction representation.
     @inlinable
     public var direction: Direction {
         switch self {
@@ -59,7 +43,7 @@ extension Depth: Orientation {
         }
     }
 
-    /// The opposite orientation.
+    /// Returns the opposite orientation.
     @inlinable
     public var opposite: Depth {
         switch self {
@@ -68,18 +52,18 @@ extension Depth: Orientation {
         }
     }
 
-    /// All cases.
+    /// All depth orientations.
     public static let allCases: [Depth] = [.forward, .backward]
 }
 
 // MARK: - Pattern Matching Support
 
 extension Depth {
-    /// Whether this is forward orientation.
+    /// Whether orientation is forward.
     @inlinable
     public var isForward: Bool { self == .forward }
 
-    /// Whether this is backward orientation.
+    /// Whether orientation is backward.
     @inlinable
     public var isBackward: Bool { self == .backward }
 }

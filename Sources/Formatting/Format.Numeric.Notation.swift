@@ -2,9 +2,9 @@
 // Notation styles for numeric formatting.
 
 extension Format.Numeric {
-    /// Notation style for numeric formatting
+    /// Notation style controlling how numbers are represented.
     ///
-    /// Controls how numbers are represented (standard, compact, or scientific).
+    /// Choose between automatic decimal representation, compact notation with suffixes (K, M, B), or scientific notation with exponents. Use this to make large numbers more readable or to display values in scientific format.
     ///
     /// ## Example
     ///
@@ -13,20 +13,17 @@ extension Format.Numeric {
     /// 1234.formatted(.number.notation(.scientific))    // "1.234E3"
     /// ```
     public enum Notation: Sendable, Equatable {
-        /// Automatic notation (default decimal representation)
+        /// Standard decimal representation without abbreviation
         case automatic
 
-        /// Compact notation using suffixes (K, M, B)
+        /// Abbreviates large numbers with K, M, or B suffix
         ///
-        /// - 1,000 → "1K"
-        /// - 1,000,000 → "1M"
-        /// - 1,000,000,000 → "1B"
+        /// Examples: 1,000 → "1K", 1,000,000 → "1M", 1,000,000,000 → "1B"
         case compactName
 
-        /// Scientific notation with exponent
+        /// Displays numbers in scientific notation with exponent
         ///
-        /// - 1234 → "1.234E3"
-        /// - 0.00123 → "1.23E-3"
+        /// Examples: 1234 → "1.234E3", 0.00123 → "1.23E-3"
         case scientific
     }
 }

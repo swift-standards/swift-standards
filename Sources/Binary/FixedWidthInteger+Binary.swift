@@ -4,19 +4,22 @@
 // MARK: - Bit Rotation
 
 extension FixedWidthInteger {
-    /// Rotates bits left by specified count.
+    /// Rotates bits left by the specified count.
     ///
-    /// Circular left shift preserving all bits.
-    /// Distinct from left shift which fills with zeros.
+    /// Performs a circular left shift, preserving all bits. Unlike a standard left shift
+    /// which fills vacated positions with zeros, rotation wraps bits from the left end
+    /// to the right end.
     ///
-    /// Category theory: Automorphism in cyclic group of bit positions
-    /// `rotateLeft: Z/nZ → Z/nZ` where n = bitWidth
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
-    /// let x: UInt8 = 0b11010011
-    /// x.rotateLeft(by: 2)  // 0b01001111
+    /// let x: UInt8 = 0b11010011  // Binary: 11010011
+    /// let rotated = x.rotateLeft(by: 2)
+    /// // 0b01001111  // Binary: 01001111
     /// ```
+    ///
+    /// - Parameter count: Number of positions to rotate left
+    /// - Returns: The value with bits rotated left
     public func rotateLeft(by count: Int) -> Self {
         let shift = count % Self.bitWidth
         guard shift != 0 else { return self }
@@ -24,19 +27,22 @@ extension FixedWidthInteger {
         return (self << shift) | (self >> (Self.bitWidth - shift))
     }
 
-    /// Rotates bits right by specified count.
+    /// Rotates bits right by the specified count.
     ///
-    /// Circular right shift preserving all bits.
-    /// Distinct from right shift which fills with sign or zeros.
+    /// Performs a circular right shift, preserving all bits. Unlike a standard right shift
+    /// which fills vacated positions with zeros or sign bits, rotation wraps bits from
+    /// the right end to the left end.
     ///
-    /// Category theory: Inverse of rotateLeft in cyclic group
-    /// `rotateRight: Z/nZ → Z/nZ` where `rotateRight(k) = rotateLeft(-k)`
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
-    /// let x: UInt8 = 0b11010011
-    /// x.rotateRight(by: 2)  // 0b11110100
+    /// let x: UInt8 = 0b11010011  // Binary: 11010011
+    /// let rotated = x.rotateRight(by: 2)
+    /// // 0b11110100  // Binary: 11110100
     /// ```
+    ///
+    /// - Parameter count: Number of positions to rotate right
+    /// - Returns: The value with bits rotated right
     public func rotateRight(by count: Int) -> Self {
         let shift = count % Self.bitWidth
         guard shift != 0 else { return self }
@@ -44,18 +50,20 @@ extension FixedWidthInteger {
         return (self >> shift) | (self << (Self.bitWidth - shift))
     }
 
-    /// Reverses all bits.
+    /// Reverses the order of all bits.
     ///
-    /// Reflection operation inverting bit order.
-    /// Useful in FFT algorithms, cryptography, and binary protocols.
+    /// Reflects the bit pattern, swapping bit positions from ends to middle.
+    /// Useful in FFT algorithms, cryptography, and binary protocol implementations.
     ///
-    /// Category theory: Involution (self-inverse) `reverseBits ∘ reverseBits = id`
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
-    /// let x: UInt8 = 0b11010011
-    /// x.reverseBits()  // 0b11001011
+    /// let x: UInt8 = 0b11010011  // Binary: 11010011
+    /// let reversed = x.reverseBits()
+    /// // 0b11001011  // Binary: 11001011
     /// ```
+    ///
+    /// - Returns: The value with all bits in reversed order
     public func reverseBits() -> Self {
         var result: Self = 0
         var value = self
@@ -73,20 +81,25 @@ extension FixedWidthInteger {
 // MARK: - Byte Serialization
 
 extension FixedWidthInteger {
-    /// Converts to byte array with specified endianness.
+    /// Converts the integer to a byte array.
     ///
-    /// Serializes integer to bytes respecting byte order.
-    /// Enables portable binary representation.
+    /// Serializes the integer to bytes using the specified byte order.
+    /// Use this for portable binary representation across different platforms.
     ///
-    /// Category theory: Homomorphism from integer ring to byte sequences
-    /// `bytes: Z → Seq(UInt8)` preserving arithmetic under deserialization
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// let x: UInt16 = 0x1234
-    /// x.bytes(endianness: .big)     // [0x12, 0x34]
-    /// x.bytes(endianness: .little)  // [0x34, 0x12]
+    ///
+    /// let bigEndian = x.bytes(endianness: .big)
+    /// // [0x12, 0x34]
+    ///
+    /// let littleEndian = x.bytes(endianness: .little)
+    /// // [0x34, 0x12]
     /// ```
+    ///
+    /// - Parameter endianness: Byte order for the output (defaults to little-endian)
+    /// - Returns: Array of bytes representing the integer
     public func bytes(endianness: Binary.Endianness = .little) -> [UInt8] {
         let converted: Self
         switch endianness {
@@ -99,24 +112,26 @@ extension FixedWidthInteger {
         return Swift.withUnsafeBytes(of: converted) { Array($0) }
     }
 
-    /// Creates an integer from byte array with specified endianness.
+    /// Creates an integer from a byte array.
     ///
-    /// Deserializes bytes to integer respecting byte order.
-    /// Inverse operation of `bytes(endianness:)`.
+    /// Deserializes bytes to an integer using the specified byte order.
+    /// Returns `nil` if the byte count doesn't match the integer's size.
     ///
-    /// Category theory: Inverse homomorphism from byte sequences to integers
-    /// `init(bytes:endianness:): Seq(UInt8) → Z`, inverse of `bytes(endianness:)`
+    /// ## Example
     ///
-    /// Example:
     /// ```swift
     /// let bytes: [UInt8] = [0x12, 0x34, 0x56, 0x78]
-    /// let value = UInt32(bytes: bytes, endianness: .big)  // 0x12345678
+    /// let value = UInt32(bytes: bytes, endianness: .big)
+    /// // 0x12345678
+    ///
+    /// let tooFewBytes: [UInt8] = [0x12, 0x34]
+    /// let invalid = UInt32(bytes: tooFewBytes, endianness: .big)
+    /// // nil
     /// ```
     ///
     /// - Parameters:
-    ///   - bytes: Byte array to deserialize
-    ///   - endianness: Byte order of the input bytes (defaults to little-endian)
-    /// - Returns: Integer value, or nil if byte count doesn't match type size
+    ///   - bytes: Byte array to deserialize (must be exactly the size of the integer type)
+    ///   - endianness: Byte order of the input (defaults to little-endian)
     public init?(bytes: [UInt8], endianness: Binary.Endianness = .little) {
         guard bytes.count == MemoryLayout<Self>.size else { return nil }
 
@@ -136,16 +151,25 @@ extension FixedWidthInteger {
 extension Array where Element: FixedWidthInteger {
     /// Creates an array of integers from a flat byte collection.
     ///
-    /// - Parameters:
-    ///   - bytes: Collection of bytes representing multiple integers
-    ///   - endianness: Byte order of the input bytes (defaults to little-endian)
-    /// - Returns: Array of integers, or nil if byte count is not a multiple of integer size
+    /// Deserializes a sequence of bytes into an array of integers. The byte count
+    /// must be a multiple of the integer size. Returns `nil` if the byte count
+    /// is not evenly divisible.
     ///
-    /// Example:
+    /// ## Example
+    ///
     /// ```swift
     /// let bytes: [UInt8] = [0x01, 0x00, 0x02, 0x00]
-    /// let values = [UInt16](bytes: bytes)  // [1, 2]
+    /// let values = [UInt16](bytes: bytes, endianness: .little)
+    /// // [1, 2]
+    ///
+    /// let oddBytes: [UInt8] = [0x01, 0x00, 0x02]
+    /// let invalid = [UInt16](bytes: oddBytes)
+    /// // nil (3 bytes is not a multiple of 2)
     /// ```
+    ///
+    /// - Parameters:
+    ///   - bytes: Collection of bytes representing multiple integers
+    ///   - endianness: Byte order of the input (defaults to little-endian)
     public init?<C: Collection>(bytes: C, endianness: Binary.Endianness = .little)
     where C.Element == UInt8 {
         let elementSize = MemoryLayout<Element>.size

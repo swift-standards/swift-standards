@@ -1,10 +1,3 @@
-//
-//  Bool?+TernaryLogic.swift
-//  swift-standards
-//
-//  Created by Coen ten Thije Boonkkamp on 06/12/2025.
-//
-
 extension Optional: TernaryLogic.`Protocol` where Wrapped == Bool {
     /// The true value (`true`).
     @inlinable
@@ -18,11 +11,11 @@ extension Optional: TernaryLogic.`Protocol` where Wrapped == Bool {
     @inlinable
     public static var unknown: Bool? { nil }
 
-    /// Returns self, since `Bool?` is the canonical representation.
+    /// Returns self as the canonical `Bool?` representation.
     @inlinable
     public static func from(_ self: Self) -> Bool? { self }
 
-    /// Creates an optional Bool from an optional Bool (identity).
+    /// Creates an optional Bool from an optional Bool (identity operation).
     @inlinable
     public init(_ bool: Bool?) {
         self = bool
@@ -30,6 +23,19 @@ extension Optional: TernaryLogic.`Protocol` where Wrapped == Bool {
 }
 
 extension Optional where Wrapped == Bool {
+    /// Creates an optional Bool from any `TernaryLogic.Protocol` conforming type.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// enum Tribool: TernaryLogic.Protocol {
+    ///     case yes, no, maybe
+    ///     // ... protocol requirements
+    /// }
+    /// let tribool = Tribool.maybe
+    /// let bool: Bool? = Bool?(tribool)
+    /// // bool = nil (unknown)
+    /// ```
     public init<T: TernaryLogic.`Protocol`>(
         _ t: T
     ) {

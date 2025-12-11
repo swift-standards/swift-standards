@@ -1,10 +1,10 @@
 // Ngon.swift
 // An N-sided polygon with exactly N vertices (compile-time enforced).
 
-public import Angle
-public import Algebra
 public import Affine
+public import Algebra
 public import Algebra_Linear
+public import Angle
 
 extension Geometry {
     /// An N-sided polygon in 2D space with exactly N vertices.
@@ -70,24 +70,24 @@ extension Geometry.Ngon: Hashable where Scalar: Hashable {
 // MARK: - Codable
 
 #if Codable
-extension Geometry.Ngon: Codable where Scalar: Codable {
-    public init(from decoder: any Decoder) throws {
-        var container = try decoder.unkeyedContainer()
-        let first = try container.decode(Geometry.Point<2>.self)
-        var verts = InlineArray<N, Geometry.Point<2>>(repeating: first)
-        for i in 1..<N {
-            verts[i] = try container.decode(Geometry.Point<2>.self)
+    extension Geometry.Ngon: Codable where Scalar: Codable {
+        public init(from decoder: any Decoder) throws {
+            var container = try decoder.unkeyedContainer()
+            let first = try container.decode(Geometry.Point<2>.self)
+            var verts = InlineArray<N, Geometry.Point<2>>(repeating: first)
+            for i in 1..<N {
+                verts[i] = try container.decode(Geometry.Point<2>.self)
+            }
+            self.vertices = verts
         }
-        self.vertices = verts
-    }
 
-    public func encode(to encoder: any Encoder) throws {
-        var container = encoder.unkeyedContainer()
-        for i in 0..<N {
-            try container.encode(vertices[i])
+        public func encode(to encoder: any Encoder) throws {
+            var container = encoder.unkeyedContainer()
+            for i in 0..<N {
+                try container.encode(vertices[i])
+            }
         }
     }
-}
 #endif
 
 // MARK: - Typealiases

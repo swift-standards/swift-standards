@@ -7,13 +7,12 @@
 
     @available(macOS 13.0, iOS 16.0, watchOS 9.0, tvOS 16.0, *)
     extension Duration {
-        /// Create a Duration from seconds
+        /// Creates a duration from a floating-point number of seconds.
         ///
-        /// Converts floating-point seconds to Duration with nanosecond precision.
+        /// ## Example
         ///
-        /// Example:
         /// ```swift
-        /// let duration = Duration.seconds(1.5)  // 1 second, 500 milliseconds
+        /// let duration = Duration.seconds(1.5)     // 1.5 seconds
         /// let duration2 = Duration.seconds(0.001)  // 1 millisecond
         /// ```
         public static func seconds(_ value: Double) -> Duration {
@@ -22,9 +21,10 @@
                 + .nanoseconds(Int64(components.fraction * 1_000_000_000))
         }
 
-        /// Convert Duration to seconds as Double
+        /// The duration expressed in seconds as a floating-point value.
         ///
-        /// Example:
+        /// ## Example
+        ///
         /// ```swift
         /// let duration = Duration.seconds(1) + Duration.milliseconds(500)
         /// duration.inSeconds  // 1.5
@@ -34,9 +34,10 @@
             return Double(seconds) + (Double(attoseconds) / 1_000_000_000_000_000_000.0)
         }
 
-        /// Convert Duration to milliseconds
+        /// The duration expressed in milliseconds.
         ///
-        /// Example:
+        /// ## Example
+        ///
         /// ```swift
         /// let duration = Duration.seconds(1.5)
         /// duration.inMilliseconds  // 1500.0
@@ -45,9 +46,10 @@
             inSeconds * 1000
         }
 
-        /// Convert Duration to microseconds
+        /// The duration expressed in microseconds.
         ///
-        /// Example:
+        /// ## Example
+        ///
         /// ```swift
         /// let duration = Duration.milliseconds(1)
         /// duration.inMicroseconds  // 1000.0
@@ -56,9 +58,10 @@
             inSeconds * 1_000_000
         }
 
-        /// Convert Duration to nanoseconds
+        /// The duration expressed in nanoseconds.
         ///
-        /// Example:
+        /// ## Example
+        ///
         /// ```swift
         /// let duration = Duration.microseconds(1)
         /// duration.inNanoseconds  // 1000.0

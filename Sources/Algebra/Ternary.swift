@@ -1,25 +1,19 @@
 // Ternary.swift
 public import Dimension
 
-// Balanced ternary digit (-1, 0, +1).
-
-/// A balanced ternary digit: negative, zero, or positive.
+/// Balanced ternary digit: -1, 0, or +1.
 ///
-/// Used in balanced ternary numeral systems where digits are -1, 0, +1.
-/// Also known as a "trit" (ternary digit).
+/// Used in balanced ternary numeral systems where digits are -1, 0, +1 (also
+/// known as a "trit"). More symmetric than binary with simple negation and no
+/// separate sign bit. Use for balanced ternary arithmetic or three-state logic.
 ///
-/// ## Mathematical Properties
-///
-/// - More symmetric than binary: negation is simple sign flip
-/// - No separate sign bit needed in balanced ternary
-/// - Arithmetic operations have natural carry/borrow behavior
-///
-/// ## Tagged Values
-///
-/// Use `Ternary.Value<T>` to pair a value with a ternary digit:
+/// ## Example
 ///
 /// ```swift
-/// let coefficient: Ternary.Value<Double> = .init(.positive, 1.0)
+/// let t: Ternary = .positive
+/// print(t.intValue)              // 1
+/// print(t.negated)               // negative
+/// print(t.multiplying(.negative)) // negative
 /// ```
 public enum Ternary: Int, Sendable, Hashable, Codable, CaseIterable {
     /// Negative one (-1).
@@ -35,7 +29,7 @@ public enum Ternary: Int, Sendable, Hashable, Codable, CaseIterable {
 // MARK: - Negation
 
 extension Ternary {
-    /// The negated ternary value.
+    /// Negated ternary value (swaps positive↔negative, preserves zero).
     @inlinable
     public var negated: Ternary {
         switch self {
@@ -55,11 +49,11 @@ extension Ternary {
 // MARK: - Arithmetic
 
 extension Ternary {
-    /// The integer value (-1, 0, or +1).
+    /// Integer value (-1, 0, or +1).
     @inlinable
     public var intValue: Int { rawValue }
 
-    /// Multiplies two ternary values.
+    /// Multiplies two ternary values (standard integer multiplication).
     @inlinable
     public func multiplying(_ other: Ternary) -> Ternary {
         Ternary(rawValue: self.rawValue * other.rawValue) ?? .zero

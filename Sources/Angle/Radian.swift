@@ -1,23 +1,26 @@
 // Radian.swift
 // An angle measured in radians (dimensionless).
 
-/// An angle measured in radians.
+/// An angle measured in radians (dimensionless ratio of arc length to radius).
 ///
-/// Radians are dimensionless - they represent the ratio of arc length to radius.
-/// A rotation by π/4 radians is the same abstract rotation regardless of what
-/// coordinate system or unit of measurement you're working in.
+/// Radians are the natural unit for angular measurement, representing pure ratios independent of coordinate systems. Use radians for mathematical operations, trigonometry, and when working with the standard library's `Double` math functions.
 ///
 /// ## Example
 ///
 /// ```swift
-/// let rightAngle = Radian(.pi / 2)
-/// let rotation = Rotation(angle: rightAngle)
+/// let angle = Radian(.pi / 4)       // 45°
+/// print(angle.sin)                  // 0.7071...
+/// print(angle.degrees)              // Degree(45.0)
+///
+/// // Arithmetic operations
+/// let doubled = angle * 2           // Radian(π/2) = 90°
+/// let sum = angle + Radian(.pi)     // Radian(5π/4) = 225°
 /// ```
 public struct Radian: Sendable, Hashable, Codable {
-    /// The angle value in radians
+    /// Angle value (radians)
     public var value: Double
 
-    /// Create a radian angle from a raw value
+    /// Creates an angle from a radian value.
     @inlinable
     public init(_ value: Double) {
         self.value = value
@@ -68,7 +71,7 @@ extension Radian: Numeric {
         self.value = value
     }
 
-    /// Multiply two angles (scaling)
+    /// Multiplies two angles (scalar scaling).
     @inlinable
     @_disfavoredOverload
     public static func * (lhs: borrowing Self, rhs: borrowing Self) -> Self {
@@ -85,7 +88,7 @@ extension Radian: Numeric {
 // MARK: - SignedNumeric
 
 extension Radian: SignedNumeric {
-    /// Negate the angle
+    /// Negates the angle (reverses direction).
     @inlinable
     @_disfavoredOverload
     public static prefix func - (value: borrowing Self) -> Self {
@@ -96,7 +99,7 @@ extension Radian: SignedNumeric {
 // MARK: - Division
 
 extension Radian {
-    /// Divide by a scalar
+    /// Divides the angle by a scalar value.
     @inlinable
     @_disfavoredOverload
     public static func / (lhs: borrowing Self, rhs: Double) -> Self {

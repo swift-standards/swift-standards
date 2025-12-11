@@ -4,10 +4,9 @@
 // Picosecond representation as a refinement type
 
 extension Time {
-    /// A picosecond (0-999)
+    /// Picosecond component (0-999).
     ///
-    /// This is a refinement type - an integer constrained to the valid range.
-    /// Represents 10^-12 seconds (trillionths of a second).
+    /// Represents 10^-12 seconds. Refinement type for type-safe sub-second precision.
     public struct Picosecond: Sendable, Equatable, Hashable, Comparable {
         /// The picosecond value (0-999)
         public let value: Int
@@ -55,6 +54,6 @@ extension Time.Picosecond {
 }
 
 extension Time.Picosecond {
-    /// Zero nanoseconds
+    /// Zero picoseconds
     public static let zero = Time.Picosecond(unchecked: 0)
 }

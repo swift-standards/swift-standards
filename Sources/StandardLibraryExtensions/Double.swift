@@ -4,17 +4,13 @@
 // Extensions for Swift standard library Double
 
 extension Double {
-    /// Rounds to specified decimal places
+    /// Returns the value rounded to the specified number of decimal places.
     ///
-    /// Quantization morphism to discrete subset.
-    /// Projects continuous reals onto decimal lattice.
+    /// ## Example
     ///
-    /// Category theory: Quotient morphism ℝ → ℝ/~
-    /// where x ~ y iff round(x, n) = round(y, n)
-    ///
-    /// Example:
     /// ```swift
     /// 3.14159.rounded(to: 2)  // 3.14
+    /// 2.71828.rounded(to: 3)  // 2.718
     /// ```
     public func rounded(to places: Int) -> Double {
         guard places >= 0 else { return self }

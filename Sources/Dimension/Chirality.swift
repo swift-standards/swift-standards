@@ -3,24 +3,14 @@
 
 /// Handedness or chirality: left or right.
 ///
-/// Describes asymmetry that distinguishes mirror images, used in:
-/// - Coordinate system handedness (left/right-handed)
-/// - Molecular chirality
-/// - Screw thread direction
-/// - Hand dominance
+/// `Chirality` represents mirror-image asymmetry in coordinate systems, molecular structures, screw threads, or any left/right distinction. Mirror reflection swaps left and right chirality.
 ///
-/// ## Mathematical Properties
-///
-/// - Forms Z₂ group under reflection
-/// - Mirror operation swaps chirality
-/// - Related to determinant sign of transformation matrices
-///
-/// ## Paired Values
-///
-/// Use `Chirality.Value<T>` to pair a value with its handedness:
+/// ## Example
 ///
 /// ```swift
-/// let hand: Chirality.Value<Coordinate> = .init(.right, coord)
+/// let system: Chirality = .right   // Right-handed coordinate system (standard)
+/// let mirrored = !system           // .left
+/// let hand: Chirality.Value<Point> = Pair(.right, point)
 /// ```
 public enum Chirality: Sendable, Hashable, Codable, CaseIterable {
     /// Left-handed (sinistral).
@@ -33,7 +23,7 @@ public enum Chirality: Sendable, Hashable, Codable, CaseIterable {
 // MARK: - Opposite
 
 extension Chirality {
-    /// The opposite chirality (mirror image).
+    /// Returns the opposite chirality (mirror image).
     @inlinable
     public var opposite: Chirality {
         switch self {
@@ -42,13 +32,13 @@ extension Chirality {
         }
     }
 
-    /// Returns the opposite chirality.
+    /// Returns the opposite chirality (prefix negation).
     @inlinable
     public static prefix func ! (value: Chirality) -> Chirality {
         value.opposite
     }
 
-    /// Alias for opposite (mirror reflection swaps chirality).
+    /// Returns the mirrored chirality.
     @inlinable
     public var mirrored: Chirality { opposite }
 }
@@ -66,6 +56,6 @@ extension Chirality {
 // MARK: - Paired Value
 
 extension Chirality {
-    /// A value paired with its chirality.
+    /// Value paired with chirality information.
     public typealias Value<Payload> = Pair<Chirality, Payload>
 }

@@ -3,40 +3,38 @@
 
 public import Algebra
 public import Dimension
-public import Dimension
 
 extension Region {
-    /// Corner of a rectangle.
+    /// Four corners of a rectangle defined by horizontal and vertical positions.
     ///
-    /// A corner is the product of a horizontal position and a vertical position,
-    /// representing `Horizontal × Vertical` (Z₂ × Z₂).
+    /// Corner represents the Cartesian product of horizontal (left/right) and vertical (top/bottom) positions, forming four named corners. Use it for corner-specific styling, layout constraints, or geometric operations. Forms the product group Z₂ × Z₂.
     ///
-    /// ## Mathematical Properties
-    ///
-    /// - Product type: `Horizontal × Vertical`
-    /// - 4 elements = 2 × 2
-    /// - `opposite` flips both components
-    ///
-    /// ## Naming Convention
-    ///
-    /// Uses absolute directions (left/right, top/bottom), not layout-relative
-    /// terms (leading/trailing). For layout-aware corners, see `Layout.Corner`.
-    ///
-    /// ## Tagged Values
-    ///
-    /// Use `Corner.Value<T>` to pair a value with its corner:
+    /// ## Example
     ///
     /// ```swift
-    /// let radius: Region.Corner.Value<CGFloat> = .init(.topLeft, 8)
+    /// let corner = Region.Corner.topLeft
+    /// let opposite = !corner  // .bottomRight
+    ///
+    /// // Component access
+    /// corner.horizontal  // .leftward
+    /// corner.vertical    // .upward
+    ///
+    /// // Adjacent corners
+    /// corner.horizontalAdjacent  // .topRight (shares vertical edge)
+    /// corner.verticalAdjacent    // .bottomLeft (shares horizontal edge)
     /// ```
+    ///
+    /// ## Note
+    ///
+    /// Uses absolute directions (left/right, top/bottom), not layout-relative terms (leading/trailing).
     public struct Corner: Sendable, Hashable, Codable {
-        /// The horizontal position (leftward or rightward).
+        /// Horizontal position (leftward or rightward).
         public var horizontal: Horizontal
 
-        /// The vertical position (upward = top, downward = bottom).
+        /// Vertical position (upward or downward).
         public var vertical: Vertical
 
-        /// Create a corner from horizontal and vertical positions.
+        /// Creates a corner from horizontal and vertical positions.
         @inlinable
         public init(horizontal: Horizontal, vertical: Vertical) {
             self.horizontal = horizontal
@@ -72,13 +70,13 @@ extension Region.Corner: CaseIterable {
 // MARK: - Opposite
 
 extension Region.Corner {
-    /// The diagonally opposite corner.
+    /// Diagonally opposite corner (flips both horizontal and vertical).
     @inlinable
     public var opposite: Region.Corner {
         Region.Corner(horizontal: horizontal.opposite, vertical: vertical.opposite)
     }
 
-    /// Returns the diagonally opposite corner.
+    /// Returns the diagonally opposite corner (diagonal reflection).
     @inlinable
     public static prefix func ! (value: Region.Corner) -> Region.Corner {
         value.opposite
@@ -88,19 +86,19 @@ extension Region.Corner {
 // MARK: - Properties
 
 extension Region.Corner {
-    /// True if this is a top corner.
+    /// Whether this is a top corner (upward vertical position).
     @inlinable
     public var isTop: Bool { vertical == .upward }
 
-    /// True if this is a bottom corner.
+    /// Whether this is a bottom corner (downward vertical position).
     @inlinable
     public var isBottom: Bool { vertical == .downward }
 
-    /// True if this is a left corner.
+    /// Whether this is a left corner (leftward horizontal position).
     @inlinable
     public var isLeft: Bool { horizontal == .leftward }
 
-    /// True if this is a right corner.
+    /// Whether this is a right corner (rightward horizontal position).
     @inlinable
     public var isRight: Bool { horizontal == .rightward }
 }
@@ -108,13 +106,13 @@ extension Region.Corner {
 // MARK: - Adjacent Corners
 
 extension Region.Corner {
-    /// The corner horizontally adjacent to this one.
+    /// Corner horizontally adjacent to this one (flips horizontal, keeps vertical).
     @inlinable
     public var horizontalAdjacent: Region.Corner {
         Region.Corner(horizontal: horizontal.opposite, vertical: vertical)
     }
 
-    /// The corner vertically adjacent to this one.
+    /// Corner vertically adjacent to this one (keeps horizontal, flips vertical).
     @inlinable
     public var verticalAdjacent: Region.Corner {
         Region.Corner(horizontal: horizontal, vertical: vertical.opposite)

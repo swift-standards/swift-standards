@@ -1,8 +1,8 @@
 // Line.swift
 // An infinite line and its bounded segment in 2D space.
 
-public import Algebra
 public import Affine
+public import Algebra
 public import Algebra_Linear
 
 extension Geometry {
@@ -51,7 +51,7 @@ extension Geometry.Line: Hashable where Scalar: Hashable {}
 
 // MARK: - Codable
 #if Codable
-extension Geometry.Line: Codable where Scalar: Codable {}
+    extension Geometry.Line: Codable where Scalar: Codable {}
 #endif
 // MARK: - Factory Methods (AdditiveArithmetic)
 
@@ -224,7 +224,7 @@ extension Geometry.Line.Segment: Hashable where Scalar: Hashable {}
 
 // MARK: - Segment Codable
 #if Codable
-extension Geometry.Line.Segment: Codable where Scalar: Codable {}
+    extension Geometry.Line.Segment: Codable where Scalar: Codable {}
 #endif
 // MARK: - Segment Reversed
 

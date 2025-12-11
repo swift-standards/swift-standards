@@ -4,17 +4,24 @@
 // MARK: - Single Integer Serialization
 
 extension [UInt8] {
-    /// Creates a byte array from any fixed-width integer.
+    /// Creates a byte array from a fixed-width integer.
+    ///
+    /// Serializes the integer to bytes using the specified byte order.
+    /// Use this for converting integers to their binary representation.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let littleEndian = [UInt8](Int32(256), endianness: .little)
+    /// // [0, 1, 0, 0]
+    ///
+    /// let bigEndian = [UInt8](Int32(256), endianness: .big)
+    /// // [0, 0, 1, 0]
+    /// ```
     ///
     /// - Parameters:
-    ///   - value: The integer value to convert
-    ///   - endianness: Byte order for the output bytes (defaults to little-endian)
-    ///
-    /// Example:
-    /// ```swift
-    /// let int32Bytes = [UInt8](Int32(256), endianness: .little)  // [0, 1, 0, 0]
-    /// let int32BytesBE = [UInt8](Int32(256), endianness: .big)   // [0, 0, 1, 0]
-    /// ```
+    ///   - value: The integer value to serialize
+    ///   - endianness: Byte order for the output (defaults to little-endian)
     public init<T: FixedWidthInteger>(_ value: T, endianness: Binary.Endianness = .little) {
         let converted: T
         switch endianness {
@@ -30,17 +37,21 @@ extension [UInt8] {
 // MARK: - Collection Serialization
 
 extension [UInt8] {
-    /// Creates a byte array from a collection of fixed-width integers.
+    /// Creates a byte array by serializing a collection of integers.
     ///
-    /// - Parameters:
-    ///   - values: Collection of integers to convert
-    ///   - endianness: Byte order for the output bytes (defaults to little-endian)
+    /// Serializes each integer in sequence using the specified byte order.
+    /// The resulting array contains all integers concatenated together.
     ///
-    /// Example:
+    /// ## Example
+    ///
     /// ```swift
     /// let bytes = [UInt8](serializing: [Int16(1), Int16(2)], endianness: .little)
-    /// // [1, 0, 2, 0] (4 bytes total)
+    /// // [1, 0, 2, 0] (4 bytes total: 2 bytes per Int16)
     /// ```
+    ///
+    /// - Parameters:
+    ///   - values: Collection of integers to serialize
+    ///   - endianness: Byte order for the output (defaults to little-endian)
     public init<C: Collection>(serializing values: C, endianness: Binary.Endianness = .little)
     where C.Element: FixedWidthInteger {
         var result: [UInt8] = []
@@ -57,12 +68,16 @@ extension [UInt8] {
 extension [UInt8] {
     /// Creates a byte array from a UTF-8 encoded string.
     ///
-    /// - Parameter string: The string to convert to UTF-8 bytes
+    /// Converts the string to UTF-8 and returns the byte representation.
     ///
-    /// Example:
+    /// ## Example
+    ///
     /// ```swift
-    /// let bytes = [UInt8](utf8: "Hello")  // [72, 101, 108, 108, 111]
+    /// let bytes = [UInt8](utf8: "Hello")
+    /// // [72, 101, 108, 108, 111]
     /// ```
+    ///
+    /// - Parameter string: The string to encode as UTF-8 bytes
     public init(utf8 string: some StringProtocol) {
         self = Array(string.utf8)
     }
@@ -71,17 +86,21 @@ extension [UInt8] {
 // MARK: - Splitting
 
 extension [UInt8] {
-    /// Splits the byte array at all occurrences of a delimiter sequence.
+    /// Splits the byte array at each occurrence of a delimiter sequence.
     ///
-    /// - Parameter separator: The byte sequence to split on
-    /// - Returns: Array of byte arrays split at the delimiter
+    /// Returns an array of subarrays separated by the delimiter.
+    /// The delimiter itself is not included in the results.
     ///
-    /// Example:
+    /// ## Example
+    ///
     /// ```swift
     /// let data: [UInt8] = [1, 2, 0, 0, 3, 4, 0, 0, 5]
     /// let parts = data.split(separator: [0, 0])
     /// // [[1, 2], [3, 4], [5]]
     /// ```
+    ///
+    /// - Parameter separator: The byte sequence to split on
+    /// - Returns: Array of byte arrays separated by the delimiter
     public func split(separator: [UInt8]) -> [[UInt8]] {
         guard !separator.isEmpty else { return [self] }
 
@@ -116,42 +135,74 @@ extension [UInt8] {
 // MARK: - Mutation Helpers
 
 extension [UInt8] {
-    /// Appends a 16-bit integer as bytes with specified endianness.
+    /// Appends a 16-bit unsigned integer as bytes.
+    ///
+    /// - Parameters:
+    ///   - value: The value to append
+    ///   - endianness: Byte order for serialization (defaults to little-endian)
     public mutating func append(_ value: UInt16, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
 
-    /// Appends a 32-bit integer as bytes with specified endianness.
+    /// Appends a 32-bit unsigned integer as bytes.
+    ///
+    /// - Parameters:
+    ///   - value: The value to append
+    ///   - endianness: Byte order for serialization (defaults to little-endian)
     public mutating func append(_ value: UInt32, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
 
-    /// Appends a 64-bit integer as bytes with specified endianness.
+    /// Appends a 64-bit unsigned integer as bytes.
+    ///
+    /// - Parameters:
+    ///   - value: The value to append
+    ///   - endianness: Byte order for serialization (defaults to little-endian)
     public mutating func append(_ value: UInt64, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
 
-    /// Appends a signed 16-bit integer as bytes with specified endianness.
+    /// Appends a 16-bit signed integer as bytes.
+    ///
+    /// - Parameters:
+    ///   - value: The value to append
+    ///   - endianness: Byte order for serialization (defaults to little-endian)
     public mutating func append(_ value: Int16, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
 
-    /// Appends a signed 32-bit integer as bytes with specified endianness.
+    /// Appends a 32-bit signed integer as bytes.
+    ///
+    /// - Parameters:
+    ///   - value: The value to append
+    ///   - endianness: Byte order for serialization (defaults to little-endian)
     public mutating func append(_ value: Int32, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
 
-    /// Appends a signed 64-bit integer as bytes with specified endianness.
+    /// Appends a 64-bit signed integer as bytes.
+    ///
+    /// - Parameters:
+    ///   - value: The value to append
+    ///   - endianness: Byte order for serialization (defaults to little-endian)
     public mutating func append(_ value: Int64, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
 
-    /// Appends a platform-sized integer as bytes with specified endianness.
+    /// Appends a platform-sized signed integer as bytes.
+    ///
+    /// - Parameters:
+    ///   - value: The value to append
+    ///   - endianness: Byte order for serialization (defaults to little-endian)
     public mutating func append(_ value: Int, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
 
-    /// Appends an unsigned platform-sized integer as bytes with specified endianness.
+    /// Appends a platform-sized unsigned integer as bytes.
+    ///
+    /// - Parameters:
+    ///   - value: The value to append
+    ///   - endianness: Byte order for serialization (defaults to little-endian)
     public mutating func append(_ value: UInt, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
@@ -160,11 +211,20 @@ extension [UInt8] {
 // MARK: - Joining Byte Arrays
 
 extension [[UInt8]] {
-    /// Joins byte arrays with a separator, pre-allocating exact capacity.
+    /// Joins byte arrays with a separator.
     ///
-    /// Efficiently concatenates an array of byte arrays with a separator between each element.
+    /// Efficiently concatenates all byte arrays with the separator inserted between
+    /// each element. Pre-allocates exact capacity for optimal performance.
     ///
-    /// - Parameter separator: The byte sequence to insert between each element
+    /// ## Example
+    ///
+    /// ```swift
+    /// let parts: [[UInt8]] = [[1, 2], [3, 4], [5]]
+    /// let joined = parts.joined(separator: [0, 0])
+    /// // [1, 2, 0, 0, 3, 4, 0, 0, 5]
+    /// ```
+    ///
+    /// - Parameter separator: The byte sequence to insert between elements
     /// - Returns: A single byte array with all elements joined by the separator
     @inlinable
     public func joined(separator: [UInt8]) -> [UInt8] {
@@ -191,6 +251,17 @@ extension [[UInt8]] {
     }
 
     /// Joins byte arrays without a separator.
+    ///
+    /// Efficiently concatenates all byte arrays into a single array.
+    /// Pre-allocates exact capacity for optimal performance.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let parts: [[UInt8]] = [[1, 2], [3, 4], [5]]
+    /// let joined = parts.joined()
+    /// // [1, 2, 3, 4, 5]
+    /// ```
     ///
     /// - Returns: A single byte array with all elements concatenated
     @inlinable

@@ -4,18 +4,25 @@
 // Month representation as a refinement type
 
 extension Time {
-    /// A month in the Gregorian calendar (1-12)
+    /// Month in the Gregorian calendar (1-12).
     ///
-    /// This is a refinement type - an integer constrained to the valid range.
-    /// Month names are format-specific and defined in format packages.
+    /// Refinement type constraining integers to valid month range.
+    /// Use static constants (`.january`, `.february`, etc.) for convenience.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let month = try Time.Month(2) // February
+    /// let feb = Time.Month.february
+    /// print(feb.days(in: Time.Year(2024))) // 29
+    /// ```
     public struct Month: RawRepresentable, Sendable, Equatable, Hashable, Comparable {
-        /// The month value (1-12)
+        /// Month value (1-12)
         public let rawValue: Int
 
-        /// Create a month with validation
+        /// Creates a month with validation (failable).
         ///
-        /// - Parameter rawValue: Month value (1-12)
-        /// - Returns: `nil` if value is not 1-12
+        /// Returns `nil` if value is not 1-12.
         public init?(rawValue: Int) {
             guard (1...12).contains(rawValue) else {
                 return nil
@@ -23,10 +30,9 @@ extension Time {
             self.rawValue = rawValue
         }
 
-        /// Create a month with validation (throwing)
+        /// Creates a month with validation (throwing).
         ///
-        /// - Parameter value: Month value (1-12)
-        /// - Throws: `Month.Error` if value is not 1-12
+        /// - Throws: `Month.Error.invalidMonth` if value is not 1-12
         public init(_ value: Int) throws(Error) {
             guard (1...12).contains(value) else {
                 throw Error.invalidMonth(value)
@@ -39,9 +45,9 @@ extension Time {
 // MARK: - Error
 
 extension Time.Month {
-    /// Errors that can occur when creating a month
+    /// Validation errors for month values.
     public enum Error: Swift.Error, Sendable, Equatable {
-        /// Month must be 1-12
+        /// Month value is not in valid range (1-12)
         case invalidMonth(Int)
     }
 }
@@ -49,7 +55,7 @@ extension Time.Month {
 // MARK: - Unchecked Initialization
 
 extension Time.Month {
-    /// Create a month without validation (internal use only)
+    /// Creates a month without validation (internal use only).
     ///
     /// - Warning: Only use when value is known to be valid (1-12)
     internal init(unchecked value: Int) {
@@ -82,10 +88,9 @@ extension Time.Month {
 // MARK: - Convenience
 
 extension Time.Month {
-    /// Number of days in this month for a given year
+    /// Returns the number of days in this month for a given year (28-31).
     ///
-    /// - Parameter year: The year (affects February in leap years)
-    /// - Returns: Number of days (28-31)
+    /// February varies by leap year (28 or 29 days).
     public func days(in year: Time.Year) -> Int {
         Time.Calendar.Gregorian.daysInMonth(year, self)
     }

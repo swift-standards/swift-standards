@@ -4,52 +4,35 @@
 // Inspired by swift-tagged by Point-Free (https://github.com/pointfreeco/swift-tagged)
 // This implementation extends the concept with coordinate/displacement arithmetic.
 
-/// A value distinguished by a phantom type tag.
+/// A value wrapped with a compile-time phantom type tag.
 ///
-/// `Tagged` wraps a raw value with a phantom type parameter that exists
-/// only at compile-time. This allows the type system to distinguish
-/// otherwise identical types without runtime overhead.
+/// `Tagged` provides zero-cost type safety by wrapping a raw value with a phantom `Tag` parameter that exists only at compile time. Use it to prevent mixing incompatible values (user IDs vs order IDs), distinguish units (meters vs feet), or enforce domain boundaries (validated vs raw strings).
 ///
-/// ## Examples
+/// The tag adds no runtime overhead—only the raw value is stored. This is the foundation for coordinate/displacement arithmetic in affine geometry.
+///
+/// ## Example
 ///
 /// ```swift
-/// // Define phantom types for different ID domains
 /// enum UserIDTag {}
 /// enum OrderIDTag {}
-///
 /// typealias UserID = Tagged<UserIDTag, Int>
 /// typealias OrderID = Tagged<OrderIDTag, Int>
 ///
-/// let userId: UserID = Tagged(42)
-/// let orderId: OrderID = Tagged(42)
-///
-/// // These are different types despite both wrapping Int:
-/// // userId == orderId  // Compile error: cannot compare UserID with OrderID
+/// let user: UserID = 42
+/// let order: OrderID = 42
+/// // user == order  // Error: cannot compare different tagged types
 /// ```
-///
-/// ## Use Cases
-///
-/// - **Type-safe identifiers**: Prevent mixing user IDs with order IDs
-/// - **Units**: Distinguish meters from feet at the type level
-/// - **Domain boundaries**: Mark validated vs unvalidated strings
-///
-/// ## Note
-///
-/// Unlike `Pair<Tag, Value>` which stores both components, `Tagged`
-/// only stores the raw value. The tag is purely a compile-time marker
-/// with zero runtime cost.
-///
 public struct Tagged<Tag, RawValue> {
-    /// The underlying value.
+    /// Underlying raw value.
     public var rawValue: RawValue
 
-    /// Creates a tagged value.
+    /// Creates a tagged value from a raw value.
     @inlinable
     public init(_ rawValue: RawValue) {
         self.rawValue = rawValue
     }
 
-    /// Creates a tagged value.
+    /// Creates a tagged value from a raw value.
     @inlinable
     public init(rawValue: RawValue) {
         self.rawValue = rawValue
@@ -63,7 +46,7 @@ extension Tagged: Equatable where RawValue: Equatable {}
 extension Tagged: Hashable where RawValue: Hashable {}
 
 #if Codable
-extension Tagged: Codable where RawValue: Codable {}
+    extension Tagged: Codable where RawValue: Codable {}
 #endif
 extension Tagged: Comparable where RawValue: Comparable {
     @inlinable
@@ -75,9 +58,7 @@ extension Tagged: Comparable where RawValue: Comparable {
 // MARK: - Functor
 
 extension Tagged {
-    /// Transform the raw value while preserving the tag.
-    ///
-    /// This is the functorial map for `Tagged<Tag, _>`.
+    /// Transforms the raw value while preserving the tag.
     @inlinable
     public func map<NewRawValue>(
         _ transform: (RawValue) throws -> NewRawValue
@@ -85,9 +66,7 @@ extension Tagged {
         Tagged<Tag, NewRawValue>(try transform(rawValue))
     }
 
-    /// Change the tag type while preserving the raw value.
-    ///
-    /// This is a zero-cost type conversion since the tag is phantom.
+    /// Changes the tag type while preserving the raw value (zero-cost conversion).
     @inlinable
     public func retag<NewTag>(_: NewTag.Type = NewTag.self) -> Tagged<NewTag, RawValue> {
         Tagged<NewTag, RawValue>(rawValue)
@@ -143,7 +122,7 @@ extension Tagged: ExpressibleByBooleanLiteral where RawValue: ExpressibleByBoole
 // MARK: - Value Alias
 
 extension Tagged {
-    /// Alias for `rawValue` - convenient for coordinate-style usage.
+    /// Convenient alias for `rawValue`.
     @inlinable
     public var value: RawValue {
         get { rawValue }
@@ -175,28 +154,28 @@ extension Tagged: AdditiveArithmetic where RawValue: AdditiveArithmetic {
 // MARK: - Scalar Arithmetic
 
 extension Tagged where RawValue: AdditiveArithmetic {
-    /// Add a raw scalar
+    /// Adds a raw scalar to a tagged value.
     @inlinable
     @_disfavoredOverload
     public static func + (lhs: Self, rhs: RawValue) -> Self {
         Self(lhs.rawValue + rhs)
     }
 
-    /// Add to a raw scalar
+    /// Adds a tagged value to a raw scalar.
     @inlinable
     @_disfavoredOverload
     public static func + (lhs: RawValue, rhs: Self) -> Self {
         Self(lhs + rhs.rawValue)
     }
 
-    /// Subtract a raw scalar
+    /// Subtracts a raw scalar from a tagged value.
     @inlinable
     @_disfavoredOverload
     public static func - (lhs: Self, rhs: RawValue) -> Self {
         Self(lhs.rawValue - rhs)
     }
 
-    /// Subtract from a raw scalar
+    /// Subtracts a tagged value from a raw scalar.
     @inlinable
     @_disfavoredOverload
     public static func - (lhs: RawValue, rhs: Self) -> Self {
@@ -207,7 +186,7 @@ extension Tagged where RawValue: AdditiveArithmetic {
 // MARK: - Negation
 
 extension Tagged where RawValue: SignedNumeric {
-    /// Negate
+    /// Returns the negation of this value.
     @inlinable
     public static prefix func - (value: Self) -> Self {
         Self(-value.rawValue)
@@ -216,22 +195,19 @@ extension Tagged where RawValue: SignedNumeric {
 
 // MARK: - Absolute Value, Min, Max
 
-/// Absolute value of a tagged value.
-///
-/// Mathematically, the absolute value of a coordinate remains in the same
-/// coordinate space (unlike multiplication which produces a scalar).
+/// Returns the absolute value of a tagged value.
 @inlinable
 public func abs<Tag, T: SignedNumeric & Comparable>(_ x: Tagged<Tag, T>) -> Tagged<Tag, T> {
     Tagged(abs(x.rawValue))
 }
 
-/// Minimum of two tagged values.
+/// Returns the minimum of two tagged values.
 @inlinable
 public func min<Tag, T: Comparable>(_ x: Tagged<Tag, T>, _ y: Tagged<Tag, T>) -> Tagged<Tag, T> {
     x.rawValue <= y.rawValue ? x : y
 }
 
-/// Maximum of two tagged values.
+/// Returns the maximum of two tagged values.
 @inlinable
 public func max<Tag, T: Comparable>(_ x: Tagged<Tag, T>, _ y: Tagged<Tag, T>) -> Tagged<Tag, T> {
     x.rawValue >= y.rawValue ? x : y
@@ -240,19 +216,19 @@ public func max<Tag, T: Comparable>(_ x: Tagged<Tag, T>, _ y: Tagged<Tag, T>) ->
 // MARK: - Multiplication/Division
 
 extension Tagged where RawValue: FloatingPoint {
-    /// Multiply by a scalar
+    /// Multiplies a tagged value by a scalar.
     @inlinable
     public static func * (lhs: Self, rhs: RawValue) -> Self {
         Self(lhs.rawValue * rhs)
     }
 
-    /// Multiply scalar by value
+    /// Multiplies a scalar by a tagged value.
     @inlinable
     public static func * (lhs: RawValue, rhs: Self) -> Self {
         Self(lhs * rhs.rawValue)
     }
 
-    /// Divide by a scalar
+    /// Divides a tagged value by a scalar.
     @inlinable
     public static func / (lhs: Self, rhs: RawValue) -> Self {
         Self(lhs.rawValue / rhs)
@@ -262,9 +238,7 @@ extension Tagged where RawValue: FloatingPoint {
 // MARK: - Squared (same tag multiplication)
 
 extension Tagged where RawValue: Numeric {
-    /// Multiply two same-tagged values to get squared magnitude.
-    ///
-    /// Useful for distance calculations: `dx*dx + dy*dy`
+    /// Multiplies two same-tagged values, returning the raw squared magnitude.
     @inlinable
     @_disfavoredOverload
     public static func * (lhs: Self, rhs: Self) -> RawValue {
@@ -275,9 +249,7 @@ extension Tagged where RawValue: Numeric {
 // MARK: - Same Tag Division (ratio)
 
 extension Tagged where RawValue: FloatingPoint {
-    /// Divide two same-tagged values to get a ratio.
-    ///
-    /// Useful for normalization: `dx / length`
+    /// Divides two same-tagged values, returning the raw ratio.
     @inlinable
     @_disfavoredOverload
     public static func / (lhs: Self, rhs: Self) -> RawValue {
@@ -331,18 +303,17 @@ extension Tagged where RawValue: FloatingPoint {
 
 // MARK: - Cross-Axis Displacement Multiplication
 
-// Displacement cross products: Dx * Dy = Area (scalar), etc.
-// Width * Height produces a scalar (area).
+// Displacement cross products: Dx × Dy = Area (scalar), Width × Height = scalar
 
 extension Tagged where Tag == Index.X.Displacement, RawValue: Numeric {
-    /// Multiply Dx by Dy to get a scalar (area).
+    /// Multiplies X-displacement by Y-displacement, returning area (scalar).
     @inlinable
     @_disfavoredOverload
     public static func * (lhs: Self, rhs: Tagged<Index.Y.Displacement, RawValue>) -> RawValue {
         lhs.rawValue * rhs.rawValue
     }
 
-    /// Multiply Dx by Dz to get a scalar.
+    /// Multiplies X-displacement by Z-displacement, returning a scalar.
     @inlinable
     @_disfavoredOverload
     public static func * (lhs: Self, rhs: Tagged<Index.Z.Displacement, RawValue>) -> RawValue {
@@ -351,14 +322,14 @@ extension Tagged where Tag == Index.X.Displacement, RawValue: Numeric {
 }
 
 extension Tagged where Tag == Index.Y.Displacement, RawValue: Numeric {
-    /// Multiply Dy by Dx to get a scalar (area).
+    /// Multiplies Y-displacement by X-displacement, returning area (scalar).
     @inlinable
     @_disfavoredOverload
     public static func * (lhs: Self, rhs: Tagged<Index.X.Displacement, RawValue>) -> RawValue {
         lhs.rawValue * rhs.rawValue
     }
 
-    /// Multiply Dy by Dz to get a scalar.
+    /// Multiplies Y-displacement by Z-displacement, returning a scalar.
     @inlinable
     @_disfavoredOverload
     public static func * (lhs: Self, rhs: Tagged<Index.Z.Displacement, RawValue>) -> RawValue {
@@ -367,14 +338,14 @@ extension Tagged where Tag == Index.Y.Displacement, RawValue: Numeric {
 }
 
 extension Tagged where Tag == Index.Z.Displacement, RawValue: Numeric {
-    /// Multiply Dz by Dx to get a scalar.
+    /// Multiplies Z-displacement by X-displacement, returning a scalar.
     @inlinable
     @_disfavoredOverload
     public static func * (lhs: Self, rhs: Tagged<Index.X.Displacement, RawValue>) -> RawValue {
         lhs.rawValue * rhs.rawValue
     }
 
-    /// Multiply Dz by Dy to get a scalar.
+    /// Multiplies Z-displacement by Y-displacement, returning a scalar.
     @inlinable
     @_disfavoredOverload
     public static func * (lhs: Self, rhs: Tagged<Index.Y.Displacement, RawValue>) -> RawValue {
@@ -384,24 +355,22 @@ extension Tagged where Tag == Index.Z.Displacement, RawValue: Numeric {
 
 // MARK: - Mixed Coordinate/Displacement Arithmetic
 
-// Coordinate + Displacement = Coordinate (Point + Vector = Point)
-// Coordinate - Coordinate = Displacement (Point - Point = Vector)
-// Coordinate - Displacement = Coordinate (Point - Vector = Point)
+// Affine geometry: Point + Vector = Point, Point - Point = Vector, Point - Vector = Point
 
 extension Tagged where Tag == Index.X.Coordinate, RawValue: AdditiveArithmetic {
-    /// Add a displacement to a coordinate.
+    /// Adds a displacement to a coordinate, returning a coordinate.
     @inlinable
     public static func + (lhs: Self, rhs: Tagged<Index.X.Displacement, RawValue>) -> Self {
         Self(lhs.rawValue + rhs.rawValue)
     }
 
-    /// Subtract two coordinates to get a displacement.
+    /// Subtracts two coordinates, returning a displacement.
     @inlinable
     public static func - (lhs: Self, rhs: Self) -> Tagged<Index.X.Displacement, RawValue> {
         Tagged<Index.X.Displacement, RawValue>(lhs.rawValue - rhs.rawValue)
     }
 
-    /// Subtract a displacement from a coordinate.
+    /// Subtracts a displacement from a coordinate, returning a coordinate.
     @inlinable
     public static func - (lhs: Self, rhs: Tagged<Index.X.Displacement, RawValue>) -> Self {
         Self(lhs.rawValue - rhs.rawValue)
@@ -409,19 +378,19 @@ extension Tagged where Tag == Index.X.Coordinate, RawValue: AdditiveArithmetic {
 }
 
 extension Tagged where Tag == Index.Y.Coordinate, RawValue: AdditiveArithmetic {
-    /// Add a displacement to a coordinate.
+    /// Adds a displacement to a coordinate, returning a coordinate.
     @inlinable
     public static func + (lhs: Self, rhs: Tagged<Index.Y.Displacement, RawValue>) -> Self {
         Self(lhs.rawValue + rhs.rawValue)
     }
 
-    /// Subtract two coordinates to get a displacement.
+    /// Subtracts two coordinates, returning a displacement.
     @inlinable
     public static func - (lhs: Self, rhs: Self) -> Tagged<Index.Y.Displacement, RawValue> {
         Tagged<Index.Y.Displacement, RawValue>(lhs.rawValue - rhs.rawValue)
     }
 
-    /// Subtract a displacement from a coordinate.
+    /// Subtracts a displacement from a coordinate, returning a coordinate.
     @inlinable
     public static func - (lhs: Self, rhs: Tagged<Index.Y.Displacement, RawValue>) -> Self {
         Self(lhs.rawValue - rhs.rawValue)
@@ -429,19 +398,19 @@ extension Tagged where Tag == Index.Y.Coordinate, RawValue: AdditiveArithmetic {
 }
 
 extension Tagged where Tag == Index.Z.Coordinate, RawValue: AdditiveArithmetic {
-    /// Add a displacement to a coordinate.
+    /// Adds a displacement to a coordinate, returning a coordinate.
     @inlinable
     public static func + (lhs: Self, rhs: Tagged<Index.Z.Displacement, RawValue>) -> Self {
         Self(lhs.rawValue + rhs.rawValue)
     }
 
-    /// Subtract two coordinates to get a displacement.
+    /// Subtracts two coordinates, returning a displacement.
     @inlinable
     public static func - (lhs: Self, rhs: Self) -> Tagged<Index.Z.Displacement, RawValue> {
         Tagged<Index.Z.Displacement, RawValue>(lhs.rawValue - rhs.rawValue)
     }
 
-    /// Subtract a displacement from a coordinate.
+    /// Subtracts a displacement from a coordinate, returning a coordinate.
     @inlinable
     public static func - (lhs: Self, rhs: Tagged<Index.Z.Displacement, RawValue>) -> Self {
         Self(lhs.rawValue - rhs.rawValue)
