@@ -104,3 +104,12 @@ extension Affine {
     /// See ``Linear/Dz``
     public typealias Dz = Linear<Scalar, Space>.Dz
 }
+
+// MARK: - Magnitude Type Aliases
+
+extension Affine {
+    /// Distance between two points (non-directional magnitude).
+    ///
+    /// See ``Linear/Magnitude``
+    public typealias Distance = Linear<Scalar, Space>.Magnitude
+}

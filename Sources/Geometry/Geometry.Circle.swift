@@ -135,7 +135,7 @@ extension Geometry.Circle where Scalar: FloatingPoint {
     /// Checks if another circle is entirely contained within this circle.
     @inlinable
     public func contains(_ other: Self) -> Bool {
-        center.distance(to: other.center) + other.radius.value <= radius.value
+        center.distance(to: other.center) + other.radius <= radius
     }
 }
 
@@ -194,8 +194,8 @@ extension Geometry.Circle where Scalar: FloatingPoint {
     @inlinable
     public func intersects(_ other: Self) -> Bool {
         let dist = center.distance(to: other.center)
-        let sumRadii = radius.value + other.radius.value
-        let diffRadii = abs(radius.value - other.radius.value)
+        let sumRadii = radius + other.radius
+        let diffRadii = radius >= other.radius ? radius - other.radius : other.radius - radius
         return dist <= sumRadii && dist >= diffRadii
     }
 
@@ -235,13 +235,18 @@ extension Geometry.Circle where Scalar: FloatingPoint {
     /// - Returns: Array of 0, 1, or 2 points where circles intersect.
     @inlinable
     public func intersection(with other: Self) -> [Geometry.Point<2>] {
-        let d = center.distance(to: other.center)
-        let r1 = radius.value
-        let r2 = other.radius.value
+        let dist = center.distance(to: other.center)
+        let sumRadii = radius + other.radius
+        let diffRadii = radius >= other.radius ? radius - other.radius : other.radius - radius
 
-        guard d <= r1 + r2 && d >= abs(r1 - r2) && d > 0 else {
+        guard dist <= sumRadii && dist >= diffRadii && dist.value > 0 else {
             return []
         }
+
+        // Complex geometric formula - use raw values for intermediate calculations
+        let d = dist.value
+        let r1 = radius.value
+        let r2 = other.radius.value
 
         let a = (r1 * r1 - r2 * r2 + d * d) / (2 * d)
         let hSq = r1 * r1 - a * a

@@ -134,14 +134,14 @@ extension Geometry.Ray where Scalar: FloatingPoint {
     public func distance(to point: Geometry.Point<2>) -> Geometry.Distance {
         let lenSq = direction.lengthSquared
         guard lenSq > 0 else {
-            return .init(origin.distance(to: point))
+            return origin.distance(to: point)
         }
 
         let v = Geometry.Vector(dx: point.x - origin.x, dy: point.y - origin.y)
         let t = max(0, (direction.dx * v.dx + direction.dy * v.dy) / lenSq)
 
         let closest = self.point(at: t)
-        return .init(point.distance(to: closest))
+        return point.distance(to: closest)
     }
 
     /// Get the closest point on the ray to a given point.

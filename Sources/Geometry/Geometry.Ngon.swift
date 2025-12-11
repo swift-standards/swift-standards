@@ -300,12 +300,12 @@ extension Geometry.Ngon where Scalar: FloatingPoint {
     /// The perimeter of the polygon
     @inlinable
     public var perimeter: Geometry.Perimeter {
-        var sum: Scalar = .zero
+        var sum: Geometry.Distance = .zero
         for i in 0..<N {
             let j = (i + 1) % N
             sum += vertices[i].distance(to: vertices[j])
         }
-        return Geometry.Perimeter(sum)
+        return sum
     }
 }
 
@@ -742,7 +742,7 @@ extension Geometry.Ngon where N == 3 {
 extension Geometry.Ngon where N == 3, Scalar: FloatingPoint {
     /// The lengths of the three sides
     @inlinable
-    public var sideLengths: (ab: Scalar, bc: Scalar, ca: Scalar) {
+    public var sideLengths: (ab: Geometry.Distance, bc: Geometry.Distance, ca: Geometry.Distance) {
         (
             vertices[0].distance(to: vertices[1]),
             vertices[1].distance(to: vertices[2]),
@@ -761,9 +761,9 @@ extension Geometry.Ngon where N == 3, Scalar: FloatingPoint {
     @inlinable
     public var incircle: Geometry.Circle? {
         let sides = sideLengths
-        let ab = sides.ab
-        let bc = sides.bc
-        let ca = sides.ca
+        let ab = sides.ab.value
+        let bc = sides.bc.value
+        let ca = sides.ca.value
 
         let perimeter = ab + bc + ca
         guard perimeter > 0 else { return nil }
@@ -783,7 +783,7 @@ extension Geometry.Ngon where N == 3, Scalar: FloatingPoint {
 
         return Geometry.Circle(
             center: center,
-            radius: Geometry.Length(inradius)
+            radius: Geometry.Radius(inradius)
         )
     }
 }
@@ -815,9 +815,9 @@ extension Geometry.Ngon where N == 3, Scalar: FloatingPoint {
         let uy: Scalar = (aSq * (cx - bx) + bSq * (ax - cx) + cSq * (bx - ax)) / d
 
         let center: Geometry.Point<2> = Geometry.Point(x: Geometry.X(ux), y: Geometry.Y(uy))
-        let radius: Scalar = center.distance(to: vertices[0])
+        let radius = center.distance(to: vertices[0])
 
-        return Geometry.Circle(center: center, radius: Geometry.Length(radius))
+        return Geometry.Circle(center: center, radius: radius)
     }
 }
 
@@ -857,9 +857,9 @@ extension Geometry.Ngon where N == 3, Scalar: BinaryFloatingPoint {
     @inlinable
     public var angles: (atA: Radian, atB: Radian, atC: Radian) {
         let sides = sideLengths
-        let ab: Scalar = sides.ab
-        let bc: Scalar = sides.bc
-        let ca: Scalar = sides.ca
+        let ab: Scalar = sides.ab.value
+        let bc: Scalar = sides.bc.value
+        let ca: Scalar = sides.ca.value
         let two: Scalar = Scalar(2)
 
         // Law of cosines: cos(A) = (b² + c² - a²) / (2bc)

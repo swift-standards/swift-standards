@@ -1,7 +1,6 @@
 // Affine.Point+Real.swift
 // Polar coordinates and rotation for 2D points with Real scalar types.
 
-public import Algebra
 import Algebra_Linear
 public import Angle
 public import Dimension
@@ -14,10 +13,11 @@ extension Affine.Point where N == 2, Scalar: Real & BinaryFloatingPoint {
     ///
     /// Converts polar coordinates `(r, θ)` to Cartesian coordinates `(x, y)`.
     @inlinable
-    public static func polar(radius: Scalar, angle: Radian) -> Self {
-        Self(
-            x: Affine.X(radius * Scalar(angle.cos)),
-            y: Affine.Y(radius * Scalar(angle.sin))
+    public static func polar(radius: Affine.Distance, angle: Radian) -> Self {
+        let r = radius.value
+        return Self(
+            x: Affine.X(r * Scalar(angle.cos)),
+            y: Affine.Y(r * Scalar(angle.sin))
         )
     }
 
@@ -29,8 +29,8 @@ extension Affine.Point where N == 2, Scalar: Real & BinaryFloatingPoint {
 
     /// Distance from origin to this point.
     @inlinable
-    public var radius: Scalar {
-        Scalar.sqrt(x.value * x.value + y.value * y.value)
+    public var radius: Affine.Distance {
+        .init(Scalar.sqrt(x.value * x.value + y.value * y.value))
     }
 }
 

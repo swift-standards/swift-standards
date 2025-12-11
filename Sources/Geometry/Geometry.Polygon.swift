@@ -107,12 +107,12 @@ extension Geometry.Polygon where Scalar: FloatingPoint {
     public var perimeter: Geometry.Perimeter {
         guard vertices.count >= 2 else { return .zero }
 
-        var sum: Scalar = .zero
+        var sum: Geometry.Length = .zero
         for i in 0..<vertices.count {
             let j = (i + 1) % vertices.count
             sum += vertices[i].distance(to: vertices[j])
         }
-        return .init(sum)
+        return sum
     }
 }
 

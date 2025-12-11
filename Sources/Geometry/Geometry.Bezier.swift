@@ -297,11 +297,11 @@ extension Geometry.Bezier where Scalar: FloatingPoint {
         let points = subdivide(into: segments)
         guard points.count >= 2 else { return .zero }
 
-        var len: Scalar = .zero
+        var len: Geometry.Length = .zero
         for i in 0..<(points.count - 1) {
             len += points[i].distance(to: points[i + 1])
         }
-        return .init(len)
+        return len
     }
 }
 

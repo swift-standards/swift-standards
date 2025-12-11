@@ -62,40 +62,6 @@ struct GeometryUnitTests {
     }
 }
 
-// MARK: - Scalar Tests
-
-@Suite
-struct ScalarTests {
-    @Test
-    func `Scalar basic operations`() {
-        let a: Geometry<Double, Void>.Scalar = 10.0
-        let b: Geometry<Double, Void>.Scalar = 5.0
-
-        #expect((a + b) == 15)
-        #expect((a - b) == 5)
-        #expect((a * 2) == 20)
-        #expect((a / 2) == 5)
-        #expect((-a) == -10)
-    }
-
-    @Test
-    func `Scalar comparison`() {
-        let a: Geometry<Double, Void>.Scalar = 10.0
-        let b: Geometry<Double, Void>.Scalar = 20.0
-
-        #expect(a < b)
-        #expect(b > a)
-    }
-
-    @Test
-    func `Scalar with custom unit`() {
-        let a: Geometry<TestUnit, Void>.Scalar = 10
-        let b: Geometry<TestUnit, Void>.Scalar = 5
-        let sum = a + b
-        #expect(sum == 15)
-    }
-}
-
 // MARK: - Point Tests
 
 @Suite

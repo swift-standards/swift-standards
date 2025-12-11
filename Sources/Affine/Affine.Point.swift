@@ -329,7 +329,7 @@ extension Affine.Point {
 extension Affine.Point where N == 2, Scalar: AdditiveArithmetic {
     /// Returns point translated by displacement components.
     @inlinable
-    public func translated(dx: Scalar, dy: Scalar) -> Self {
+    public func translated(dx: Affine.Dx, dy: Affine.Dy) -> Self {
         Self(x: x + dx, y: y + dy)
     }
 
@@ -352,6 +352,7 @@ extension Affine.Point where N == 2, Scalar: FloatingPoint {
     /// Computes squared Euclidean distance to another point.
     ///
     /// More efficient than `distance(to:)` when comparing distances.
+    /// Returns raw scalar for use in comparisons; use `distance(to:)` for typed result.
     @inlinable
     public func distanceSquared(to other: Self) -> Scalar {
         let dx = other.x.value - x.value
@@ -361,8 +362,8 @@ extension Affine.Point where N == 2, Scalar: FloatingPoint {
 
     /// Computes Euclidean distance to another point.
     @inlinable
-    public func distance(to other: Self) -> Scalar {
-        distanceSquared(to: other).squareRoot()
+    public func distance(to other: Self) -> Affine.Distance {
+        .init(distanceSquared(to: other).squareRoot())
     }
 
     /// Linearly interpolates between this point and another.
@@ -420,6 +421,7 @@ extension Affine.Point where N == 3, Scalar: FloatingPoint {
     /// Computes squared Euclidean distance to another point.
     ///
     /// More efficient than `distance(to:)` when comparing distances.
+    /// Returns raw scalar for use in comparisons; use `distance(to:)` for typed result.
     @inlinable
     public func distanceSquared(to other: Self) -> Scalar {
         let dx = other.x - x
@@ -430,7 +432,7 @@ extension Affine.Point where N == 3, Scalar: FloatingPoint {
 
     /// Computes Euclidean distance to another point.
     @inlinable
-    public func distance(to other: Self) -> Scalar {
-        distanceSquared(to: other).squareRoot()
+    public func distance(to other: Self) -> Affine.Distance {
+        .init(distanceSquared(to: other).squareRoot())
     }
 }

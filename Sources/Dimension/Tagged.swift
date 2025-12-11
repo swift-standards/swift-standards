@@ -531,7 +531,6 @@ extension Tagged: Strideable where RawValue: Strideable {
     }
 }
 
-
 extension Tagged where RawValue: BinaryFloatingPoint {
     public init<I: BinaryInteger>(_ value: I) {
         self.init(RawValue(value))
