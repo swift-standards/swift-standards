@@ -1,10 +1,11 @@
-// Geometry.AffineTransform.swift
+// Affine.Transform.swift
 // A 2D affine transformation: linear transformation + translation.
 
+public import Algebra_Linear
 public import Angle
 public import RealModule
 
-extension Geometry {
+extension Affine {
     /// A 2D affine transformation.
     ///
     /// An affine transformation consists of:
@@ -31,35 +32,63 @@ extension Geometry {
     /// ## Example
     ///
     /// ```swift
-    /// let transform = Geometry<Points>.AffineTransform(
-    ///     linear: .rotation(.pi / 4),
+    /// let transform = Affine<Double>.Transform(
+    ///     linear: .identity,
     ///     translation: .init(x: 100, y: 50)
     /// )
     /// ```
-    public struct AffineTransform {
-        /// The linear transformation (rotation, scale, shear)
-        public var linear: Geometry.Linear<2>
+    public struct Transform {
+        /// The linear transformation (rotation, scale, shear) as a 2x2 matrix
+        public var linear: Linear<Scalar>.Matrix<2, 2>
 
         /// The translation (displacement)
         public var translation: Translation
 
         /// Create an affine transform from linear and translation components
         @inlinable
-        public init(linear: Geometry.Linear<2>, translation: Translation) {
+        public init(linear: Linear<Scalar>.Matrix<2, 2>, translation: Translation) {
             self.linear = linear
             self.translation = translation
         }
     }
 }
 
-extension Geometry.AffineTransform: Sendable where Scalar: Sendable {}
-extension Geometry.AffineTransform: Equatable where Scalar: Equatable {}
-extension Geometry.AffineTransform: Hashable where Scalar: Hashable {}
-extension Geometry.AffineTransform: Codable where Scalar: Codable {}
+extension Affine.Transform: Sendable where Scalar: Sendable {}
+extension Affine.Transform: Equatable where Scalar: Equatable {}
+extension Affine.Transform: Hashable where Scalar: Hashable {}
+
+// MARK: - Codable
+
+extension Affine.Transform: Codable where Scalar: Codable {
+    private enum CodingKeys: String, CodingKey {
+        case a, b, c, d, tx, ty
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let a = try container.decode(Scalar.self, forKey: .a)
+        let b = try container.decode(Scalar.self, forKey: .b)
+        let c = try container.decode(Scalar.self, forKey: .c)
+        let d = try container.decode(Scalar.self, forKey: .d)
+        let tx = try container.decode(Scalar.self, forKey: .tx)
+        let ty = try container.decode(Scalar.self, forKey: .ty)
+        self.init(a: a, b: b, c: c, d: d, tx: tx, ty: ty)
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(a, forKey: .a)
+        try container.encode(b, forKey: .b)
+        try container.encode(c, forKey: .c)
+        try container.encode(d, forKey: .d)
+        try container.encode(tx.value, forKey: .tx)
+        try container.encode(ty.value, forKey: .ty)
+    }
+}
 
 // MARK: - Identity
 
-extension Geometry.AffineTransform where Scalar: AdditiveArithmetic & ExpressibleByIntegerLiteral {
+extension Affine.Transform where Scalar: AdditiveArithmetic & ExpressibleByIntegerLiteral {
     /// The identity transform (no transformation)
     @inlinable
     public static var identity: Self {
@@ -69,28 +98,25 @@ extension Geometry.AffineTransform where Scalar: AdditiveArithmetic & Expressibl
 
 // MARK: - Convenience Initializers
 
-extension Geometry.AffineTransform where Scalar: AdditiveArithmetic {
+extension Affine.Transform where Scalar: AdditiveArithmetic {
     /// Create from just a linear transformation (no translation)
     @inlinable
-    public init(linear: Geometry.Linear<2>) {
+    public init(linear: Linear<Scalar>.Matrix<2, 2>) {
         self.init(linear: linear, translation: .zero)
     }
 }
 
-extension Geometry.AffineTransform where Scalar: AdditiveArithmetic & ExpressibleByIntegerLiteral {
+extension Affine.Transform where Scalar: AdditiveArithmetic & ExpressibleByIntegerLiteral {
     /// Create from just a translation (identity linear)
     @inlinable
-    public init(translation: Geometry.Translation) {
+    public init(translation: Affine.Translation) {
         self.init(linear: .identity, translation: translation)
     }
 }
 
-// MARK: - Symmetry Initializers
-// See Symmetry module for init(_ rotation:), init(_ scale:), init(_ shear:)
-
 // MARK: - Component Access (Standard Notation)
 
-extension Geometry.AffineTransform {
+extension Affine.Transform {
     /// Linear coefficient a (row 0, col 0)
     @inlinable
     public var a: Scalar {
@@ -121,14 +147,14 @@ extension Geometry.AffineTransform {
 
     /// Translation x component (type-safe)
     @inlinable
-    public var tx: Geometry.X {
+    public var tx: Affine.X {
         get { translation.x }
         set { translation.x = newValue }
     }
 
     /// Translation y component (type-safe)
     @inlinable
-    public var ty: Geometry.Y {
+    public var ty: Affine.Y {
         get { translation.y }
         set { translation.y = newValue }
     }
@@ -136,7 +162,7 @@ extension Geometry.AffineTransform {
 
 // MARK: - Raw Component Initializer
 
-extension Geometry.AffineTransform {
+extension Affine.Transform {
     /// Create an affine transform with raw matrix components
     ///
     /// - Parameters:
@@ -144,8 +170,8 @@ extension Geometry.AffineTransform {
     ///   - tx, ty: Translation in coordinate units (raw scalar values)
     @inlinable
     public init(a: Scalar, b: Scalar, c: Scalar, d: Scalar, tx: Scalar, ty: Scalar) {
-        self.linear = Geometry.Linear(a: a, b: b, c: c, d: d)
-        self.translation = Geometry.Translation(x: tx, y: ty)
+        self.linear = Linear<Scalar>.Matrix(a: a, b: b, c: c, d: d)
+        self.translation = Affine.Translation(x: tx, y: ty)
     }
 
     /// Create an affine transform with typed translation components
@@ -154,22 +180,22 @@ extension Geometry.AffineTransform {
     ///   - a, b, c, d: Dimensionless linear transformation coefficients
     ///   - tx, ty: Translation in coordinate units (type-safe)
     @inlinable
-    public init(a: Scalar, b: Scalar, c: Scalar, d: Scalar, tx: Geometry.X, ty: Geometry.Y) {
-        self.linear = Geometry.Linear(a: a, b: b, c: c, d: d)
-        self.translation = Geometry.Translation(x: tx, y: ty)
+    public init(a: Scalar, b: Scalar, c: Scalar, d: Scalar, tx: Affine.X, ty: Affine.Y) {
+        self.linear = Linear<Scalar>.Matrix(a: a, b: b, c: c, d: d)
+        self.translation = Affine.Translation(x: tx, y: ty)
     }
 }
 
 // MARK: - Composition
 
-extension Geometry.AffineTransform where Scalar: FloatingPoint {
+extension Affine.Transform where Scalar: FloatingPoint {
     /// Concatenate with another transform (self * other)
     ///
     /// The resulting transform applies `other` first, then `self`.
     @inlinable
     public func concatenating(_ other: Self) -> Self {
         // Linear part: matrix multiplication
-        let newLinear = linear.concatenating(other.linear)
+        let newLinear = linear.multiplied(by: other.linear)
 
         // Translation part: apply self's linear to other's translation, then add self's translation
         let otherTx = other.translation.x.value
@@ -179,80 +205,66 @@ extension Geometry.AffineTransform where Scalar: FloatingPoint {
 
         return Self(
             linear: newLinear,
-            translation: Geometry.Translation(x: newTx, y: newTy)
+            translation: Affine.Translation(x: newTx, y: newTy)
         )
     }
 }
 
 // MARK: - Factory Methods
 
-extension Geometry.AffineTransform where Scalar: FloatingPoint & ExpressibleByIntegerLiteral {
+extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLiteral {
     /// Create a translation transform
     @inlinable
     public static func translation(x: Scalar, y: Scalar) -> Self {
-        Self(linear: .identity, translation: Geometry.Translation(x: x, y: y))
+        Self(linear: .identity, translation: Affine.Translation(x: x, y: y))
     }
 
     /// Create a translation transform from a vector
     @inlinable
-    public static func translation(_ vector: Geometry.Vector<2>) -> Self {
-        Self(translation: Geometry.Translation(vector))
+    public static func translation(_ vector: Linear<Scalar>.Vector<2>) -> Self {
+        Self(translation: Affine.Translation(vector))
     }
 
     /// Create a uniform scaling transform
     @inlinable
     public static func scale(_ factor: Scalar) -> Self {
-        Self(linear: .scale(factor))
+        Self(linear: Linear<Scalar>.Matrix(a: factor, b: 0, c: 0, d: factor))
     }
 
     /// Create a non-uniform scaling transform
     @inlinable
     public static func scale(x: Scalar, y: Scalar) -> Self {
-        Self(linear: .scale(x: x, y: y))
+        Self(linear: Linear<Scalar>.Matrix(a: x, b: 0, c: 0, d: y))
     }
 
     /// Create a shear transform
     @inlinable
     public static func shear(x: Scalar, y: Scalar) -> Self {
-        Self(linear: .shear(x: x, y: y))
+        Self(linear: Linear<Scalar>.Matrix(a: 1, b: x, c: y, d: 1))
     }
 }
 
 // MARK: - Rotation Factory (Real & BinaryFloatingPoint)
 
-extension Geometry.AffineTransform where Scalar: Real & BinaryFloatingPoint {
+extension Affine.Transform where Scalar: Real & BinaryFloatingPoint {
     /// Create a rotation transform
     @inlinable
     public static func rotation(_ angle: Radian) -> Self {
-        Self(linear: .rotation(angle), translation: .zero)
+        let c = Scalar(angle.cos)
+        let s = Scalar(angle.sin)
+        return Self(linear: Linear<Scalar>.Matrix(a: c, b: -s, c: s, d: c), translation: .zero)
     }
 
     /// Create a rotation transform from degrees
     @inlinable
     public static func rotation(_ angle: Degree) -> Self {
-        Self(linear: .rotation(angle.radians), translation: .zero)
+        rotation(angle.radians)
     }
 }
-//
-//// MARK: - Rotation Factory (Float)
-//
-// extension Geometry.AffineTransform where Scalar == Float {
-//    /// Create a rotation transform
-//    @inlinable
-//    public static func rotation(_ angle: Radian) -> Self {
-//        Self(linear: .rotation(angle), translation: .zero)
-//    }
-//
-//    /// Create a rotation transform from degrees
-//    @inlinable
-//    public static func rotation(_ angle: Degree) -> Self {
-//        Self(linear: .rotation(angle.radians), translation: .zero)
-//    }
-// }
 
 // MARK: - Fluent Modifiers
 
-extension Geometry.AffineTransform where Scalar: FloatingPoint & ExpressibleByIntegerLiteral {
+extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLiteral {
     /// Return a new transform with translation applied
     @inlinable
     public func translated(x: Scalar, y: Scalar) -> Self {
@@ -261,7 +273,7 @@ extension Geometry.AffineTransform where Scalar: FloatingPoint & ExpressibleByIn
 
     /// Return a new transform with translation applied
     @inlinable
-    public func translated(by vector: Geometry.Vector<2>) -> Self {
+    public func translated(by vector: Linear<Scalar>.Vector<2>) -> Self {
         concatenating(.translation(vector))
     }
 
@@ -278,7 +290,7 @@ extension Geometry.AffineTransform where Scalar: FloatingPoint & ExpressibleByIn
     }
 }
 
-extension Geometry.AffineTransform where Scalar: Real & BinaryFloatingPoint {
+extension Affine.Transform where Scalar: Real & BinaryFloatingPoint {
     /// Return a new transform with rotation applied
     @inlinable
     public func rotated(by angle: Radian) -> Self {
@@ -294,7 +306,7 @@ extension Geometry.AffineTransform where Scalar: Real & BinaryFloatingPoint {
 
 // MARK: - Inversion
 
-extension Geometry.AffineTransform where Scalar: FloatingPoint {
+extension Affine.Transform where Scalar: FloatingPoint {
     /// The determinant of the linear part
     @inlinable
     public var determinant: Scalar {
@@ -304,13 +316,13 @@ extension Geometry.AffineTransform where Scalar: FloatingPoint {
     /// Whether this transform is invertible
     @inlinable
     public var isInvertible: Bool {
-        linear.isInvertible
+        determinant != 0
     }
 
     /// The inverse transform, or nil if not invertible
     @inlinable
     public var inverted: Self? {
-        guard let invLinear = linear.inverted else { return nil }
+        guard let invLinear = linear.inverse else { return nil }
 
         // inv(T) = -inv(L) * t
         let tx = translation.x.value
@@ -320,53 +332,44 @@ extension Geometry.AffineTransform where Scalar: FloatingPoint {
 
         return Self(
             linear: invLinear,
-            translation: Geometry.Translation(x: newTx, y: newTy)
+            translation: Affine.Translation(x: newTx, y: newTy)
         )
     }
 }
 
 // MARK: - Apply Transform
 
-extension Geometry.AffineTransform where Scalar: FloatingPoint {
+extension Affine.Transform where Scalar: FloatingPoint {
     /// Apply transform to a point
     @inlinable
-    public func apply(to point: Geometry.Point<2>) -> Geometry.Point<2> {
+    public func apply(to point: Affine.Point<2>) -> Affine.Point<2> {
         let px = point.x.value
         let py = point.y.value
         let newX = linear.a * px + linear.b * py + translation.x.value
         let newY = linear.c * px + linear.d * py + translation.y.value
-        return Geometry.Point(x: Geometry.X(newX), y: Geometry.Y(newY))
+        return Affine.Point(x: Affine.X(newX), y: Affine.Y(newY))
     }
 
     /// Apply transform to a vector (ignores translation)
     @inlinable
-    public func apply(to vector: Geometry.Vector<2>) -> Geometry.Vector<2> {
-        let vx = vector.dx.value
-        let vy = vector.dy.value
+    public func apply(to vector: Linear<Scalar>.Vector<2>) -> Linear<Scalar>.Vector<2> {
+        let vx = vector.dx
+        let vy = vector.dy
         let newDx = linear.a * vx + linear.b * vy
         let newDy = linear.c * vx + linear.d * vy
-        return Geometry.Vector(dx: Geometry.X(newDx), dy: Geometry.Y(newDy))
-    }
-
-    /// Apply transform to a size (uses absolute values)
-    @inlinable
-    public func apply(to size: Geometry.Size<2>) -> Geometry.Size<2> {
-        let w = size.width.value
-        let h = size.height.value
-        let newW = abs(linear.a * w + linear.b * h)
-        let newH = abs(linear.c * w + linear.d * h)
-        return Geometry.Size(width: .init(newW), height: .init(newH))
+        return Linear<Scalar>.Vector(dx: newDx, dy: newDy)
     }
 }
 
 // MARK: - Monoid
 
-extension Geometry.AffineTransform where Scalar: FloatingPoint & ExpressibleByIntegerLiteral {
+extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLiteral {
     /// Compose multiple transforms into a single transform.
     ///
-    /// Following standard mathematical convention (f ∘ g applies g first),
-    /// transforms are applied in **reverse** order: the last transform
-    /// in the array is applied first.
+    /// Due to right-to-left matrix multiplication, transforms are applied
+    /// in **reverse** order: the last transform in the array is applied first.
+    ///
+    /// For forward-order application, reverse the array before calling.
     @inlinable
     public static func composed(_ transforms: [Self]) -> Self {
         transforms.reduce(.identity) { $0.concatenating($1) }

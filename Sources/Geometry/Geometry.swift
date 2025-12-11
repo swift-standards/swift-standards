@@ -37,6 +37,8 @@
 // typealias Transform = Geometry<Points>.AffineTransform
 // ```
 
+public import Affine
+public import Algebra_Linear
 import Angle
 import Dimension
 import Region
@@ -49,3 +51,4 @@ public enum Geometry<Scalar: ~Copyable>: ~Copyable {}
 
 extension Geometry: Copyable where Scalar: Copyable {}
 extension Geometry: Sendable where Scalar: Sendable {}
+

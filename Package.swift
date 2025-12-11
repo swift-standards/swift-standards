@@ -28,6 +28,8 @@ let package = Package(
                 "StandardTime",
                 "Locale",
                 "Algebra",
+                "Algebra Linear",
+                "Affine",
                 "Binary",
                 "Dimension",
                 "Positioning",
@@ -60,6 +62,14 @@ let package = Package(
         .library(
             name: "Algebra",
             targets: ["Algebra"]
+        ),
+        .library(
+            name: "Algebra Linear",
+            targets: ["Algebra Linear"]
+        ),
+        .library(
+            name: "Affine",
+            targets: ["Affine"]
         ),
         .library(
             name: "Binary",
@@ -119,6 +129,8 @@ let package = Package(
                 "StandardTime",
                 "Locale",
                 "Algebra",
+                "Algebra Linear",
+                "Affine",
                 "Binary",
                 "Dimension",
                 "Positioning",
@@ -156,6 +168,22 @@ let package = Package(
             name: "Algebra"
         ),
         .target(
+            name: "Algebra Linear",
+            dependencies: [
+                "Algebra",
+                "Angle",
+                .product(name: "RealModule", package: "swift-numerics"),
+            ]
+        ),
+        .target(
+            name: "Affine",
+            dependencies: [
+                "Algebra Linear",
+                "Angle",
+                .product(name: "RealModule", package: "swift-numerics"),
+            ]
+        ),
+        .target(
             name: "Binary",
             dependencies: [
                 "Algebra",
@@ -187,6 +215,8 @@ let package = Package(
             name: "Geometry",
             dependencies: [
                 "Algebra",
+                "Algebra Linear",
+                "Affine",
                 "Dimension",
                 "Formatting",
                 "Angle",
@@ -259,6 +289,20 @@ let package = Package(
             name: "Algebra".tests,
             dependencies: [
                 "Algebra",
+                "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
+            name: "Algebra Linear".tests,
+            dependencies: [
+                "Algebra Linear",
+                "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
+            name: "Affine".tests,
+            dependencies: [
+                "Affine",
                 "StandardsTestSupport",
             ]
         ),
