@@ -60,13 +60,7 @@ struct `Strideable Conformance Tests` {
         #expect(d.distance(to: next) == 15)
     }
 
-    @Test
-    func `Dimension is Strideable`() {
-        let dim: Geometry<Double>.Dimension = 40
-        let next = dim.advanced(by: 20)
-        #expect(next == 60)
-        #expect(dim.distance(to: next) == 20)
-    }
+    // Note: Dimension Strideable test removed; Geometry.Dimension no longer exists
 
     @Test
     func `X stride sequence`() {
@@ -232,19 +226,25 @@ struct `Scalar Wrapper Operators` {
     @Test
     func `Width multiplication and division`() {
         let w: Geometry<Double>.Width = 10
-        #expect((w * 2) == 20)
-        #expect((2 * w) == 20)
-        #expect((w / 2) == 5)
-        #expect((-w) == -10)
+        let scaled: Geometry<Double>.Width = w * 2.0  // Explicit type
+        #expect(scaled.value == 20)
+        let scaled2: Geometry<Double>.Width = 2.0 * w
+        #expect(scaled2.value == 20)
+        let divided: Geometry<Double>.Width = w / 2.0
+        #expect(divided.value == 5)
+        #expect((-w).value == -10)
     }
 
     @Test
     func `Height multiplication and division`() {
         let h: Geometry<Double>.Height = 10
-        #expect((h * 2) == 20)
-        #expect((2 * h) == 20)
-        #expect((h / 2) == 5)
-        #expect((-h) == -10)
+        let scaled: Geometry<Double>.Height = h * 2.0  // Explicit type
+        #expect(scaled.value == 20)
+        let scaled2: Geometry<Double>.Height = 2.0 * h
+        #expect(scaled2.value == 20)
+        let divided: Geometry<Double>.Height = h / 2.0
+        #expect(divided.value == 5)
+        #expect((-h).value == -10)
     }
 
     @Test
@@ -265,19 +265,5 @@ struct `Scalar Wrapper Operators` {
         #expect((-d) == -10)
     }
 
-    @Test
-    func `Dimension multiplication and division`() {
-        let dim: Geometry<Double>.Dimension = 10
-        #expect((dim * 2) == 20)
-        #expect((2 * dim) == 20)
-        #expect((dim / 2) == 5)
-        #expect((-dim) == -10)
-    }
-
-    @Test
-    func `Dimension map`() {
-        let dim: Geometry<Double>.Dimension = 10
-        let mapped = dim.map { $0 * 3 + 1 }
-        #expect(mapped == 31)
-    }
+    // Note: Geometry.Dimension was removed; use Width/Height (displacements) instead
 }

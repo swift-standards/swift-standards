@@ -655,12 +655,7 @@ struct DimensionTests {
         #expect((len / 2) == 5)
     }
 
-    @Test
-    func `Dimension map`() {
-        let dim: Geometry<Double>.Dimension = .init(10)
-        let mapped = dim.map { $0 * 2 }
-        #expect(mapped == 20)
-    }
+    // Note: Geometry.Dimension was removed; use Width/Height (displacements) instead
 
     @Test
     func `X negation and multiplication`() {

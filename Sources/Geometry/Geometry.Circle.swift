@@ -183,8 +183,8 @@ extension Geometry.Circle where Scalar: BinaryFloatingPoint {
         let c: Scalar = Scalar(angle.cos)
         let s: Scalar = Scalar(angle.sin)
         return Geometry.Vector(
-            dx: Geometry.X(-s),
-            dy: Geometry.Y(c)
+            dx: Geometry.Width(-s),
+            dy: Geometry.Height(c)
         )
     }
 

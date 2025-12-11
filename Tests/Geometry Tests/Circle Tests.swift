@@ -173,8 +173,11 @@ struct `Circle Tests` {
         let angle: Radian = .init(Double.pi / 3)
         let point = circle.point(at: angle)
         let tangent = circle.tangent(at: angle)
-        // Vector from center to point
-        let radius: Geometry<Double>.Vector<2> = .init(dx: point.x, dy: point.y)
+        // Vector from center to point (extract values since circle is centered at origin)
+        let radius: Geometry<Double>.Vector<2> = .init(
+            dx: Geometry<Double>.Width(point.x.value),
+            dy: Geometry<Double>.Height(point.y.value)
+        )
         // Dot product should be zero
         let dot = radius.dot(tangent)
         #expect(abs(dot) < 1e-10)

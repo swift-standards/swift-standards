@@ -227,8 +227,8 @@ extension Geometry.Ellipse where Scalar: BinaryFloatingPoint {
         let sinR: Scalar = Scalar(rotation.sin)
 
         return Geometry.Vector(
-            dx: Geometry.X(dx * cosR - dy * sinR),
-            dy: Geometry.Y(dx * sinR + dy * cosR)
+            dx: Geometry.Width(dx * cosR - dy * sinR),
+            dy: Geometry.Height(dx * sinR + dy * cosR)
         )
     }
 }

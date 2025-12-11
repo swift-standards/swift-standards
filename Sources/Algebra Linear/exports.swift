@@ -2,3 +2,4 @@
 // Re-export dependencies so consumers get full access to underlying types
 
 @_exported import Algebra
+@_exported import Dimension

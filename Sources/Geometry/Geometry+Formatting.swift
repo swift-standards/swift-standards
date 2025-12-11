@@ -3,48 +3,6 @@
 
 public import Formatting
 
-// MARK: - Width + formatted()
-
-extension Geometry.Width where Scalar: BinaryFloatingPoint {
-    /// Format this width using the given format style.
-    ///
-    /// - Parameter format: The format style to use
-    /// - Returns: The formatted output
-    ///
-    /// ## Example
-    ///
-    /// ```swift
-    /// let width: Geometry<Double>.Width = 612.0
-    /// width.formatted(.number)  // "612"
-    /// ```
-    @inlinable
-    public func formatted<S>(_ format: S) -> S.FormatOutput
-    where S: FormatStyle, S.FormatInput: BinaryFloatingPoint {
-        format.format(S.FormatInput(value))
-    }
-}
-
-// MARK: - Height + formatted()
-
-extension Geometry.Height where Scalar: BinaryFloatingPoint {
-    /// Format this height using the given format style.
-    ///
-    /// - Parameter format: The format style to use
-    /// - Returns: The formatted output
-    ///
-    /// ## Example
-    ///
-    /// ```swift
-    /// let height: Geometry<Double>.Height = 792.0
-    /// height.formatted(.number)  // "792"
-    /// ```
-    @inlinable
-    public func formatted<S>(_ format: S) -> S.FormatOutput
-    where S: FormatStyle, S.FormatInput: BinaryFloatingPoint {
-        format.format(S.FormatInput(value))
-    }
-}
-
 // MARK: - Length + formatted()
 
 extension Geometry.Length where Scalar: BinaryFloatingPoint {
@@ -52,20 +10,13 @@ extension Geometry.Length where Scalar: BinaryFloatingPoint {
     ///
     /// - Parameter format: The format style to use
     /// - Returns: The formatted output
-    @inlinable
-    public func formatted<S>(_ format: S) -> S.FormatOutput
-    where S: FormatStyle, S.FormatInput: BinaryFloatingPoint {
-        format.format(S.FormatInput(value))
-    }
-}
-
-// MARK: - Dimension + formatted()
-
-extension Geometry.Dimension where Scalar: BinaryFloatingPoint {
-    /// Format this dimension using the given format style.
     ///
-    /// - Parameter format: The format style to use
-    /// - Returns: The formatted output
+    /// ## Example
+    ///
+    /// ```swift
+    /// let length: Geometry<Double>.Length = 100.5
+    /// length.formatted(.number)  // "100.5"
+    /// ```
     @inlinable
     public func formatted<S>(_ format: S) -> S.FormatOutput
     where S: FormatStyle, S.FormatInput: BinaryFloatingPoint {

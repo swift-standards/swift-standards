@@ -156,21 +156,8 @@ struct CoordinateTests {
         #expect(squared == 16)
     }
 
-    @Test("X * Y returns scalar (cross product)")
-    func xTimesY() {
-        let x = X(3)
-        let y = Y(4)
-        let result: Double = x * y
-        #expect(result == 12)
-    }
-
-    @Test("Y * X returns scalar (cross product)")
-    func yTimesX() {
-        let y = Y(4)
-        let x = X(3)
-        let result: Double = y * x
-        #expect(result == 12)
-    }
+    // Note: X * Y cross-axis multiplication is only defined for displacements (Dx * Dy),
+    // not for coordinates. Coordinates represent positions, not magnitudes that can be multiplied.
 
     // MARK: - Comparison
 

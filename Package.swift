@@ -175,6 +175,8 @@ let package = Package(
             dependencies: [
                 "Algebra",
                 "Angle",
+                "Dimension",
+                "Formatting",
                 .product(name: "RealModule", package: "swift-numerics"),
             ]
         ),

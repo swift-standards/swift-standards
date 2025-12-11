@@ -172,8 +172,8 @@ extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
         // Tangent is perpendicular to radius, in direction of sweep
         let sign: Scalar = sweep.value >= 0 ? 1 : -1
         return Geometry.Vector(
-            dx: Geometry.X(-sign * Scalar(angle.sin)),
-            dy: Geometry.Y(sign * Scalar(angle.cos))
+            dx: Geometry.Width(-sign * Scalar(angle.sin)),
+            dy: Geometry.Height(sign * Scalar(angle.cos))
         )
     }
 }
