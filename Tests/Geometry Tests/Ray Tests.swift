@@ -1,8 +1,11 @@
 // Ray Tests.swift
 // Tests for Geometry.Ray type.
 
+@testable import Algebra
 import Testing
 
+@testable import Affine
+@testable import Algebra_Linear
 @testable import Geometry
 
 @Suite

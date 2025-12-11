@@ -1,6 +1,10 @@
 // Line.swift
 // An infinite line and its bounded segment in 2D space.
 
+public import Algebra
+public import Affine
+public import Algebra_Linear
+
 extension Geometry {
     /// An infinite line in 2D space.
     ///
@@ -158,7 +162,7 @@ extension Geometry.Line where Scalar: FloatingPoint {
     /// - Returns: Array of intersection points where the line crosses polygon edges
     @inlinable
     public func intersections<let N: Int>(with ngon: Geometry.Ngon<N>) -> [Geometry.Point<2>]
-    where Scalar: AdditiveArithmetic {
+    where Scalar: FloatingPoint {
         var result: [Geometry.Point<2>] = []
         let edges = ngon.edges
         for i in 0..<N {
@@ -237,8 +241,8 @@ extension Geometry.Line.Segment {
 extension Geometry.Line.Segment where Scalar: AdditiveArithmetic {
     /// The vector from start to end
     @inlinable
-    public var vector: Geometry.Vector2 {
-        Geometry.Vector2(dx: end.x - start.x, dy: end.y - start.y)
+    public var vector: Geometry.Vector<2> {
+        Geometry.Vector(dx: end.x - start.x, dy: end.y - start.y)
     }
 
     /// The infinite line containing this segment

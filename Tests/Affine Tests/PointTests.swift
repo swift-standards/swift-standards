@@ -2,6 +2,7 @@
 // Tests for Affine.Point
 
 import Testing
+@testable import Algebra
 @testable import Affine
 @testable import Algebra_Linear
 
@@ -29,7 +30,11 @@ struct PointTests {
 
     @Test("3D point construction")
     func point3DConstruction() {
-        let p = Point3(x: 1.0, y: 2.0, z: 3.0)
+        let p = Point3(
+            x: Affine<Double>.X(1.0),
+            y: Affine<Double>.Y(2.0),
+            z: Affine<Double>.Z(3.0)
+        )
         #expect(p.x == 1.0)
         #expect(p.y == 2.0)
         #expect(p.z == 3.0)

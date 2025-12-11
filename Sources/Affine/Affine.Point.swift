@@ -1,6 +1,7 @@
 // Affine.Point.swift
 // A fixed-size coordinate with compile-time known dimensions.
 
+public import Algebra
 public import Algebra_Linear
 
 extension Affine {
@@ -212,13 +213,6 @@ extension Affine.Point where N == 2 {
     public init(x: Affine.X, y: Affine.Y) {
         self.init([x.value, y.value])
     }
-
-    /// Create a 2D point from raw scalar values
-    @_disfavoredOverload
-    @inlinable
-    public init(x: Scalar, y: Scalar) {
-        self.init([x, y])
-    }
 }
 
 // MARK: - 3D Convenience
@@ -226,35 +220,35 @@ extension Affine.Point where N == 2 {
 extension Affine.Point where N == 3 {
     /// The x coordinate
     @inlinable
-    public var x: Scalar {
-        get { coordinates[0] }
-        set { coordinates[0] = newValue }
+    public var x: Affine.X {
+        get { .init(coordinates[0]) }
+        set { coordinates[0] = newValue.value }
     }
 
     /// The y coordinate
     @inlinable
-    public var y: Scalar {
-        get { coordinates[1] }
-        set { coordinates[1] = newValue }
+    public var y: Affine.Y {
+        get { .init(coordinates[1]) }
+        set { coordinates[1] = newValue.value }
     }
 
     /// The z coordinate
     @inlinable
-    public var z: Scalar {
-        get { coordinates[2] }
-        set { coordinates[2] = newValue }
+    public var z: Affine.Z {
+        get { .init(coordinates[2]) }
+        set { coordinates[2] = newValue.value }
     }
 
-    /// Create a 3D point with the given coordinates
+    /// Create a 3D point with the given coordinates (type-safe)
     @inlinable
-    public init(x: Scalar, y: Scalar, z: Scalar) {
-        self.init([x, y, z])
+    public init(x: Affine.X, y: Affine.Y, z: Affine.Z) {
+        self.init([x.value, y.value, z.value])
     }
 
     /// Create a 3D point from a 2D point with z coordinate
     @inlinable
-    public init(_ point2: Affine.Point<2>, z: Scalar) {
-        self.init(x: point2.x.value, y: point2.y.value, z: z)
+    public init(_ point2: Affine.Point<2>, z: Affine.Z) {
+        self.init(x: point2.x, y: point2.y, z: z)
     }
 }
 
@@ -263,41 +257,41 @@ extension Affine.Point where N == 3 {
 extension Affine.Point where N == 4 {
     /// The x coordinate
     @inlinable
-    public var x: Scalar {
-        get { coordinates[0] }
-        set { coordinates[0] = newValue }
+    public var x: Affine.X {
+        get { .init(coordinates[0]) }
+        set { coordinates[0] = newValue.value }
     }
 
     /// The y coordinate
     @inlinable
-    public var y: Scalar {
-        get { coordinates[1] }
-        set { coordinates[1] = newValue }
+    public var y: Affine.Y {
+        get { .init(coordinates[1]) }
+        set { coordinates[1] = newValue.value }
     }
 
     /// The z coordinate
     @inlinable
-    public var z: Scalar {
-        get { coordinates[2] }
-        set { coordinates[2] = newValue }
+    public var z: Affine.Z {
+        get { .init(coordinates[2]) }
+        set { coordinates[2] = newValue.value }
     }
 
     /// The w coordinate
     @inlinable
-    public var w: Scalar {
-        get { coordinates[3] }
-        set { coordinates[3] = newValue }
+    public var w: Affine.W {
+        get { .init(coordinates[3]) }
+        set { coordinates[3] = newValue.value }
     }
 
     /// Create a 4D point with the given coordinates
     @inlinable
-    public init(x: Scalar, y: Scalar, z: Scalar, w: Scalar) {
-        self.init([x, y, z, w])
+    public init(x: Affine.X, y: Affine.Y, z: Affine.Z, w: Affine.W) {
+        self.init([x.value, y.value, z.value, w.value])
     }
 
     /// Create a 4D point from a 3D point with w coordinate
     @inlinable
-    public init(_ point3: Affine.Point<3>, w: Scalar) {
+    public init(_ point3: Affine.Point<3>, w: Affine.W) {
         self.init(x: point3.x, y: point3.y, z: point3.z, w: w)
     }
 }
@@ -328,13 +322,15 @@ extension Affine.Point where N == 2, Scalar: AdditiveArithmetic {
     /// Translate point by a vector
     @inlinable
     public func translated(by vector: Linear<Scalar>.Vector<2>) -> Self {
-        Self(x: Affine.X(x.value + vector.dx), y: Affine.Y(y.value + vector.dy))
+        // x and vector.dx are both Tagged<Algebra.X, Scalar>, so we can add directly
+        Self(x: x + vector.dx, y: y + vector.dy)
     }
 
     /// The vector from this point to another
     @inlinable
     public func vector(to other: Self) -> Linear<Scalar>.Vector<2> {
-        Linear<Scalar>.Vector(dx: other.x.value - x.value, dy: other.y.value - y.value)
+        // Difference of Tagged values with same tag returns Tagged
+        Linear<Scalar>.Vector(dx: other.x - x, dy: other.y - y)
     }
 }
 
@@ -384,13 +380,14 @@ extension Affine.Point where N == 2, Scalar: FloatingPoint {
 extension Affine.Point where N == 3, Scalar: AdditiveArithmetic {
     /// Translate point by delta values
     @inlinable
-    public func translated(dx: Scalar, dy: Scalar, dz: Scalar) -> Self {
+    public func translated(dx: Affine.X, dy: Affine.Y, dz: Affine.Z) -> Self {
         Self(x: x + dx, y: y + dy, z: z + dz)
     }
 
     /// Translate point by a vector
     @inlinable
     public func translated(by vector: Linear<Scalar>.Vector<3>) -> Self {
+        // Point3D uses raw Scalar, Vector3D uses Tagged - extract values
         Self(x: x + vector.dx, y: y + vector.dy, z: z + vector.dz)
     }
 

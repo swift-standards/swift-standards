@@ -14,6 +14,7 @@
 //
 // - `Vector<N>`: An N-dimensional vector (element of vector space)
 // - `Matrix<M, N>`: An M×N matrix (linear map from N-dim to M-dim space)
+// - `X`, `Y`, `Z`: Type-safe coordinate components
 //
 // ## Usage
 //
@@ -25,6 +26,8 @@
 // let m: Mat4 = .identity
 // ```
 
+public import Algebra
+
 /// The Linear namespace for vector space primitives.
 ///
 /// Parameterized by the scalar type (field) used for coordinates.
@@ -33,3 +36,31 @@ public enum Linear<Scalar: ~Copyable>: ~Copyable {}
 
 extension Linear: Copyable where Scalar: Copyable {}
 extension Linear: Sendable where Scalar: Sendable {}
+
+// MARK: - Coordinate Type Aliases
+
+extension Linear {
+    /// A type-safe horizontal displacement component.
+    ///
+    /// Uses `Tagged` with `Algebra.X` phantom type for compile-time
+    /// distinction from Y, Z, and W components.
+    public typealias X = Tagged<Algebra.X, Scalar>
+
+    /// A type-safe vertical displacement component.
+    ///
+    /// Uses `Tagged` with `Algebra.Y` phantom type for compile-time
+    /// distinction from X, Z, and W components.
+    public typealias Y = Tagged<Algebra.Y, Scalar>
+
+    /// A type-safe depth displacement component.
+    ///
+    /// Uses `Tagged` with `Algebra.Z` phantom type for compile-time
+    /// distinction from X, Y, and W components.
+    public typealias Z = Tagged<Algebra.Z, Scalar>
+
+    /// A type-safe homogeneous displacement component.
+    ///
+    /// Uses `Tagged` with `Algebra.W` phantom type for compile-time
+    /// distinction from X, Y, and Z components.
+    public typealias W = Tagged<Algebra.W, Scalar>
+}

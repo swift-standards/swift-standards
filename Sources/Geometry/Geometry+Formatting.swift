@@ -3,49 +3,6 @@
 
 public import Formatting
 
-// MARK: - X + formatted()
-
-extension Geometry.X where Scalar: BinaryFloatingPoint {
-    /// Format this X coordinate using the given format style.
-    ///
-    /// - Parameter format: The format style to use
-    /// - Returns: The formatted output
-    ///
-    /// ## Example
-    ///
-    /// ```swift
-    /// let x: Geometry<Double>.X = 72.5
-    /// x.formatted(.number)  // "72.5"
-    /// x.formatted(.number.precision(.fractionLength(2)))  // "72.50"
-    /// ```
-    @inlinable
-    public func formatted<S>(_ format: S) -> S.FormatOutput
-    where S: FormatStyle, S.FormatInput: BinaryFloatingPoint {
-        format.format(S.FormatInput(value))
-    }
-}
-
-// MARK: - Y + formatted()
-
-extension Geometry.Y where Scalar: BinaryFloatingPoint {
-    /// Format this Y coordinate using the given format style.
-    ///
-    /// - Parameter format: The format style to use
-    /// - Returns: The formatted output
-    ///
-    /// ## Example
-    ///
-    /// ```swift
-    /// let y: Geometry<Double>.Y = 144.0
-    /// y.formatted(.number)  // "144"
-    /// ```
-    @inlinable
-    public func formatted<S>(_ format: S) -> S.FormatOutput
-    where S: FormatStyle, S.FormatInput: BinaryFloatingPoint {
-        format.format(S.FormatInput(value))
-    }
-}
-
 // MARK: - Width + formatted()
 
 extension Geometry.Width where Scalar: BinaryFloatingPoint {

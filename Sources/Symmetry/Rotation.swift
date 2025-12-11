@@ -1,8 +1,8 @@
 // Rotation.swift
 // An N-dimensional rotation (element of SO(n), dimensionless).
 
+public import Algebra_Linear
 public import Angle
-public import Geometry
 
 /// An N-dimensional rotation.
 ///
@@ -22,14 +22,14 @@ public import Geometry
 /// ```
 public struct Rotation<let N: Int>: Sendable {
     /// The rotation matrix (orthogonal, determinant = +1)
-    public var matrix: Linear<N>
+    public var matrix: Linear<Double>.Matrix<N, N>
 
     /// Create a rotation from an orthogonal matrix
     ///
     /// - Precondition: The matrix should be orthogonal with determinant +1.
     ///   This is not validated for performance reasons.
     @inlinable
-    public init(matrix: Linear<N>) {
+    public init(matrix: Linear<Double>.Matrix<N, N>) {
         self.matrix = matrix
     }
 }
@@ -62,7 +62,7 @@ extension Rotation: Codable where N == 2 {
 
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let matrix = try container.decode(Linear<2>.self, forKey: .matrix)
+        let matrix = try container.decode(Linear<Double>.Matrix<2, 2>.self, forKey: .matrix)
         self.init(matrix: matrix)
     }
 
@@ -103,7 +103,7 @@ extension Rotation where N == 2 {
     public init(angle: Radian) {
         let c = angle.cos
         let s = angle.sin
-        self.init(matrix: Linear(a: c, b: -s, c: s, d: c))
+        self.init(matrix: .init(a: c, b: -s, c: s, d: c))
     }
 
     /// Create a 2D rotation from an angle in degrees
@@ -115,7 +115,7 @@ extension Rotation where N == 2 {
     /// Create a 2D rotation from cos and sin values
     @inlinable
     public init(cos: Double, sin: Double) {
-        self.init(matrix: Linear(a: cos, b: -sin, c: sin, d: cos))
+        self.init(matrix: .init(a: cos, b: -sin, c: sin, d: cos))
     }
 }
 
@@ -127,7 +127,7 @@ extension Rotation {
     /// The resulting rotation applies `other` first, then `self`.
     @inlinable
     public func concatenating(_ other: Self) -> Self where N == 2 {
-        Self(matrix: matrix.concatenating(other.matrix))
+        Self(matrix: matrix.multiplied(by: other.matrix))
     }
 }
 
@@ -137,15 +137,8 @@ extension Rotation where N == 2 {
     /// For orthogonal matrices, the inverse equals the transpose.
     @inlinable
     public var inverted: Self {
-        // For 2D: transpose is simple
-        Self(
-            matrix: Linear(
-                a: matrix.a,
-                b: matrix.c,  // swapped
-                c: matrix.b,  // swapped
-                d: matrix.d
-            )
-        )
+        // For 2D: transpose is simple (inverse = transpose for orthogonal matrices)
+        Self(matrix: matrix.transpose)
     }
 }
 

@@ -2,8 +2,11 @@
 // Tests for Geometry.Arc type.
 
 import Angle
+@testable import Algebra
 import Testing
 
+@testable import Affine
+@testable import Algebra_Linear
 @testable import Geometry
 @testable import RealModule
 

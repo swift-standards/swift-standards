@@ -1,7 +1,7 @@
 // Shear.swift
 // An N-dimensional shear transformation (dimensionless).
 
-public import Geometry
+public import Algebra_Linear
 
 /// A 2D shear transformation.
 ///
@@ -137,7 +137,7 @@ extension Shear where N == 2 {
 extension Shear where N == 2 {
     /// Convert to a 2D linear transformation matrix
     @inlinable
-    public var linear: Linear<2> {
-        Linear(a: 1, b: x, c: y, d: 1)
+    public var linear: Linear<Double>.Matrix<2, 2> {
+        .init(a: 1, b: x, c: y, d: 1)
     }
 }

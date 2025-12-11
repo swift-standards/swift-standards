@@ -2,6 +2,9 @@
 // An ellipse defined by center, semi-axes, and rotation.
 
 public import Angle
+public import Algebra
+public import Affine
+public import Algebra_Linear
 
 extension Geometry {
     /// An ellipse in 2D space defined by center, semi-axes, and rotation.

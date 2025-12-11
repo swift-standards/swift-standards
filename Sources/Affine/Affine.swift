@@ -19,7 +19,7 @@
 // ## Types
 //
 // - `Point<N>`: A position in N-dimensional affine space
-// - `X`, `Y`: Type-safe coordinate functions (projections)
+// - `X`, `Y`, `Z`: Type-safe coordinate functions (projections)
 // - `Translation`: A displacement in affine space
 // - `Transform`: An affine transformation (linear + translation)
 //
@@ -33,6 +33,8 @@
 // let v = q - p  // Linear<Double>.Vector<2>
 // ```
 
+public import Algebra
+
 /// The Affine namespace for affine space primitives.
 ///
 /// Parameterized by the scalar type (field) used for coordinates.
@@ -41,3 +43,31 @@ public enum Affine<Scalar: ~Copyable>: ~Copyable {}
 
 extension Affine: Copyable where Scalar: Copyable {}
 extension Affine: Sendable where Scalar: Sendable {}
+
+// MARK: - Coordinate Type Aliases
+
+extension Affine {
+    /// A type-safe horizontal coordinate (x-projection).
+    ///
+    /// Uses `Tagged` with `Algebra.X` phantom type for compile-time
+    /// distinction from Y and Z coordinates.
+    public typealias X = Tagged<Algebra.X, Scalar>
+
+    /// A type-safe vertical coordinate (y-projection).
+    ///
+    /// Uses `Tagged` with `Algebra.Y` phantom type for compile-time
+    /// distinction from X and Z coordinates.
+    public typealias Y = Tagged<Algebra.Y, Scalar>
+
+    /// A type-safe depth coordinate (z-projection).
+    ///
+    /// Uses `Tagged` with `Algebra.Z` phantom type for compile-time
+    /// distinction from X, Y, and W coordinates.
+    public typealias Z = Tagged<Algebra.Z, Scalar>
+
+    /// A type-safe homogeneous coordinate (w-projection).
+    ///
+    /// Uses `Tagged` with `Algebra.W` phantom type for compile-time
+    /// distinction from X, Y, and Z coordinates.
+    public typealias W = Tagged<Algebra.W, Scalar>
+}

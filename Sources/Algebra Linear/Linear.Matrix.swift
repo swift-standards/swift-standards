@@ -1,6 +1,9 @@
 // Linear.Matrix.swift
 // A general M×N matrix with compile-time dimensions.
 
+public import Angle
+public import RealModule
+
 extension Linear {
     /// A general M×N matrix with compile-time known dimensions.
     ///
@@ -258,6 +261,15 @@ extension Linear.Matrix where Scalar: AdditiveArithmetic & Numeric {
         }
         return Linear.Matrix<Rows, P>(rows: result)
     }
+
+    /// Matrix multiplication operator
+    @inlinable
+    public static func * <let P: Int>(
+        lhs: Self,
+        rhs: Linear.Matrix<Columns, P>
+    ) -> Linear.Matrix<Rows, P> {
+        lhs.multiplied(by: rhs)
+    }
 }
 
 // MARK: - Square Matrix Operations
@@ -326,6 +338,12 @@ extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: Numeric {
 }
 
 extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint {
+    /// Whether this matrix is invertible
+    @inlinable
+    public var isInvertible: Bool {
+        determinant != 0
+    }
+
     /// The inverse of the 2×2 matrix, or nil if singular
     @inlinable
     public var inverse: Self? {
@@ -338,6 +356,113 @@ extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint {
             c: -c * invDet,
             d: a * invDet
         )
+    }
+}
+
+// MARK: - 2×2 Codable
+
+extension Linear.Matrix: Codable where Rows == 2, Columns == 2, Scalar: Codable {
+    private enum CodingKeys: String, CodingKey {
+        case a, b, c, d
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let a = try container.decode(Scalar.self, forKey: .a)
+        let b = try container.decode(Scalar.self, forKey: .b)
+        let c = try container.decode(Scalar.self, forKey: .c)
+        let d = try container.decode(Scalar.self, forKey: .d)
+        self.init(a: a, b: b, c: c, d: d)
+    }
+
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(a, forKey: .a)
+        try container.encode(b, forKey: .b)
+        try container.encode(c, forKey: .c)
+        try container.encode(d, forKey: .d)
+    }
+}
+
+// MARK: - 2×2 Factory Methods
+
+extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint & ExpressibleByIntegerLiteral {
+    /// Create a uniform scaling matrix
+    @inlinable
+    public static func scale(_ factor: Scalar) -> Self {
+        Self(a: factor, b: 0, c: 0, d: factor)
+    }
+
+    /// Create a non-uniform scaling matrix
+    @inlinable
+    public static func scale(x: Scalar, y: Scalar) -> Self {
+        Self(a: x, b: 0, c: 0, d: y)
+    }
+
+    /// Create a shear matrix
+    @inlinable
+    public static func shear(x: Scalar, y: Scalar) -> Self {
+        Self(a: 1, b: x, c: y, d: 1)
+    }
+}
+
+// MARK: - 2×2 Rotation Factory (cos/sin)
+
+extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: SignedNumeric & ExpressibleByIntegerLiteral {
+    /// Create a rotation matrix from cos/sin values
+    ///
+    /// - Parameters:
+    ///   - cos: Cosine of the rotation angle
+    ///   - sin: Sine of the rotation angle
+    @inlinable
+    public static func rotation(cos: Scalar, sin: Scalar) -> Self {
+        Self(a: cos, b: -sin, c: sin, d: cos)
+    }
+}
+
+// MARK: - 2×2 Rotation Factory (Angle)
+
+extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: Real & BinaryFloatingPoint {
+    /// Create a rotation matrix from an angle
+    ///
+    /// - Parameter angle: Rotation angle in radians
+    /// - Returns: A 2×2 rotation matrix
+    @inlinable
+    public static func rotation(_ angle: Radian) -> Self {
+        let c = Scalar(angle.cos)
+        let s = Scalar(angle.sin)
+        return Self(a: c, b: -s, c: s, d: c)
+    }
+
+    /// Create a rotation matrix from degrees
+    @inlinable
+    public static func rotation(_ angle: Degree) -> Self {
+        rotation(angle.radians)
+    }
+}
+
+// MARK: - 2×2 Decomposition
+
+extension Linear.Matrix where Rows == 2, Columns == 2, Scalar == Double {
+    /// Extract the rotation angle (approximate, assumes no shear)
+    ///
+    /// For a pure rotation matrix, this returns the exact angle.
+    /// For matrices with scale/shear, this extracts the rotational component.
+    @inlinable
+    public var rotationAngle: Radian {
+        Radian.atan2(y: c, x: a)
+    }
+}
+
+extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint {
+    /// Extract scale factors (approximate, assumes no shear)
+    ///
+    /// Returns the scale factors along x and y axes.
+    @inlinable
+    public var scaleFactors: (x: Scalar, y: Scalar) {
+        let sx = (a * a + c * c).squareRoot()
+        let sy = (b * b + d * d).squareRoot()
+        return (sx, sy)
     }
 }
 

@@ -133,3 +133,252 @@ extension Tagged: ExpressibleByBooleanLiteral where RawValue: ExpressibleByBoole
         self.rawValue = RawValue(booleanLiteral: value)
     }
 }
+
+// MARK: - Value Alias
+
+extension Tagged {
+    /// Alias for `rawValue` - convenient for coordinate-style usage.
+    @inlinable
+    public var value: RawValue {
+        get { rawValue }
+        set { rawValue = newValue }
+    }
+}
+
+// MARK: - AdditiveArithmetic
+
+extension Tagged: AdditiveArithmetic where RawValue: AdditiveArithmetic {
+    @inlinable
+    public static var zero: Self {
+        Self(.zero)
+    }
+
+    @inlinable
+    @_disfavoredOverload
+    public static func + (lhs: Self, rhs: Self) -> Self {
+        Self(lhs.rawValue + rhs.rawValue)
+    }
+
+    @inlinable
+    @_disfavoredOverload
+    public static func - (lhs: Self, rhs: Self) -> Self {
+        Self(lhs.rawValue - rhs.rawValue)
+    }
+}
+
+// MARK: - Scalar Arithmetic
+
+extension Tagged where RawValue: AdditiveArithmetic {
+    /// Add a raw scalar
+    @inlinable
+    @_disfavoredOverload
+    public static func + (lhs: Self, rhs: RawValue) -> Self {
+        Self(lhs.rawValue + rhs)
+    }
+
+    /// Add to a raw scalar
+    @inlinable
+    @_disfavoredOverload
+    public static func + (lhs: RawValue, rhs: Self) -> Self {
+        Self(lhs + rhs.rawValue)
+    }
+
+    /// Subtract a raw scalar
+    @inlinable
+    @_disfavoredOverload
+    public static func - (lhs: Self, rhs: RawValue) -> Self {
+        Self(lhs.rawValue - rhs)
+    }
+
+    /// Subtract from a raw scalar
+    @inlinable
+    @_disfavoredOverload
+    public static func - (lhs: RawValue, rhs: Self) -> Self {
+        Self(lhs - rhs.rawValue)
+    }
+}
+
+// MARK: - Negation
+
+extension Tagged where RawValue: SignedNumeric {
+    /// Negate
+    @inlinable
+    public static prefix func - (value: Self) -> Self {
+        Self(-value.rawValue)
+    }
+}
+
+// MARK: - Absolute Value, Min, Max
+
+/// Absolute value of a tagged value.
+///
+/// Mathematically, the absolute value of a coordinate remains in the same
+/// coordinate space (unlike multiplication which produces a scalar).
+@inlinable
+public func abs<Tag, T: SignedNumeric & Comparable>(_ x: Tagged<Tag, T>) -> Tagged<Tag, T> {
+    Tagged(abs(x.rawValue))
+}
+
+/// Minimum of two tagged values.
+@inlinable
+public func min<Tag, T: Comparable>(_ x: Tagged<Tag, T>, _ y: Tagged<Tag, T>) -> Tagged<Tag, T> {
+    x.rawValue <= y.rawValue ? x : y
+}
+
+/// Maximum of two tagged values.
+@inlinable
+public func max<Tag, T: Comparable>(_ x: Tagged<Tag, T>, _ y: Tagged<Tag, T>) -> Tagged<Tag, T> {
+    x.rawValue >= y.rawValue ? x : y
+}
+
+// MARK: - Multiplication/Division
+
+extension Tagged where RawValue: FloatingPoint {
+    /// Multiply by a scalar
+    @inlinable
+    public static func * (lhs: Self, rhs: RawValue) -> Self {
+        Self(lhs.rawValue * rhs)
+    }
+
+    /// Multiply scalar by value
+    @inlinable
+    @_disfavoredOverload
+    public static func * (lhs: RawValue, rhs: Self) -> Self {
+        Self(lhs * rhs.rawValue)
+    }
+
+    /// Divide by a scalar
+    @inlinable
+    public static func / (lhs: Self, rhs: RawValue) -> Self {
+        Self(lhs.rawValue / rhs)
+    }
+}
+
+// MARK: - Squared (same tag multiplication)
+
+extension Tagged where RawValue: Numeric {
+    /// Multiply two same-tagged values to get squared magnitude.
+    ///
+    /// Useful for distance calculations: `dx*dx + dy*dy`
+    @inlinable
+    public static func * (lhs: Self, rhs: Self) -> RawValue {
+        lhs.rawValue * rhs.rawValue
+    }
+}
+
+// MARK: - Same Tag Division (ratio)
+
+extension Tagged where RawValue: FloatingPoint {
+    /// Divide two same-tagged values to get a ratio.
+    ///
+    /// Useful for normalization: `dx / length`
+    @inlinable
+    public static func / (lhs: Self, rhs: Self) -> RawValue {
+        lhs.rawValue / rhs.rawValue
+    }
+}
+
+// MARK: - Compound Assignment Operators
+
+extension Tagged where RawValue: AdditiveArithmetic {
+    /// Add and assign
+    @inlinable
+    public static func += (lhs: inout Self, rhs: Self) {
+        lhs.rawValue = lhs.rawValue + rhs.rawValue
+    }
+
+    /// Subtract and assign
+    @inlinable
+    public static func -= (lhs: inout Self, rhs: Self) {
+        lhs.rawValue = lhs.rawValue - rhs.rawValue
+    }
+
+    /// Add scalar and assign
+    @inlinable
+    public static func += (lhs: inout Self, rhs: RawValue) {
+        lhs.rawValue = lhs.rawValue + rhs
+    }
+
+    /// Subtract scalar and assign
+    @inlinable
+    public static func -= (lhs: inout Self, rhs: RawValue) {
+        lhs.rawValue = lhs.rawValue - rhs
+    }
+}
+
+extension Tagged where RawValue: FloatingPoint {
+    /// Multiply and assign by scalar
+    @inlinable
+    public static func *= (lhs: inout Self, rhs: RawValue) {
+        lhs.rawValue = lhs.rawValue * rhs
+    }
+
+    /// Divide and assign by scalar
+    @inlinable
+    public static func /= (lhs: inout Self, rhs: RawValue) {
+        lhs.rawValue = lhs.rawValue / rhs
+    }
+}
+
+// MARK: - Cross-Axis Multiplication
+
+// All axis pair combinations for cross product calculations.
+// X * Y, Y * X, Y * Z, Z * Y, X * Z, Z * X all produce Scalar.
+
+extension Tagged where Tag == Algebra.X, RawValue: Numeric {
+    /// Multiply X by Y to get a scalar.
+    @inlinable
+    public static func * (lhs: Self, rhs: Tagged<Algebra.Y, RawValue>) -> RawValue {
+        lhs.rawValue * rhs.rawValue
+    }
+
+    /// Multiply X by Z to get a scalar.
+    @inlinable
+    public static func * (lhs: Self, rhs: Tagged<Algebra.Z, RawValue>) -> RawValue {
+        lhs.rawValue * rhs.rawValue
+    }
+}
+
+extension Tagged where Tag == Algebra.Y, RawValue: Numeric {
+    /// Multiply Y by X to get a scalar.
+    @inlinable
+    public static func * (lhs: Self, rhs: Tagged<Algebra.X, RawValue>) -> RawValue {
+        lhs.rawValue * rhs.rawValue
+    }
+
+    /// Multiply Y by Z to get a scalar.
+    @inlinable
+    public static func * (lhs: Self, rhs: Tagged<Algebra.Z, RawValue>) -> RawValue {
+        lhs.rawValue * rhs.rawValue
+    }
+}
+
+extension Tagged where Tag == Algebra.Z, RawValue: Numeric {
+    /// Multiply Z by X to get a scalar.
+    @inlinable
+    public static func * (lhs: Self, rhs: Tagged<Algebra.X, RawValue>) -> RawValue {
+        lhs.rawValue * rhs.rawValue
+    }
+
+    /// Multiply Z by Y to get a scalar.
+    @inlinable
+    public static func * (lhs: Self, rhs: Tagged<Algebra.Y, RawValue>) -> RawValue {
+        lhs.rawValue * rhs.rawValue
+    }
+}
+
+// MARK: - Strideable
+
+extension Tagged: Strideable where RawValue: Strideable {
+    public typealias Stride = RawValue.Stride
+
+    @inlinable
+    public func distance(to other: Self) -> Stride {
+        rawValue.distance(to: other.rawValue)
+    }
+
+    @inlinable
+    public func advanced(by n: Stride) -> Self {
+        Self(rawValue.advanced(by: n))
+    }
+}

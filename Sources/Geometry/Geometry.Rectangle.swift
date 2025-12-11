@@ -2,6 +2,9 @@
 // A rectangle defined by corner coordinates, parameterized by unit type.
 
 public import Dimension
+public import Algebra
+public import Affine
+public import Algebra_Linear
 
 extension Geometry {
     /// A rectangle parameterized by its unit type.

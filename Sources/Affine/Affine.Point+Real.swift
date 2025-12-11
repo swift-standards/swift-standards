@@ -1,7 +1,8 @@
 // Affine.Point+Real.swift
 // Polar coordinates and rotation for 2D points with Real scalar types.
 
-public import Algebra_Linear
+public import Algebra
+import Algebra_Linear
 public import Angle
 public import RealModule
 

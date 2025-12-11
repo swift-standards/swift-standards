@@ -37,6 +37,7 @@
 // typealias Transform = Geometry<Points>.AffineTransform
 // ```
 
+public import Algebra
 public import Affine
 public import Algebra_Linear
 import Angle
@@ -51,4 +52,26 @@ public enum Geometry<Scalar: ~Copyable>: ~Copyable {}
 
 extension Geometry: Copyable where Scalar: Copyable {}
 extension Geometry: Sendable where Scalar: Sendable {}
+
+// MARK: - Type Aliases (Canonical types from Affine/Linear)
+
+extension Geometry {
+    /// Type-safe X coordinate - typealias to `Affine<Scalar>.X`
+    public typealias X = Affine<Scalar>.X
+
+    /// Type-safe Y coordinate - typealias to `Affine<Scalar>.Y`
+    public typealias Y = Affine<Scalar>.Y
+
+    /// A 2D translation - typealias to `Affine<Scalar>.Translation`
+    public typealias Translation = Affine<Scalar>.Translation
+
+    /// A 2D affine transformation - typealias to `Affine<Scalar>.Transform`
+    public typealias AffineTransform = Affine<Scalar>.Transform
+
+    /// An N-dimensional point - typealias to `Affine<Scalar>.Point<N>`
+    public typealias Point<let N: Int> = Affine<Scalar>.Point<N>
+
+    /// An N-dimensional vector - typealias to `Linear<Scalar>.Vector<N>`
+    public typealias Vector<let N: Int> = Linear<Scalar>.Vector<N>
+}
 

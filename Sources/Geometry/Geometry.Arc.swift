@@ -2,6 +2,9 @@
 // A circular arc defined by center, radius, and angle range.
 
 public import Angle
+public import Algebra
+public import Affine
+public import Algebra_Linear
 public import RealModule
 
 extension Geometry {

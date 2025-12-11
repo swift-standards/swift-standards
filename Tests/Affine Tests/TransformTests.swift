@@ -1,6 +1,7 @@
 // TransformTests.swift
 // Tests for Affine.Transform
 
+@testable import Algebra
 import Testing
 @testable import Affine
 @testable import Algebra_Linear

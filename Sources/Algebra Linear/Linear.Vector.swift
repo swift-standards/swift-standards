@@ -1,6 +1,8 @@
 // Linear.Vector.swift
 // A fixed-size displacement vector with compile-time known dimensions.
 
+public import Algebra
+
 extension Linear {
     /// A fixed-size displacement vector with compile-time known dimensions.
     ///
@@ -300,24 +302,24 @@ extension Linear.Vector where Scalar: FloatingPoint {
 // MARK: - 2D Convenience
 
 extension Linear.Vector where N == 2 {
-    /// The x component (horizontal displacement)
+    /// The x component (horizontal displacement) - type-safe
     @inlinable
-    public var dx: Scalar {
-        get { components[0] }
-        set { components[0] = newValue }
+    public var dx: Linear.X {
+        get { Linear.X(components[0]) }
+        set { components[0] = newValue.value }
     }
 
-    /// The y component (vertical displacement)
+    /// The y component (vertical displacement) - type-safe
     @inlinable
-    public var dy: Scalar {
-        get { components[1] }
-        set { components[1] = newValue }
+    public var dy: Linear.Y {
+        get { Linear.Y(components[1]) }
+        set { components[1] = newValue.value }
     }
 
-    /// Create a 2D vector from scalar values
+    /// Create a 2D vector from typed components
     @inlinable
-    public init(dx: Scalar, dy: Scalar) {
-        self.init([dx, dy])
+    public init(dx: Linear.X, dy: Linear.Y) {
+        self.init([dx.value, dy.value])
     }
 }
 
@@ -334,40 +336,43 @@ extension Linear.Vector where N == 2, Scalar: SignedNumeric {
     }
 }
 
+// Note: The cross product uses Tagged's cross-axis multiplication:
+// dx: Tagged<Algebra.X, Scalar> * other.dy: Tagged<Algebra.Y, Scalar> -> Scalar
+
 // MARK: - 3D Convenience
 
 extension Linear.Vector where N == 3 {
-    /// The x component
+    /// The x component - type-safe
     @inlinable
-    public var dx: Scalar {
-        get { components[0] }
-        set { components[0] = newValue }
+    public var dx: Linear.X {
+        get { Linear.X(components[0]) }
+        set { components[0] = newValue.value }
     }
 
-    /// The y component
+    /// The y component - type-safe
     @inlinable
-    public var dy: Scalar {
-        get { components[1] }
-        set { components[1] = newValue }
+    public var dy: Linear.Y {
+        get { Linear.Y(components[1]) }
+        set { components[1] = newValue.value }
     }
 
-    /// The z component
+    /// The z component - type-safe
     @inlinable
-    public var dz: Scalar {
-        get { components[2] }
-        set { components[2] = newValue }
+    public var dz: Linear.Z {
+        get { Linear.Z(components[2]) }
+        set { components[2] = newValue.value }
     }
 
-    /// Create a 3D vector with the given components
+    /// Create a 3D vector with typed components
     @inlinable
-    public init(dx: Scalar, dy: Scalar, dz: Scalar) {
-        self.init([dx, dy, dz])
+    public init(dx: Linear.X, dy: Linear.Y, dz: Linear.Z) {
+        self.init([dx.value, dy.value, dz.value])
     }
 
     /// Create a 3D vector from a 2D vector with z component
     @inlinable
-    public init(_ vector2: Linear.Vector<2>, dz: Scalar) {
-        self.init(dx: vector2.dx, dy: vector2.dy, dz: dz)
+    public init(_ vector2: Linear.Vector<2>, dz: Linear.Z) {
+        self.init([vector2.dx.value, vector2.dy.value, dz.value])
     }
 }
 
@@ -378,9 +383,9 @@ extension Linear.Vector where N == 3, Scalar: SignedNumeric {
     @inlinable
     public func cross(_ other: borrowing Self) -> Self {
         Self(
-            dx: dy * other.dz - dz * other.dy,
-            dy: dz * other.dx - dx * other.dz,
-            dz: dx * other.dy - dy * other.dx
+            dx: Linear.X(dy * other.dz - dz * other.dy),
+            dy: Linear.Y(dz * other.dx - dx * other.dz),
+            dz: Linear.Z(dx * other.dy - dy * other.dx)
         )
     }
 }
@@ -388,44 +393,44 @@ extension Linear.Vector where N == 3, Scalar: SignedNumeric {
 // MARK: - 4D Convenience
 
 extension Linear.Vector where N == 4 {
-    /// The x component
+    /// The x component - type-safe
     @inlinable
-    public var dx: Scalar {
-        get { components[0] }
-        set { components[0] = newValue }
+    public var dx: Linear.X {
+        get { Linear.X(components[0]) }
+        set { components[0] = newValue.value }
     }
 
-    /// The y component
+    /// The y component - type-safe
     @inlinable
-    public var dy: Scalar {
-        get { components[1] }
-        set { components[1] = newValue }
+    public var dy: Linear.Y {
+        get { Linear.Y(components[1]) }
+        set { components[1] = newValue.value }
     }
 
-    /// The z component
+    /// The z component - type-safe
     @inlinable
-    public var dz: Scalar {
-        get { components[2] }
-        set { components[2] = newValue }
+    public var dz: Linear.Z {
+        get { Linear.Z(components[2]) }
+        set { components[2] = newValue.value }
     }
 
-    /// The w component
+    /// The w component - type-safe
     @inlinable
-    public var dw: Scalar {
-        get { components[3] }
-        set { components[3] = newValue }
+    public var dw: Linear.W {
+        get { Linear.W(components[3]) }
+        set { components[3] = newValue.value }
     }
 
-    /// Create a 4D vector with the given components
+    /// Create a 4D vector with typed components
     @inlinable
-    public init(dx: Scalar, dy: Scalar, dz: Scalar, dw: Scalar) {
-        self.init([dx, dy, dz, dw])
+    public init(dx: Linear.X, dy: Linear.Y, dz: Linear.Z, dw: Linear.W) {
+        self.init([dx.value, dy.value, dz.value, dw.value])
     }
 
     /// Create a 4D vector from a 3D vector with w component
     @inlinable
-    public init(_ vector3: Linear.Vector<3>, dw: Scalar) {
-        self.init(dx: vector3.dx, dy: vector3.dy, dz: vector3.dz, dw: dw)
+    public init(_ vector3: Linear.Vector<3>, dw: Linear.W) {
+        self.init([vector3.dx.value, vector3.dy.value, vector3.dz.value, dw.value])
     }
 }
 

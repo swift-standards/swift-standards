@@ -1,6 +1,10 @@
 // Polygon.swift
 // A polygon defined by an ordered sequence of vertices.
 
+public import Algebra
+public import Affine
+public import Algebra_Linear
+
 extension Geometry {
     /// A polygon in 2D space defined by an ordered sequence of vertices.
     ///

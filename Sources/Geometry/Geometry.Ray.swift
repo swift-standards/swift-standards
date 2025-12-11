@@ -1,6 +1,10 @@
 // Ray.swift
 // A half-line (ray) extending from an origin in a direction.
 
+public import Algebra
+public import Affine
+public import Algebra_Linear
+
 extension Geometry {
     /// A ray (half-line) in 2D space, extending from an origin point in a direction.
     ///

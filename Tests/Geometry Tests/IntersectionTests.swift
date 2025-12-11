@@ -1,6 +1,9 @@
 // IntersectionTests.swift
 // Tests for intersection operations on Line, Line.Segment, and other geometric types.
 
+import Affine
+import Algebra_Linear
+@testable import Algebra
 import Testing
 
 @testable import Geometry

@@ -1,5 +1,6 @@
 // Symmetry Tests.swift
 
+import Algebra_Linear
 import Geometry
 import Testing
 

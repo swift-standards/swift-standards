@@ -1,6 +1,7 @@
 // Affine.Translation.swift
 // A 2D translation (displacement) in an affine space.
 
+public import Algebra
 public import Algebra_Linear
 
 extension Affine {
@@ -49,8 +50,9 @@ extension Affine.Translation {
     /// Create a translation from a vector
     @inlinable
     public init(_ vector: Linear<Scalar>.Vector<2>) {
-        self.x = Affine.X(vector.dx)
-        self.y = Affine.Y(vector.dy)
+        // Linear.X and Affine.X are both Tagged<Algebra.X, Scalar>
+        self.x = vector.dx
+        self.y = vector.dy
     }
 }
 
@@ -96,6 +98,6 @@ extension Affine.Translation {
     /// Convert to a 2D vector
     @inlinable
     public var vector: Linear<Scalar>.Vector<2> {
-        Linear<Scalar>.Vector(dx: x.value, dy: y.value)
+        Linear<Scalar>.Vector(dx: x, dy: y)
     }
 }

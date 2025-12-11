@@ -2,6 +2,9 @@
 // An N-sided polygon with exactly N vertices (compile-time enforced).
 
 public import Angle
+public import Algebra
+public import Affine
+public import Algebra_Linear
 
 extension Geometry {
     /// An N-sided polygon in 2D space with exactly N vertices.

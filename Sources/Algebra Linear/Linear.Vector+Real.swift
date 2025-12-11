@@ -1,6 +1,7 @@
 // Linear.Vector+Real.swift
 // Angle and rotation operations for 2D vectors with Real scalar types.
 
+public import Algebra
 public import Angle
 public import RealModule
 
@@ -10,7 +11,7 @@ extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// The angle of this vector from the positive x-axis
     @inlinable
     public var angle: Radian {
-        .atan2(y: Double(dy), x: Double(dx))
+        .atan2(y: Double(dy.value), x: Double(dx.value))
     }
 }
 
@@ -20,15 +21,15 @@ extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// Create a unit vector at the given angle
     @inlinable
     public static func unit(at angle: Radian) -> Self {
-        Self(dx: Scalar(angle.cos), dy: Scalar(angle.sin))
+        Self(dx: Linear.X(Scalar(angle.cos)), dy: Linear.Y(Scalar(angle.sin)))
     }
 
     /// Create a vector with given length at the given angle (polar coordinates)
     @inlinable
     public static func polar(length: Scalar, angle: Radian) -> Self {
         Self(
-            dx: length * Scalar(angle.cos),
-            dy: length * Scalar(angle.sin)
+            dx: Linear.X(length * Scalar(angle.cos)),
+            dy: Linear.Y(length * Scalar(angle.sin))
         )
     }
 }
@@ -66,11 +67,11 @@ extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
     public func rotated(by angle: Radian) -> Self {
         let c = Scalar(angle.cos)
         let s = Scalar(angle.sin)
-        let x = dx
-        let y = dy
+        let x = dx.value
+        let y = dy.value
         return Self(
-            dx: x * c - y * s,
-            dy: x * s + y * c
+            dx: Linear.X(x * c - y * s),
+            dy: Linear.Y(x * s + y * c)
         )
     }
 

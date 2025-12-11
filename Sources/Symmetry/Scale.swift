@@ -1,7 +1,7 @@
 // Scale.swift
 // An N-dimensional scale transformation (dimensionless).
 
-public import Geometry
+public import Algebra_Linear
 
 /// An N-dimensional scale transformation.
 ///
@@ -227,7 +227,7 @@ extension Scale {
 extension Scale where N == 2 {
     /// Convert to a 2D linear transformation matrix
     @inlinable
-    public var linear: Linear<2> {
-        Linear(a: x, b: 0, c: 0, d: y)
+    public var linear: Linear<Double>.Matrix<2, 2> {
+        .init(a: x, b: 0, c: 0, d: y)
     }
 }

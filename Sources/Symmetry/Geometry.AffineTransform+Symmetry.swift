@@ -1,11 +1,12 @@
 // Geometry.AffineTransform+Symmetry.swift
 // AffineTransform initializers from Symmetry types.
 
-public import Geometry
+import Geometry
+public import Affine
 
 // MARK: - AffineTransform from Rotation
 
-extension Geometry.AffineTransform where Scalar == Double {
+extension Affine.Transform where Scalar == Double {
     /// Create from a rotation
     @inlinable
     public init(_ rotation: Rotation<2>) {

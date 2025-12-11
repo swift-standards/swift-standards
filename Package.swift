@@ -180,6 +180,7 @@ let package = Package(
             dependencies: [
                 "Algebra Linear",
                 "Angle",
+                "Formatting",
                 .product(name: "RealModule", package: "swift-numerics"),
             ]
         ),
@@ -227,6 +228,8 @@ let package = Package(
         .target(
             name: "Symmetry",
             dependencies: [
+                "Algebra Linear",
+                "Affine",
                 "Angle",
                 "Geometry",
             ]
@@ -337,6 +340,7 @@ let package = Package(
         .testTarget(
             name: "Symmetry".tests,
             dependencies: [
+                "Algebra Linear",
                 "Symmetry",
                 "StandardsTestSupport",
             ]
@@ -351,6 +355,8 @@ let package = Package(
         .testTarget(
             name: "Geometry".tests,
             dependencies: [
+                "Affine",
+                "Algebra Linear",
                 "Geometry",
                 "Symmetry",
                 "StandardsTestSupport",

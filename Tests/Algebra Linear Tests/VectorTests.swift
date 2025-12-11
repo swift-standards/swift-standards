@@ -1,6 +1,7 @@
 // VectorTests.swift
 // Tests for Linear.Vector
 
+@testable import Algebra
 import Testing
 @testable import Algebra_Linear
 

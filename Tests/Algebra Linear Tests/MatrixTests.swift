@@ -1,6 +1,7 @@
 // MatrixTests.swift
 // Tests for Linear.Matrix
 
+@testable import Algebra
 import Testing
 @testable import Algebra_Linear
 

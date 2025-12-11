@@ -2,6 +2,9 @@
 // Bezier curves of arbitrary degree.
 
 public import Angle
+public import Algebra
+public import Algebra_Linear
+public import Affine
 
 extension Geometry {
     /// A Bezier curve defined by control points.

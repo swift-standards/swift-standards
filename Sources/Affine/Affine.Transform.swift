@@ -1,6 +1,7 @@
 // Affine.Transform.swift
 // A 2D affine transformation: linear transformation + translation.
 
+public import Algebra
 public import Algebra_Linear
 public import Angle
 public import RealModule
@@ -353,11 +354,12 @@ extension Affine.Transform where Scalar: FloatingPoint {
     /// Apply transform to a vector (ignores translation)
     @inlinable
     public func apply(to vector: Linear<Scalar>.Vector<2>) -> Linear<Scalar>.Vector<2> {
-        let vx = vector.dx
-        let vy = vector.dy
+        // Matrix multiplication mixes X and Y components: new_x = a*x + b*y
+        let vx = vector.dx.value
+        let vy = vector.dy.value
         let newDx = linear.a * vx + linear.b * vy
         let newDy = linear.c * vx + linear.d * vy
-        return Linear<Scalar>.Vector(dx: newDx, dy: newDy)
+        return Linear<Scalar>.Vector(dx: Linear<Scalar>.X(newDx), dy: Linear<Scalar>.Y(newDy))
     }
 }
 

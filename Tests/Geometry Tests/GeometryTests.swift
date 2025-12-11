@@ -1,7 +1,10 @@
 // GeometryTests.swift
 
+import Affine
+import Algebra_Linear
 import Angle
 import Symmetry
+@testable import Algebra
 import Testing
 
 @testable import Geometry
@@ -137,56 +140,56 @@ struct PointTests {
     @Test
     func `Point plus vector`() {
         let point: Geometry<Double>.Point<2> = .init(x: 10, y: 20)
-        let vector: Geometry<Double>.Vector2 = .init(dx: 5, dy: 10)
+        let vector: Geometry<Double>.Vector<2> = .init(dx: 5, dy: 10)
         let result = point + vector
         #expect(result.x == 15)
         #expect(result.y == 30)
     }
 }
 
-// MARK: - Vector2 Tests
+// MARK: - Vector<2> Tests
 
 @Suite
-struct Vector2Tests {
+struct VectorTests {
     @Test
     func `Creates vector`() {
-        let v: Geometry<Double>.Vector2 = .init(dx: 3, dy: 4)
+        let v: Geometry<Double>.Vector<2> = .init(dx: 3, dy: 4)
         #expect(v.dx == 3)
         #expect(v.dy == 4)
     }
 
     @Test
     func `Vector length`() {
-        let v: Geometry<Double>.Vector2 = .init(dx: 3, dy: 4)
+        let v: Geometry<Double>.Vector<2> = .init(dx: 3, dy: 4)
         #expect(v.length == 5)
         #expect(v.lengthSquared == 25)
     }
 
     @Test
     func `Vector normalization`() {
-        let v: Geometry<Double>.Vector2 = .init(dx: 3, dy: 4)
+        let v: Geometry<Double>.Vector<2> = .init(dx: 3, dy: 4)
         let n = v.normalized
         #expect(abs(n.length - 1.0) < 0.0001)
     }
 
     @Test
     func `Vector dot product`() {
-        let a: Geometry<Double>.Vector2 = .init(dx: 1, dy: 0)
-        let b: Geometry<Double>.Vector2 = .init(dx: 0, dy: 1)
+        let a: Geometry<Double>.Vector<2> = .init(dx: 1, dy: 0)
+        let b: Geometry<Double>.Vector<2> = .init(dx: 0, dy: 1)
         #expect(a.dot(b) == 0)  // perpendicular
     }
 
     @Test
     func `Vector cross product`() {
-        let a: Geometry<Double>.Vector2 = .init(dx: 1, dy: 0)
-        let b: Geometry<Double>.Vector2 = .init(dx: 0, dy: 1)
+        let a: Geometry<Double>.Vector<2> = .init(dx: 1, dy: 0)
+        let b: Geometry<Double>.Vector<2> = .init(dx: 0, dy: 1)
         #expect(a.cross(b) == 1)  // counter-clockwise
     }
 
     @Test
     func `Vector arithmetic`() {
-        let a: Geometry<Double>.Vector2 = .init(dx: 10, dy: 20)
-        let b: Geometry<Double>.Vector2 = .init(dx: 5, dy: 10)
+        let a: Geometry<Double>.Vector<2> = .init(dx: 10, dy: 20)
+        let b: Geometry<Double>.Vector<2> = .init(dx: 5, dy: 10)
 
         #expect((a + b).dx == 15)
         #expect((a - b).dx == 5)
@@ -664,7 +667,7 @@ struct DimensionTests {
         let x: Geometry<Double>.X = .init(10)
         #expect((-x) == -10)
         #expect((x * 2.0) == 20)
-        #expect((x / 2) == 5)
+        #expect((x / 2.0) == 5)
     }
 
     @Test
@@ -672,7 +675,7 @@ struct DimensionTests {
         let y: Geometry<Double>.Y = .init(10)
         #expect((-y) == -10)
         #expect((y * 2.0) == 20)
-        #expect((y / 2) == 5)
+        #expect((y / 2.0) == 5)
     }
 }
 
@@ -703,9 +706,11 @@ struct AffineTransformGenericTests {
 
 @Suite
 struct LinearTransformTests {
+    typealias Matrix2x2 = Linear<Double>.Matrix<2, 2>
+
     @Test
     func `Linear identity`() {
-        let identity = Linear<2>.identity
+        let identity = Matrix2x2.identity
         #expect(identity.a == 1)
         #expect(identity.b == 0)
         #expect(identity.c == 0)
@@ -734,9 +739,9 @@ struct LinearTransformTests {
 
     @Test
     func `Linear concatenation`() {
-        let scale = Linear<2>.scale(2)
-        let rotation = Linear<2>.rotation(.halfPi)
-        let combined = rotation.concatenating(scale)
+        let scale = Matrix2x2.scale(2)
+        let rotation = Matrix2x2.rotation(.halfPi)
+        let combined = rotation * scale
         // Scale first, then rotate
         #expect(abs(combined.a) < 1e-10)
         #expect(abs(combined.b + 2) < 1e-10)
@@ -746,22 +751,22 @@ struct LinearTransformTests {
 
     @Test
     func `Linear determinant`() {
-        let identity = Linear<2>.identity
+        let identity = Matrix2x2.identity
         #expect(identity.determinant == 1)
 
-        let scale = Linear<2>.scale(x: 2, y: 3)
+        let scale = Matrix2x2.scale(x: 2, y: 3)
         #expect(scale.determinant == 6)
     }
 
     @Test
     func `Linear inversion`() {
-        let scale = Linear<2>.scale(x: 2, y: 4)
-        let inverted = scale.inverted!
+        let scale = Matrix2x2.scale(x: 2, y: 4)
+        let inverted = scale.inverse!
         #expect(inverted.a == 0.5)
         #expect(inverted.d == 0.25)
 
-        let singular = Linear<2>(a: 1, b: 1, c: 1, d: 1)
-        #expect(singular.inverted == nil)
+        let singular = Matrix2x2(a: 1, b: 1, c: 1, d: 1)
+        #expect(singular.inverse == nil)
     }
 }
 

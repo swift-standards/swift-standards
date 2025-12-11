@@ -1,8 +1,11 @@
 // ProtocolConformanceTests.swift
 // Tests for protocol conformances added to scalar wrappers and other types.
 
+@testable import Algebra
 import Testing
 
+@testable import Affine
+@testable import Algebra_Linear
 @testable import Geometry
 
 // MARK: - Strideable Tests
@@ -211,7 +214,7 @@ struct `Scalar Wrapper Operators` {
         let twoTimesX: Geometry<Double>.X = 2.0 * x
         #expect(xTimes2 == 20)
         #expect(twoTimesX == 20)
-        #expect((x / 2) == 5)
+        #expect((x / 2.0) == 5)
         #expect((-x) == -10)
     }
 
@@ -222,7 +225,7 @@ struct `Scalar Wrapper Operators` {
         let twoTimesY: Geometry<Double>.Y = 2.0 * y
         #expect(yTimes2 == 20)
         #expect(twoTimesY == 20)
-        #expect((y / 2) == 5)
+        #expect((y / 2.0) == 5)
         #expect((-y) == -10)
     }
 

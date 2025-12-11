@@ -6,6 +6,8 @@ import Algebra
 import Region
 import Testing
 
+@testable import Affine
+@testable import Algebra_Linear
 @testable import Geometry
 
 // MARK: - Quadrant Tests
