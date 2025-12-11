@@ -263,6 +263,23 @@ extension Geometry.Ray where Scalar: FloatingPoint {
             return dot >= 0
         }
     }
+
+    /// Find intersection points with an N-gon.
+    ///
+    /// - Parameter ngon: The polygon to intersect with
+    /// - Returns: Array of intersection points where the ray crosses polygon edges
+    @inlinable
+    public func intersections<let N: Int>(with ngon: Geometry.Ngon<N>) -> [Geometry.Point<2>]
+    where Scalar: AdditiveArithmetic {
+        var result: [Geometry.Point<2>] = []
+        let edges = ngon.edges
+        for i in 0..<N {
+            if let point = intersection(with: edges[i]) {
+                result.append(point)
+            }
+        }
+        return result
+    }
 }
 
 // MARK: - Functorial Map

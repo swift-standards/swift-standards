@@ -151,6 +151,33 @@ extension Geometry.Line where Scalar: FloatingPoint {
             y: Geometry.Y(2 * projected.y.value - other.y.value)
         )
     }
+
+    /// Find intersection points with an N-gon.
+    ///
+    /// - Parameter ngon: The polygon to intersect with
+    /// - Returns: Array of intersection points where the line crosses polygon edges
+    @inlinable
+    public func intersections<let N: Int>(with ngon: Geometry.Ngon<N>) -> [Geometry.Point<2>]
+    where Scalar: AdditiveArithmetic {
+        var result: [Geometry.Point<2>] = []
+        let edges = ngon.edges
+        for i in 0..<N {
+            // Intersect this line with the segment's line, then check if on segment
+            let seg = edges[i]
+            let segLine = seg.line
+            guard let pt = intersection(with: segLine) else { continue }
+
+            // Check if pt is within segment bounds (parameter t in [0, 1])
+            let lenSq = seg.vector.dx * seg.vector.dx + seg.vector.dy * seg.vector.dy
+            guard lenSq > .ulpOfOne else { continue }
+            let v = Geometry.Vector(dx: pt.x - seg.start.x, dy: pt.y - seg.start.y)
+            let t = (seg.vector.dx * v.dx + seg.vector.dy * v.dy) / lenSq
+            if t >= 0 && t <= 1 {
+                result.append(pt)
+            }
+        }
+        return result
+    }
 }
 
 // MARK: - Line.Segment
@@ -326,6 +353,23 @@ extension Geometry.Line.Segment where Scalar: FloatingPoint {
         let dx = other.x.value - closest.x.value
         let dy = other.y.value - closest.y.value
         return (dx * dx + dy * dy).squareRoot()
+    }
+
+    /// Find intersection points with an N-gon.
+    ///
+    /// - Parameter ngon: The polygon to intersect with
+    /// - Returns: Array of intersection points where the segment crosses polygon edges
+    @inlinable
+    public func intersections<let N: Int>(with ngon: Geometry.Ngon<N>) -> [Geometry.Point<2>]
+    where Scalar: AdditiveArithmetic {
+        var result: [Geometry.Point<2>] = []
+        let edges = ngon.edges
+        for i in 0..<N {
+            if let point = intersection(with: edges[i]) {
+                result.append(point)
+            }
+        }
+        return result
     }
 }
 

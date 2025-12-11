@@ -483,6 +483,103 @@ extension Geometry.Ngon where Scalar: FloatingPoint {
     }
 }
 
+// MARK: - Regular Polygon Factory
+
+extension Geometry.Ngon where Scalar: BinaryFloatingPoint {
+    /// Create a regular N-gon with the given side length.
+    ///
+    /// A regular polygon has all sides equal length and all interior angles equal.
+    /// Vertices are placed counter-clockwise starting from the rightmost point.
+    ///
+    /// - Parameters:
+    ///   - sideLength: The length of each side
+    ///   - center: The center of the polygon (default: origin)
+    /// - Returns: A regular N-gon
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let hexagon = Geometry<Double>.Hexagon.regular(sideLength: 10)
+    /// let pentagon = Geometry<Double>.Pentagon.regular(sideLength: 5, at: .init(x: 10, y: 10))
+    /// ```
+    @inlinable
+    public static func regular(
+        sideLength: Scalar,
+        at center: Geometry.Point<2> = .zero
+    ) -> Self {
+        // Circumradius R = s / (2 * sin(π/N))
+        let piOverN: Radian = .pi(over: Double(N))
+        let two: Scalar = Scalar(2)
+        let circumradius = sideLength / (two * Scalar(piOverN.sin))
+
+        // First vertex at angle 0 (rightmost point)
+        let first = Geometry.Point<2>(
+            x: Geometry.X(center.x.value + circumradius),
+            y: Geometry.Y(center.y.value)
+        )
+        var verts = InlineArray<N, Geometry.Point<2>>(repeating: first)
+
+        for i in 0..<N {
+            let angle: Radian = .pi(times: 2 * Double(i) / Double(N))
+            verts[i] = Geometry.Point(
+                x: Geometry.X(center.x.value + circumradius * Scalar(angle.cos)),
+                y: Geometry.Y(center.y.value + circumradius * Scalar(angle.sin))
+            )
+        }
+
+        return Self(verts)
+    }
+
+    /// Create a regular N-gon with the given circumradius.
+    ///
+    /// The circumradius is the distance from the center to each vertex.
+    ///
+    /// - Parameters:
+    ///   - circumradius: The radius of the circumscribed circle
+    ///   - center: The center of the polygon (default: origin)
+    /// - Returns: A regular N-gon
+    @inlinable
+    public static func regular(
+        circumradius: Scalar,
+        at center: Geometry.Point<2> = .zero
+    ) -> Self {
+        let first = Geometry.Point<2>(
+            x: Geometry.X(center.x.value + circumradius),
+            y: Geometry.Y(center.y.value)
+        )
+        var verts = InlineArray<N, Geometry.Point<2>>(repeating: first)
+
+        for i in 0..<N {
+            let angle: Radian = .pi(times: 2 * Double(i) / Double(N))
+            verts[i] = Geometry.Point(
+                x: Geometry.X(center.x.value + circumradius * Scalar(angle.cos)),
+                y: Geometry.Y(center.y.value + circumradius * Scalar(angle.sin))
+            )
+        }
+
+        return Self(verts)
+    }
+
+    /// Create a regular N-gon with the given inradius (apothem).
+    ///
+    /// The inradius is the distance from the center to the midpoint of each side.
+    ///
+    /// - Parameters:
+    ///   - inradius: The radius of the inscribed circle (apothem)
+    ///   - center: The center of the polygon (default: origin)
+    /// - Returns: A regular N-gon
+    @inlinable
+    public static func regular(
+        inradius: Scalar,
+        at center: Geometry.Point<2> = .zero
+    ) -> Self {
+        // Circumradius R = r / cos(π/N) where r is inradius
+        let piOverN: Radian = .pi(over: Double(N))
+        let circumradius = inradius / Scalar(piOverN.cos)
+        return regular(circumradius: circumradius, at: center)
+    }
+}
+
 // MARK: - Polygon Conversion
 
 extension Geometry.Ngon {
