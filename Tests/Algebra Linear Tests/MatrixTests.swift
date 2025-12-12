@@ -6,16 +6,16 @@ import Testing
 @testable import Algebra
 @testable import Algebra_Linear
 
-@Suite("Linear.Matrix Tests")
-struct MatrixTests {
+@Suite
+struct `Linear.Matrix Tests` {
     typealias Mat2x2 = Linear<Double, Void>.Matrix2x2
     typealias Mat3x3 = Linear<Double, Void>.Matrix3x3
     typealias Vec2 = Linear<Double, Void>.Vector<2>
 
     // MARK: - Construction
 
-    @Test("2x2 matrix construction with a,b,c,d")
-    func matrix2x2Construction() {
+    @Test
+    func `2x2 matrix construction with a,b,c,d`() {
         let m = Mat2x2(a: 1, b: 2, c: 3, d: 4)
         #expect(m.a == 1)
         #expect(m.b == 2)
@@ -23,8 +23,8 @@ struct MatrixTests {
         #expect(m.d == 4)
     }
 
-    @Test("Subscript access")
-    func subscriptAccess() {
+    @Test
+    func `Subscript access`() {
         var m = Mat2x2(a: 1, b: 2, c: 3, d: 4)
         #expect(m[0, 0] == 1)
         #expect(m[0, 1] == 2)
@@ -37,8 +37,8 @@ struct MatrixTests {
 
     // MARK: - Identity
 
-    @Test("Identity matrix")
-    func identityMatrix() {
+    @Test
+    func `Identity matrix`() {
         let id = Mat2x2.identity
         #expect(id.a == 1)
         #expect(id.b == 0)
@@ -46,8 +46,8 @@ struct MatrixTests {
         #expect(id.d == 1)
     }
 
-    @Test("3x3 identity matrix")
-    func identity3x3() {
+    @Test
+    func `3x3 identity matrix`() {
         let id = Mat3x3.identity
         #expect(id[0, 0] == 1)
         #expect(id[0, 1] == 0)
@@ -57,8 +57,8 @@ struct MatrixTests {
 
     // MARK: - Zero
 
-    @Test("Zero matrix")
-    func zeroMatrix() {
+    @Test
+    func `Zero matrix`() {
         let zero = Mat2x2.zero
         #expect(zero.a == 0)
         #expect(zero.b == 0)
@@ -68,8 +68,8 @@ struct MatrixTests {
 
     // MARK: - Arithmetic
 
-    @Test("Matrix addition")
-    func addition() {
+    @Test
+    func `Matrix addition`() {
         let a = Mat2x2(a: 1, b: 2, c: 3, d: 4)
         let b = Mat2x2(a: 5, b: 6, c: 7, d: 8)
         let sum = a + b
@@ -79,8 +79,8 @@ struct MatrixTests {
         #expect(sum.d == 12)
     }
 
-    @Test("Matrix subtraction")
-    func subtraction() {
+    @Test
+    func `Matrix subtraction`() {
         let a = Mat2x2(a: 5, b: 6, c: 7, d: 8)
         let b = Mat2x2(a: 1, b: 2, c: 3, d: 4)
         let diff = a - b
@@ -90,8 +90,8 @@ struct MatrixTests {
         #expect(diff.d == 4)
     }
 
-    @Test("Scalar multiplication")
-    func scalarMultiplication() {
+    @Test
+    func `Scalar multiplication`() {
         let m = Mat2x2(a: 1, b: 2, c: 3, d: 4)
         let scaled = m * 2.0
         #expect(scaled.a == 2)
@@ -100,8 +100,8 @@ struct MatrixTests {
         #expect(scaled.d == 8)
     }
 
-    @Test("Negation")
-    func negation() {
+    @Test
+    func `Negation`() {
         let m = Mat2x2(a: 1, b: -2, c: 3, d: -4)
         let neg = -m
         #expect(neg.a == -1)
@@ -112,8 +112,8 @@ struct MatrixTests {
 
     // MARK: - Matrix Multiplication
 
-    @Test("Matrix-vector multiplication")
-    func matrixVectorMultiplication() {
+    @Test
+    func `Matrix-vector multiplication`() {
         let m = Mat2x2(a: 1, b: 2, c: 3, d: 4)
         let v = Vec2(dx: 1, dy: 1)
         let result = m * v
@@ -121,8 +121,8 @@ struct MatrixTests {
         #expect(result.dy == 7)  // 3*1 + 4*1
     }
 
-    @Test("Matrix-matrix multiplication")
-    func matrixMatrixMultiplication() {
+    @Test
+    func `Matrix-matrix multiplication`() {
         let a = Mat2x2(a: 1, b: 2, c: 3, d: 4)
         let b = Mat2x2(a: 5, b: 6, c: 7, d: 8)
         let result = a.multiplied(by: b)
@@ -134,8 +134,8 @@ struct MatrixTests {
         #expect(result.d == 50)
     }
 
-    @Test("Identity multiplication")
-    func identityMultiplication() {
+    @Test
+    func `Identity multiplication`() {
         let m = Mat2x2(a: 1, b: 2, c: 3, d: 4)
         let id = Mat2x2.identity
         let result = m.multiplied(by: id)
@@ -144,8 +144,8 @@ struct MatrixTests {
 
     // MARK: - Transpose
 
-    @Test("Transpose")
-    func transpose() {
+    @Test
+    func `Transpose`() {
         let m = Mat2x2(a: 1, b: 2, c: 3, d: 4)
         let t = m.transpose
         #expect(t.a == 1)
@@ -156,14 +156,14 @@ struct MatrixTests {
 
     // MARK: - Determinant
 
-    @Test("2x2 determinant")
-    func determinant2x2() {
+    @Test
+    func `2x2 determinant`() {
         let m = Mat2x2(a: 1, b: 2, c: 3, d: 4)
         #expect(m.determinant == -2)  // 1*4 - 2*3 = -2
     }
 
-    @Test("3x3 determinant")
-    func determinant3x3() {
+    @Test
+    func `3x3 determinant`() {
         // | 1 2 3 |
         // | 4 5 6 |
         // | 7 8 9 |
@@ -181,8 +181,8 @@ struct MatrixTests {
         #expect(m.determinant == 0)
     }
 
-    @Test("3x3 non-singular determinant")
-    func determinant3x3NonSingular() {
+    @Test
+    func `3x3 non-singular determinant`() {
         // | 1 0 0 |
         // | 0 2 0 |
         // | 0 0 3 |
@@ -196,8 +196,8 @@ struct MatrixTests {
 
     // MARK: - Inverse
 
-    @Test("2x2 inverse")
-    func inverse2x2() {
+    @Test
+    func `2x2 inverse`() {
         let m = Mat2x2(a: 4, b: 7, c: 2, d: 6)
         // det = 4*6 - 7*2 = 10
         // inv = 1/10 * [6 -7; -2 4]
@@ -211,14 +211,14 @@ struct MatrixTests {
         #expect(abs(inv.d - 0.4) < 1e-10)
     }
 
-    @Test("Singular matrix has no inverse")
-    func singularMatrixNoInverse() {
+    @Test
+    func `Singular matrix has no inverse`() {
         let m = Mat2x2(a: 1, b: 2, c: 2, d: 4)  // det = 0
         #expect(m.inverse == nil)
     }
 
-    @Test("Inverse * original = identity")
-    func inverseMultiplication() {
+    @Test
+    func `Inverse * original = identity`() {
         let m = Mat2x2(a: 4, b: 7, c: 2, d: 6)
         guard let inv = m.inverse else {
             #expect(Bool(false), "Matrix should be invertible")
@@ -233,14 +233,14 @@ struct MatrixTests {
 
     // MARK: - Trace
 
-    @Test("Trace")
-    func trace() {
+    @Test
+    func `Trace`() {
         let m = Mat2x2(a: 1, b: 2, c: 3, d: 4)
         #expect(m.trace == 5)  // 1 + 4
     }
 
-    @Test("3x3 trace")
-    func trace3x3() {
+    @Test
+    func `3x3 trace`() {
         var m = Mat3x3.zero
         m[0, 0] = 1
         m[1, 1] = 2
@@ -250,8 +250,8 @@ struct MatrixTests {
 
     // MARK: - Equatable
 
-    @Test("Matrix equality")
-    func equality() {
+    @Test
+    func `Matrix equality`() {
         let a = Mat2x2(a: 1, b: 2, c: 3, d: 4)
         let b = Mat2x2(a: 1, b: 2, c: 3, d: 4)
         let c = Mat2x2(a: 1, b: 2, c: 3, d: 5)
@@ -261,8 +261,8 @@ struct MatrixTests {
 
     // MARK: - Non-square Matrix
 
-    @Test("Non-square matrix multiplication")
-    func nonSquareMultiplication() {
+    @Test
+    func `Non-square matrix multiplication`() {
         // 2x3 matrix multiplied by 3x2 gives 2x2
         let m23: Linear<Double, Void>.Matrix<2, 3> = .init(rows: [
             [1, 2, 3],

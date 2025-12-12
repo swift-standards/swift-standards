@@ -413,6 +413,7 @@ public func * <Space, Scalar: Numeric>(
 
 /// Adds a displacement to an X coordinate, returning a coordinate.
 /// For quantized spaces (Space: Quantized), the more specific operators in Quantized.swift are preferred.
+@_disfavoredOverload
 @inlinable
 public func + <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.X.Coordinate<Space>, Scalar>,
@@ -422,6 +423,7 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Subtracts two X coordinates, returning a displacement.
+@_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.X.Coordinate<Space>, Scalar>,
@@ -431,6 +433,7 @@ public func - <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Subtracts a displacement from an X coordinate, returning a coordinate.
+@_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.X.Coordinate<Space>, Scalar>,
@@ -440,6 +443,7 @@ public func - <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Adds an X coordinate to a displacement, returning a coordinate (commutative).
+@_disfavoredOverload
 @inlinable
 public func + <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.X.Displacement<Space>, Scalar>,
@@ -450,6 +454,7 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 
 /// Subtracts an X coordinate from a displacement, returning a coordinate.
 /// Useful for coordinate system conversions (e.g., pageWidth - x).
+@_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.X.Displacement<Space>, Scalar>,
@@ -461,6 +466,7 @@ public func - <Space, Scalar: AdditiveArithmetic>(
 // MARK: Y Axis
 
 /// Adds a displacement to a Y coordinate, returning a coordinate.
+@_disfavoredOverload
 @inlinable
 public func + <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Y.Coordinate<Space>, Scalar>,
@@ -470,6 +476,7 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Subtracts two Y coordinates, returning a displacement.
+@_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Y.Coordinate<Space>, Scalar>,
@@ -479,6 +486,7 @@ public func - <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Subtracts a displacement from a Y coordinate, returning a coordinate.
+@_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Y.Coordinate<Space>, Scalar>,
@@ -488,6 +496,7 @@ public func - <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Adds a Y coordinate to a displacement, returning a coordinate (commutative).
+@_disfavoredOverload
 @inlinable
 public func + <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Y.Displacement<Space>, Scalar>,
@@ -498,6 +507,7 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 
 /// Subtracts a Y coordinate from a displacement, returning a coordinate.
 /// Useful for coordinate system conversions (e.g., pageHeight - y).
+@_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Y.Displacement<Space>, Scalar>,
@@ -509,6 +519,7 @@ public func - <Space, Scalar: AdditiveArithmetic>(
 // MARK: Z Axis
 
 /// Adds a displacement to a Z coordinate, returning a coordinate.
+@_disfavoredOverload
 @inlinable
 public func + <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Z.Coordinate<Space>, Scalar>,
@@ -518,6 +529,7 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Subtracts two Z coordinates, returning a displacement.
+@_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Z.Coordinate<Space>, Scalar>,
@@ -527,6 +539,7 @@ public func - <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Subtracts a displacement from a Z coordinate, returning a coordinate.
+@_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Z.Coordinate<Space>, Scalar>,
@@ -536,6 +549,7 @@ public func - <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Adds a Z coordinate to a displacement, returning a coordinate (commutative).
+@_disfavoredOverload
 @inlinable
 public func + <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Z.Displacement<Space>, Scalar>,
@@ -546,6 +560,7 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 
 /// Subtracts a Z coordinate from a displacement, returning a coordinate.
 /// Useful for coordinate system conversions (e.g., pageDepth - z).
+@_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Z.Displacement<Space>, Scalar>,
@@ -561,6 +576,7 @@ public func - <Space, Scalar: AdditiveArithmetic>(
 // The magnitude is interpreted as distance along the axis of the coordinate.
 
 /// Adds a magnitude to an X coordinate, returning a coordinate.
+@_disfavoredOverload
 @inlinable
 public func + <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.X.Coordinate<Space>, Scalar>,
@@ -570,6 +586,7 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Subtracts a magnitude from an X coordinate, returning a coordinate.
+@_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.X.Coordinate<Space>, Scalar>,
@@ -579,6 +596,7 @@ public func - <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Adds an X coordinate to a magnitude, returning a coordinate (commutative).
+@_disfavoredOverload
 @inlinable
 public func + <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Magnitude<Space>, Scalar>,
@@ -588,6 +606,7 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Adds a magnitude to a Y coordinate, returning a coordinate.
+@_disfavoredOverload
 @inlinable
 public func + <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Y.Coordinate<Space>, Scalar>,
@@ -597,6 +616,7 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Subtracts a magnitude from a Y coordinate, returning a coordinate.
+@_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Y.Coordinate<Space>, Scalar>,
@@ -606,6 +626,7 @@ public func - <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Adds a Y coordinate to a magnitude, returning a coordinate (commutative).
+@_disfavoredOverload
 @inlinable
 public func + <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Magnitude<Space>, Scalar>,
@@ -615,6 +636,7 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Adds a magnitude to a Z coordinate, returning a coordinate.
+@_disfavoredOverload
 @inlinable
 public func + <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Z.Coordinate<Space>, Scalar>,
@@ -624,6 +646,7 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Subtracts a magnitude from a Z coordinate, returning a coordinate.
+@_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Z.Coordinate<Space>, Scalar>,
@@ -633,6 +656,7 @@ public func - <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Adds a Z coordinate to a magnitude, returning a coordinate (commutative).
+@_disfavoredOverload
 @inlinable
 public func + <Space, Scalar: AdditiveArithmetic>(
     lhs: Tagged<Index.Magnitude<Space>, Scalar>,

@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Pair - Static Functions
 
-@Suite("Pair - Static Functions")
-struct Pair_StaticTests {
+@Suite
+struct `Pair - Static Functions` {
     @Test
     func `map transforms second component`() {
         let pair = Pair("a", 10)
@@ -70,8 +70,8 @@ struct Pair_StaticTests {
 
 // MARK: - Pair - Properties
 
-@Suite("Pair - Properties")
-struct Pair_PropertyTests {
+@Suite
+struct `Pair - Properties` {
     @Test
     func `first and second accessors`() {
         let pair = Pair(10, "value")
@@ -127,8 +127,8 @@ struct Pair_PropertyTests {
 
 // MARK: - Pair - Initializers
 
-@Suite("Pair - Initializers")
-struct Pair_InitializerTests {
+@Suite
+struct `Pair - Initializers` {
     @Test
     func `init with two parameters`() {
         let pair = Pair(10, "value")
@@ -156,8 +156,8 @@ struct Pair_InitializerTests {
 
 // MARK: - Pair - Protocol Conformances
 
-@Suite("Pair - Protocol Conformances")
-struct Pair_ProtocolTests {
+@Suite
+struct `Pair - Protocol Conformances` {
     @Test
     func `Equatable when components are Equatable`() {
         let pair1 = Pair(10, "value")
@@ -180,8 +180,8 @@ struct Pair_ProtocolTests {
 
 // MARK: - Pair - Type-Specific Tests
 
-@Suite("Pair - Type-Specific Tests")
-struct Pair_TypeSpecificTests {
+@Suite
+struct `Pair - Type-Specific Tests` {
     @Test
     func `allFirsts when First is CaseIterable`() {
         let allDirections = Pair<Direction, Int>.allFirsts

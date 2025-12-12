@@ -5,8 +5,8 @@ import Testing
 
 @testable import Region
 
-@Suite("Quadrant - Rotation")
-struct QuadrantRotationTests {
+@Suite
+struct `Quadrant - Rotation` {
     @Test(arguments: Region.Quadrant.allCases)
     func `next is cyclic`(quadrant: Region.Quadrant) {
         let next = Region.Quadrant.next(of: quadrant)
@@ -64,8 +64,8 @@ struct QuadrantRotationTests {
     }
 }
 
-@Suite("Quadrant - Sign Properties")
-struct QuadrantSignTests {
+@Suite
+struct `Quadrant - Sign Properties` {
     @Test(arguments: Region.Quadrant.allCases)
     func `hasPositiveX property matches static function`(quadrant: Region.Quadrant) {
         let property = quadrant.hasPositiveX

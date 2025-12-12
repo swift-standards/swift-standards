@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Axis.Direction Typealias Tests
 
-@Suite("Axis.Direction - Typealias")
-struct AxisDirection_TypealiasTests {
+@Suite
+struct `Axis.Direction - Typealias` {
     @Test
     func `Direction is same type across all dimensions`() {
         let dir1: Axis<1>.Direction = .positive

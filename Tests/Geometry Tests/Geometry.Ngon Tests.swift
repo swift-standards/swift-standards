@@ -11,10 +11,10 @@ import Testing
 
 // MARK: - Triangle (Ngon<3>) Initialization Tests
 
-@Suite("Geometry.Ngon<3> - Initialization")
-struct GeometryTriangle_InitializationTests {
-    @Test("Triangle initialization with named vertices")
-    func triangleInit() {
+@Suite
+struct `Geometry.Ngon<3> - Initialization` {
+    @Test
+    func `Triangle initialization with named vertices`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -28,8 +28,8 @@ struct GeometryTriangle_InitializationTests {
         #expect(triangle.c.y == 3)
     }
 
-    @Test("Triangle from vertices array")
-    func triangleFromArray() {
+    @Test
+    func `Triangle from vertices array`() {
         let vertices: [Geometry<Double, Void>.Point<2>] = [
             .init(x: 0, y: 0),
             .init(x: 3, y: 0),
@@ -42,8 +42,8 @@ struct GeometryTriangle_InitializationTests {
         #expect(triangle!.c.y == 4)
     }
 
-    @Test("Triangle from wrong size array returns nil")
-    func triangleFromWrongSizeArray() {
+    @Test
+    func `Triangle from wrong size array returns nil`() {
         let twoVertices: [Geometry<Double, Void>.Point<2>] = [
             .init(x: 0, y: 0),
             .init(x: 3, y: 0),
@@ -55,10 +55,10 @@ struct GeometryTriangle_InitializationTests {
 
 // MARK: - Triangle Factory Methods Tests
 
-@Suite("Geometry.Ngon<3> - Factory Methods")
-struct GeometryTriangle_FactoryTests {
-    @Test("Right triangle factory")
-    func rightTriangle() {
+@Suite
+struct `Geometry.Ngon<3> - Factory Methods` {
+    @Test
+    func `Right triangle factory`() {
         let triangle: Geometry<Double, Void>.Triangle = .right(base: 3, height: 4)
         #expect(triangle.a.x == 0)
         #expect(triangle.a.y == 0)
@@ -69,8 +69,8 @@ struct GeometryTriangle_FactoryTests {
         #expect(abs(triangle.area - 6) < 1e-10)
     }
 
-    @Test("Right triangle at custom origin")
-    func rightTriangleAtOrigin() {
+    @Test
+    func `Right triangle at custom origin`() {
         let origin: Geometry<Double, Void>.Point<2> = .init(x: 5, y: 10)
         let triangle: Geometry<Double, Void>.Triangle = .right(base: 3, height: 4, at: origin)
         #expect(triangle.a.x == 5)
@@ -79,8 +79,8 @@ struct GeometryTriangle_FactoryTests {
         #expect(triangle.b.y == 10)
     }
 
-    @Test("Equilateral triangle factory")
-    func equilateralTriangle() {
+    @Test
+    func `Equilateral triangle factory`() {
         let triangle: Geometry<Double, Void>.Triangle = .equilateral(sideLength: 6)
         let sides = triangle.sideLengths
         #expect(abs(sides.ab - 6) < 1e-10)
@@ -88,16 +88,16 @@ struct GeometryTriangle_FactoryTests {
         #expect(abs(sides.ca - 6) < 1e-10)
     }
 
-    @Test("Equilateral triangle at custom origin")
-    func equilateralTriangleAtOrigin() {
+    @Test
+    func `Equilateral triangle at custom origin`() {
         let origin: Geometry<Double, Void>.Point<2> = .init(x: 10, y: 20)
         let triangle: Geometry<Double, Void>.Triangle = .equilateral(sideLength: 4, at: origin)
         #expect(triangle.a.x == 10)
         #expect(triangle.a.y == 20)
     }
 
-    @Test("Isosceles triangle factory")
-    func isoscelesTriangle() {
+    @Test
+    func `Isosceles triangle factory`() {
         let triangle = Geometry<Double, Void>.Triangle.isosceles(base: 6, leg: 5)
         #expect(triangle != nil)
         let sides = triangle!.sideLengths
@@ -106,8 +106,8 @@ struct GeometryTriangle_FactoryTests {
         #expect(abs(sides.ca - 5) < 1e-10)
     }
 
-    @Test("Isosceles triangle impossible returns nil")
-    func isoscelesTriangleImpossible() {
+    @Test
+    func `Isosceles triangle impossible returns nil`() {
         let triangle = Geometry<Double, Void>.Triangle.isosceles(base: 10, leg: 2)
         #expect(triangle == nil)
     }
@@ -115,10 +115,10 @@ struct GeometryTriangle_FactoryTests {
 
 // MARK: - Triangle Properties Tests
 
-@Suite("Geometry.Ngon<3> - Properties")
-struct GeometryTriangle_PropertiesTests {
-    @Test("Vertices array")
-    func verticesArray() {
+@Suite
+struct `Geometry.Ngon<3> - Properties` {
+    @Test
+    func `Vertices array`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 1, y: 0),
@@ -131,8 +131,8 @@ struct GeometryTriangle_PropertiesTests {
         #expect(vertices[2] == triangle.c)
     }
 
-    @Test("Edges tuple")
-    func edgesTuple() {
+    @Test
+    func `Edges tuple`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -147,8 +147,8 @@ struct GeometryTriangle_PropertiesTests {
         #expect(edges.ca.end == triangle.a)
     }
 
-    @Test("Side lengths")
-    func sideLengths() {
+    @Test
+    func `Side lengths`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 3, y: 0),
@@ -163,10 +163,10 @@ struct GeometryTriangle_PropertiesTests {
 
 // MARK: - Triangle Static Functions Tests
 
-@Suite("Geometry.Ngon<3> - Static Functions")
-struct GeometryTriangle_StaticTests {
-    @Test("Geometry.area(of:) for right triangle")
-    func staticAreaRightTriangle() {
+@Suite
+struct `Geometry.Ngon<3> - Static Functions` {
+    @Test
+    func `Geometry.area(of:) for right triangle`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -176,8 +176,8 @@ struct GeometryTriangle_StaticTests {
         #expect(abs(area - 6) < 1e-10)
     }
 
-    @Test("Geometry.signedDoubleArea(of:) CCW positive")
-    func staticSignedDoubleAreaCCW() {
+    @Test
+    func `Geometry.signedDoubleArea(of:) CCW positive`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -187,8 +187,8 @@ struct GeometryTriangle_StaticTests {
         #expect(signedArea > 0)
     }
 
-    @Test("Geometry.signedDoubleArea(of:) CW negative")
-    func staticSignedDoubleAreaCW() {
+    @Test
+    func `Geometry.signedDoubleArea(of:) CW negative`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 0, y: 3),
@@ -198,8 +198,8 @@ struct GeometryTriangle_StaticTests {
         #expect(signedArea < 0)
     }
 
-    @Test("Geometry.perimeter(of:) 3-4-5 triangle")
-    func staticPerimeter() {
+    @Test
+    func `Geometry.perimeter(of:) 3-4-5 triangle`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 3, y: 0),
@@ -209,8 +209,8 @@ struct GeometryTriangle_StaticTests {
         #expect(abs(perimeter.value - 12) < 1e-10)
     }
 
-    @Test("Geometry.centroid(of:) triangle")
-    func staticCentroid() {
+    @Test
+    func `Geometry.centroid(of:) triangle`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 6, y: 0),
@@ -225,10 +225,10 @@ struct GeometryTriangle_StaticTests {
 
 // MARK: - Triangle Area and Perimeter Tests
 
-@Suite("Geometry.Ngon<3> - Area and Perimeter")
-struct GeometryTriangle_AreaTests {
-    @Test("Area property matches static function")
-    func areaProperty() {
+@Suite
+struct `Geometry.Ngon<3> - Area and Perimeter` {
+    @Test
+    func `Area property matches static function`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -237,8 +237,8 @@ struct GeometryTriangle_AreaTests {
         #expect(abs(triangle.area - 6) < 1e-10)
     }
 
-    @Test("Signed area CCW")
-    func signedAreaCCW() {
+    @Test
+    func `Signed area CCW`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -247,8 +247,8 @@ struct GeometryTriangle_AreaTests {
         #expect(triangle.signedArea > 0)
     }
 
-    @Test("Signed area CW")
-    func signedAreaCW() {
+    @Test
+    func `Signed area CW`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 0, y: 3),
@@ -257,8 +257,8 @@ struct GeometryTriangle_AreaTests {
         #expect(triangle.signedArea < 0)
     }
 
-    @Test("Perimeter of 3-4-5 triangle")
-    func perimeter() {
+    @Test
+    func `Perimeter of 3-4-5 triangle`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 3, y: 0),
@@ -270,10 +270,10 @@ struct GeometryTriangle_AreaTests {
 
 // MARK: - Triangle Centroid Tests
 
-@Suite("Geometry.Ngon<3> - Centroid")
-struct GeometryTriangle_CentroidTests {
-    @Test("Centroid property")
-    func centroidProperty() {
+@Suite
+struct `Geometry.Ngon<3> - Centroid` {
+    @Test
+    func `Centroid property`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 6, y: 0),
@@ -287,10 +287,10 @@ struct GeometryTriangle_CentroidTests {
 
 // MARK: - Triangle Circles Tests
 
-@Suite("Geometry.Ngon<3> - Circles")
-struct GeometryTriangle_CirclesTests {
-    @Test("Circumcircle of right triangle")
-    func circumcircleRightTriangle() {
+@Suite
+struct `Geometry.Ngon<3> - Circles` {
+    @Test
+    func `Circumcircle of right triangle`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -303,8 +303,8 @@ struct GeometryTriangle_CirclesTests {
         #expect(abs(circumcircle!.radius.value - 2.5) < 1e-10)
     }
 
-    @Test("Circumcircle passes through all vertices")
-    func circumcircleThroughVertices() {
+    @Test
+    func `Circumcircle passes through all vertices`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 5, y: 0),
@@ -322,8 +322,8 @@ struct GeometryTriangle_CirclesTests {
         #expect(abs(dc - r) < 1e-10)
     }
 
-    @Test("Incircle of 3-4-5 triangle")
-    func incircle345Triangle() {
+    @Test
+    func `Incircle of 3-4-5 triangle`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 3, y: 0),
@@ -334,8 +334,8 @@ struct GeometryTriangle_CirclesTests {
         #expect(abs(incircle!.radius.value - 1) < 1e-10)
     }
 
-    @Test("Orthocenter")
-    func orthocenter() {
+    @Test
+    func `Orthocenter`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -348,10 +348,10 @@ struct GeometryTriangle_CirclesTests {
 
 // MARK: - Triangle Angles Tests
 
-@Suite("Geometry.Ngon<3> - Angles")
-struct GeometryTriangle_AnglesTests {
-    @Test("Angles of triangle sum to π")
-    func anglesSumToPi() {
+@Suite
+struct `Geometry.Ngon<3> - Angles` {
+    @Test
+    func `Angles of triangle sum to π`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 5, y: 0),
@@ -365,10 +365,10 @@ struct GeometryTriangle_AnglesTests {
 
 // MARK: - Triangle Containment Tests
 
-@Suite("Geometry.Ngon<3> - Containment")
-struct GeometryTriangle_ContainmentTests {
-    @Test("Contains centroid")
-    func containsCentroid() {
+@Suite
+struct `Geometry.Ngon<3> - Containment` {
+    @Test
+    func `Contains centroid`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -377,8 +377,8 @@ struct GeometryTriangle_ContainmentTests {
         #expect(triangle.contains(triangle.centroid))
     }
 
-    @Test("Contains vertex")
-    func containsVertex() {
+    @Test
+    func `Contains vertex`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -387,8 +387,8 @@ struct GeometryTriangle_ContainmentTests {
         #expect(triangle.contains(triangle.a))
     }
 
-    @Test("Does not contain exterior point")
-    func doesNotContainExterior() {
+    @Test
+    func `Does not contain exterior point`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -398,8 +398,8 @@ struct GeometryTriangle_ContainmentTests {
         #expect(!triangle.contains(point))
     }
 
-    @Test("Contains using barycentric")
-    func containsBarycentric() {
+    @Test
+    func `Contains using barycentric`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -411,10 +411,10 @@ struct GeometryTriangle_ContainmentTests {
 
 // MARK: - Triangle Barycentric Tests
 
-@Suite("Geometry.Ngon<3> - Barycentric Coordinates")
-struct GeometryTriangle_BarycentricTests {
-    @Test("Barycentric of vertex A")
-    func barycentricVertexA() {
+@Suite
+struct `Geometry.Ngon<3> - Barycentric Coordinates` {
+    @Test
+    func `Barycentric of vertex A`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -427,8 +427,8 @@ struct GeometryTriangle_BarycentricTests {
         #expect(abs(bary!.w) < 1e-10)
     }
 
-    @Test("Barycentric of centroid")
-    func barycentricCentroid() {
+    @Test
+    func `Barycentric of centroid`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 3, y: 0),
@@ -441,8 +441,8 @@ struct GeometryTriangle_BarycentricTests {
         #expect(abs(bary!.w - 1.0 / 3.0) < 1e-10)
     }
 
-    @Test("Barycentric sum is 1")
-    func barycentricSumIsOne() {
+    @Test
+    func `Barycentric sum is 1`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 5, y: 0),
@@ -453,8 +453,8 @@ struct GeometryTriangle_BarycentricTests {
         #expect(abs(bary.u + bary.v + bary.w - 1) < 1e-10)
     }
 
-    @Test("Point from barycentric vertex")
-    func pointFromBarycentricVertex() {
+    @Test
+    func `Point from barycentric vertex`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -465,8 +465,8 @@ struct GeometryTriangle_BarycentricTests {
         #expect(abs(point.y.value - triangle.a.y.value) < 1e-10)
     }
 
-    @Test("Point from barycentric centroid")
-    func pointFromBarycentricCentroid() {
+    @Test
+    func `Point from barycentric centroid`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 6, y: 0),
@@ -480,10 +480,10 @@ struct GeometryTriangle_BarycentricTests {
 
 // MARK: - Triangle Bounding Box Tests
 
-@Suite("Geometry.Ngon<3> - Bounding Box")
-struct GeometryTriangle_BoundingBoxTests {
-    @Test("Bounding box")
-    func boundingBox() {
+@Suite
+struct `Geometry.Ngon<3> - Bounding Box` {
+    @Test
+    func `Bounding box`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 1, y: 2),
             b: .init(x: 5, y: 3),
@@ -499,10 +499,10 @@ struct GeometryTriangle_BoundingBoxTests {
 
 // MARK: - Triangle Transformation Tests
 
-@Suite("Geometry.Ngon<3> - Transformations")
-struct GeometryTriangle_TransformationTests {
-    @Test("Translation")
-    func translation() {
+@Suite
+struct `Geometry.Ngon<3> - Transformations` {
+    @Test
+    func `Translation`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 1, y: 0),
@@ -515,8 +515,8 @@ struct GeometryTriangle_TransformationTests {
         #expect(translated.b.y == 10)
     }
 
-    @Test("Scaling about point")
-    func scalingAboutPoint() {
+    @Test
+    func `Scaling about point`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 2, y: 0),
@@ -529,8 +529,8 @@ struct GeometryTriangle_TransformationTests {
         #expect(scaled.c.y == 4)
     }
 
-    @Test("Scaling about centroid")
-    func scalingAboutCentroid() {
+    @Test
+    func `Scaling about centroid`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 2, y: 0),
@@ -543,10 +543,10 @@ struct GeometryTriangle_TransformationTests {
 
 // MARK: - Quadrilateral (Ngon<4>) Tests
 
-@Suite("Geometry.Ngon<4> - Quadrilateral")
-struct GeometryQuadrilateral_Tests {
-    @Test("Quadrilateral initialization")
-    func quadInit() {
+@Suite
+struct `Geometry.Ngon<4> - Quadrilateral` {
+    @Test
+    func `Quadrilateral initialization`() {
         let quad: Geometry<Double, Void>.Quadrilateral = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -559,8 +559,8 @@ struct GeometryQuadrilateral_Tests {
         #expect(quad.d.y == 3)
     }
 
-    @Test("Quadrilateral diagonals")
-    func diagonals() {
+    @Test
+    func `Quadrilateral diagonals`() {
         let quad: Geometry<Double, Void>.Quadrilateral = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -574,8 +574,8 @@ struct GeometryQuadrilateral_Tests {
         #expect(diags.bd.end == quad.d)
     }
 
-    @Test("Quadrilateral triangulation")
-    func triangulation() {
+    @Test
+    func `Quadrilateral triangulation`() {
         let quad: Geometry<Double, Void>.Quadrilateral = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -591,8 +591,8 @@ struct GeometryQuadrilateral_Tests {
         #expect(triangles.1.c == quad.d)
     }
 
-    @Test("Rectangle area as quadrilateral")
-    func rectangleArea() {
+    @Test
+    func `Rectangle area as quadrilateral`() {
         let quad: Geometry<Double, Void>.Quadrilateral = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 4, y: 0),
@@ -605,17 +605,17 @@ struct GeometryQuadrilateral_Tests {
 
 // MARK: - Regular Polygon Tests
 
-@Suite("Geometry.Ngon - Regular Polygons")
-struct GeometryNgon_RegularTests {
-    @Test("Regular hexagon from side length")
-    func regularHexagonSideLength() {
+@Suite
+struct `Geometry.Ngon - Regular Polygons` {
+    @Test
+    func `Regular hexagon from side length`() {
         let hexagon = Geometry<Double, Void>.Hexagon.regular(sideLength: 10)
         let perimeter = Geometry.perimeter(of: hexagon)
         #expect(abs(perimeter.value - 60) < 1e-10)
     }
 
-    @Test("Regular pentagon from circumradius")
-    func regularPentagonCircumradius() {
+    @Test
+    func `Regular pentagon from circumradius`() {
         let pentagon = Geometry<Double, Void>.Pentagon.regular(circumradius: 10)
         let vertices = pentagon.vertexArray
         for v in vertices {
@@ -624,8 +624,8 @@ struct GeometryNgon_RegularTests {
         }
     }
 
-    @Test("Regular triangle is equilateral")
-    func regularTriangle() {
+    @Test
+    func `Regular triangle is equilateral`() {
         let triangle = Geometry<Double, Void>.Triangle.regular(sideLength: 6)
         let sides = triangle.sideLengths
         #expect(abs(sides.ab - 6) < 1e-9)
@@ -636,10 +636,10 @@ struct GeometryNgon_RegularTests {
 
 // MARK: - Ngon Convexity Tests
 
-@Suite("Geometry.Ngon - Convexity")
-struct GeometryNgon_ConvexityTests {
-    @Test("Square is convex")
-    func squareIsConvex() {
+@Suite
+struct `Geometry.Ngon - Convexity` {
+    @Test
+    func `Square is convex`() {
         let square: Geometry<Double, Void>.Quadrilateral = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 1, y: 0),
@@ -649,8 +649,8 @@ struct GeometryNgon_ConvexityTests {
         #expect(square.isConvex)
     }
 
-    @Test("Triangle is always convex")
-    func triangleIsConvex() {
+    @Test
+    func `Triangle is always convex`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 5, y: 0),
@@ -662,10 +662,10 @@ struct GeometryNgon_ConvexityTests {
 
 // MARK: - Ngon Winding Tests
 
-@Suite("Geometry.Ngon - Winding")
-struct GeometryNgon_WindingTests {
-    @Test("Counter-clockwise winding")
-    func counterClockwise() {
+@Suite
+struct `Geometry.Ngon - Winding` {
+    @Test
+    func `Counter-clockwise winding`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 1, y: 0),
@@ -675,8 +675,8 @@ struct GeometryNgon_WindingTests {
         #expect(!triangle.isClockwise)
     }
 
-    @Test("Clockwise winding")
-    func clockwise() {
+    @Test
+    func `Clockwise winding`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 0, y: 1),
@@ -686,8 +686,8 @@ struct GeometryNgon_WindingTests {
         #expect(!triangle.isCounterClockwise)
     }
 
-    @Test("Reversed polygon")
-    func reversedPolygon() {
+    @Test
+    func `Reversed polygon`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 1, y: 0),
@@ -700,10 +700,10 @@ struct GeometryNgon_WindingTests {
 
 // MARK: - Functorial Map Tests
 
-@Suite("Geometry.Ngon - Functorial Map")
-struct GeometryNgon_MapTests {
-    @Test("Triangle map to different scalar type")
-    func triangleMap() {
+@Suite
+struct `Geometry.Ngon - Functorial Map` {
+    @Test
+    func `Triangle map to different scalar type`() {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 1, y: 0),

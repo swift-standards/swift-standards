@@ -2,22 +2,22 @@ import Testing
 
 @testable import StandardLibraryExtensions
 
-@Suite("ClosedRange.Builder Tests")
-struct ClosedRangeBuilderTests {
+@Suite
+struct `ClosedRange.Builder Tests` {
 
-    @Suite("Basic Construction")
-    struct BasicConstructionTests {
+    @Suite
+    struct `Basic Construction` {
 
-        @Test("Single range")
-        func singleRange() {
+        @Test
+        func `Single range`() {
             let ranges = ClosedRange.build {
                 1...5
             }
             #expect(ranges == [1...5])
         }
 
-        @Test("Multiple ranges")
-        func multipleRanges() {
+        @Test
+        func `Multiple ranges`() {
             let ranges = ClosedRange.build {
                 1...5
                 10...15
@@ -26,23 +26,23 @@ struct ClosedRangeBuilderTests {
             #expect(ranges == [1...5, 10...15, 20...25])
         }
 
-        @Test("Empty block")
-        func emptyBlock() {
+        @Test
+        func `Empty block`() {
             let ranges: [ClosedRange<Int>] = ClosedRange.build {
             }
             #expect(ranges.isEmpty)
         }
 
-        @Test("Single value becomes single-element range")
-        func singleValueBecomesSingleElementRange() {
+        @Test
+        func `Single value becomes single-element range`() {
             let ranges = ClosedRange.build {
                 5
             }
             #expect(ranges == [5...5])
         }
 
-        @Test("Mixed values and ranges")
-        func mixedValuesAndRanges() {
+        @Test
+        func `Mixed values and ranges`() {
             let ranges = ClosedRange.build {
                 1
                 3...5
@@ -52,11 +52,11 @@ struct ClosedRangeBuilderTests {
         }
     }
 
-    @Suite("Control Flow")
-    struct ControlFlowTests {
+    @Suite
+    struct `Control Flow` {
 
-        @Test("Conditional inclusion - true")
-        func conditionalInclusionTrue() {
+        @Test
+        func `Conditional inclusion - true`() {
             let include = true
             let ranges = ClosedRange.build {
                 1...5
@@ -67,8 +67,8 @@ struct ClosedRangeBuilderTests {
             #expect(ranges == [1...5, 10...15])
         }
 
-        @Test("Conditional inclusion - false")
-        func conditionalInclusionFalse() {
+        @Test
+        func `Conditional inclusion - false`() {
             let include = false
             let ranges = ClosedRange.build {
                 1...5
@@ -79,8 +79,8 @@ struct ClosedRangeBuilderTests {
             #expect(ranges == [1...5])
         }
 
-        @Test("If-else first branch")
-        func ifElseFirstBranch() {
+        @Test
+        func `If-else first branch`() {
             let condition = true
             let ranges = ClosedRange.build {
                 if condition {
@@ -92,8 +92,8 @@ struct ClosedRangeBuilderTests {
             #expect(ranges == [1...5])
         }
 
-        @Test("If-else second branch")
-        func ifElseSecondBranch() {
+        @Test
+        func `If-else second branch`() {
             let condition = false
             let ranges = ClosedRange.build {
                 if condition {
@@ -105,8 +105,8 @@ struct ClosedRangeBuilderTests {
             #expect(ranges == [10...15])
         }
 
-        @Test("For loop")
-        func forLoop() {
+        @Test
+        func `For loop`() {
             let ranges = ClosedRange.build {
                 for i in 0..<3 {
                     (i * 10)...(i * 10 + 5)
@@ -116,11 +116,11 @@ struct ClosedRangeBuilderTests {
         }
     }
 
-    @Suite("Expression Building")
-    struct ExpressionBuildingTests {
+    @Suite
+    struct `Expression Building` {
 
-        @Test("Array of ranges")
-        func arrayOfRanges() {
+        @Test
+        func `Array of ranges`() {
             let existing = [1...5, 10...15]
             let ranges = ClosedRange.build {
                 existing
@@ -130,35 +130,35 @@ struct ClosedRangeBuilderTests {
         }
     }
 
-    @Suite("Static Method Tests")
-    struct StaticMethodTests {
+    @Suite
+    struct `Static Method Tests` {
 
-        @Test("buildExpression range")
-        func buildExpressionRange() {
+        @Test
+        func `buildExpression range`() {
             let result = ClosedRange<Int>.Builder.buildExpression(1...5)
             #expect(result == [1...5])
         }
 
-        @Test("buildExpression single value")
-        func buildExpressionSingleValue() {
+        @Test
+        func `buildExpression single value`() {
             let result = ClosedRange<Int>.Builder.buildExpression(5)
             #expect(result == [5...5])
         }
 
-        @Test("buildPartialBlock first")
-        func buildPartialBlockFirst() {
+        @Test
+        func `buildPartialBlock first`() {
             let result = ClosedRange<Int>.Builder.buildPartialBlock(first: [1...5])
             #expect(result == [1...5])
         }
 
-        @Test("buildPartialBlock first void")
-        func buildPartialBlockFirstVoid() {
+        @Test
+        func `buildPartialBlock first void`() {
             let result = ClosedRange<Int>.Builder.buildPartialBlock(first: ())
             #expect(result.isEmpty)
         }
 
-        @Test("buildPartialBlock accumulated")
-        func buildPartialBlockAccumulated() {
+        @Test
+        func `buildPartialBlock accumulated`() {
             let result = ClosedRange<Int>.Builder.buildPartialBlock(
                 accumulated: [1...5],
                 next: [10...15]
@@ -166,30 +166,30 @@ struct ClosedRangeBuilderTests {
             #expect(result == [1...5, 10...15])
         }
 
-        @Test("buildOptional some")
-        func buildOptionalSome() {
+        @Test
+        func `buildOptional some`() {
             let result = ClosedRange<Int>.Builder.buildOptional([1...5])
             #expect(result == [1...5])
         }
 
-        @Test("buildOptional none")
-        func buildOptionalNone() {
+        @Test
+        func `buildOptional none`() {
             let result = ClosedRange<Int>.Builder.buildOptional(nil)
             #expect(result.isEmpty)
         }
 
-        @Test("buildArray")
-        func buildArray() {
+        @Test
+        func `buildArray`() {
             let result = ClosedRange<Int>.Builder.buildArray([[1...5], [10...15]])
             #expect(result == [1...5, 10...15])
         }
     }
 
-    @Suite("Different Bound Types")
-    struct DifferentBoundTypesTests {
+    @Suite
+    struct `Different Bound Types` {
 
-        @Test("Double ranges")
-        func doubleRanges() {
+        @Test
+        func `Double ranges`() {
             let ranges = ClosedRange.build {
                 0.0...1.0
                 2.0...3.0
@@ -197,8 +197,8 @@ struct ClosedRangeBuilderTests {
             #expect(ranges == [0.0...1.0, 2.0...3.0])
         }
 
-        @Test("Character ranges")
-        func characterRanges() {
+        @Test
+        func `Character ranges`() {
             let ranges = ClosedRange.build {
                 Character("a")...Character("z")
                 Character("A")...Character("Z")
@@ -209,11 +209,11 @@ struct ClosedRangeBuilderTests {
         }
     }
 
-    @Suite("Limited Availability")
-    struct LimitedAvailabilityTests {
+    @Suite
+    struct `Limited Availability` {
 
-        @Test("Limited availability passthrough")
-        func limitedAvailabilityPassthrough() {
+        @Test
+        func `Limited availability passthrough`() {
             let ranges = ClosedRange.build {
                 1...5
                 if #available(macOS 26, iOS 26, *) {

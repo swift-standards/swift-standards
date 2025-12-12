@@ -5,8 +5,8 @@ import Testing
 
 @testable import Region
 
-@Suite("Edge - Opposite")
-struct EdgeOppositeTests {
+@Suite
+struct `Edge - Opposite` {
     @Test(arguments: Region.Edge.allCases)
     func `opposite is involution`(edge: Region.Edge) {
         let opposite = Region.Edge.opposite(of: edge)
@@ -30,8 +30,8 @@ struct EdgeOppositeTests {
     }
 }
 
-@Suite("Edge - Orientation")
-struct EdgeOrientationTests {
+@Suite
+struct `Edge - Orientation` {
     @Test(arguments: Region.Edge.allCases)
     func `isHorizontal property matches static function`(edge: Region.Edge) {
         let property = edge.isHorizontal
@@ -70,8 +70,8 @@ struct EdgeOrientationTests {
     }
 }
 
-@Suite("Edge - Adjacent Corners")
-struct EdgeCornersTests {
+@Suite
+struct `Edge - Adjacent Corners` {
     @Test
     func topCorners() {
         let corners = Region.Edge.corners(of: .top)

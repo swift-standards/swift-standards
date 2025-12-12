@@ -3,8 +3,8 @@ import Testing
 
 @testable import Algebra
 
-@Suite("Gradient - Static Functions")
-struct Gradient_StaticTests {
+@Suite
+struct `Gradient - Static Functions` {
     @Test(arguments: Gradient.allCases)
     func `opposite is involution`(gradient: Gradient) {
         #expect(Gradient.opposite(of: Gradient.opposite(of: gradient)) == gradient)
@@ -17,8 +17,8 @@ struct Gradient_StaticTests {
     }
 }
 
-@Suite("Gradient - Properties")
-struct Gradient_PropertyTests {
+@Suite
+struct `Gradient - Properties` {
     @Test
     func `cases exist`() {
         #expect(Gradient.allCases.count == 2)

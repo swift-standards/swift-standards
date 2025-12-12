@@ -7,8 +7,8 @@ import Testing
 
 // MARK: - Chirality - Static Functions
 
-@Suite("Chirality - Static Functions")
-struct Chirality_StaticTests {
+@Suite
+struct `Chirality - Static Functions` {
     @Test(arguments: [Chirality.left, Chirality.right])
     func `opposite is involution`(chirality: Chirality) {
         #expect(Chirality.opposite(of: Chirality.opposite(of: chirality)) == chirality)
@@ -27,8 +27,8 @@ struct Chirality_StaticTests {
 
 // MARK: - Chirality - Properties
 
-@Suite("Chirality - Properties")
-struct Chirality_PropertyTests {
+@Suite
+struct `Chirality - Properties` {
     @Test(arguments: [Chirality.left, Chirality.right])
     func `opposite property delegates to static function`(chirality: Chirality) {
         #expect(chirality.opposite == Chirality.opposite(of: chirality))
@@ -52,8 +52,8 @@ struct Chirality_PropertyTests {
 
 // MARK: - Chirality - Operators
 
-@Suite("Chirality - Operators")
-struct Chirality_OperatorTests {
+@Suite
+struct `Chirality - Operators` {
     @Test(arguments: [Chirality.left, Chirality.right])
     func `negation operator is involution`(chirality: Chirality) {
         #expect(!(!chirality) == chirality)
@@ -72,8 +72,8 @@ struct Chirality_OperatorTests {
 
 // MARK: - Chirality - Protocol Conformances
 
-@Suite("Chirality - Protocol Conformances")
-struct Chirality_ProtocolTests {
+@Suite
+struct `Chirality - Protocol Conformances` {
     @Test
     func `allCases contains exactly two cases`() {
         #expect(Chirality.allCases.count == 2)
@@ -117,8 +117,8 @@ struct Chirality_ProtocolTests {
 
 // MARK: - Chirality - Value Typealias
 
-@Suite("Chirality - Value Typealias")
-struct Chirality_ValueTests {
+@Suite
+struct `Chirality - Value Typealias` {
     @Test
     func `Value typealias for Pair`() {
         let paired: Chirality.Value<String> = Pair(.left, "hand")

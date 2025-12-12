@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Enumeration - Collection Conformance
 
-@Suite("Enumeration - Collection")
-struct Enumeration_CollectionTests {
+@Suite
+struct `Enumeration - Collection` {
     @Test
     func `startIndex is always 0`() {
         let enumeration = Ordinal<5>.allCases
@@ -43,8 +43,8 @@ struct Enumeration_CollectionTests {
 
 // MARK: - Enumeration - BidirectionalCollection
 
-@Suite("Enumeration - BidirectionalCollection")
-struct Enumeration_BidirectionalTests {
+@Suite
+struct `Enumeration - BidirectionalCollection` {
     @Test
     func `index before decrements by 1`() {
         let enumeration = Ordinal<10>.allCases
@@ -65,8 +65,8 @@ struct Enumeration_BidirectionalTests {
 
 // MARK: - Enumeration - RandomAccessCollection
 
-@Suite("Enumeration - RandomAccessCollection")
-struct Enumeration_RandomAccessTests {
+@Suite
+struct `Enumeration - RandomAccessCollection` {
     @Test
     func `distance from start to end`() {
         let enumeration = Ordinal<10>.allCases
@@ -116,8 +116,8 @@ struct Enumeration_RandomAccessTests {
 
 // MARK: - Enumeration - Iterator
 
-@Suite("Enumeration - Iterator")
-struct Enumeration_IteratorTests {
+@Suite
+struct `Enumeration - Iterator` {
     @Test
     func `iterator produces all elements in order`() {
         let enumeration = Ordinal<4>.allCases
@@ -155,8 +155,8 @@ struct Enumeration_IteratorTests {
 
 // MARK: - Enumeration - Zero-Cost Abstraction
 
-@Suite("Enumeration - Zero-Cost")
-struct Enumeration_ZeroCostTests {
+@Suite
+struct `Enumeration - Zero-Cost` {
     @Test
     func `Enumeration is zero-size type`() {
         // Enumeration has no stored properties, so it should be zero-size

@@ -7,10 +7,10 @@ import Testing
 
 // MARK: - Stack Tests
 
-@Suite("Layout.Stack")
-struct StackTests {
-    @Test("Stack vertical convenience")
-    func verticalConvenience() {
+@Suite
+struct `Layout.Stack` {
+    @Test
+    func `Stack vertical convenience`() {
         let stack: Layout<Double>.Stack<[Int]> = .vertical(
             spacing: 10.0,
             alignment: .leading,
@@ -23,8 +23,8 @@ struct StackTests {
         #expect(stack.content == [1, 2, 3])
     }
 
-    @Test("Stack horizontal convenience")
-    func horizontalConvenience() {
+    @Test
+    func `Stack horizontal convenience`() {
         let stack: Layout<Double>.Stack<[Int]> = .horizontal(
             spacing: 8.0,
             alignment: .center,
@@ -36,8 +36,8 @@ struct StackTests {
         #expect(stack.alignment == .center)
     }
 
-    @Test("Stack default alignment")
-    func defaultAlignment() {
+    @Test
+    func `Stack default alignment`() {
         let stack: Layout<Double>.Stack<[Int]> = .vertical(
             spacing: 10.0,
             content: [1, 2, 3]
@@ -46,8 +46,8 @@ struct StackTests {
         #expect(stack.alignment == .center)
     }
 
-    @Test("Stack with custom spacing type")
-    func customSpacingType() {
+    @Test
+    func `Stack with custom spacing type`() {
         let stack: Layout<TestSpacing>.Stack<[String]> = .vertical(
             spacing: TestSpacing(10),
             alignment: .trailing,
@@ -57,8 +57,8 @@ struct StackTests {
         #expect(stack.spacing == TestSpacing(10))
     }
 
-    @Test("Stack Equatable")
-    func equatable() {
+    @Test
+    func `Stack Equatable`() {
         let a: Layout<Double>.Stack<[Int]> = .vertical(spacing: 10, content: [1, 2])
         let b: Layout<Double>.Stack<[Int]> = .vertical(spacing: 10, content: [1, 2])
         let c: Layout<Double>.Stack<[Int]> = .vertical(spacing: 20, content: [1, 2])
@@ -67,8 +67,8 @@ struct StackTests {
         #expect(a != c)
     }
 
-    @Test("Stack map spacing")
-    func mapSpacing() throws {
+    @Test
+    func `Stack map spacing`() throws {
         let stack: Layout<Double>.Stack<[Int]> = .vertical(
             spacing: 10.0,
             content: [1, 2, 3]
@@ -79,8 +79,8 @@ struct StackTests {
         #expect(mapped.content == [1, 2, 3])
     }
 
-    @Test("Stack map content")
-    func mapContent() throws {
+    @Test
+    func `Stack map content`() throws {
         let stack: Layout<Double>.Stack<[Int]> = .vertical(
             spacing: 10.0,
             content: [1, 2, 3]
@@ -91,14 +91,14 @@ struct StackTests {
         #expect(mapped.spacing == 10.0)
     }
 
-    @Test("Stack is Sendable")
-    func sendable() {
+    @Test
+    func `Stack is Sendable`() {
         let stack: Layout<Double>.Stack<[Int]> = .vertical(spacing: 10, content: [1, 2])
         let _: any Sendable = stack
     }
 
-    @Test("Stack is Hashable")
-    func hashable() {
+    @Test
+    func `Stack is Hashable`() {
         let stack: Layout<Double>.Stack<[Int]> = .vertical(spacing: 10, content: [1, 2])
         var set = Set<Layout<Double>.Stack<[Int]>>()
         set.insert(stack)

@@ -7,10 +7,10 @@ import Testing
 
 // TODO: Add comprehensive tests for Geometry.Depth functionality
 
-@Suite("Geometry.Depth - Placeholder")
-struct GeometryDepth_PlaceholderTests {
-    @Test("Placeholder test")
-    func placeholder() {
+@Suite
+struct `Geometry.Depth - Placeholder` {
+    @Test
+    func `Placeholder test`() {
         // Add tests here once Depth functionality is better understood
         #expect(true)
     }

@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Index Phantom Types
 
-@Suite("Dimension - Index Phantom Types")
-struct Dimension_IndexTests {
+@Suite
+struct `Dimension - Index Phantom Types` {
     enum TestSpace {}
 
     @Test
@@ -53,8 +53,8 @@ struct Dimension_IndexTests {
 
 // MARK: - Tagged Values with Index
 
-@Suite("Dimension - Tagged with Index")
-struct Dimension_TaggedIndexTests {
+@Suite
+struct `Dimension - Tagged with Index` {
     enum TestSpace {}
 
     @Test

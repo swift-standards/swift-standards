@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Vertical - Static Functions
 
-@Suite("Vertical - Static Functions")
-struct Vertical_StaticTests {
+@Suite
+struct `Vertical - Static Functions` {
     @Test(arguments: [Vertical.upward, Vertical.downward])
     func `opposite is involution`(vertical: Vertical) {
         #expect(Vertical.opposite(of: Vertical.opposite(of: vertical)) == vertical)
@@ -26,8 +26,8 @@ struct Vertical_StaticTests {
 
 // MARK: - Vertical - Properties
 
-@Suite("Vertical - Properties")
-struct Vertical_PropertyTests {
+@Suite
+struct `Vertical - Properties` {
     @Test(arguments: [Vertical.upward, Vertical.downward])
     func `opposite property delegates to static function`(vertical: Vertical) {
         #expect(vertical.opposite == Vertical.opposite(of: vertical))
@@ -76,8 +76,8 @@ struct Vertical_PropertyTests {
 
 // MARK: - Vertical - Initializers
 
-@Suite("Vertical - Initializers")
-struct Vertical_InitializerTests {
+@Suite
+struct `Vertical - Initializers` {
     @Test
     func `init from positive direction creates upward`() {
         #expect(Vertical(direction: .positive) == .upward)
@@ -106,8 +106,8 @@ struct Vertical_InitializerTests {
 
 // MARK: - Vertical - Protocol Conformances
 
-@Suite("Vertical - Protocol Conformances")
-struct Vertical_ProtocolTests {
+@Suite
+struct `Vertical - Protocol Conformances` {
     @Test
     func `allCases contains exactly two cases`() {
         #expect(Vertical.allCases.count == 2)
@@ -149,8 +149,8 @@ struct Vertical_ProtocolTests {
 
 // MARK: - Vertical - Operators
 
-@Suite("Vertical - Operators")
-struct Vertical_OperatorTests {
+@Suite
+struct `Vertical - Operators` {
     @Test(arguments: [Vertical.upward, Vertical.downward])
     func `negation operator is involution`(vertical: Vertical) {
         #expect(!(!vertical) == vertical)

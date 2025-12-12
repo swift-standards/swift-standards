@@ -3,8 +3,8 @@ import Testing
 
 @testable import Algebra
 
-@Suite("Parity - Static Functions")
-struct Parity_StaticTests {
+@Suite
+struct `Parity - Static Functions` {
     @Test(arguments: Parity.allCases)
     func `opposite is involution`(parity: Parity) {
         #expect(Parity.opposite(of: Parity.opposite(of: parity)) == parity)
@@ -37,8 +37,8 @@ struct Parity_StaticTests {
     }
 }
 
-@Suite("Parity - Properties")
-struct Parity_PropertyTests {
+@Suite
+struct `Parity - Properties` {
     @Test
     func `cases exist`() {
         #expect(Parity.allCases.count == 2)

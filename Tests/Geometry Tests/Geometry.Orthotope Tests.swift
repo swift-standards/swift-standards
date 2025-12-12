@@ -7,10 +7,10 @@ import Testing
 
 // TODO: Add comprehensive tests for Geometry.Orthotope functionality
 
-@Suite("Geometry.Orthotope - Placeholder")
-struct GeometryOrthotope_PlaceholderTests {
-    @Test("Placeholder test")
-    func placeholder() {
+@Suite
+struct `Geometry.Orthotope - Placeholder` {
+    @Test
+    func `Placeholder test`() {
         // Add tests here once Orthotope functionality is better understood
         #expect(true)
     }

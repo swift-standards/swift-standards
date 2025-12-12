@@ -2,14 +2,14 @@ import Testing
 
 @testable import StandardLibraryExtensions
 
-@Suite("Bool.Builder Tests")
-struct BoolBuilderTests {
+@Suite
+struct `Bool.Builder Tests` {
 
-    @Suite("Bool.all (AND Semantics)")
-    struct AllBuilderTests {
+    @Suite
+    struct `Bool.all (AND Semantics)` {
 
-        @Test("All true returns true")
-        func allTrueReturnsTrue() {
+        @Test
+        func `All true returns true`() {
             let result = Bool.all {
                 true
                 true
@@ -18,8 +18,8 @@ struct BoolBuilderTests {
             #expect(result == true)
         }
 
-        @Test("Any false returns false")
-        func anyFalseReturnsFalse() {
+        @Test
+        func `Any false returns false`() {
             let result = Bool.all {
                 true
                 false
@@ -28,31 +28,31 @@ struct BoolBuilderTests {
             #expect(result == false)
         }
 
-        @Test("Empty block returns true (identity)")
-        func emptyBlockReturnsTrue() {
+        @Test
+        func `Empty block returns true (identity)`() {
             let result = Bool.all {
             }
             #expect(result == true)
         }
 
-        @Test("Single true")
-        func singleTrue() {
+        @Test
+        func `Single true`() {
             let result = Bool.all {
                 true
             }
             #expect(result == true)
         }
 
-        @Test("Single false")
-        func singleFalse() {
+        @Test
+        func `Single false`() {
             let result = Bool.all {
                 false
             }
             #expect(result == false)
         }
 
-        @Test("Conditional inclusion - true")
-        func conditionalInclusionTrue() {
+        @Test
+        func `Conditional inclusion - true`() {
             let include = true
             let result = Bool.all {
                 true
@@ -63,8 +63,8 @@ struct BoolBuilderTests {
             #expect(result == true)
         }
 
-        @Test("Conditional inclusion - false condition")
-        func conditionalInclusionFalseCondition() {
+        @Test
+        func `Conditional inclusion - false condition`() {
             let include = false
             let result = Bool.all {
                 true
@@ -75,8 +75,8 @@ struct BoolBuilderTests {
             #expect(result == true)
         }
 
-        @Test("For loop all true")
-        func forLoopAllTrue() {
+        @Test
+        func `For loop all true`() {
             let result = Bool.all {
                 for _ in 1...3 {
                     true
@@ -85,8 +85,8 @@ struct BoolBuilderTests {
             #expect(result == true)
         }
 
-        @Test("For loop with false")
-        func forLoopWithFalse() {
+        @Test
+        func `For loop with false`() {
             let result = Bool.all {
                 for i in 1...3 {
                     i != 2
@@ -96,11 +96,11 @@ struct BoolBuilderTests {
         }
     }
 
-    @Suite("Bool.any (OR Semantics)")
-    struct AnyBuilderTests {
+    @Suite
+    struct `Bool.any (OR Semantics)` {
 
-        @Test("All false returns false")
-        func allFalseReturnsFalse() {
+        @Test
+        func `All false returns false`() {
             let result = Bool.any {
                 false
                 false
@@ -109,8 +109,8 @@ struct BoolBuilderTests {
             #expect(result == false)
         }
 
-        @Test("Any true returns true")
-        func anyTrueReturnsTrue() {
+        @Test
+        func `Any true returns true`() {
             let result = Bool.any {
                 false
                 true
@@ -119,31 +119,31 @@ struct BoolBuilderTests {
             #expect(result == true)
         }
 
-        @Test("Empty block returns false (identity)")
-        func emptyBlockReturnsFalse() {
+        @Test
+        func `Empty block returns false (identity)`() {
             let result = Bool.any {
             }
             #expect(result == false)
         }
 
-        @Test("Single true")
-        func singleTrue() {
+        @Test
+        func `Single true`() {
             let result = Bool.any {
                 true
             }
             #expect(result == true)
         }
 
-        @Test("Single false")
-        func singleFalse() {
+        @Test
+        func `Single false`() {
             let result = Bool.any {
                 false
             }
             #expect(result == false)
         }
 
-        @Test("Conditional inclusion - true condition with true value")
-        func conditionalInclusionTrueConditionTrueValue() {
+        @Test
+        func `Conditional inclusion - true condition with true value`() {
             let include = true
             let result = Bool.any {
                 false
@@ -154,8 +154,8 @@ struct BoolBuilderTests {
             #expect(result == true)
         }
 
-        @Test("Conditional inclusion - false condition")
-        func conditionalInclusionFalseCondition() {
+        @Test
+        func `Conditional inclusion - false condition`() {
             let include = false
             let result = Bool.any {
                 false
@@ -166,8 +166,8 @@ struct BoolBuilderTests {
             #expect(result == false)
         }
 
-        @Test("For loop all false")
-        func forLoopAllFalse() {
+        @Test
+        func `For loop all false`() {
             let result = Bool.any {
                 for _ in 1...3 {
                     false
@@ -176,8 +176,8 @@ struct BoolBuilderTests {
             #expect(result == false)
         }
 
-        @Test("For loop with true")
-        func forLoopWithTrue() {
+        @Test
+        func `For loop with true`() {
             let result = Bool.any {
                 for i in 1...3 {
                     i == 2
@@ -187,11 +187,11 @@ struct BoolBuilderTests {
         }
     }
 
-    @Suite("Bool.count")
-    struct CountBuilderTests {
+    @Suite
+    struct `Bool.count` {
 
-        @Test("Counts true values")
-        func countsTrueValues() {
+        @Test
+        func `Counts true values`() {
             let result = Bool.count {
                 true
                 false
@@ -202,8 +202,8 @@ struct BoolBuilderTests {
             #expect(result == 3)
         }
 
-        @Test("All false returns zero")
-        func allFalseReturnsZero() {
+        @Test
+        func `All false returns zero`() {
             let result = Bool.count {
                 false
                 false
@@ -212,8 +212,8 @@ struct BoolBuilderTests {
             #expect(result == 0)
         }
 
-        @Test("All true returns count")
-        func allTrueReturnsCount() {
+        @Test
+        func `All true returns count`() {
             let result = Bool.count {
                 true
                 true
@@ -222,15 +222,15 @@ struct BoolBuilderTests {
             #expect(result == 3)
         }
 
-        @Test("Empty block returns zero")
-        func emptyBlockReturnsZero() {
+        @Test
+        func `Empty block returns zero`() {
             let result = Bool.count {
             }
             #expect(result == 0)
         }
 
-        @Test("For loop counting")
-        func forLoopCounting() {
+        @Test
+        func `For loop counting`() {
             let result = Bool.count {
                 for i in 1...10 {
                     i % 2 == 0
@@ -240,11 +240,11 @@ struct BoolBuilderTests {
         }
     }
 
-    @Suite("Bool.one (XOR Semantics)")
-    struct OneBuilderTests {
+    @Suite
+    struct `Bool.one (XOR Semantics)` {
 
-        @Test("Exactly one true returns true")
-        func exactlyOneTrueReturnsTrue() {
+        @Test
+        func `Exactly one true returns true`() {
             let result = Bool.one {
                 false
                 true
@@ -253,8 +253,8 @@ struct BoolBuilderTests {
             #expect(result == true)
         }
 
-        @Test("Multiple true returns false")
-        func multipleTrueReturnsFalse() {
+        @Test
+        func `Multiple true returns false`() {
             let result = Bool.one {
                 true
                 true
@@ -263,8 +263,8 @@ struct BoolBuilderTests {
             #expect(result == false)
         }
 
-        @Test("All false returns false")
-        func allFalseReturnsFalse() {
+        @Test
+        func `All false returns false`() {
             let result = Bool.one {
                 false
                 false
@@ -273,15 +273,15 @@ struct BoolBuilderTests {
             #expect(result == false)
         }
 
-        @Test("Empty block returns false")
-        func emptyBlockReturnsFalse() {
+        @Test
+        func `Empty block returns false`() {
             let result = Bool.one {
             }
             #expect(result == false)
         }
 
-        @Test("Single true returns true")
-        func singleTrueReturnsTrue() {
+        @Test
+        func `Single true returns true`() {
             let result = Bool.one {
                 true
             }
@@ -289,11 +289,11 @@ struct BoolBuilderTests {
         }
     }
 
-    @Suite("Bool.none (NOR Semantics)")
-    struct NoneBuilderTests {
+    @Suite
+    struct `Bool.none (NOR Semantics)` {
 
-        @Test("All false returns true")
-        func allFalseReturnsTrue() {
+        @Test
+        func `All false returns true`() {
             let result = Bool.none {
                 false
                 false
@@ -302,8 +302,8 @@ struct BoolBuilderTests {
             #expect(result == true)
         }
 
-        @Test("Any true returns false")
-        func anyTrueReturnsFalse() {
+        @Test
+        func `Any true returns false`() {
             let result = Bool.none {
                 false
                 true
@@ -312,23 +312,23 @@ struct BoolBuilderTests {
             #expect(result == false)
         }
 
-        @Test("Empty block returns true")
-        func emptyBlockReturnsTrue() {
+        @Test
+        func `Empty block returns true`() {
             let result = Bool.none {
             }
             #expect(result == true)
         }
 
-        @Test("Single false returns true")
-        func singleFalseReturnsTrue() {
+        @Test
+        func `Single false returns true`() {
             let result = Bool.none {
                 false
             }
             #expect(result == true)
         }
 
-        @Test("Single true returns false")
-        func singleTrueReturnsFalse() {
+        @Test
+        func `Single true returns false`() {
             let result = Bool.none {
                 true
             }
@@ -336,11 +336,11 @@ struct BoolBuilderTests {
         }
     }
 
-    @Suite("Real-World Patterns")
-    struct RealWorldPatternsTests {
+    @Suite
+    struct `Real-World Patterns` {
 
-        @Test("Validation with all")
-        func validationWithAll() {
+        @Test
+        func `Validation with all`() {
             let username = "john_doe"
             let password = "secret123"
             let age = 25
@@ -354,8 +354,8 @@ struct BoolBuilderTests {
             #expect(isValid == true)
         }
 
-        @Test("Permission check with any")
-        func permissionCheckWithAny() {
+        @Test
+        func `Permission check with any`() {
             let isAdmin = false
             let isOwner = true
             let isPublic = false
@@ -369,8 +369,8 @@ struct BoolBuilderTests {
             #expect(canAccess == true)
         }
 
-        @Test("Mutual exclusion with one")
-        func mutualExclusionWithOne() {
+        @Test
+        func `Mutual exclusion with one`() {
             let option1 = false
             let option2 = true
             let option3 = false
@@ -384,8 +384,8 @@ struct BoolBuilderTests {
             #expect(exactlyOneSelected == true)
         }
 
-        @Test("No errors check with none")
-        func noErrorsCheckWithNone() {
+        @Test
+        func `No errors check with none`() {
             let hasNetworkError = false
             let hasValidationError = false
             let hasTimeout = false
@@ -400,11 +400,11 @@ struct BoolBuilderTests {
         }
     }
 
-    @Suite("Limited Availability")
-    struct LimitedAvailabilityTests {
+    @Suite
+    struct `Limited Availability` {
 
-        @Test("Limited availability passthrough - all")
-        func limitedAvailabilityPassthroughAll() {
+        @Test
+        func `Limited availability passthrough - all`() {
             let result = Bool.all {
                 true
                 if #available(macOS 26, iOS 26, *) {
@@ -414,8 +414,8 @@ struct BoolBuilderTests {
             #expect(result == true)
         }
 
-        @Test("Limited availability passthrough - any")
-        func limitedAvailabilityPassthroughAny() {
+        @Test
+        func `Limited availability passthrough - any`() {
             let result = Bool.any {
                 false
                 if #available(macOS 26, iOS 26, *) {

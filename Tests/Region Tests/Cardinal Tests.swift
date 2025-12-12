@@ -5,8 +5,8 @@ import Testing
 
 @testable import Region
 
-@Suite("Cardinal - Rotation")
-struct CardinalRotationTests {
+@Suite
+struct `Cardinal - Rotation` {
     @Test(arguments: Region.Cardinal.allCases)
     func `clockwise is cyclic`(direction: Region.Cardinal) {
         let cw = Region.Cardinal.clockwise(of: direction)
@@ -64,8 +64,8 @@ struct CardinalRotationTests {
     }
 }
 
-@Suite("Cardinal - Axis Properties")
-struct CardinalAxisTests {
+@Suite
+struct `Cardinal - Axis Properties` {
     @Test(arguments: Region.Cardinal.allCases)
     func `isHorizontal property matches static function`(direction: Region.Cardinal) {
         let property = direction.isHorizontal

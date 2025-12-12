@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Axis.Vertical Typealias Tests
 
-@Suite("Axis.Vertical - Typealias")
-struct AxisVertical_TypealiasTests {
+@Suite
+struct `Axis.Vertical - Typealias` {
     @Test
     func `Axis2 Vertical is identical to Vertical`() {
         let axisVert: Axis<2>.Vertical = .downward

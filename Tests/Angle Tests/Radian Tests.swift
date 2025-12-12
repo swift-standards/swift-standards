@@ -6,8 +6,8 @@ import Testing
 import RealModule
 @testable import Angle
 
-@Suite("Radian - Basic Structure & Arithmetic")
-struct RadianTests {
+@Suite
+struct `Radian - Basic Structure & Arithmetic` {
     @Test
     func initialization() {
         let angle = Radian(.pi / 2)

@@ -2,22 +2,22 @@ import Testing
 
 @testable import StandardLibraryExtensions
 
-@Suite("Substring.Builder Tests")
-struct SubstringBuilderTests {
+@Suite
+struct `Substring.Builder Tests` {
 
-    @Suite("Basic Construction")
-    struct BasicConstructionTests {
+    @Suite
+    struct `Basic Construction` {
 
-        @Test("Single substring")
-        func singleSubstring() {
+        @Test
+        func `Single substring`() {
             let result: Substring = Substring {
                 "Hello"
             }
             #expect(result == "Hello")
         }
 
-        @Test("Multiple substrings joined with newlines")
-        func multipleSubstringsJoinedWithNewlines() {
+        @Test
+        func `Multiple substrings joined with newlines`() {
             let result: Substring = Substring {
                 "First"
                 "Second"
@@ -26,23 +26,23 @@ struct SubstringBuilderTests {
             #expect(result == "First\nSecond\nThird")
         }
 
-        @Test("Empty block")
-        func emptyBlock() {
+        @Test
+        func `Empty block`() {
             let result: Substring = Substring {
             }
             #expect(result.isEmpty)
         }
 
-        @Test("Empty string")
-        func emptyString() {
+        @Test
+        func `Empty string`() {
             let result: Substring = Substring {
                 ""
             }
             #expect(result.isEmpty)
         }
 
-        @Test("Mixed String and Substring")
-        func mixedStringAndSubstring() {
+        @Test
+        func `Mixed String and Substring`() {
             let sub: Substring = "World"
             let result: Substring = Substring {
                 "Hello"
@@ -52,11 +52,11 @@ struct SubstringBuilderTests {
         }
     }
 
-    @Suite("Control Flow")
-    struct ControlFlowTests {
+    @Suite
+    struct `Control Flow` {
 
-        @Test("Conditional inclusion - true")
-        func conditionalInclusionTrue() {
+        @Test
+        func `Conditional inclusion - true`() {
             let include = true
             let result: Substring = Substring {
                 "Start"
@@ -68,8 +68,8 @@ struct SubstringBuilderTests {
             #expect(result == "Start\nMiddle\nEnd")
         }
 
-        @Test("Conditional inclusion - false")
-        func conditionalInclusionFalse() {
+        @Test
+        func `Conditional inclusion - false`() {
             let include = false
             let result: Substring = Substring {
                 "Start"
@@ -81,8 +81,8 @@ struct SubstringBuilderTests {
             #expect(result == "Start\n\nEnd")
         }
 
-        @Test("If-else first branch")
-        func ifElseFirstBranch() {
+        @Test
+        func `If-else first branch`() {
             let condition = true
             let result: Substring = Substring {
                 if condition {
@@ -94,8 +94,8 @@ struct SubstringBuilderTests {
             #expect(result == "first")
         }
 
-        @Test("If-else second branch")
-        func ifElseSecondBranch() {
+        @Test
+        func `If-else second branch`() {
             let condition = false
             let result: Substring = Substring {
                 if condition {
@@ -107,8 +107,8 @@ struct SubstringBuilderTests {
             #expect(result == "second")
         }
 
-        @Test("For loop")
-        func forLoop() {
+        @Test
+        func `For loop`() {
             let result: Substring = Substring {
                 for i in 1...3 {
                     "Line \(i)"
@@ -118,11 +118,11 @@ struct SubstringBuilderTests {
         }
     }
 
-    @Suite("Expression Building")
-    struct ExpressionBuildingTests {
+    @Suite
+    struct `Expression Building` {
 
-        @Test("Optional Substring - some")
-        func optionalSubstringSome() {
+        @Test
+        func `Optional Substring - some`() {
             let value: Substring? = "Hello"
             let result: Substring = Substring {
                 value
@@ -130,8 +130,8 @@ struct SubstringBuilderTests {
             #expect(result == "Hello")
         }
 
-        @Test("Optional Substring - none")
-        func optionalSubstringNone() {
+        @Test
+        func `Optional Substring - none`() {
             let value: Substring? = nil
             let result: Substring = Substring {
                 value
@@ -139,8 +139,8 @@ struct SubstringBuilderTests {
             #expect(result.isEmpty)
         }
 
-        @Test("Optional String - some")
-        func optionalStringSome() {
+        @Test
+        func `Optional String - some`() {
             let value: String? = "Hello"
             let result: Substring = Substring {
                 value
@@ -148,8 +148,8 @@ struct SubstringBuilderTests {
             #expect(result == "Hello")
         }
 
-        @Test("Optional String - none")
-        func optionalStringNone() {
+        @Test
+        func `Optional String - none`() {
             let value: String? = nil
             let result: Substring = Substring {
                 value
@@ -158,76 +158,76 @@ struct SubstringBuilderTests {
         }
     }
 
-    @Suite("Static Method Tests")
-    struct StaticMethodTests {
+    @Suite
+    struct `Static Method Tests` {
 
-        @Test("buildExpression Substring")
-        func buildExpressionSubstring() {
+        @Test
+        func `buildExpression Substring`() {
             let result = Substring.Builder.buildExpression(Substring("Hello"))
             #expect(result == "Hello")
         }
 
-        @Test("buildExpression String")
-        func buildExpressionString() {
+        @Test
+        func `buildExpression String`() {
             let result = Substring.Builder.buildExpression("Hello")
             #expect(result == "Hello")
         }
 
-        @Test("buildPartialBlock first")
-        func buildPartialBlockFirst() {
+        @Test
+        func `buildPartialBlock first`() {
             let result = Substring.Builder.buildPartialBlock(first: "Hello")
             #expect(result == "Hello")
         }
 
-        @Test("buildPartialBlock first void")
-        func buildPartialBlockFirstVoid() {
+        @Test
+        func `buildPartialBlock first void`() {
             let result = Substring.Builder.buildPartialBlock(first: ())
             #expect(result.isEmpty)
         }
 
-        @Test("buildPartialBlock accumulated")
-        func buildPartialBlockAccumulated() {
+        @Test
+        func `buildPartialBlock accumulated`() {
             let result = Substring.Builder.buildPartialBlock(accumulated: "First", next: "Second")
             #expect(result == "First\nSecond")
         }
 
-        @Test("buildPartialBlock accumulated empty")
-        func buildPartialBlockAccumulatedEmpty() {
+        @Test
+        func `buildPartialBlock accumulated empty`() {
             let result = Substring.Builder.buildPartialBlock(accumulated: "", next: "Second")
             #expect(result == "Second")
         }
 
-        @Test("buildOptional some")
-        func buildOptionalSome() {
+        @Test
+        func `buildOptional some`() {
             let result = Substring.Builder.buildOptional("Hello")
             #expect(result == "Hello")
         }
 
-        @Test("buildOptional none")
-        func buildOptionalNone() {
+        @Test
+        func `buildOptional none`() {
             let result = Substring.Builder.buildOptional(nil)
             #expect(result.isEmpty)
         }
 
-        @Test("buildArray")
-        func buildArray() {
+        @Test
+        func `buildArray`() {
             let result = Substring.Builder.buildArray(["First", "Second", "Third"])
             #expect(result == "First\nSecond\nThird")
         }
 
-        @Test("buildFinalResult")
-        func buildFinalResult() {
+        @Test
+        func `buildFinalResult`() {
             let result = Substring.Builder.buildFinalResult("Hello")
             #expect(result == "Hello")
             #expect(type(of: result) == Substring.self)
         }
     }
 
-    @Suite("Limited Availability")
-    struct LimitedAvailabilityTests {
+    @Suite
+    struct `Limited Availability` {
 
-        @Test("Limited availability passthrough")
-        func limitedAvailabilityPassthrough() {
+        @Test
+        func `Limited availability passthrough`() {
             let result: Substring = Substring {
                 "Always"
                 if #available(macOS 26, iOS 26, *) {

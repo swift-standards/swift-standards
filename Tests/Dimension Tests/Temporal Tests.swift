@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Temporal - Static Functions
 
-@Suite("Temporal - Static Functions")
-struct Temporal_StaticTests {
+@Suite
+struct `Temporal - Static Functions` {
     @Test(arguments: [Temporal.future, Temporal.past])
     func `opposite is involution`(temporal: Temporal) {
         #expect(Temporal.opposite(of: Temporal.opposite(of: temporal)) == temporal)
@@ -26,8 +26,8 @@ struct Temporal_StaticTests {
 
 // MARK: - Temporal - Properties
 
-@Suite("Temporal - Properties")
-struct Temporal_PropertyTests {
+@Suite
+struct `Temporal - Properties` {
     @Test(arguments: [Temporal.future, Temporal.past])
     func `opposite property delegates to static function`(temporal: Temporal) {
         #expect(temporal.opposite == Temporal.opposite(of: temporal))
@@ -76,8 +76,8 @@ struct Temporal_PropertyTests {
 
 // MARK: - Temporal - Initializers
 
-@Suite("Temporal - Initializers")
-struct Temporal_InitializerTests {
+@Suite
+struct `Temporal - Initializers` {
     @Test
     func `init from positive direction creates future`() {
         #expect(Temporal(direction: .positive) == .future)
@@ -106,8 +106,8 @@ struct Temporal_InitializerTests {
 
 // MARK: - Temporal - Protocol Conformances
 
-@Suite("Temporal - Protocol Conformances")
-struct Temporal_ProtocolTests {
+@Suite
+struct `Temporal - Protocol Conformances` {
     @Test
     func `allCases contains exactly two cases`() {
         #expect(Temporal.allCases.count == 2)
@@ -149,8 +149,8 @@ struct Temporal_ProtocolTests {
 
 // MARK: - Temporal - Operators
 
-@Suite("Temporal - Operators")
-struct Temporal_OperatorTests {
+@Suite
+struct `Temporal - Operators` {
     @Test(arguments: [Temporal.future, Temporal.past])
     func `negation operator is involution`(temporal: Temporal) {
         #expect(!(!temporal) == temporal)

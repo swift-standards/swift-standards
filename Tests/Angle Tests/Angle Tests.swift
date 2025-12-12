@@ -5,8 +5,8 @@ import StandardsTestSupport
 import Testing
 @testable import Angle
 
-@Suite("Angle - Namespace")
-struct AngleNamespaceTests {
+@Suite
+struct `Angle - Namespace` {
     @Test
     func angleNamespaceExists() {
         // Verify the Angle enum is available

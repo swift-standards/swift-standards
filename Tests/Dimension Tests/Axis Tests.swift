@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Axis - Static Functions
 
-@Suite("Axis - Static Functions")
-struct Axis_StaticTests {
+@Suite
+struct `Axis - Static Functions` {
     @Test(arguments: [Axis<2>.primary, Axis<2>.secondary])
     func `perpendicular is involution in 2D`(axis: Axis<2>) {
         let perp1 = Axis<2>.perpendicular(of: axis)
@@ -28,8 +28,8 @@ struct Axis_StaticTests {
 
 // MARK: - Axis - Properties
 
-@Suite("Axis - Properties")
-struct Axis_PropertyTests {
+@Suite
+struct `Axis - Properties` {
     @Test(arguments: [Axis<2>.primary, Axis<2>.secondary])
     func `perpendicular property delegates to static function`(axis: Axis<2>) {
         #expect(axis.perpendicular == Axis<2>.perpendicular(of: axis))
@@ -44,8 +44,8 @@ struct Axis_PropertyTests {
 
 // MARK: - Axis - Initializers
 
-@Suite("Axis - Initializers")
-struct Axis_InitializerTests {
+@Suite
+struct `Axis - Initializers` {
     @Test(arguments: [0, 1, 2, 3, 4])
     func `init with valid rawValue`(value: Int) {
         let axis: Axis<5>? = Axis(value)
@@ -68,8 +68,8 @@ struct Axis_InitializerTests {
 
 // MARK: - Axis - Dimension-Specific Constants
 
-@Suite("Axis - Dimension-Specific Constants")
-struct Axis_DimensionConstantsTests {
+@Suite
+struct `Axis - Dimension-Specific Constants` {
     @Test
     func `1D has only primary`() {
         #expect(Axis<1>.primary.rawValue == 0)
@@ -99,8 +99,8 @@ struct Axis_DimensionConstantsTests {
 
 // MARK: - Axis - Protocol Conformances
 
-@Suite("Axis - Protocol Conformances")
-struct Axis_ProtocolTests {
+@Suite
+struct `Axis - Protocol Conformances` {
     @Test
     func `Equatable reflexivity`() {
         #expect(Axis<2>.primary == Axis<2>.primary)
@@ -122,8 +122,8 @@ struct Axis_ProtocolTests {
 
 // MARK: - Axis - Type Safety
 
-@Suite("Axis - Type Safety")
-struct Axis_TypeSafetyTests {
+@Suite
+struct `Axis - Type Safety` {
     @Test
     func `Axes of different dimensions have same rawValue but different types`() {
         let axis2: Axis<2> = .primary
@@ -154,8 +154,8 @@ struct Axis_TypeSafetyTests {
 
 // MARK: - Axis - Enumerable Conformance
 
-@Suite("Axis - Enumerable Conformance")
-struct Axis_EnumerableTests {
+@Suite
+struct `Axis - Enumerable Conformance` {
     @Test
     func `caseCount matches dimension`() {
         #expect(Axis<1>.caseCount == 1)

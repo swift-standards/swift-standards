@@ -3,14 +3,14 @@ import Testing
 
 @testable import TernaryLogic
 
-@Suite("TernaryLogic.Builder Tests")
-struct TernaryLogicBuilderTests {
+@Suite
+struct `TernaryLogic.Builder Tests` {
 
-    @Suite("TernaryLogic.all (Strong Kleene AND)")
-    struct AllTests {
+    @Suite
+    struct `TernaryLogic.all (Strong Kleene AND)` {
 
-        @Test("All true returns true")
-        func allTrueReturnsTrue() {
+        @Test
+        func `All true returns true`() {
             let result = Bool?.all {
                 true
                 true
@@ -19,8 +19,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == true)
         }
 
-        @Test("Any false returns false")
-        func anyFalseReturnsFalse() {
+        @Test
+        func `Any false returns false`() {
             let result = Bool?.all {
                 true
                 false
@@ -29,8 +29,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == false)
         }
 
-        @Test("Unknown with no false returns unknown")
-        func unknownWithNoFalseReturnsUnknown() {
+        @Test
+        func `Unknown with no false returns unknown`() {
             let result = Bool?.all {
                 true
                 nil as Bool?
@@ -39,8 +39,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == nil)
         }
 
-        @Test("False dominates unknown")
-        func falseDominatesUnknown() {
+        @Test
+        func `False dominates unknown`() {
             let result = Bool?.all {
                 nil as Bool?
                 false
@@ -49,39 +49,39 @@ struct TernaryLogicBuilderTests {
             #expect(result == false)
         }
 
-        @Test("Empty block returns true")
-        func emptyBlockReturnsTrue() {
+        @Test
+        func `Empty block returns true`() {
             let result: Bool? = Bool?.all {
             }
             #expect(result == true)
         }
 
-        @Test("Single true")
-        func singleTrue() {
+        @Test
+        func `Single true`() {
             let result = Bool?.all {
                 true
             }
             #expect(result == true)
         }
 
-        @Test("Single false")
-        func singleFalse() {
+        @Test
+        func `Single false`() {
             let result = Bool?.all {
                 false
             }
             #expect(result == false)
         }
 
-        @Test("Single unknown")
-        func singleUnknown() {
+        @Test
+        func `Single unknown`() {
             let result = Bool?.all {
                 nil as Bool?
             }
             #expect(result == nil)
         }
 
-        @Test("Conditional inclusion - true branch")
-        func conditionalInclusionTrueBranch() {
+        @Test
+        func `Conditional inclusion - true branch`() {
             let condition = true
             let result = Bool?.all {
                 true
@@ -92,8 +92,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == true)
         }
 
-        @Test("Conditional inclusion - false branch yields unknown")
-        func conditionalInclusionFalseBranchYieldsUnknown() {
+        @Test
+        func `Conditional inclusion - false branch yields unknown`() {
             let condition = false
             let result = Bool?.all {
                 true
@@ -105,8 +105,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == nil)
         }
 
-        @Test("If-else first branch")
-        func ifElseFirstBranch() {
+        @Test
+        func `If-else first branch`() {
             let condition = true
             let result = Bool?.all {
                 if condition {
@@ -118,8 +118,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == true)
         }
 
-        @Test("If-else second branch")
-        func ifElseSecondBranch() {
+        @Test
+        func `If-else second branch`() {
             let condition = false
             let result = Bool?.all {
                 if condition {
@@ -131,8 +131,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == false)
         }
 
-        @Test("For loop all true")
-        func forLoopAllTrue() {
+        @Test
+        func `For loop all true`() {
             let result = Bool?.all {
                 for _ in 1...3 {
                     true
@@ -141,8 +141,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == true)
         }
 
-        @Test("For loop with false")
-        func forLoopWithFalse() {
+        @Test
+        func `For loop with false`() {
             let values: [Bool?] = [true, false, true]
             let result = Bool?.all {
                 for v in values {
@@ -152,8 +152,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == false)
         }
 
-        @Test("For loop with unknown")
-        func forLoopWithUnknown() {
+        @Test
+        func `For loop with unknown`() {
             let values: [Bool?] = [true, nil, true]
             let result = Bool?.all {
                 for v in values {
@@ -164,11 +164,11 @@ struct TernaryLogicBuilderTests {
         }
     }
 
-    @Suite("TernaryLogic.any (Strong Kleene OR)")
-    struct AnyTests {
+    @Suite
+    struct `TernaryLogic.any (Strong Kleene OR)` {
 
-        @Test("All false returns false")
-        func allFalseReturnsFalse() {
+        @Test
+        func `All false returns false`() {
             let result = Bool?.any {
                 false
                 false
@@ -177,8 +177,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == false)
         }
 
-        @Test("Any true returns true")
-        func anyTrueReturnsTrue() {
+        @Test
+        func `Any true returns true`() {
             let result = Bool?.any {
                 false
                 true
@@ -187,8 +187,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == true)
         }
 
-        @Test("Unknown with no true returns unknown")
-        func unknownWithNoTrueReturnsUnknown() {
+        @Test
+        func `Unknown with no true returns unknown`() {
             let result = Bool?.any {
                 false
                 nil as Bool?
@@ -197,8 +197,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == nil)
         }
 
-        @Test("True dominates unknown")
-        func trueDominatesUnknown() {
+        @Test
+        func `True dominates unknown`() {
             let result = Bool?.any {
                 nil as Bool?
                 true
@@ -207,39 +207,39 @@ struct TernaryLogicBuilderTests {
             #expect(result == true)
         }
 
-        @Test("Empty block returns false")
-        func emptyBlockReturnsFalse() {
+        @Test
+        func `Empty block returns false`() {
             let result: Bool? = Bool?.any {
             }
             #expect(result == false)
         }
 
-        @Test("Single true")
-        func singleTrue() {
+        @Test
+        func `Single true`() {
             let result = Bool?.any {
                 true
             }
             #expect(result == true)
         }
 
-        @Test("Single false")
-        func singleFalse() {
+        @Test
+        func `Single false`() {
             let result = Bool?.any {
                 false
             }
             #expect(result == false)
         }
 
-        @Test("Single unknown")
-        func singleUnknown() {
+        @Test
+        func `Single unknown`() {
             let result = Bool?.any {
                 nil as Bool?
             }
             #expect(result == nil)
         }
 
-        @Test("Conditional inclusion - false branch yields unknown")
-        func conditionalInclusionFalseBranchYieldsUnknown() {
+        @Test
+        func `Conditional inclusion - false branch yields unknown`() {
             let condition = false
             let result = Bool?.any {
                 false
@@ -252,11 +252,11 @@ struct TernaryLogicBuilderTests {
         }
     }
 
-    @Suite("TernaryLogic.none (Strong Kleene NOR)")
-    struct NoneTests {
+    @Suite
+    struct `TernaryLogic.none (Strong Kleene NOR)` {
 
-        @Test("All false returns true")
-        func allFalseReturnsTrue() {
+        @Test
+        func `All false returns true`() {
             let result = Bool?.none {
                 false
                 false
@@ -265,8 +265,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == true)
         }
 
-        @Test("Any true returns false")
-        func anyTrueReturnsFalse() {
+        @Test
+        func `Any true returns false`() {
             let result = Bool?.none {
                 false
                 true
@@ -275,8 +275,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == false)
         }
 
-        @Test("Unknown with no true returns unknown")
-        func unknownWithNoTrueReturnsUnknown() {
+        @Test
+        func `Unknown with no true returns unknown`() {
             let result = Bool?.none {
                 false
                 nil as Bool?
@@ -285,8 +285,8 @@ struct TernaryLogicBuilderTests {
             #expect(result == nil)
         }
 
-        @Test("True dominates unknown for NOR")
-        func trueDominatesUnknownForNor() {
+        @Test
+        func `True dominates unknown for NOR`() {
             let result = Bool?.none {
                 nil as Bool?
                 true
@@ -296,32 +296,32 @@ struct TernaryLogicBuilderTests {
             #expect(result == false)
         }
 
-        @Test("Empty block returns true")
-        func emptyBlockReturnsTrue() {
+        @Test
+        func `Empty block returns true`() {
             let result: Bool? = Bool?.none {
             }
             // NOR of empty = NOT(false) = true
             #expect(result == true)
         }
 
-        @Test("Single true returns false")
-        func singleTrueReturnsFalse() {
+        @Test
+        func `Single true returns false`() {
             let result = Bool?.none {
                 true
             }
             #expect(result == false)
         }
 
-        @Test("Single false returns true")
-        func singleFalseReturnsTrue() {
+        @Test
+        func `Single false returns true`() {
             let result = Bool?.none {
                 false
             }
             #expect(result == true)
         }
 
-        @Test("Single unknown returns unknown")
-        func singleUnknownReturnsUnknown() {
+        @Test
+        func `Single unknown returns unknown`() {
             let result = Bool?.none {
                 nil as Bool?
             }
@@ -329,23 +329,23 @@ struct TernaryLogicBuilderTests {
         }
     }
 
-    @Suite("Static Method Tests")
-    struct StaticMethodTests {
+    @Suite
+    struct `Static Method Tests` {
 
-        @Test("All.buildExpression Bool?")
-        func allBuildExpressionOptionalBool() {
+        @Test
+        func `All.buildExpression Bool?`() {
             let result = TernaryLogic.Builder<Bool?>.All.buildExpression(true as Bool?)
             #expect(result == true)
         }
 
-        @Test("All.buildExpression Bool")
-        func allBuildExpressionBool() {
+        @Test
+        func `All.buildExpression Bool`() {
             let result = TernaryLogic.Builder<Bool?>.All.buildExpression(true)
             #expect(result == true)
         }
 
-        @Test("All.buildPartialBlock accumulated")
-        func allBuildPartialBlockAccumulated() {
+        @Test
+        func `All.buildPartialBlock accumulated`() {
             // true AND true = true
             let r1 = TernaryLogic.Builder<Bool?>.All.buildPartialBlock(
                 accumulated: true,
@@ -372,8 +372,8 @@ struct TernaryLogicBuilderTests {
             #expect(r4 == false)
         }
 
-        @Test("Any.buildPartialBlock accumulated")
-        func anyBuildPartialBlockAccumulated() {
+        @Test
+        func `Any.buildPartialBlock accumulated`() {
             // false OR false = false
             let r1 = TernaryLogic.Builder<Bool?>.`Any`.buildPartialBlock(
                 accumulated: false,
@@ -403,8 +403,8 @@ struct TernaryLogicBuilderTests {
             #expect(r4 == true)
         }
 
-        @Test("None.buildFinalResult")
-        func noneBuildFinalResult() {
+        @Test
+        func `None.buildFinalResult`() {
             // NOR of true = false
             let r1 = TernaryLogic.Builder<Bool?>.None.buildFinalResult(true)
             #expect(r1 == false)
@@ -419,11 +419,11 @@ struct TernaryLogicBuilderTests {
         }
     }
 
-    @Suite("Comparison with Bool.Builder")
-    struct ComparisonTests {
+    @Suite
+    struct `Comparison with Bool.Builder` {
 
-        @Test("Bool.all vs Bool?.all - no unknowns")
-        func boolAllVsBoolOptionalAllNoUnknowns() {
+        @Test
+        func `Bool.all vs Bool?.all - no unknowns`() {
             // With no unknowns, they should behave the same
             let boolResult = Bool.all {
                 true
@@ -437,8 +437,8 @@ struct TernaryLogicBuilderTests {
             #expect(ternaryResult == true)
         }
 
-        @Test("Bool.all vs Bool?.all - with conditional")
-        func boolAllVsBoolOptionalAllWithConditional() {
+        @Test
+        func `Bool.all vs Bool?.all - with conditional`() {
             let condition = false
 
             // Bool.all: missing value treated as identity (true for AND)

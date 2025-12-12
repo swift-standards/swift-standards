@@ -3,8 +3,8 @@ import Testing
 
 @testable import Algebra
 
-@Suite("Comparison - Static Functions")
-struct Comparison_StaticTests {
+@Suite
+struct `Comparison - Static Functions` {
     @Test(arguments: Comparison.allCases)
     func `reversed is involution`(comparison: Comparison) {
         #expect(Comparison.reversed(Comparison.reversed(comparison)) == comparison)
@@ -18,8 +18,8 @@ struct Comparison_StaticTests {
     }
 }
 
-@Suite("Comparison - Properties")
-struct Comparison_PropertyTests {
+@Suite
+struct `Comparison - Properties` {
     @Test
     func `cases exist`() {
         #expect(Comparison.allCases.count == 3)

@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Axis.Horizontal Typealias Tests
 
-@Suite("Axis.Horizontal - Typealias")
-struct AxisHorizontal_TypealiasTests {
+@Suite
+struct `Axis.Horizontal - Typealias` {
     @Test
     func `Axis2 Horizontal is identical to Horizontal`() {
         let axisHoriz: Axis<2>.Horizontal = .leftward

@@ -2,22 +2,22 @@ import Testing
 
 @testable import StandardLibraryExtensions
 
-@Suite("ContiguousArray.Builder Tests")
-struct ContiguousArrayBuilderTests {
+@Suite
+struct `ContiguousArray.Builder Tests` {
 
-    @Suite("Basic Construction")
-    struct BasicConstructionTests {
+    @Suite
+    struct `Basic Construction` {
 
-        @Test("Single element")
-        func singleElement() {
+        @Test
+        func `Single element`() {
             let array: ContiguousArray<Int> = ContiguousArray {
                 42
             }
             #expect(array == [42])
         }
 
-        @Test("Multiple elements")
-        func multipleElements() {
+        @Test
+        func `Multiple elements`() {
             let array: ContiguousArray<Int> = ContiguousArray {
                 1
                 2
@@ -26,15 +26,15 @@ struct ContiguousArrayBuilderTests {
             #expect(array == [1, 2, 3])
         }
 
-        @Test("Empty block")
-        func emptyBlock() {
+        @Test
+        func `Empty block`() {
             let array: ContiguousArray<Int> = ContiguousArray {
             }
             #expect(array.isEmpty)
         }
 
-        @Test("Mixed elements and arrays")
-        func mixedElementsAndArrays() {
+        @Test
+        func `Mixed elements and arrays`() {
             let array: ContiguousArray<Int> = ContiguousArray {
                 1
                 [2, 3]
@@ -43,8 +43,8 @@ struct ContiguousArrayBuilderTests {
             #expect(array == [1, 2, 3, 4])
         }
 
-        @Test("Nested contiguous arrays")
-        func nestedContiguousArrays() {
+        @Test
+        func `Nested contiguous arrays`() {
             let nested: ContiguousArray<Int> = [10, 20]
             let array: ContiguousArray<Int> = ContiguousArray {
                 1
@@ -55,11 +55,11 @@ struct ContiguousArrayBuilderTests {
         }
     }
 
-    @Suite("Control Flow")
-    struct ControlFlowTests {
+    @Suite
+    struct `Control Flow` {
 
-        @Test("Conditional inclusion - true")
-        func conditionalInclusionTrue() {
+        @Test
+        func `Conditional inclusion - true`() {
             let include = true
             let array: ContiguousArray<Int> = ContiguousArray {
                 1
@@ -71,8 +71,8 @@ struct ContiguousArrayBuilderTests {
             #expect(array == [1, 2, 3])
         }
 
-        @Test("Conditional inclusion - false")
-        func conditionalInclusionFalse() {
+        @Test
+        func `Conditional inclusion - false`() {
             let include = false
             let array: ContiguousArray<Int> = ContiguousArray {
                 1
@@ -84,8 +84,8 @@ struct ContiguousArrayBuilderTests {
             #expect(array == [1, 3])
         }
 
-        @Test("If-else first branch")
-        func ifElseFirstBranch() {
+        @Test
+        func `If-else first branch`() {
             let condition = true
             let array: ContiguousArray<String> = ContiguousArray {
                 if condition {
@@ -97,8 +97,8 @@ struct ContiguousArrayBuilderTests {
             #expect(array == ["first"])
         }
 
-        @Test("If-else second branch")
-        func ifElseSecondBranch() {
+        @Test
+        func `If-else second branch`() {
             let condition = false
             let array: ContiguousArray<String> = ContiguousArray {
                 if condition {
@@ -110,8 +110,8 @@ struct ContiguousArrayBuilderTests {
             #expect(array == ["second"])
         }
 
-        @Test("For loop")
-        func forLoop() {
+        @Test
+        func `For loop`() {
             let array: ContiguousArray<Int> = ContiguousArray {
                 for i in 1...3 {
                     i * 10
@@ -121,11 +121,11 @@ struct ContiguousArrayBuilderTests {
         }
     }
 
-    @Suite("Expression Building")
-    struct ExpressionBuildingTests {
+    @Suite
+    struct `Expression Building` {
 
-        @Test("Optional element - some")
-        func optionalElementSome() {
+        @Test
+        func `Optional element - some`() {
             let value: Int? = 42
             let array: ContiguousArray<Int> = ContiguousArray {
                 value
@@ -133,8 +133,8 @@ struct ContiguousArrayBuilderTests {
             #expect(array == [42])
         }
 
-        @Test("Optional element - none")
-        func optionalElementNone() {
+        @Test
+        func `Optional element - none`() {
             let value: Int? = nil
             let array: ContiguousArray<Int> = ContiguousArray {
                 value
@@ -142,8 +142,8 @@ struct ContiguousArrayBuilderTests {
             #expect(array.isEmpty)
         }
 
-        @Test("Regular array expression")
-        func regularArrayExpression() {
+        @Test
+        func `Regular array expression`() {
             let array: ContiguousArray<Int> = ContiguousArray {
                 [1, 2, 3]
             }
@@ -151,35 +151,35 @@ struct ContiguousArrayBuilderTests {
         }
     }
 
-    @Suite("Static Method Tests")
-    struct StaticMethodTests {
+    @Suite
+    struct `Static Method Tests` {
 
-        @Test("buildExpression single element")
-        func buildExpressionSingleElement() {
+        @Test
+        func `buildExpression single element`() {
             let result = ContiguousArray<Int>.Builder.buildExpression(42)
             #expect(result == [42])
         }
 
-        @Test("buildExpression array")
-        func buildExpressionArray() {
+        @Test
+        func `buildExpression array`() {
             let result = ContiguousArray<Int>.Builder.buildExpression([1, 2, 3])
             #expect(result == [1, 2, 3])
         }
 
-        @Test("buildPartialBlock first")
-        func buildPartialBlockFirst() {
+        @Test
+        func `buildPartialBlock first`() {
             let result = ContiguousArray<Int>.Builder.buildPartialBlock(first: [1, 2, 3])
             #expect(result == [1, 2, 3])
         }
 
-        @Test("buildPartialBlock first void")
-        func buildPartialBlockFirstVoid() {
+        @Test
+        func `buildPartialBlock first void`() {
             let result = ContiguousArray<Int>.Builder.buildPartialBlock(first: ())
             #expect(result.isEmpty)
         }
 
-        @Test("buildPartialBlock accumulated")
-        func buildPartialBlockAccumulated() {
+        @Test
+        func `buildPartialBlock accumulated`() {
             let result = ContiguousArray<Int>.Builder.buildPartialBlock(
                 accumulated: [1, 2],
                 next: [3, 4]
@@ -187,30 +187,30 @@ struct ContiguousArrayBuilderTests {
             #expect(result == [1, 2, 3, 4])
         }
 
-        @Test("buildOptional some")
-        func buildOptionalSome() {
+        @Test
+        func `buildOptional some`() {
             let result = ContiguousArray<Int>.Builder.buildOptional([1, 2, 3])
             #expect(result == [1, 2, 3])
         }
 
-        @Test("buildOptional none")
-        func buildOptionalNone() {
+        @Test
+        func `buildOptional none`() {
             let result = ContiguousArray<Int>.Builder.buildOptional(nil)
             #expect(result.isEmpty)
         }
 
-        @Test("buildArray")
-        func buildArray() {
+        @Test
+        func `buildArray`() {
             let result = ContiguousArray<Int>.Builder.buildArray([[1, 2], [3, 4]])
             #expect(result == [1, 2, 3, 4])
         }
     }
 
-    @Suite("Limited Availability")
-    struct LimitedAvailabilityTests {
+    @Suite
+    struct `Limited Availability` {
 
-        @Test("Limited availability passthrough")
-        func limitedAvailabilityPassthrough() {
+        @Test
+        func `Limited availability passthrough`() {
             let array: ContiguousArray<Int> = ContiguousArray {
                 1
                 if #available(macOS 26, iOS 26, *) {

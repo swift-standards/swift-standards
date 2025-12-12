@@ -3,8 +3,8 @@ import Testing
 
 @testable import Algebra
 
-@Suite("Phase - Static Functions")
-struct Phase_StaticTests {
+@Suite
+struct `Phase - Static Functions` {
     @Test(arguments: Phase.allCases)
     func `opposite is 180 degree rotation`(phase: Phase) {
         #expect(Phase.opposite(of: Phase.opposite(of: phase)) == phase)
@@ -41,8 +41,8 @@ struct Phase_StaticTests {
     }
 }
 
-@Suite("Phase - Properties")
-struct Phase_PropertyTests {
+@Suite
+struct `Phase - Properties` {
     @Test
     func `cases exist`() {
         #expect(Phase.allCases.count == 4)

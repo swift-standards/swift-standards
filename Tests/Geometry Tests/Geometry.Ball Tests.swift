@@ -11,10 +11,10 @@ import Testing
 
 // MARK: - Initialization Tests
 
-@Suite("Geometry.Ball - Initialization")
-struct GeometryBall_InitializationTests {
-    @Test("Ball initialization with center and radius")
-    func ballInitialization() {
+@Suite
+struct `Geometry.Ball - Initialization` {
+    @Test
+    func `Ball initialization with center and radius`() {
         let ball: Geometry<Double, Void>.Ball<2> = .init(
             center: .init(x: 10, y: 20),
             radius: 5
@@ -24,24 +24,24 @@ struct GeometryBall_InitializationTests {
         #expect(ball.radius == 5)
     }
 
-    @Test("Ball at origin with radius")
-    func ballAtOrigin() {
+    @Test
+    func `Ball at origin with radius`() {
         let ball: Geometry<Double, Void>.Ball<2> = .init(radius: 10)
         #expect(ball.center.x == 0)
         #expect(ball.center.y == 0)
         #expect(ball.radius == 10)
     }
 
-    @Test("Unit ball")
-    func unitBall() {
+    @Test
+    func `Unit ball`() {
         let ball: Geometry<Double, Void>.Ball<2> = .unit
         #expect(ball.center.x == 0)
         #expect(ball.center.y == 0)
         #expect(ball.radius == 1)
     }
 
-    @Test("Circle typealias")
-    func circleTypealias() {
+    @Test
+    func `Circle typealias`() {
         let circle: Geometry<Double, Void>.Circle = .init(
             center: .init(x: 5, y: 10),
             radius: 3
@@ -50,8 +50,8 @@ struct GeometryBall_InitializationTests {
         #expect(circle.radius == 3)
     }
 
-    @Test("Circle from circular ellipse")
-    func circleFromEllipse() {
+    @Test
+    func `Circle from circular ellipse`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .circle(
             center: .init(x: 5, y: 10),
             radius: 7
@@ -63,8 +63,8 @@ struct GeometryBall_InitializationTests {
         #expect(circle?.radius == 7)
     }
 
-    @Test("Circle from non-circular ellipse returns nil")
-    func circleFromNonCircularEllipse() {
+    @Test
+    func `Circle from non-circular ellipse returns nil`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let circle = Geometry<Double, Void>.Circle(ellipse)
         #expect(circle == nil)
@@ -73,35 +73,35 @@ struct GeometryBall_InitializationTests {
 
 // MARK: - Properties Tests
 
-@Suite("Geometry.Ball - Properties")
-struct GeometryBall_PropertiesTests {
-    @Test("Circle diameter")
-    func circleDiameter() {
+@Suite
+struct `Geometry.Ball - Properties` {
+    @Test
+    func `Circle diameter`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         #expect(circle.diameter.width.value == 10)
     }
 
-    @Test("Circle circumference")
-    func circleCircumference() {
+    @Test
+    func `Circle circumference`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 1)
         #expect(abs(circle.circumference.value - 2 * .pi) < 1e-10)
     }
 
-    @Test("Circle area using property")
-    func circleAreaProperty() {
+    @Test
+    func `Circle area using property`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 2)
         #expect(abs(circle.area.value - 4 * .pi) < 1e-10)
     }
 
-    @Test("Sphere surface area")
-    func sphereSurfaceArea() {
+    @Test
+    func `Sphere surface area`() {
         let sphere: Geometry<Double, Void>.Sphere = .init(center: .zero, radius: 2)
         // Surface area = 4πr² = 4π(4) = 16π
         #expect(abs(sphere.surfaceArea - 16 * .pi) < 1e-10)
     }
 
-    @Test("Sphere volume")
-    func sphereVolume() {
+    @Test
+    func `Sphere volume`() {
         let sphere: Geometry<Double, Void>.Sphere = .init(center: .zero, radius: 3)
         // Volume = (4/3)πr³ = (4/3)π(27) = 36π
         #expect(abs(sphere.volume - 36 * .pi) < 1e-10)
@@ -110,17 +110,17 @@ struct GeometryBall_PropertiesTests {
 
 // MARK: - Static Function Tests
 
-@Suite("Geometry.Ball - Static Functions")
-struct GeometryBall_StaticTests {
-    @Test("Geometry.area(of:) for circle")
-    func staticAreaFunction() {
+@Suite
+struct `Geometry.Ball - Static Functions` {
+    @Test
+    func `Geometry.area(of:) for circle`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 3)
         let area = Geometry.area(of: circle)
         #expect(abs(area.value - 9 * .pi) < 1e-10)
     }
 
-    @Test("Geometry.boundingBox(of:) for circle")
-    func staticBoundingBox() {
+    @Test
+    func `Geometry.boundingBox(of:) for circle`() {
         let circle: Geometry<Double, Void>.Circle = .init(
             center: .init(x: 10, y: 20),
             radius: 5
@@ -132,57 +132,57 @@ struct GeometryBall_StaticTests {
         #expect(bbox.ury == 25)
     }
 
-    @Test("Geometry.contains(_:point:) for point inside")
-    func staticContainsPointInside() {
+    @Test
+    func `Geometry.contains(_:point:) for point inside`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 10)
         let point: Geometry<Double, Void>.Point<2> = .init(x: 3, y: 4)  // distance 5
         #expect(Geometry.contains(circle, point: point))
     }
 
-    @Test("Geometry.contains(_:point:) for point on boundary")
-    func staticContainsPointOnBoundary() {
+    @Test
+    func `Geometry.contains(_:point:) for point on boundary`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let point: Geometry<Double, Void>.Point<2> = .init(x: 3, y: 4)  // distance 5
         #expect(Geometry.contains(circle, point: point))
     }
 
-    @Test("Geometry.contains(_:point:) for point outside")
-    func staticContainsPointOutside() {
+    @Test
+    func `Geometry.contains(_:point:) for point outside`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let point: Geometry<Double, Void>.Point<2> = .init(x: 6, y: 8)  // distance 10
         #expect(!Geometry.contains(circle, point: point))
     }
 
-    @Test("Geometry.contains(_:_:) circle contains another")
-    func staticContainsCircle() {
+    @Test
+    func `Geometry.contains(_:_:) circle contains another`() {
         let outer: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 10)
         let inner: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 3)
         #expect(Geometry.contains(outer, inner))
     }
 
-    @Test("Geometry.contains(_:_:) circle does not contain larger circle")
-    func staticDoesNotContainLargerCircle() {
+    @Test
+    func `Geometry.contains(_:_:) circle does not contain larger circle`() {
         let small: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 3)
         let large: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 10)
         #expect(!Geometry.contains(small, large))
     }
 
-    @Test("Geometry.intersects(_:_:) overlapping circles")
-    func staticIntersectsOverlapping() {
+    @Test
+    func `Geometry.intersects(_:_:) overlapping circles`() {
         let c1: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let c2: Geometry<Double, Void>.Circle = .init(center: .init(x: 6, y: 0), radius: 5)
         #expect(Geometry.intersects(c1, c2))
     }
 
-    @Test("Geometry.intersects(_:_:) tangent circles")
-    func staticIntersectsTangent() {
+    @Test
+    func `Geometry.intersects(_:_:) tangent circles`() {
         let c1: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let c2: Geometry<Double, Void>.Circle = .init(center: .init(x: 10, y: 0), radius: 5)
         #expect(Geometry.intersects(c1, c2))
     }
 
-    @Test("Geometry.intersects(_:_:) separate circles")
-    func staticDoesNotIntersect() {
+    @Test
+    func `Geometry.intersects(_:_:) separate circles`() {
         let c1: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let c2: Geometry<Double, Void>.Circle = .init(center: .init(x: 20, y: 0), radius: 5)
         #expect(!Geometry.intersects(c1, c2))
@@ -191,10 +191,10 @@ struct GeometryBall_StaticTests {
 
 // MARK: - Containment Tests
 
-@Suite("Geometry.Ball - Containment")
-struct GeometryBall_ContainmentTests {
-    @Test("Contains center point")
-    func containsCenter() {
+@Suite
+struct `Geometry.Ball - Containment` {
+    @Test
+    func `Contains center point`() {
         let circle: Geometry<Double, Void>.Circle = .init(
             center: .init(x: 5, y: 5),
             radius: 10
@@ -202,22 +202,22 @@ struct GeometryBall_ContainmentTests {
         #expect(circle.contains(circle.center))
     }
 
-    @Test("Contains interior using containsInterior")
-    func containsInteriorPoint() {
+    @Test
+    func `Contains interior using containsInterior`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 10)
         let point: Geometry<Double, Void>.Point<2> = .init(x: 3, y: 4)
         #expect(circle.containsInterior(point))
     }
 
-    @Test("Boundary point not strictly interior")
-    func boundaryNotInterior() {
+    @Test
+    func `Boundary point not strictly interior`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let point: Geometry<Double, Void>.Point<2> = .init(x: 3, y: 4)  // distance 5
         #expect(!circle.containsInterior(point))
     }
 
-    @Test("Circle contains smaller circle")
-    func circleContainsCircle() {
+    @Test
+    func `Circle contains smaller circle`() {
         let outer: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 10)
         let inner: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 3)
         #expect(outer.contains(inner))
@@ -226,34 +226,34 @@ struct GeometryBall_ContainmentTests {
 
 // MARK: - Point on Circle Tests
 
-@Suite("Geometry.Ball - Parametric Points")
-struct GeometryBall_ParametricTests {
-    @Test("Point at angle 0 (rightmost)")
-    func pointAtZero() {
+@Suite
+struct `Geometry.Ball - Parametric Points` {
+    @Test
+    func `Point at angle 0 (rightmost)`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let point = circle.point(at: .zero)
         #expect(abs(point.x.value - 5) < 1e-10)
         #expect(abs(point.y.value) < 1e-10)
     }
 
-    @Test("Point at angle π/2 (top)")
-    func pointAtHalfPi() {
+    @Test
+    func `Point at angle π/2 (top)`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let point = circle.point(at: .halfPi)
         #expect(abs(point.x.value) < 1e-10)
         #expect(abs(point.y.value - 5) < 1e-10)
     }
 
-    @Test("Point at angle π (leftmost)")
-    func pointAtPi() {
+    @Test
+    func `Point at angle π (leftmost)`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let point = circle.point(at: .pi)
         #expect(abs(point.x.value - (-5)) < 1e-10)
         #expect(abs(point.y.value) < 1e-10)
     }
 
-    @Test("Point with offset center")
-    func pointWithOffsetCenter() {
+    @Test
+    func `Point with offset center`() {
         let circle: Geometry<Double, Void>.Circle = .init(
             center: .init(x: 10, y: 20),
             radius: 5
@@ -263,8 +263,8 @@ struct GeometryBall_ParametricTests {
         #expect(abs(point.y.value - 20) < 1e-10)
     }
 
-    @Test("Closest point to exterior point")
-    func closestPointToExterior() {
+    @Test
+    func `Closest point to exterior point`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let exterior: Geometry<Double, Void>.Point<2> = .init(x: 10, y: 0)
         let closest = circle.closestPoint(to: exterior)
@@ -272,8 +272,8 @@ struct GeometryBall_ParametricTests {
         #expect(abs(closest.y.value) < 1e-10)
     }
 
-    @Test("Closest point when query point is at center")
-    func closestPointAtCenter() {
+    @Test
+    func `Closest point when query point is at center`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let closest = circle.closestPoint(to: circle.center)
         // Should return rightmost point when at center
@@ -284,26 +284,26 @@ struct GeometryBall_ParametricTests {
 
 // MARK: - Tangent Tests
 
-@Suite("Geometry.Ball - Tangent Vectors")
-struct GeometryBall_TangentTests {
-    @Test("Tangent at angle 0 points up")
-    func tangentAtZero() {
+@Suite
+struct `Geometry.Ball - Tangent Vectors` {
+    @Test
+    func `Tangent at angle 0 points up`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let tangent = circle.tangent(at: .zero)
         #expect(abs(tangent.dx.value) < 1e-10)
         #expect(abs(tangent.dy.value - 1) < 1e-10)
     }
 
-    @Test("Tangent at angle π/2 points left")
-    func tangentAtHalfPi() {
+    @Test
+    func `Tangent at angle π/2 points left`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let tangent = circle.tangent(at: .halfPi)
         #expect(abs(tangent.dx.value - (-1)) < 1e-10)
         #expect(abs(tangent.dy.value) < 1e-10)
     }
 
-    @Test("Tangent is perpendicular to radius")
-    func tangentPerpendicularToRadius() {
+    @Test
+    func `Tangent is perpendicular to radius`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let angle: Radian = .init(Double.pi / 3)
         let point = circle.point(at: angle)
@@ -319,10 +319,10 @@ struct GeometryBall_TangentTests {
 
 // MARK: - Bounding Box Tests
 
-@Suite("Geometry.Ball - Bounding Box")
-struct GeometryBall_BoundingBoxTests {
-    @Test("Bounding box at origin")
-    func boundingBoxAtOrigin() {
+@Suite
+struct `Geometry.Ball - Bounding Box` {
+    @Test
+    func `Bounding box at origin`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let bbox = circle.boundingBox
         #expect(bbox.llx == -5)
@@ -331,8 +331,8 @@ struct GeometryBall_BoundingBoxTests {
         #expect(bbox.ury == 5)
     }
 
-    @Test("Bounding box with offset")
-    func boundingBoxWithOffset() {
+    @Test
+    func `Bounding box with offset`() {
         let circle: Geometry<Double, Void>.Circle = .init(
             center: .init(x: 10, y: 20),
             radius: 5
@@ -347,10 +347,10 @@ struct GeometryBall_BoundingBoxTests {
 
 // MARK: - Transformation Tests
 
-@Suite("Geometry.Ball - Transformations")
-struct GeometryBall_TransformationTests {
-    @Test("Translation preserves radius")
-    func translation() {
+@Suite
+struct `Geometry.Ball - Transformations` {
+    @Test
+    func `Translation preserves radius`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let translated = circle.translated(by: .init(dx: 10, dy: 20))
         #expect(translated.center.x == 10)
@@ -358,8 +358,8 @@ struct GeometryBall_TransformationTests {
         #expect(translated.radius == 5)
     }
 
-    @Test("Uniform scaling about center")
-    func scalingAboutCenter() {
+    @Test
+    func `Uniform scaling about center`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let scaled = circle.scaled(by: 2)
         #expect(scaled.center.x == 0)
@@ -367,8 +367,8 @@ struct GeometryBall_TransformationTests {
         #expect(scaled.radius == 10)
     }
 
-    @Test("Scaling about arbitrary point")
-    func scalingAboutPoint() {
+    @Test
+    func `Scaling about arbitrary point`() {
         let circle: Geometry<Double, Void>.Circle = .init(
             center: .init(x: 10, y: 0),
             radius: 5
@@ -382,10 +382,10 @@ struct GeometryBall_TransformationTests {
 
 // MARK: - Line Intersection Tests
 
-@Suite("Geometry.Ball - Line Intersection")
-struct GeometryBall_LineIntersectionTests {
-    @Test("Geometry.intersection(_:_:) line through center")
-    func staticLineThroughCenter() {
+@Suite
+struct `Geometry.Ball - Line Intersection` {
+    @Test
+    func `Geometry.intersection(_:_:) line through center`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let line: Geometry<Double, Void>.Line = .init(
             point: .zero,
@@ -398,8 +398,8 @@ struct GeometryBall_LineIntersectionTests {
         #expect(abs(sorted[1].x.value - 5) < 1e-10)
     }
 
-    @Test("Line tangent to circle")
-    func lineTangent() {
+    @Test
+    func `Line tangent to circle`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 5, y: 0),
@@ -411,8 +411,8 @@ struct GeometryBall_LineIntersectionTests {
         #expect(abs(intersections[0].y.value) < 1e-10)
     }
 
-    @Test("Line misses circle")
-    func lineMissesCircle() {
+    @Test
+    func `Line misses circle`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 10, y: 0),
@@ -425,18 +425,18 @@ struct GeometryBall_LineIntersectionTests {
 
 // MARK: - Circle-Circle Intersection Tests
 
-@Suite("Geometry.Ball - Circle Intersection")
-struct GeometryBall_CircleIntersectionTests {
-    @Test("Geometry.intersection(_:_:) two points")
-    func staticIntersectionTwoPoints() {
+@Suite
+struct `Geometry.Ball - Circle Intersection` {
+    @Test
+    func `Geometry.intersection(_:_:) two points`() {
         let c1: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let c2: Geometry<Double, Void>.Circle = .init(center: .init(x: 6, y: 0), radius: 5)
         let intersections = Geometry.intersection(c1, c2)
         #expect(intersections.count == 2)
     }
 
-    @Test("Tangent circles touch at one point")
-    func tangentCircles() {
+    @Test
+    func `Tangent circles touch at one point`() {
         let c1: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let c2: Geometry<Double, Void>.Circle = .init(center: .init(x: 10, y: 0), radius: 5)
         let intersections = c1.intersection(with: c2)
@@ -445,24 +445,24 @@ struct GeometryBall_CircleIntersectionTests {
         #expect(abs(intersections[0].y.value) < 1e-10)
     }
 
-    @Test("Separate circles")
-    func separateCircles() {
+    @Test
+    func `Separate circles`() {
         let c1: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let c2: Geometry<Double, Void>.Circle = .init(center: .init(x: 20, y: 0), radius: 5)
         let intersections = c1.intersection(with: c2)
         #expect(intersections.isEmpty)
     }
 
-    @Test("One circle inside another")
-    func circleInsideAnother() {
+    @Test
+    func `One circle inside another`() {
         let c1: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 10)
         let c2: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 3)
         let intersections = c1.intersection(with: c2)
         #expect(intersections.isEmpty)
     }
 
-    @Test("Intersection method on circle")
-    func intersectionMethod() {
+    @Test
+    func `Intersection method on circle`() {
         let c1: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let c2: Geometry<Double, Void>.Circle = .init(center: .init(x: 6, y: 0), radius: 5)
         #expect(c1.intersects(c2))
@@ -471,25 +471,25 @@ struct GeometryBall_CircleIntersectionTests {
 
 // MARK: - Bezier Approximation Tests
 
-@Suite("Geometry.Ball - Bezier Curves")
-struct GeometryBall_BezierTests {
-    @Test("Bezier curves count")
-    func bezierCurvesCount() {
+@Suite
+struct `Geometry.Ball - Bezier Curves` {
+    @Test
+    func `Bezier curves count`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let curves = circle.bezierCurves
         #expect(curves.count == 4)
     }
 
-    @Test("Bezier start point")
-    func bezierStartPoint() {
+    @Test
+    func `Bezier start point`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let startPoint = circle.bezierStartPoint
         #expect(abs(startPoint.x.value - 5) < 1e-10)
         #expect(abs(startPoint.y.value) < 1e-10)
     }
 
-    @Test("First bezier segment starts at rightmost point")
-    func firstBezierSegment() {
+    @Test
+    func `First bezier segment starts at rightmost point`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let curves = circle.bezierCurves
         let first = curves[0]
@@ -500,10 +500,10 @@ struct GeometryBall_BezierTests {
 
 // MARK: - Functorial Map Tests
 
-@Suite("Geometry.Ball - Functorial Map")
-struct GeometryBall_MapTests {
-    @Test("Map to different scalar type")
-    func mapToFloat() {
+@Suite
+struct `Geometry.Ball - Functorial Map` {
+    @Test
+    func `Map to different scalar type`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let mapped: Geometry<Float, Void>.Circle = circle.map { Float($0) }
         #expect(mapped.center.x.value == 0)

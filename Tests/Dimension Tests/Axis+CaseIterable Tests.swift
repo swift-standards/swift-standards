@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Axis+CaseIterable - Enumerable Conformance
 
-@Suite("Axis+CaseIterable - Enumerable")
-struct AxisCaseIterable_EnumerableTests {
+@Suite
+struct `Axis+CaseIterable - Enumerable` {
     @Test
     func `caseCount equals dimension`() {
         #expect(Axis<1>.caseCount == 1)
@@ -38,8 +38,8 @@ struct AxisCaseIterable_EnumerableTests {
 
 // MARK: - Axis+CaseIterable - AllCases
 
-@Suite("Axis+CaseIterable - AllCases")
-struct AxisCaseIterable_AllCasesTests {
+@Suite
+struct `Axis+CaseIterable - AllCases` {
     @Test
     func `allCases for 1D has 1 element`() {
         let allCases = Array(Axis<1>.allCases)
@@ -85,8 +85,8 @@ struct AxisCaseIterable_AllCasesTests {
 
 // MARK: - Axis+CaseIterable - Iteration
 
-@Suite("Axis+CaseIterable - Iteration")
-struct AxisCaseIterable_IterationTests {
+@Suite
+struct `Axis+CaseIterable - Iteration` {
     @Test
     func `for-in loop over allCases`() {
         var rawValues: [Int] = []

@@ -8,8 +8,8 @@ import Testing
 @testable import Algebra
 @testable import Algebra_Linear
 
-@Suite("Affine.Transform Tests")
-struct AffineTransformTests {
+@Suite
+struct `Affine.Transform Tests` {
     typealias Transform = Affine<Double, Void>.Transform
     typealias Point2 = Affine<Double, Void>.Point<2>
     typealias Vec2 = Linear<Double, Void>.Vector<2>
@@ -20,10 +20,10 @@ struct AffineTransformTests {
 
     // MARK: - Identity Tests
 
-    @Suite("Identity")
-    struct IdentityTests {
-        @Test("Identity transform has correct values")
-        func identityValues() {
+    @Suite
+    struct `Identity` {
+        @Test
+        func `Identity transform has correct values`() {
             let id = Transform.identity
             #expect(id.a == 1)
             #expect(id.b == 0)
@@ -33,7 +33,7 @@ struct AffineTransformTests {
             #expect(id.ty.value == 0)
         }
 
-        @Test("Identity preserves points", arguments: [
+        @Test(arguments: [
             Point2(x: 0, y: 0),
             Point2(x: 3, y: 4),
             Point2(x: -5, y: 7),
@@ -46,8 +46,8 @@ struct AffineTransformTests {
             #expect(transformed.y.value == p.y.value)
         }
 
-        @Test("Identity preserves points instance method")
-        func identityPreservesPointsInstance() {
+        @Test
+        func `Identity preserves points instance method`() {
             let id = Transform.identity
             let p = Point2(x: 3, y: 4)
             let transformed = id.apply(to: p)
@@ -58,10 +58,10 @@ struct AffineTransformTests {
 
     // MARK: - Translation Tests
 
-    @Suite("Translation")
-    struct TranslationTests {
-        @Test("Translation from dx/dy")
-        func translationFromComponents() {
+    @Suite
+    struct `Translation` {
+        @Test
+        func `Translation from dx/dy`() {
             let t = Transform.translation(dx: 10, dy: 20)
             let p = Point2(x: 1, y: 2)
             let result = Transform.apply(t, to: p)
@@ -69,8 +69,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 22)
         }
 
-        @Test("Translation from vector")
-        func translationFromVector() {
+        @Test
+        func `Translation from vector`() {
             let v = Vec2(dx: 10, dy: 20)
             let t = Transform.translation(v)
             let p = Point2(x: 1, y: 2)
@@ -79,8 +79,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 22)
         }
 
-        @Test("Translation from Translation value")
-        func translationFromTranslation() {
+        @Test
+        func `Translation from Translation value`() {
             let translation = Translation(dx: 10, dy: 20)
             let t = Transform.translation(translation)
             let p = Point2(x: 1, y: 2)
@@ -89,8 +89,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 22)
         }
 
-        @Test("Translation has identity linear part")
-        func translationLinearPart() {
+        @Test
+        func `Translation has identity linear part`() {
             let t = Transform.translation(dx: 10, dy: 20)
             #expect(t.linear == Matrix2x2.identity)
         }
@@ -98,10 +98,10 @@ struct AffineTransformTests {
 
     // MARK: - Scaling Tests
 
-    @Suite("Scaling")
-    struct ScalingTests {
-        @Test("Uniform scaling")
-        func uniformScaling() {
+    @Suite
+    struct `Scaling` {
+        @Test
+        func `Uniform scaling`() {
             let t = Transform.scale(2)
             let p = Point2(x: 3, y: 4)
             let result = Transform.apply(t, to: p)
@@ -109,8 +109,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 8)
         }
 
-        @Test("Non-uniform scaling")
-        func nonUniformScaling() {
+        @Test
+        func `Non-uniform scaling`() {
             let t = Transform.scale(x: 2, y: 3)
             let p = Point2(x: 3, y: 4)
             let result = Transform.apply(t, to: p)
@@ -118,8 +118,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 12)
         }
 
-        @Test("Scaling by zero collapses point")
-        func scalingByZero() {
+        @Test
+        func `Scaling by zero collapses point`() {
             let t = Transform.scale(0)
             let p = Point2(x: 3, y: 4)
             let result = Transform.apply(t, to: p)
@@ -127,8 +127,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 0)
         }
 
-        @Test("Negative scaling inverts coordinates")
-        func negativeScaling() {
+        @Test
+        func `Negative scaling inverts coordinates`() {
             let t = Transform.scale(-1)
             let p = Point2(x: 3, y: 4)
             let result = Transform.apply(t, to: p)
@@ -139,10 +139,10 @@ struct AffineTransformTests {
 
     // MARK: - Rotation Tests
 
-    @Suite("Rotation")
-    struct RotationTests {
-        @Test("Rotation by 90 degrees (radians)")
-        func rotation90Radians() {
+    @Suite
+    struct `Rotation` {
+        @Test
+        func `Rotation by 90 degrees (radians)`() {
             let t = Transform.rotation(Degree(90))
             let p = Point2(x: 1, y: 0)
             let result = Transform.apply(t, to: p)
@@ -150,8 +150,8 @@ struct AffineTransformTests {
             #expect(abs(result.y.value - 1) < 1e-10)
         }
 
-        @Test("Rotation by 180 degrees")
-        func rotation180() {
+        @Test
+        func `Rotation by 180 degrees`() {
             let t = Transform.rotation(Degree(180))
             let p = Point2(x: 1, y: 0)
             let result = Transform.apply(t, to: p)
@@ -159,8 +159,8 @@ struct AffineTransformTests {
             #expect(abs(result.y.value) < 1e-10)
         }
 
-        @Test("Rotation by 270 degrees")
-        func rotation270() {
+        @Test
+        func `Rotation by 270 degrees`() {
             let t = Transform.rotation(Degree(270))
             let p = Point2(x: 1, y: 0)
             let result = Transform.apply(t, to: p)
@@ -168,8 +168,8 @@ struct AffineTransformTests {
             #expect(abs(result.y.value - (-1)) < 1e-10)
         }
 
-        @Test("Rotation by degrees")
-        func rotationDegrees() {
+        @Test
+        func `Rotation by degrees`() {
             let t = Transform.rotation(Degree(90))
             let p = Point2(x: 1, y: 0)
             let result = Transform.apply(t, to: p)
@@ -177,7 +177,7 @@ struct AffineTransformTests {
             #expect(abs(result.y.value - 1) < 1e-10)
         }
 
-        @Test("Rotation preserves distance from origin", arguments: [
+        @Test(arguments: [
             (Point2(x: 3, y: 4), 45.0),
             (Point2(x: 1, y: 1), 90.0),
             (Point2(x: 5, y: 0), 180.0)
@@ -193,10 +193,10 @@ struct AffineTransformTests {
 
     // MARK: - Shear Tests
 
-    @Suite("Shear")
-    struct ShearTests {
-        @Test("Horizontal shear")
-        func horizontalShear() {
+    @Suite
+    struct `Shear` {
+        @Test
+        func `Horizontal shear`() {
             let t = Transform.shear(x: 1, y: 0)
             let p = Point2(x: 0, y: 1)
             let result = Transform.apply(t, to: p)
@@ -204,8 +204,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 1)
         }
 
-        @Test("Vertical shear")
-        func verticalShear() {
+        @Test
+        func `Vertical shear`() {
             let t = Transform.shear(x: 0, y: 1)
             let p = Point2(x: 1, y: 0)
             let result = Transform.apply(t, to: p)
@@ -216,10 +216,10 @@ struct AffineTransformTests {
 
     // MARK: - Composition Tests
 
-    @Suite("Composition")
-    struct CompositionTests {
-        @Test("Concatenation order (scale then translate)")
-        func concatenationOrder() {
+    @Suite
+    struct `Composition` {
+        @Test
+        func `Concatenation order (scale then translate)`() {
             let scale = Transform.scale(2)
             let translate = Transform.translation(dx: 10, dy: 0)
             let combined = Transform.concatenating(translate, scale)
@@ -231,8 +231,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 0)
         }
 
-        @Test("Concatenation instance method")
-        func concatenationInstance() {
+        @Test
+        func `Concatenation instance method`() {
             let scale = Transform.scale(2)
             let translate = Transform.translation(dx: 10, dy: 0)
             let combined = translate.concatenating(scale)
@@ -243,8 +243,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 0)
         }
 
-        @Test("Compose multiple transforms")
-        func composeMultiple() {
+        @Test
+        func `Compose multiple transforms`() {
             let composed = Transform.composed(
                 .translation(dx: 1, dy: 0),
                 .scale(2),
@@ -256,8 +256,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 2)
         }
 
-        @Test("Compose from array")
-        func composeArray() {
+        @Test
+        func `Compose from array`() {
             let transforms = [
                 Transform.translation(dx: 1, dy: 0),
                 Transform.scale(2),
@@ -270,8 +270,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 2)
         }
 
-        @Test("Identity is neutral for composition")
-        func identityNeutral() {
+        @Test
+        func `Identity is neutral for composition`() {
             let t = Transform.translation(dx: 5, dy: 10)
             let composed1 = Transform.concatenating(t, .identity)
             let composed2 = Transform.concatenating(.identity, t)
@@ -289,10 +289,10 @@ struct AffineTransformTests {
 
     // MARK: - Fluent Modifier Tests
 
-    @Suite("Fluent Modifiers")
-    struct FluentModifierTests {
-        @Test("Fluent translation by dx/dy")
-        func fluentTranslation() {
+    @Suite
+    struct `Fluent Modifiers` {
+        @Test
+        func `Fluent translation by dx/dy`() {
             let t = Transform.identity.translated(dx: 10, dy: 20)
             let p = Point2(x: 1, y: 2)
             let result = Transform.apply(t, to: p)
@@ -300,8 +300,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 22)
         }
 
-        @Test("Fluent translation by vector")
-        func fluentTranslationVector() {
+        @Test
+        func `Fluent translation by vector`() {
             let v = Vec2(dx: 10, dy: 20)
             let t = Transform.identity.translated(by: v)
             let p = Point2(x: 1, y: 2)
@@ -310,8 +310,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 22)
         }
 
-        @Test("Fluent translation by Translation")
-        func fluentTranslationTranslation() {
+        @Test
+        func `Fluent translation by Translation`() {
             let translation = Translation(dx: 10, dy: 20)
             let t = Transform.identity.translated(by: translation)
             let p = Point2(x: 1, y: 2)
@@ -320,8 +320,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 22)
         }
 
-        @Test("Fluent uniform scaling")
-        func fluentScaling() {
+        @Test
+        func `Fluent uniform scaling`() {
             let t = Transform.identity.scaled(by: 2)
             let p = Point2(x: 3, y: 4)
             let result = Transform.apply(t, to: p)
@@ -329,8 +329,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 8)
         }
 
-        @Test("Fluent non-uniform scaling")
-        func fluentScalingNonUniform() {
+        @Test
+        func `Fluent non-uniform scaling`() {
             let t = Transform.identity.scaled(x: 2, y: 3)
             let p = Point2(x: 3, y: 4)
             let result = Transform.apply(t, to: p)
@@ -338,8 +338,8 @@ struct AffineTransformTests {
             #expect(result.y.value == 12)
         }
 
-        @Test("Fluent rotation (radians)")
-        func fluentRotation() {
+        @Test
+        func `Fluent rotation (radians)`() {
             let t = Transform.identity.rotated(by: Degree(90))
             let p = Point2(x: 1, y: 0)
             let result = Transform.apply(t, to: p)
@@ -347,8 +347,8 @@ struct AffineTransformTests {
             #expect(abs(result.y.value - 1) < 1e-10)
         }
 
-        @Test("Fluent rotation (degrees)")
-        func fluentRotationDegrees() {
+        @Test
+        func `Fluent rotation (degrees)`() {
             let t = Transform.identity.rotated(by: Degree(90))
             let p = Point2(x: 1, y: 0)
             let result = Transform.apply(t, to: p)
@@ -356,8 +356,8 @@ struct AffineTransformTests {
             #expect(abs(result.y.value - 1) < 1e-10)
         }
 
-        @Test("Chained fluent modifiers")
-        func chainedFluent() {
+        @Test
+        func `Chained fluent modifiers`() {
             // Composition: scale ∘ rotate ∘ translate
             // Execution order (right-to-left): translate → rotate → scale
             let t = Transform.identity
@@ -374,8 +374,8 @@ struct AffineTransformTests {
             #expect(abs(result.y.value - 22) < 1e-10)
         }
 
-        @Test("Static fluent methods")
-        func staticFluentMethods() {
+        @Test
+        func `Static fluent methods`() {
             // Composition: scale ∘ translate
             // Execution order (right-to-left): translate → scale
             let base = Transform.scale(2)
@@ -390,40 +390,40 @@ struct AffineTransformTests {
 
     // MARK: - Inversion Tests
 
-    @Suite("Inversion")
-    struct InversionTests {
-        @Test("Determinant of identity")
-        func determinantIdentity() {
+    @Suite
+    struct `Inversion` {
+        @Test
+        func `Determinant of identity`() {
             let t = Transform.identity
             #expect(t.determinant == 1)
         }
 
-        @Test("Determinant of scaling")
-        func determinantScaling() {
+        @Test
+        func `Determinant of scaling`() {
             let t = Transform.scale(x: 2, y: 3)
             #expect(t.determinant == 6)
         }
 
-        @Test("Determinant of rotation is 1")
-        func determinantRotation() {
+        @Test
+        func `Determinant of rotation is 1`() {
             let t = Transform.rotation(Degree(45))
             #expect(abs(t.determinant - 1) < 1e-10)
         }
 
-        @Test("Identity is invertible")
-        func identityInvertible() {
+        @Test
+        func `Identity is invertible`() {
             let t = Transform.identity
             #expect(t.isInvertible)
         }
 
-        @Test("Singular transform is not invertible")
-        func singularNotInvertible() {
+        @Test
+        func `Singular transform is not invertible`() {
             let singular = Transform(a: 1.0, b: 2.0, c: 2.0, d: 4.0, tx: 0.0, ty: 0.0)
             #expect(!singular.isInvertible)
         }
 
-        @Test("Invert translation")
-        func invertTranslation() {
+        @Test
+        func `Invert translation`() {
             let t = Transform.translation(dx: 10, dy: 20)
             guard let inv = Transform.inverted(t) else {
                 #expect(Bool(false), "Transform should be invertible")
@@ -438,8 +438,8 @@ struct AffineTransformTests {
             #expect(abs(restored.y.value - p.y.value) < 1e-10)
         }
 
-        @Test("Invert scaling")
-        func invertScaling() {
+        @Test
+        func `Invert scaling`() {
             let t = Transform.scale(2)
             guard let inv = Transform.inverted(t) else {
                 #expect(Bool(false), "Transform should be invertible")
@@ -454,8 +454,8 @@ struct AffineTransformTests {
             #expect(abs(restored.y.value - p.y.value) < 1e-10)
         }
 
-        @Test("Invert rotation")
-        func invertRotation() {
+        @Test
+        func `Invert rotation`() {
             let t = Transform.rotation(Degree(45))
             guard let inv = Transform.inverted(t) else {
                 #expect(Bool(false), "Transform should be invertible")
@@ -470,8 +470,8 @@ struct AffineTransformTests {
             #expect(abs(restored.y.value - p.y.value) < 1e-10)
         }
 
-        @Test("Invert complex transform")
-        func invertComplex() {
+        @Test
+        func `Invert complex transform`() {
             let t = Transform.identity
                 .scaled(by: 2)
                 .rotated(by: Degree(45))
@@ -490,8 +490,8 @@ struct AffineTransformTests {
             #expect(abs(restored.y.value - p.y.value) < 1e-10)
         }
 
-        @Test("Inverse instance method")
-        func inverseInstance() {
+        @Test
+        func `Inverse instance method`() {
             let t = Transform.translation(dx: 10, dy: 20).scaled(by: 2)
             guard let inv = t.inverted else {
                 #expect(Bool(false), "Transform should be invertible")
@@ -506,8 +506,8 @@ struct AffineTransformTests {
             #expect(abs(restored.y.value - p.y.value) < 1e-10)
         }
 
-        @Test("Singular transform has no inverse")
-        func singularNoInverse() {
+        @Test
+        func `Singular transform has no inverse`() {
             let singular = Transform(a: 1.0, b: 2.0, c: 2.0, d: 4.0, tx: 0.0, ty: 0.0)
             #expect(Transform.inverted(singular) == nil)
             #expect(singular.inverted == nil)
@@ -516,10 +516,10 @@ struct AffineTransformTests {
 
     // MARK: - Vector Transform Tests
 
-    @Suite("Vector Transform")
-    struct VectorTransformTests {
-        @Test("Vector transform ignores translation")
-        func vectorIgnoresTranslation() {
+    @Suite
+    struct `Vector Transform` {
+        @Test
+        func `Vector transform ignores translation`() {
             let t = Transform.translation(dx: 100, dy: 200).scaled(by: 2)
             let v = Vec2(dx: 3, dy: 4)
             let result = Transform.apply(t, to: v)
@@ -528,8 +528,8 @@ struct AffineTransformTests {
             #expect(result.dy.value == 8)
         }
 
-        @Test("Vector transform instance method")
-        func vectorInstance() {
+        @Test
+        func `Vector transform instance method`() {
             let t = Transform.translation(dx: 100, dy: 200).scaled(by: 2)
             let v = Vec2(dx: 3, dy: 4)
             let result = t.apply(to: v)
@@ -537,16 +537,16 @@ struct AffineTransformTests {
             #expect(result.dy.value == 8)
         }
 
-        @Test("Identity preserves vectors")
-        func identityPreservesVectors() {
+        @Test
+        func `Identity preserves vectors`() {
             let v = Vec2(dx: 3, dy: 4)
             let result = Transform.apply(.identity, to: v)
             #expect(result.dx.value == 3)
             #expect(result.dy.value == 4)
         }
 
-        @Test("Rotation transforms vectors")
-        func rotationTransformsVectors() {
+        @Test
+        func `Rotation transforms vectors`() {
             let t = Transform.rotation(Degree(90))
             let v = Vec2(dx: 1, dy: 0)
             let result = Transform.apply(t, to: v)
@@ -557,10 +557,10 @@ struct AffineTransformTests {
 
     // MARK: - Construction Tests
 
-    @Suite("Construction")
-    struct ConstructionTests {
-        @Test("Construction from raw components")
-        func rawComponents() {
+    @Suite
+    struct `Construction` {
+        @Test
+        func `Construction from raw components`() {
             let t = Transform(a: 1, b: 2, c: 3, d: 4, tx: 5, ty: 6)
             #expect(t.a == 1)
             #expect(t.b == 2)
@@ -570,8 +570,8 @@ struct AffineTransformTests {
             #expect(t.ty.value == 6)
         }
 
-        @Test("Construction from linear and translation")
-        func linearAndTranslation() {
+        @Test
+        func `Construction from linear and translation`() {
             let linear = Matrix2x2(a: 1, b: 2, c: 3, d: 4)
             let translation = Affine<Double, Void>.Translation(dx: 5.0, dy: 6.0)
             let t = Transform(linear: linear, translation: translation)
@@ -583,8 +583,8 @@ struct AffineTransformTests {
             #expect(t.ty.value == 6)
         }
 
-        @Test("Construction from linear only")
-        func linearOnly() {
+        @Test
+        func `Construction from linear only`() {
             let linear = Matrix2x2(a: 1, b: 2, c: 3, d: 4)
             let t = Transform(linear: linear)
             #expect(t.a == 1)
@@ -595,8 +595,8 @@ struct AffineTransformTests {
             #expect(t.ty.value == 0)
         }
 
-        @Test("Construction from translation only")
-        func translationOnly() {
+        @Test
+        func `Construction from translation only`() {
             let translation = Affine<Double, Void>.Translation(dx: 5.0, dy: 6.0)
             let t = Transform(translation: translation)
             #expect(t.a == 1)
@@ -610,10 +610,10 @@ struct AffineTransformTests {
 
     // MARK: - Equatable Tests
 
-    @Suite("Equatable")
-    struct EquatableTests {
-        @Test("Transform equality")
-        func equality() {
+    @Suite
+    struct `Equatable` {
+        @Test
+        func `Transform equality`() {
             let a = Transform.translation(dx: 1, dy: 2)
             let b = Transform.translation(dx: 1, dy: 2)
             let c = Transform.translation(dx: 1, dy: 3)
@@ -621,13 +621,13 @@ struct AffineTransformTests {
             #expect(a != c)
         }
 
-        @Test("Identity equals identity")
-        func identityEquality() {
+        @Test
+        func `Identity equals identity`() {
             #expect(Transform.identity == Transform.identity)
         }
 
-        @Test("Different transforms are not equal")
-        func differentNotEqual() {
+        @Test
+        func `Different transforms are not equal`() {
             let scale = Transform.scale(2)
             let rotate = Transform.rotation(Degree(45))
             #expect(scale != rotate)

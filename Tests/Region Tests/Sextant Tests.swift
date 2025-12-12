@@ -5,8 +5,8 @@ import Testing
 
 @testable import Region
 
-@Suite("Sextant - Rotation")
-struct SextantRotationTests {
+@Suite
+struct `Sextant - Rotation` {
     @Test(arguments: Region.Sextant.allCases)
     func `next is cyclic`(sextant: Region.Sextant) {
         var current = sextant
@@ -70,8 +70,8 @@ struct SextantRotationTests {
     }
 }
 
-@Suite("Sextant - Quadrant")
-struct SextantQuadrantTests {
+@Suite
+struct `Sextant - Quadrant` {
     @Test(arguments: Region.Sextant.allCases)
     func `quadrant property matches static function`(sextant: Region.Sextant) {
         let property = sextant.quadrant
@@ -97,8 +97,8 @@ struct SextantQuadrantTests {
     }
 }
 
-@Suite("Sextant - Half-Plane Properties")
-struct SextantHalfPlaneTests {
+@Suite
+struct `Sextant - Half-Plane Properties` {
     @Test(arguments: Region.Sextant.allCases)
     func `isUpperHalf property matches static function`(sextant: Region.Sextant) {
         let property = sextant.isUpperHalf

@@ -2,38 +2,38 @@ import Testing
 
 @testable import StandardLibraryExtensions
 
-@Suite("Dictionary.Builder Tests")
-struct DictionaryBuilderTests {
+@Suite
+struct `Dictionary.Builder Tests` {
 
-    @Suite("Expression Building")
-    struct ExpressionBuildingTests {
+    @Suite
+    struct `Expression Building` {
 
-        @Test("Tuple expression")
-        func tupleExpression() {
+        @Test
+        func `Tuple expression`() {
             let dict: [String: Int] = Dictionary {
                 ("key", 42)
             }
             #expect(dict == ["key": 42])
         }
 
-        @Test("Dictionary expression")
-        func dictionaryExpression() {
+        @Test
+        func `Dictionary expression`() {
             let dict: [String: Int] = Dictionary {
                 ["a": 1, "b": 2]
             }
             #expect(dict == ["a": 1, "b": 2])
         }
 
-        @Test("Array of tuples expression")
-        func arrayOfTuplesExpression() {
+        @Test
+        func `Array of tuples expression`() {
             let dict: [String: Int] = Dictionary {
                 [("a", 1), ("b", 2), ("c", 3)]
             }
             #expect(dict == ["a": 1, "b": 2, "c": 3])
         }
 
-        @Test("Optional tuple expression - some")
-        func optionalTupleExpressionSome() {
+        @Test
+        func `Optional tuple expression - some`() {
             let pair: (String, Int)? = ("key", 42)
             let dict: [String: Int] = Dictionary {
                 pair
@@ -41,8 +41,8 @@ struct DictionaryBuilderTests {
             #expect(dict == ["key": 42])
         }
 
-        @Test("Optional tuple expression - none")
-        func optionalTupleExpressionNone() {
+        @Test
+        func `Optional tuple expression - none`() {
             let pair: (String, Int)? = nil
             let dict: [String: Int] = Dictionary {
                 pair
@@ -51,19 +51,19 @@ struct DictionaryBuilderTests {
         }
     }
 
-    @Suite("Basic Construction")
-    struct BasicConstructionTests {
+    @Suite
+    struct `Basic Construction` {
 
-        @Test("Basic tuple construction")
-        func basicTupleConstruction() {
+        @Test
+        func `Basic tuple construction`() {
             let dict: [String: String] = Dictionary {
                 ("key", "value")
             }
             #expect(dict == ["key": "value"])
         }
 
-        @Test("Multiple tuples")
-        func multipleTuples() {
+        @Test
+        func `Multiple tuples`() {
             let dict: [String: Int] = Dictionary {
                 ("a", 1)
                 ("b", 2)
@@ -71,16 +71,16 @@ struct DictionaryBuilderTests {
             #expect(dict == ["a": 1, "b": 2])
         }
 
-        @Test("Dictionary literal construction")
-        func dictionaryLiteralConstruction() {
+        @Test
+        func `Dictionary literal construction`() {
             let dict: [String: String] = Dictionary {
                 ["host": "localhost"]
             }
             #expect(dict == ["host": "localhost"])
         }
 
-        @Test("Dictionary merging")
-        func dictionaryMerging() {
+        @Test
+        func `Dictionary merging`() {
             let existing = ["a": 1, "b": 2]
             let dict: [String: Int] = Dictionary {
                 existing
@@ -89,19 +89,19 @@ struct DictionaryBuilderTests {
             #expect(dict == ["a": 1, "b": 2, "c": 3])
         }
 
-        @Test("Empty dictionary")
-        func emptyDictionary() {
+        @Test
+        func `Empty dictionary`() {
             let dict: [String: Int] = Dictionary {
             }
             #expect(dict == [:])
         }
     }
 
-    @Suite("Control Flow")
-    struct ControlFlowTests {
+    @Suite
+    struct `Control Flow` {
 
-        @Test("Conditional elements - included")
-        func conditionalElementsIncluded() {
+        @Test
+        func `Conditional elements - included`() {
             let includePort = true
             let dict: [String: String] = Dictionary {
                 ("host", "localhost")
@@ -112,8 +112,8 @@ struct DictionaryBuilderTests {
             #expect(dict == ["host": "localhost", "port": "8080"])
         }
 
-        @Test("Conditional elements - excluded")
-        func conditionalElementsExcluded() {
+        @Test
+        func `Conditional elements - excluded`() {
             let includePort = false
             let dict: [String: String] = Dictionary {
                 ("host", "localhost")
@@ -124,8 +124,8 @@ struct DictionaryBuilderTests {
             #expect(dict == ["host": "localhost"])
         }
 
-        @Test("If-else first branch")
-        func ifElseFirstBranch() {
+        @Test
+        func `If-else first branch`() {
             let useProduction = true
             let dict: [String: String] = Dictionary {
                 if useProduction {
@@ -137,8 +137,8 @@ struct DictionaryBuilderTests {
             #expect(dict == ["env": "production"])
         }
 
-        @Test("If-else second branch")
-        func ifElseSecondBranch() {
+        @Test
+        func `If-else second branch`() {
             let useProduction = false
             let dict: [String: String] = Dictionary {
                 if useProduction {
@@ -150,8 +150,8 @@ struct DictionaryBuilderTests {
             #expect(dict == ["env": "development"])
         }
 
-        @Test("For loop")
-        func forLoop() {
+        @Test
+        func `For loop`() {
             let dict: [String: Int] = Dictionary {
                 for i in 1...3 {
                     ("key\(i)", i)
@@ -161,11 +161,11 @@ struct DictionaryBuilderTests {
         }
     }
 
-    @Suite("Key Override Behavior")
-    struct KeyOverrideBehaviorTests {
+    @Suite
+    struct `Key Override Behavior` {
 
-        @Test("Later values override earlier")
-        func laterValuesOverride() {
+        @Test
+        func `Later values override earlier`() {
             let dict: [String: String] = Dictionary {
                 ("key", "first")
                 ("key", "second")
@@ -173,8 +173,8 @@ struct DictionaryBuilderTests {
             #expect(dict == ["key": "second"])
         }
 
-        @Test("Merged dictionaries override")
-        func mergedDictionariesOverride() {
+        @Test
+        func `Merged dictionaries override`() {
             let dict: [String: Int] = Dictionary {
                 ["a": 1, "b": 2]
                 ["b": 20, "c": 3]
@@ -183,11 +183,11 @@ struct DictionaryBuilderTests {
         }
     }
 
-    @Suite("Limited Availability")
-    struct LimitedAvailabilityTests {
+    @Suite
+    struct `Limited Availability` {
 
-        @Test("Limited availability passthrough")
-        func limitedAvailabilityPassthrough() {
+        @Test
+        func `Limited availability passthrough`() {
             let dict: [String: String] = Dictionary {
                 ("always", "present")
                 if #available(macOS 26, iOS 26, *) {
@@ -199,55 +199,55 @@ struct DictionaryBuilderTests {
         }
     }
 
-    @Suite("Static Method Tests")
-    struct StaticMethodTests {
+    @Suite
+    struct `Static Method Tests` {
 
-        @Test("buildExpression tuple")
-        func buildExpressionTuple() {
+        @Test
+        func `buildExpression tuple`() {
             let result = [String: Int].Builder.buildExpression(("key", 42))
             #expect(result == ["key": 42])
         }
 
-        @Test("buildExpression dictionary")
-        func buildExpressionDictionary() {
+        @Test
+        func `buildExpression dictionary`() {
             let result = [String: Int].Builder.buildExpression(["a": 1, "b": 2])
             #expect(result == ["a": 1, "b": 2])
         }
 
-        @Test("buildExpression array of tuples")
-        func buildExpressionArrayOfTuples() {
+        @Test
+        func `buildExpression array of tuples`() {
             let result = [String: Int].Builder.buildExpression([("a", 1), ("b", 2)])
             #expect(result == ["a": 1, "b": 2])
         }
 
-        @Test("buildExpression optional tuple some")
-        func buildExpressionOptionalTupleSome() {
+        @Test
+        func `buildExpression optional tuple some`() {
             let pair: (String, Int)? = ("key", 42)
             let result = [String: Int].Builder.buildExpression(pair)
             #expect(result == ["key": 42])
         }
 
-        @Test("buildExpression optional tuple none")
-        func buildExpressionOptionalTupleNone() {
+        @Test
+        func `buildExpression optional tuple none`() {
             let pair: (String, Int)? = nil
             let result = [String: Int].Builder.buildExpression(pair)
             #expect(result == [:])
         }
 
-        @Test("buildPartialBlock first")
-        func buildPartialBlockFirst() {
+        @Test
+        func `buildPartialBlock first`() {
             let result = [String: Int].Builder.buildPartialBlock(first: ["a": 1])
             #expect(result == ["a": 1])
         }
 
-        @Test("buildPartialBlock first void")
-        func buildPartialBlockFirstVoid() {
+        @Test
+        func `buildPartialBlock first void`() {
             let result = [String: Int].Builder.buildPartialBlock(first: ())
             #expect(result == [:])
         }
 
-        @Test("buildPartialBlock accumulated")
-        func buildPartialBlockAccumulated() {
+        @Test
+        func `buildPartialBlock accumulated`() {
             let result = [String: Int].Builder.buildPartialBlock(
                 accumulated: ["a": 1],
                 next: ["b": 2]
@@ -255,32 +255,32 @@ struct DictionaryBuilderTests {
             #expect(result == ["a": 1, "b": 2])
         }
 
-        @Test("buildOptional some")
-        func buildOptionalSome() {
+        @Test
+        func `buildOptional some`() {
             let result = [String: Int].Builder.buildOptional(["a": 1])
             #expect(result == ["a": 1])
         }
 
-        @Test("buildOptional none")
-        func buildOptionalNone() {
+        @Test
+        func `buildOptional none`() {
             let result = [String: Int].Builder.buildOptional(nil)
             #expect(result == [:])
         }
 
-        @Test("buildEither first")
-        func buildEitherFirst() {
+        @Test
+        func `buildEither first`() {
             let result = [String: Int].Builder.buildEither(first: ["a": 1])
             #expect(result == ["a": 1])
         }
 
-        @Test("buildEither second")
-        func buildEitherSecond() {
+        @Test
+        func `buildEither second`() {
             let result = [String: Int].Builder.buildEither(second: ["b": 2])
             #expect(result == ["b": 2])
         }
 
-        @Test("buildArray")
-        func buildArray() {
+        @Test
+        func `buildArray`() {
             let result = [String: Int].Builder.buildArray([
                 ["a": 1],
                 ["b": 2],
@@ -289,18 +289,18 @@ struct DictionaryBuilderTests {
             #expect(result == ["a": 1, "b": 2, "c": 3])
         }
 
-        @Test("buildLimitedAvailability")
-        func buildLimitedAvailability() {
+        @Test
+        func `buildLimitedAvailability`() {
             let result = [String: Int].Builder.buildLimitedAvailability(["a": 1])
             #expect(result == ["a": 1])
         }
     }
 
-    @Suite("Edge Cases")
-    struct EdgeCasesTests {
+    @Suite
+    struct `Edge Cases` {
 
-        @Test("Large dictionary construction")
-        func largeDictionaryConstruction() {
+        @Test
+        func `Large dictionary construction`() {
             let dict: [String: Int] = Dictionary {
                 for i in 1...100 {
                     ("key\(i)", i)
@@ -311,8 +311,8 @@ struct DictionaryBuilderTests {
             #expect(dict["key100"] == 100)
         }
 
-        @Test("Mixed types as values")
-        func mixedTypesAsValues() {
+        @Test
+        func `Mixed types as values`() {
             let dict: [String: Any] = Dictionary {
                 ("string", "value" as Any)
                 ("int", 42 as Any)
@@ -321,8 +321,8 @@ struct DictionaryBuilderTests {
             #expect(dict.count == 3)
         }
 
-        @Test("Nested conditionals")
-        func nestedConditionals() {
+        @Test
+        func `Nested conditionals`() {
             let a = true
             let b = false
 

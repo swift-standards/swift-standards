@@ -2,30 +2,30 @@ import Testing
 
 @testable import StandardLibraryExtensions
 
-@Suite("Array.Builder Tests")
-struct ArrayBuilderTests {
+@Suite
+struct `Array.Builder Tests` {
 
-    @Suite("Expression Building")
-    struct ExpressionBuildingTests {
+    @Suite
+    struct `Expression Building` {
 
-        @Test("Single element expression")
-        func singleElementExpression() {
+        @Test
+        func `Single element expression`() {
             let array: [Int] = Array {
                 42
             }
             #expect(array == [42])
         }
 
-        @Test("Array expression")
-        func arrayExpression() {
+        @Test
+        func `Array expression`() {
             let array: [Int] = Array {
                 [1, 2, 3]
             }
             #expect(array == [1, 2, 3])
         }
 
-        @Test("Mixed expressions")
-        func mixedExpressions() {
+        @Test
+        func `Mixed expressions`() {
             let array: [Int] = Array {
                 1
                 [2, 3]
@@ -34,8 +34,8 @@ struct ArrayBuilderTests {
             #expect(array == [1, 2, 3, 4])
         }
 
-        @Test("Optional element expression - some")
-        func optionalElementExpressionSome() {
+        @Test
+        func `Optional element expression - some`() {
             let value: Int? = 42
             let array: [Int] = Array {
                 value
@@ -43,8 +43,8 @@ struct ArrayBuilderTests {
             #expect(array == [42])
         }
 
-        @Test("Optional element expression - none")
-        func optionalElementExpressionNone() {
+        @Test
+        func `Optional element expression - none`() {
             let value: Int? = nil
             let array: [Int] = Array {
                 value
@@ -53,26 +53,26 @@ struct ArrayBuilderTests {
         }
     }
 
-    @Suite("Block Building")
-    struct BlockBuildingTests {
+    @Suite
+    struct `Block Building` {
 
-        @Test("Empty block")
-        func emptyBlock() {
+        @Test
+        func `Empty block`() {
             let array: [Int] = Array {
             }
             #expect(array.isEmpty)
         }
 
-        @Test("Single component block")
-        func singleComponentBlock() {
+        @Test
+        func `Single component block`() {
             let array: [String] = Array {
                 "hello"
             }
             #expect(array == ["hello"])
         }
 
-        @Test("Multiple component block")
-        func multipleComponentBlock() {
+        @Test
+        func `Multiple component block`() {
             let array: [String] = Array {
                 "hello"
                 "world"
@@ -81,8 +81,8 @@ struct ArrayBuilderTests {
             #expect(array == ["hello", "world", "test"])
         }
 
-        @Test("Nested arrays in block")
-        func nestedArraysInBlock() {
+        @Test
+        func `Nested arrays in block`() {
             let array: [Int] = Array {
                 [1, 2]
                 [3, 4]
@@ -92,11 +92,11 @@ struct ArrayBuilderTests {
         }
     }
 
-    @Suite("Control Flow")
-    struct ControlFlowTests {
+    @Suite
+    struct `Control Flow` {
 
-        @Test("Optional elements - some")
-        func optionalElementsSome() {
+        @Test
+        func `Optional elements - some`() {
             let shouldInclude = true
             let array: [String] = Array {
                 "always"
@@ -108,8 +108,8 @@ struct ArrayBuilderTests {
             #expect(array == ["always", "conditional", "end"])
         }
 
-        @Test("Optional elements - none")
-        func optionalElementsNone() {
+        @Test
+        func `Optional elements - none`() {
             let shouldInclude = false
             let array: [String] = Array {
                 "always"
@@ -121,8 +121,8 @@ struct ArrayBuilderTests {
             #expect(array == ["always", "end"])
         }
 
-        @Test("If-else first branch")
-        func ifElseFirstBranch() {
+        @Test
+        func `If-else first branch`() {
             let condition = true
             let array: [String] = Array {
                 if condition {
@@ -134,8 +134,8 @@ struct ArrayBuilderTests {
             #expect(array == ["first"])
         }
 
-        @Test("If-else second branch")
-        func ifElseSecondBranch() {
+        @Test
+        func `If-else second branch`() {
             let condition = false
             let array: [String] = Array {
                 if condition {
@@ -147,8 +147,8 @@ struct ArrayBuilderTests {
             #expect(array == ["second"])
         }
 
-        @Test("For loop")
-        func forLoop() {
+        @Test
+        func `For loop`() {
             let array: [Int] = Array {
                 for i in 1...3 {
                     i * 2
@@ -157,8 +157,8 @@ struct ArrayBuilderTests {
             #expect(array == [2, 4, 6])
         }
 
-        @Test("Complex for loop with nested arrays")
-        func complexForLoopWithNestedArrays() {
+        @Test
+        func `Complex for loop with nested arrays`() {
             let array: [Int] = Array {
                 0
                 for i in 1...2 {
@@ -170,11 +170,11 @@ struct ArrayBuilderTests {
         }
     }
 
-    @Suite("Limited Availability")
-    struct LimitedAvailabilityTests {
+    @Suite
+    struct `Limited Availability` {
 
-        @Test("Limited availability passthrough")
-        func limitedAvailabilityPassthrough() {
+        @Test
+        func `Limited availability passthrough`() {
             let array: [String] = Array {
                 "available"
                 if #available(macOS 26, iOS 26, *) {
@@ -186,11 +186,11 @@ struct ArrayBuilderTests {
         }
     }
 
-    @Suite("Type Inference")
-    struct TypeInferenceTests {
+    @Suite
+    struct `Type Inference` {
 
-        @Test("String type inference")
-        func stringTypeInference() {
+        @Test
+        func `String type inference`() {
             let array = Array {
                 "hello"
                 "world"
@@ -198,8 +198,8 @@ struct ArrayBuilderTests {
             #expect(array == ["hello", "world"])
         }
 
-        @Test("Int type inference")
-        func intTypeInference() {
+        @Test
+        func `Int type inference`() {
             let array = Array {
                 1
                 2
@@ -208,8 +208,8 @@ struct ArrayBuilderTests {
             #expect(array == [1, 2, 3])
         }
 
-        @Test("Mixed numeric types promote to common type")
-        func mixedNumericTypes() {
+        @Test
+        func `Mixed numeric types promote to common type`() {
             let array: [Double] = Array {
                 1.0
                 2.5
@@ -219,11 +219,11 @@ struct ArrayBuilderTests {
         }
     }
 
-    @Suite("Edge Cases")
-    struct EdgeCasesTests {
+    @Suite
+    struct `Edge Cases` {
 
-        @Test("Deeply nested conditionals")
-        func deeplyNestedConditionals() {
+        @Test
+        func `Deeply nested conditionals`() {
             let a = true
             let b = false
             let c = true
@@ -246,8 +246,8 @@ struct ArrayBuilderTests {
             #expect(array == ["start", "a-true", "b-false", "c-true", "end"])
         }
 
-        @Test("Empty arrays in builder")
-        func emptyArraysInBuilder() {
+        @Test
+        func `Empty arrays in builder`() {
             let array: [Int] = Array {
                 [1, 2]
                 []
@@ -257,8 +257,8 @@ struct ArrayBuilderTests {
             #expect(array == [1, 2, 3, 4])
         }
 
-        @Test("Large array construction")
-        func largeArrayConstruction() {
+        @Test
+        func `Large array construction`() {
             let array: [Int] = Array {
                 for i in 1...100 {
                     i
@@ -269,8 +269,8 @@ struct ArrayBuilderTests {
             #expect(array.last == 100)
         }
 
-        @Test("Alternating types with Optional")
-        func alternatingTypesWithOptional() {
+        @Test
+        func `Alternating types with Optional`() {
             let array: [Int?] = Array {
                 1
                 nil
@@ -282,85 +282,85 @@ struct ArrayBuilderTests {
         }
     }
 
-    @Suite("Static Method Tests")
-    struct StaticMethodTests {
+    @Suite
+    struct `Static Method Tests` {
 
-        @Test("buildExpression single element")
-        func buildExpressionSingleElement() {
+        @Test
+        func `buildExpression single element`() {
             let result = [Int].Builder.buildExpression(42)
             #expect(result == [42])
         }
 
-        @Test("buildExpression array")
-        func buildExpressionArray() {
+        @Test
+        func `buildExpression array`() {
             let result = [Int].Builder.buildExpression([1, 2, 3])
             #expect(result == [1, 2, 3])
         }
 
-        @Test("buildExpression optional some")
-        func buildExpressionOptionalSome() {
+        @Test
+        func `buildExpression optional some`() {
             let value: Int? = 42
             let result = [Int].Builder.buildExpression(value)
             #expect(result == [42])
         }
 
-        @Test("buildExpression optional none")
-        func buildExpressionOptionalNone() {
+        @Test
+        func `buildExpression optional none`() {
             let value: Int? = nil
             let result = [Int].Builder.buildExpression(value)
             #expect(result == [])
         }
 
-        @Test("buildPartialBlock first")
-        func buildPartialBlockFirst() {
+        @Test
+        func `buildPartialBlock first`() {
             let result = [Int].Builder.buildPartialBlock(first: [1, 2, 3])
             #expect(result == [1, 2, 3])
         }
 
-        @Test("buildPartialBlock first void")
-        func buildPartialBlockFirstVoid() {
+        @Test
+        func `buildPartialBlock first void`() {
             let result = [Int].Builder.buildPartialBlock(first: ())
             #expect(result == [])
         }
 
-        @Test("buildPartialBlock accumulated")
-        func buildPartialBlockAccumulated() {
+        @Test
+        func `buildPartialBlock accumulated`() {
             let result = [Int].Builder.buildPartialBlock(accumulated: [1, 2], next: [3, 4])
             #expect(result == [1, 2, 3, 4])
         }
 
-        @Test("buildOptional some")
-        func buildOptionalSome() {
+        @Test
+        func `buildOptional some`() {
             let result = [Int].Builder.buildOptional([1, 2, 3])
             #expect(result == [1, 2, 3])
         }
 
-        @Test("buildOptional none")
-        func buildOptionalNone() {
+        @Test
+        func `buildOptional none`() {
             let result = [Int].Builder.buildOptional(nil)
             #expect(result == [])
         }
 
-        @Test("buildEither first")
-        func buildEitherFirst() {
+        @Test
+        func `buildEither first`() {
             let result = [Int].Builder.buildEither(first: [1, 2])
             #expect(result == [1, 2])
         }
 
-        @Test("buildEither second")
-        func buildEitherSecond() {
+        @Test
+        func `buildEither second`() {
             let result = [Int].Builder.buildEither(second: [3, 4])
             #expect(result == [3, 4])
         }
 
-        @Test("buildArray")
-        func buildArray() {
+        @Test
+        func `buildArray`() {
             let result = [Int].Builder.buildArray([[1, 2], [3, 4], [5, 6]])
             #expect(result == [1, 2, 3, 4, 5, 6])
         }
 
-        @Test("buildLimitedAvailability")
-        func buildLimitedAvailability() {
+        @Test
+        func `buildLimitedAvailability`() {
             let result = [Int].Builder.buildLimitedAvailability([1, 2, 3])
             #expect(result == [1, 2, 3])
         }

@@ -5,8 +5,8 @@ import Testing
 
 @testable import Region
 
-@Suite("Corner - Opposite")
-struct CornerOppositeTests {
+@Suite
+struct `Corner - Opposite` {
     @Test(arguments: Region.Corner.allCases)
     func `opposite is involution`(corner: Region.Corner) {
         let opposite = Region.Corner.opposite(of: corner)
@@ -30,8 +30,8 @@ struct CornerOppositeTests {
     }
 }
 
-@Suite("Corner - Vertical Position")
-struct CornerVerticalTests {
+@Suite
+struct `Corner - Vertical Position` {
     @Test(arguments: Region.Corner.allCases)
     func `isTop property matches static function`(corner: Region.Corner) {
         let property = corner.isTop
@@ -70,8 +70,8 @@ struct CornerVerticalTests {
     }
 }
 
-@Suite("Corner - Horizontal Position")
-struct CornerHorizontalTests {
+@Suite
+struct `Corner - Horizontal Position` {
     @Test(arguments: Region.Corner.allCases)
     func `isLeft property matches static function`(corner: Region.Corner) {
         let property = corner.isLeft
@@ -110,8 +110,8 @@ struct CornerHorizontalTests {
     }
 }
 
-@Suite("Corner - Adjacent Corners")
-struct CornerAdjacentTests {
+@Suite
+struct `Corner - Adjacent Corners` {
     @Test(arguments: Region.Corner.allCases)
     func `horizontalAdjacent property matches static function`(corner: Region.Corner) {
         let property = corner.horizontalAdjacent

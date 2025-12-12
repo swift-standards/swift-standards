@@ -3,8 +3,8 @@ import Testing
 
 @testable import Algebra
 
-@Suite("Ternary - Static Functions")
-struct Ternary_StaticTests {
+@Suite
+struct `Ternary - Static Functions` {
     @Test(arguments: Ternary.allCases)
     func `negated is involution`(ternary: Ternary) {
         #expect(Ternary.negated(Ternary.negated(ternary)) == ternary)
@@ -28,8 +28,8 @@ struct Ternary_StaticTests {
     }
 }
 
-@Suite("Ternary - Properties")
-struct Ternary_PropertyTests {
+@Suite
+struct `Ternary - Properties` {
     @Test
     func `cases exist`() {
         #expect(Ternary.allCases.count == 3)

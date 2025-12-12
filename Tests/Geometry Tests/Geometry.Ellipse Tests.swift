@@ -11,10 +11,10 @@ import Testing
 
 // MARK: - Initialization Tests
 
-@Suite("Geometry.Ellipse - Initialization")
-struct GeometryEllipse_InitializationTests {
-    @Test("Ellipse initialization")
-    func ellipseInit() {
+@Suite
+struct `Geometry.Ellipse - Initialization` {
+    @Test
+    func `Ellipse initialization`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(
             center: .init(x: 10, y: 20),
             semiMajor: 8,
@@ -28,16 +28,16 @@ struct GeometryEllipse_InitializationTests {
         #expect(ellipse.rotation == .zero)
     }
 
-    @Test("Axis-aligned ellipse at origin")
-    func axisAlignedEllipse() {
+    @Test
+    func `Axis-aligned ellipse at origin`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         #expect(ellipse.center.x == 0)
         #expect(ellipse.center.y == 0)
         #expect(ellipse.rotation == .zero)
     }
 
-    @Test("Circle as special ellipse")
-    func circleAsEllipse() {
+    @Test
+    func `Circle as special ellipse`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .circle(
             center: .init(x: 5, y: 5),
             radius: 10
@@ -46,8 +46,8 @@ struct GeometryEllipse_InitializationTests {
         #expect(ellipse.semiMinor == 10)
     }
 
-    @Test("Ellipse from circle")
-    func ellipseFromCircle() {
+    @Test
+    func `Ellipse from circle`() {
         let circle: Geometry<Double, Void>.Circle = .init(
             center: .init(x: 5, y: 10),
             radius: 7
@@ -64,43 +64,43 @@ struct GeometryEllipse_InitializationTests {
 
 // MARK: - Properties Tests
 
-@Suite("Geometry.Ellipse - Properties")
-struct GeometryEllipse_PropertiesTests {
-    @Test("Major and minor axes")
-    func axes() {
+@Suite
+struct `Geometry.Ellipse - Properties` {
+    @Test
+    func `Major and minor axes`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         #expect(ellipse.majorAxis == 20)
         #expect(ellipse.minorAxis == 10)
     }
 
-    @Test("Eccentricity of circle is zero")
-    func eccentricityCircle() {
+    @Test
+    func `Eccentricity of circle is zero`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .circle(center: .zero, radius: 10)
         #expect(abs(ellipse.eccentricity) < 1e-10)
     }
 
-    @Test("Eccentricity of elongated ellipse")
-    func eccentricityElongated() {
+    @Test
+    func `Eccentricity of elongated ellipse`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 5, semiMinor: 3)
         // e = sqrt(1 - (b/a)^2) = sqrt(1 - 9/25) = sqrt(16/25) = 4/5 = 0.8
         #expect(abs(ellipse.eccentricity - 0.8) < 1e-10)
     }
 
-    @Test("Focal distance")
-    func focalDistance() {
+    @Test
+    func `Focal distance`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 5, semiMinor: 3)
         // c = sqrt(a^2 - b^2) = sqrt(25 - 9) = 4
         #expect(abs(ellipse.focalDistance.value - 4) < 1e-10)
     }
 
-    @Test("isCircle for circle")
-    func isCircleTrue() {
+    @Test
+    func `isCircle for circle`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .circle(center: .zero, radius: 5)
         #expect(ellipse.isCircle)
     }
 
-    @Test("isCircle for non-circle")
-    func isCircleFalse() {
+    @Test
+    func `isCircle for non-circle`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         #expect(!ellipse.isCircle)
     }
@@ -108,10 +108,10 @@ struct GeometryEllipse_PropertiesTests {
 
 // MARK: - Foci Tests
 
-@Suite("Geometry.Ellipse - Foci")
-struct GeometryEllipse_FociTests {
-    @Test("Foci of axis-aligned ellipse")
-    func fociAxisAligned() {
+@Suite
+struct `Geometry.Ellipse - Foci` {
+    @Test
+    func `Foci of axis-aligned ellipse`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 5, semiMinor: 3)
         let foci = ellipse.foci
         // c = sqrt(a^2 - b^2) = sqrt(25 - 9) = 4
@@ -121,8 +121,8 @@ struct GeometryEllipse_FociTests {
         #expect(abs(foci.f2.y.value) < 1e-10)
     }
 
-    @Test("Foci of circle are coincident")
-    func fociCircle() {
+    @Test
+    func `Foci of circle are coincident`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .circle(center: .zero, radius: 5)
         let foci = ellipse.foci
         #expect(abs(foci.f1.x.value) < 1e-10)
@@ -134,18 +134,18 @@ struct GeometryEllipse_FociTests {
 
 // MARK: - Static Functions Tests
 
-@Suite("Geometry.Ellipse - Static Functions")
-struct GeometryEllipse_StaticTests {
-    @Test("Geometry.area(of:) ellipse")
-    func staticArea() {
+@Suite
+struct `Geometry.Ellipse - Static Functions` {
+    @Test
+    func `Geometry.area(of:) ellipse`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 5, semiMinor: 3)
         let area = Geometry.area(of: ellipse)
         // Area = π * a * b = π * 5 * 3 = 15π
         #expect(abs(area - 15 * .pi) < 1e-10)
     }
 
-    @Test("Geometry.contains(_:point:) center")
-    func staticContainsCenter() {
+    @Test
+    func `Geometry.contains(_:point:) center`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(
             center: .init(x: 5, y: 5),
             semiMajor: 10,
@@ -154,38 +154,38 @@ struct GeometryEllipse_StaticTests {
         #expect(Geometry.contains(ellipse, point: ellipse.center))
     }
 
-    @Test("Geometry.contains(_:point:) interior point")
-    func staticContainsInterior() {
+    @Test
+    func `Geometry.contains(_:point:) interior point`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point: Geometry<Double, Void>.Point<2> = .init(x: 5, y: 2)
         #expect(Geometry.contains(ellipse, point: point))
     }
 
-    @Test("Geometry.contains(_:point:) exterior point")
-    func staticContainsExterior() {
+    @Test
+    func `Geometry.contains(_:point:) exterior point`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point: Geometry<Double, Void>.Point<2> = .init(x: 15, y: 0)
         #expect(!Geometry.contains(ellipse, point: point))
     }
 
-    @Test("Geometry.point(of:at:) at angle 0")
-    func staticPointAt0() {
+    @Test
+    func `Geometry.point(of:at:) at angle 0`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point = Geometry.point(of: ellipse, at: .zero)
         #expect(abs(point.x.value - 10) < 1e-10)
         #expect(abs(point.y.value) < 1e-10)
     }
 
-    @Test("Geometry.point(of:at:) at angle π/2")
-    func staticPointAtHalfPi() {
+    @Test
+    func `Geometry.point(of:at:) at angle π/2`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point = Geometry.point(of: ellipse, at: .halfPi)
         #expect(abs(point.x.value) < 1e-10)
         #expect(abs(point.y.value - 5) < 1e-10)
     }
 
-    @Test("Geometry.point(of:at:) at angle π")
-    func staticPointAtPi() {
+    @Test
+    func `Geometry.point(of:at:) at angle π`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point = Geometry.point(of: ellipse, at: .pi)
         #expect(abs(point.x.value - (-10)) < 1e-10)
@@ -195,16 +195,16 @@ struct GeometryEllipse_StaticTests {
 
 // MARK: - Area and Perimeter Tests
 
-@Suite("Geometry.Ellipse - Area and Perimeter")
-struct GeometryEllipse_AreaTests {
-    @Test("Area property matches static function")
-    func areaProperty() {
+@Suite
+struct `Geometry.Ellipse - Area and Perimeter` {
+    @Test
+    func `Area property matches static function`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 5, semiMinor: 3)
         #expect(abs(ellipse.area - 15 * .pi) < 1e-10)
     }
 
-    @Test("Perimeter approximation for circle")
-    func perimeterCircle() {
+    @Test
+    func `Perimeter approximation for circle`() {
         let circle: Geometry<Double, Void>.Ellipse = .circle(center: .zero, radius: 5)
         #expect(abs(circle.perimeter.value - 10 * .pi) < 0.01)
     }
@@ -212,34 +212,34 @@ struct GeometryEllipse_AreaTests {
 
 // MARK: - Point on Ellipse Tests
 
-@Suite("Geometry.Ellipse - Parametric Points")
-struct GeometryEllipse_ParametricTests {
-    @Test("Point at parameter 0")
-    func pointAt0() {
+@Suite
+struct `Geometry.Ellipse - Parametric Points` {
+    @Test
+    func `Point at parameter 0`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point = ellipse.point(at: .zero)
         #expect(abs(point.x.value - 10) < 1e-10)
         #expect(abs(point.y.value) < 1e-10)
     }
 
-    @Test("Point at parameter π/2")
-    func pointAtHalfPi() {
+    @Test
+    func `Point at parameter π/2`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point = ellipse.point(at: .halfPi)
         #expect(abs(point.x.value) < 1e-10)
         #expect(abs(point.y.value - 5) < 1e-10)
     }
 
-    @Test("Point at parameter π")
-    func pointAtPi() {
+    @Test
+    func `Point at parameter π`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point = ellipse.point(at: .pi)
         #expect(abs(point.x.value - (-10)) < 1e-10)
         #expect(abs(point.y.value) < 1e-10)
     }
 
-    @Test("Tangent at parameter")
-    func tangentAt() {
+    @Test
+    func `Tangent at parameter`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let tangent = ellipse.tangent(at: .zero)
         // Tangent at rightmost point should point upward
@@ -249,10 +249,10 @@ struct GeometryEllipse_ParametricTests {
 
 // MARK: - Containment Tests
 
-@Suite("Geometry.Ellipse - Containment")
-struct GeometryEllipse_ContainmentTests {
-    @Test("Contains center")
-    func containsCenter() {
+@Suite
+struct `Geometry.Ellipse - Containment` {
+    @Test
+    func `Contains center`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(
             center: .init(x: 5, y: 5),
             semiMajor: 10,
@@ -261,22 +261,22 @@ struct GeometryEllipse_ContainmentTests {
         #expect(ellipse.contains(ellipse.center))
     }
 
-    @Test("Contains point on boundary")
-    func containsBoundary() {
+    @Test
+    func `Contains point on boundary`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point: Geometry<Double, Void>.Point<2> = .init(x: 10, y: 0)
         #expect(ellipse.contains(point))
     }
 
-    @Test("Contains interior point")
-    func containsInterior() {
+    @Test
+    func `Contains interior point`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point: Geometry<Double, Void>.Point<2> = .init(x: 5, y: 2)
         #expect(ellipse.contains(point))
     }
 
-    @Test("Does not contain exterior point")
-    func doesNotContainExterior() {
+    @Test
+    func `Does not contain exterior point`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point: Geometry<Double, Void>.Point<2> = .init(x: 15, y: 0)
         #expect(!ellipse.contains(point))
@@ -285,10 +285,10 @@ struct GeometryEllipse_ContainmentTests {
 
 // MARK: - Bounding Box Tests
 
-@Suite("Geometry.Ellipse - Bounding Box")
-struct GeometryEllipse_BoundingBoxTests {
-    @Test("Bounding box axis-aligned")
-    func boundingBoxAxisAligned() {
+@Suite
+struct `Geometry.Ellipse - Bounding Box` {
+    @Test
+    func `Bounding box axis-aligned`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let bbox = ellipse.boundingBox
         #expect(abs(bbox.llx.value - (-10)) < 1e-10)
@@ -297,8 +297,8 @@ struct GeometryEllipse_BoundingBoxTests {
         #expect(abs(bbox.ury.value - 5) < 1e-10)
     }
 
-    @Test("Bounding box with center offset")
-    func boundingBoxOffset() {
+    @Test
+    func `Bounding box with center offset`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(
             center: .init(x: 10, y: 20),
             semiMajor: 5,
@@ -314,18 +314,18 @@ struct GeometryEllipse_BoundingBoxTests {
 
 // MARK: - Circle Conversion Tests
 
-@Suite("Geometry.Ellipse - Circle Conversion")
-struct GeometryEllipse_CircleConversionTests {
-    @Test("Circle from circular ellipse")
-    func circleFromEllipse() {
+@Suite
+struct `Geometry.Ellipse - Circle Conversion` {
+    @Test
+    func `Circle from circular ellipse`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .circle(center: .zero, radius: 5)
         let circle = Geometry<Double, Void>.Circle(ellipse)
         #expect(circle != nil)
         #expect(circle?.radius == 5)
     }
 
-    @Test("Circle from non-circular ellipse is nil")
-    func circleFromNonCircular() {
+    @Test
+    func `Circle from non-circular ellipse is nil`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let circle = Geometry<Double, Void>.Circle(ellipse)
         #expect(circle == nil)
@@ -334,10 +334,10 @@ struct GeometryEllipse_CircleConversionTests {
 
 // MARK: - Transformation Tests
 
-@Suite("Geometry.Ellipse - Transformations")
-struct GeometryEllipse_TransformationTests {
-    @Test("Translation")
-    func translation() {
+@Suite
+struct `Geometry.Ellipse - Transformations` {
+    @Test
+    func `Translation`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let translated = ellipse.translated(by: .init(dx: 5, dy: 10))
         #expect(translated.center.x == 5)
@@ -346,16 +346,16 @@ struct GeometryEllipse_TransformationTests {
         #expect(translated.semiMinor == 5)
     }
 
-    @Test("Scaling")
-    func scaling() {
+    @Test
+    func `Scaling`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let scaled = ellipse.scaled(by: 2)
         #expect(scaled.semiMajor == 20)
         #expect(scaled.semiMinor == 10)
     }
 
-    @Test("Rotation")
-    func rotation() {
+    @Test
+    func `Rotation`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let rotated = ellipse.rotated(by: .halfPi)
         #expect(abs(rotated.rotation.value - Double.pi / 2) < 1e-10)
@@ -364,10 +364,10 @@ struct GeometryEllipse_TransformationTests {
 
 // MARK: - Functorial Map Tests
 
-@Suite("Geometry.Ellipse - Functorial Map")
-struct GeometryEllipse_MapTests {
-    @Test("Ellipse map to different scalar type")
-    func ellipseMap() {
+@Suite
+struct `Geometry.Ellipse - Functorial Map` {
+    @Test
+    func `Ellipse map to different scalar type`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let mapped: Geometry<Float, Void>.Ellipse = ellipse.map { Float($0) }
         #expect(mapped.semiMajor.value == 10)

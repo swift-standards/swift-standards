@@ -2,22 +2,22 @@ import Testing
 
 @testable import StandardLibraryExtensions
 
-@Suite("Range.Builder Tests")
-struct RangeBuilderTests {
+@Suite
+struct `Range.Builder Tests` {
 
-    @Suite("Basic Construction")
-    struct BasicConstructionTests {
+    @Suite
+    struct `Basic Construction` {
 
-        @Test("Single range")
-        func singleRange() {
+        @Test
+        func `Single range`() {
             let ranges = Range.build {
                 0..<5
             }
             #expect(ranges == [0..<5])
         }
 
-        @Test("Multiple ranges")
-        func multipleRanges() {
+        @Test
+        func `Multiple ranges`() {
             let ranges = Range.build {
                 0..<5
                 10..<15
@@ -26,19 +26,19 @@ struct RangeBuilderTests {
             #expect(ranges == [0..<5, 10..<15, 20..<25])
         }
 
-        @Test("Empty block")
-        func emptyBlock() {
+        @Test
+        func `Empty block`() {
             let ranges: [Range<Int>] = Range.build {
             }
             #expect(ranges.isEmpty)
         }
     }
 
-    @Suite("Control Flow")
-    struct ControlFlowTests {
+    @Suite
+    struct `Control Flow` {
 
-        @Test("Conditional inclusion - true")
-        func conditionalInclusionTrue() {
+        @Test
+        func `Conditional inclusion - true`() {
             let include = true
             let ranges = Range.build {
                 0..<5
@@ -49,8 +49,8 @@ struct RangeBuilderTests {
             #expect(ranges == [0..<5, 10..<15])
         }
 
-        @Test("Conditional inclusion - false")
-        func conditionalInclusionFalse() {
+        @Test
+        func `Conditional inclusion - false`() {
             let include = false
             let ranges = Range.build {
                 0..<5
@@ -61,8 +61,8 @@ struct RangeBuilderTests {
             #expect(ranges == [0..<5])
         }
 
-        @Test("If-else first branch")
-        func ifElseFirstBranch() {
+        @Test
+        func `If-else first branch`() {
             let condition = true
             let ranges = Range.build {
                 if condition {
@@ -74,8 +74,8 @@ struct RangeBuilderTests {
             #expect(ranges == [0..<5])
         }
 
-        @Test("If-else second branch")
-        func ifElseSecondBranch() {
+        @Test
+        func `If-else second branch`() {
             let condition = false
             let ranges = Range.build {
                 if condition {
@@ -87,8 +87,8 @@ struct RangeBuilderTests {
             #expect(ranges == [10..<15])
         }
 
-        @Test("For loop")
-        func forLoop() {
+        @Test
+        func `For loop`() {
             let ranges = Range.build {
                 for i in 0..<3 {
                     (i * 10)..<(i * 10 + 5)
@@ -98,11 +98,11 @@ struct RangeBuilderTests {
         }
     }
 
-    @Suite("Expression Building")
-    struct ExpressionBuildingTests {
+    @Suite
+    struct `Expression Building` {
 
-        @Test("Array of ranges")
-        func arrayOfRanges() {
+        @Test
+        func `Array of ranges`() {
             let existing = [0..<5, 10..<15]
             let ranges = Range.build {
                 existing
@@ -112,57 +112,57 @@ struct RangeBuilderTests {
         }
     }
 
-    @Suite("Static Method Tests")
-    struct StaticMethodTests {
+    @Suite
+    struct `Static Method Tests` {
 
-        @Test("buildExpression range")
-        func buildExpressionRange() {
+        @Test
+        func `buildExpression range`() {
             let result = Range<Int>.Builder.buildExpression(0..<5)
             #expect(result == [0..<5])
         }
 
-        @Test("buildPartialBlock first")
-        func buildPartialBlockFirst() {
+        @Test
+        func `buildPartialBlock first`() {
             let result = Range<Int>.Builder.buildPartialBlock(first: [0..<5])
             #expect(result == [0..<5])
         }
 
-        @Test("buildPartialBlock first void")
-        func buildPartialBlockFirstVoid() {
+        @Test
+        func `buildPartialBlock first void`() {
             let result = Range<Int>.Builder.buildPartialBlock(first: ())
             #expect(result.isEmpty)
         }
 
-        @Test("buildPartialBlock accumulated")
-        func buildPartialBlockAccumulated() {
+        @Test
+        func `buildPartialBlock accumulated`() {
             let result = Range<Int>.Builder.buildPartialBlock(accumulated: [0..<5], next: [10..<15])
             #expect(result == [0..<5, 10..<15])
         }
 
-        @Test("buildOptional some")
-        func buildOptionalSome() {
+        @Test
+        func `buildOptional some`() {
             let result = Range<Int>.Builder.buildOptional([0..<5])
             #expect(result == [0..<5])
         }
 
-        @Test("buildOptional none")
-        func buildOptionalNone() {
+        @Test
+        func `buildOptional none`() {
             let result = Range<Int>.Builder.buildOptional(nil)
             #expect(result.isEmpty)
         }
 
-        @Test("buildArray")
-        func buildArray() {
+        @Test
+        func `buildArray`() {
             let result = Range<Int>.Builder.buildArray([[0..<5], [10..<15]])
             #expect(result == [0..<5, 10..<15])
         }
     }
 
-    @Suite("Different Bound Types")
-    struct DifferentBoundTypesTests {
+    @Suite
+    struct `Different Bound Types` {
 
-        @Test("Double ranges")
-        func doubleRanges() {
+        @Test
+        func `Double ranges`() {
             let ranges = Range.build {
                 0.0..<1.0
                 2.0..<3.0
@@ -170,8 +170,8 @@ struct RangeBuilderTests {
             #expect(ranges == [0.0..<1.0, 2.0..<3.0])
         }
 
-        @Test("String Index ranges")
-        func stringIndexRanges() {
+        @Test
+        func `String Index ranges`() {
             let str = "Hello, World!"
             let ranges = Range.build {
                 str.startIndex..<str.index(str.startIndex, offsetBy: 5)
@@ -180,11 +180,11 @@ struct RangeBuilderTests {
         }
     }
 
-    @Suite("Limited Availability")
-    struct LimitedAvailabilityTests {
+    @Suite
+    struct `Limited Availability` {
 
-        @Test("Limited availability passthrough")
-        func limitedAvailabilityPassthrough() {
+        @Test
+        func `Limited availability passthrough`() {
             let ranges = Range.build {
                 0..<5
                 if #available(macOS 26, iOS 26, *) {

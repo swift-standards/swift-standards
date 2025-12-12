@@ -8,91 +8,91 @@ import Testing
 @testable import Affine
 @testable import Algebra
 
-@Suite("Affine.Point+Real Tests")
-struct AffinePointRealTests {
+@Suite
+struct `Affine.Point+Real Tests` {
     typealias Point2 = Affine<Double, Void>.Point<2>
 
     // MARK: - Polar Coordinate Tests
 
-    @Suite("Polar Coordinates")
-    struct PolarTests {
-        @Test("Create point from polar coordinates (0 degrees)")
-        func polarZeroDegrees() {
+    @Suite
+    struct `Polar Coordinates` {
+        @Test
+        func `Create point from polar coordinates (0 degrees)`() {
             let p = Point2.polar(radius: .init(5.0), angle: Degree(0).radians)
             #expect(abs(p.x.value - 5.0) < 1e-10)
             #expect(abs(p.y.value - 0.0) < 1e-10)
         }
 
-        @Test("Create point from polar coordinates (90 degrees)")
-        func polar90Degrees() {
+        @Test
+        func `Create point from polar coordinates (90 degrees)`() {
             let p = Point2.polar(radius: .init(5.0), angle: Degree(90).radians)
             #expect(abs(p.x.value - 0.0) < 1e-10)
             #expect(abs(p.y.value - 5.0) < 1e-10)
         }
 
-        @Test("Create point from polar coordinates (180 degrees)")
-        func polar180Degrees() {
+        @Test
+        func `Create point from polar coordinates (180 degrees)`() {
             let p = Point2.polar(radius: .init(5.0), angle: Degree(180).radians)
             #expect(abs(p.x.value - (-5.0)) < 1e-10)
             #expect(abs(p.y.value - 0.0) < 1e-10)
         }
 
-        @Test("Create point from polar coordinates (270 degrees)")
-        func polar270Degrees() {
+        @Test
+        func `Create point from polar coordinates (270 degrees)`() {
             let p = Point2.polar(radius: .init(5.0), angle: Degree(270).radians)
             #expect(abs(p.x.value - 0.0) < 1e-10)
             #expect(abs(p.y.value - (-5.0)) < 1e-10)
         }
 
-        @Test("Create point from polar coordinates (45 degrees)")
-        func polar45Degrees() {
+        @Test
+        func `Create point from polar coordinates (45 degrees)`() {
             let p = Point2.polar(radius: .init(1.0), angle: Degree(45).radians)
             let expected = 1.0 / sqrt(2.0)
             #expect(abs(p.x.value - expected) < 1e-10)
             #expect(abs(p.y.value - expected) < 1e-10)
         }
 
-        @Test("Angle of point at (1, 0)")
-        func angleAtOneZero() {
+        @Test
+        func `Angle of point at (1, 0)`() {
             let p = Point2(x: 1, y: 0)
             let angle = p.angle
             #expect(abs(angle.degrees.value) < 1e-10)
         }
 
-        @Test("Angle of point at (0, 1)")
-        func angleAtZeroOne() {
+        @Test
+        func `Angle of point at (0, 1)`() {
             let p = Point2(x: 0, y: 1)
             let angle = p.angle
             #expect(abs(angle.degrees.value - 90) < 1e-10)
         }
 
-        @Test("Angle of point at (-1, 0)")
-        func angleAtMinusOneZero() {
+        @Test
+        func `Angle of point at (-1, 0)`() {
             let p = Point2(x: -1, y: 0)
             let angle = p.angle
             #expect(abs(abs(angle.degrees.value) - 180) < 1e-10)
         }
 
-        @Test("Angle of point at (0, -1)")
-        func angleAtZeroMinusOne() {
+        @Test
+        func `Angle of point at (0, -1)`() {
             let p = Point2(x: 0, y: -1)
             let angle = p.angle
             #expect(abs(angle.degrees.value - (-90)) < 1e-10)
         }
 
-        @Test("Radius of point")
-        func radius() {
+        @Test
+        func `Radius of point`() {
             let p = Point2(x: 3, y: 4)
             #expect(p.radius.value == 5.0)
         }
 
-        @Test("Radius of origin")
-        func radiusOrigin() {
+        @Test
+        func `Radius of origin`() {
             let p = Point2.zero
             #expect(p.radius.value == 0.0)
         }
 
-        @Test("Polar round-trip conversion", arguments: [
+        @Test(arguments: [
             (5.0, 0.0),
             (5.0, 45.0),
             (5.0, 90.0),
@@ -113,42 +113,42 @@ struct AffinePointRealTests {
 
     // MARK: - Rotation Tests
 
-    @Suite("Rotation")
-    struct RotationTests {
-        @Test("Rotate by 90 degrees around origin (radians)")
-        func rotate90Radians() {
+    @Suite
+    struct `Rotation` {
+        @Test
+        func `Rotate by 90 degrees around origin (radians)`() {
             let p = Point2(x: 1, y: 0)
             let rotated = Point2.rotated(p, by: Degree(90))
             #expect(abs(rotated.x.value - 0.0) < 1e-10)
             #expect(abs(rotated.y.value - 1.0) < 1e-10)
         }
 
-        @Test("Rotate by 90 degrees around origin instance method (radians)")
-        func rotate90RadiansInstance() {
+        @Test
+        func `Rotate by 90 degrees around origin instance method (radians)`() {
             let p = Point2(x: 1, y: 0)
             let rotated = p.rotated(by: Degree(90))
             #expect(abs(rotated.x.value - 0.0) < 1e-10)
             #expect(abs(rotated.y.value - 1.0) < 1e-10)
         }
 
-        @Test("Rotate by 180 degrees around origin")
-        func rotate180() {
+        @Test
+        func `Rotate by 180 degrees around origin`() {
             let p = Point2(x: 1, y: 0)
             let rotated = Point2.rotated(p, by: Degree(180))
             #expect(abs(rotated.x.value - (-1.0)) < 1e-10)
             #expect(abs(rotated.y.value - 0.0) < 1e-10)
         }
 
-        @Test("Rotate by 270 degrees around origin")
-        func rotate270() {
+        @Test
+        func `Rotate by 270 degrees around origin`() {
             let p = Point2(x: 1, y: 0)
             let rotated = Point2.rotated(p, by: Degree(270))
             #expect(abs(rotated.x.value - 0.0) < 1e-10)
             #expect(abs(rotated.y.value - (-1.0)) < 1e-10)
         }
 
-        @Test("Rotate by 45 degrees around origin")
-        func rotate45() {
+        @Test
+        func `Rotate by 45 degrees around origin`() {
             let p = Point2(x: 1, y: 0)
             let rotated = Point2.rotated(p, by: Degree(45))
             let expected = 1.0 / sqrt(2.0)
@@ -156,23 +156,23 @@ struct AffinePointRealTests {
             #expect(abs(rotated.y.value - expected) < 1e-10)
         }
 
-        @Test("Rotate by degrees (90 degrees)")
-        func rotateByDegrees90() {
+        @Test
+        func `Rotate by degrees (90 degrees)`() {
             let p = Point2(x: 1, y: 0)
             let rotated = Point2.rotated(p, by: Degree(90))
             #expect(abs(rotated.x.value - 0.0) < 1e-10)
             #expect(abs(rotated.y.value - 1.0) < 1e-10)
         }
 
-        @Test("Rotate by degrees instance method")
-        func rotateByDegreesInstance() {
+        @Test
+        func `Rotate by degrees instance method`() {
             let p = Point2(x: 1, y: 0)
             let rotated = p.rotated(by: Degree(90))
             #expect(abs(rotated.x.value - 0.0) < 1e-10)
             #expect(abs(rotated.y.value - 1.0) < 1e-10)
         }
 
-        @Test("Rotation preserves distance from origin", arguments: [
+        @Test(arguments: [
             (Point2(x: 3, y: 4), 45.0),
             (Point2(x: 1, y: 1), 90.0),
             (Point2(x: 5, y: 0), 180.0),
@@ -185,8 +185,8 @@ struct AffinePointRealTests {
             #expect(abs(originalDist - rotatedDist) < 1e-10)
         }
 
-        @Test("Rotate around custom center (90 degrees)")
-        func rotateAroundCenter90() {
+        @Test
+        func `Rotate around custom center (90 degrees)`() {
             let center = Point2(x: 1, y: 1)
             let p = Point2(x: 2, y: 1)
             let rotated = Point2.rotated(p, by: Degree(90), around: center)
@@ -194,8 +194,8 @@ struct AffinePointRealTests {
             #expect(abs(rotated.y.value - 2.0) < 1e-10)
         }
 
-        @Test("Rotate around custom center instance method")
-        func rotateAroundCenterInstance() {
+        @Test
+        func `Rotate around custom center instance method`() {
             let center = Point2(x: 1, y: 1)
             let p = Point2(x: 2, y: 1)
             let rotated = p.rotated(by: Degree(90), around: center)
@@ -203,8 +203,8 @@ struct AffinePointRealTests {
             #expect(abs(rotated.y.value - 2.0) < 1e-10)
         }
 
-        @Test("Rotate around custom center (180 degrees)")
-        func rotateAroundCenter180() {
+        @Test
+        func `Rotate around custom center (180 degrees)`() {
             let center = Point2(x: 0, y: 0)
             let p = Point2(x: 1, y: 1)
             let rotated = Point2.rotated(p, by: Degree(180), around: center)
@@ -212,7 +212,7 @@ struct AffinePointRealTests {
             #expect(abs(rotated.y.value - (-1.0)) < 1e-10)
         }
 
-        @Test("Rotate around center preserves distance from center", arguments: [
+        @Test(arguments: [
             (Point2(x: 5, y: 5), Point2(x: 8, y: 5), 45.0),
             (Point2(x: 0, y: 0), Point2(x: 3, y: 4), 90.0),
             (Point2(x: 1, y: 1), Point2(x: 1, y: 2), 180.0)
@@ -224,8 +224,8 @@ struct AffinePointRealTests {
             #expect(abs(originalDist - rotatedDist) < 1e-10)
         }
 
-        @Test("Rotate around custom center by degrees (90 degrees)")
-        func rotateAroundCenterByDegrees() {
+        @Test
+        func `Rotate around custom center by degrees (90 degrees)`() {
             let center = Point2(x: 1, y: 1)
             let p = Point2(x: 2, y: 1)
             let rotated = Point2.rotated(p, by: Degree(90), around: center)
@@ -233,8 +233,8 @@ struct AffinePointRealTests {
             #expect(abs(rotated.y.value - 2.0) < 1e-10)
         }
 
-        @Test("Rotate around custom center by degrees instance method")
-        func rotateAroundCenterByDegreesInstance() {
+        @Test
+        func `Rotate around custom center by degrees instance method`() {
             let center = Point2(x: 1, y: 1)
             let p = Point2(x: 2, y: 1)
             let rotated = p.rotated(by: Degree(90), around: center)
@@ -242,8 +242,8 @@ struct AffinePointRealTests {
             #expect(abs(rotated.y.value - 2.0) < 1e-10)
         }
 
-        @Test("Multiple rotations compose correctly")
-        func multipleRotations() {
+        @Test
+        func `Multiple rotations compose correctly`() {
             let p = Point2(x: 1, y: 0)
             let rotated1 = Point2.rotated(p, by: Degree(45))
             let rotated2 = Point2.rotated(rotated1, by: Degree(45))

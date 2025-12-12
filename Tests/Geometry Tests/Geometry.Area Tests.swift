@@ -7,10 +7,10 @@ import Testing
 
 // TODO: Add comprehensive tests for Geometry.Area functionality
 
-@Suite("Geometry.Area - Placeholder")
-struct GeometryArea_PlaceholderTests {
-    @Test("Placeholder test")
-    func placeholder() {
+@Suite
+struct `Geometry.Area - Placeholder` {
+    @Test
+    func `Placeholder test`() {
         // Add tests here once Area functionality is better understood
         #expect(true)
     }

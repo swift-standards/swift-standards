@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Ordinal - Static Functions
 
-@Suite("Ordinal - Static Functions")
-struct Ordinal_StaticTests {
+@Suite
+struct `Ordinal - Static Functions` {
     @Test
     func `injected safely converts to larger domain`() {
         let ord2: Ordinal<2> = Ordinal(0)!
@@ -39,8 +39,8 @@ struct Ordinal_StaticTests {
 
 // MARK: - Ordinal - Properties
 
-@Suite("Ordinal - Properties")
-struct Ordinal_PropertyTests {
+@Suite
+struct `Ordinal - Properties` {
     @Test(arguments: [0, 1, 2])
     func `rawValue accessor`(value: Int) {
         let ordinal: Ordinal<5> = Ordinal(value)!
@@ -85,8 +85,8 @@ struct Ordinal_PropertyTests {
 
 // MARK: - Ordinal - Initializers
 
-@Suite("Ordinal - Initializers")
-struct Ordinal_InitializerTests {
+@Suite
+struct `Ordinal - Initializers` {
     @Test(arguments: [0, 1, 2, 3, 4])
     func `init with valid value`(value: Int) {
         let ordinal: Ordinal<5>? = Ordinal(value)
@@ -109,8 +109,8 @@ struct Ordinal_InitializerTests {
 
 // MARK: - Ordinal - Protocol Conformances
 
-@Suite("Ordinal - Protocol Conformances")
-struct Ordinal_ProtocolTests {
+@Suite
+struct `Ordinal - Protocol Conformances` {
     @Test
     func `Equatable reflexivity`() {
         let ord1: Ordinal<5> = Ordinal(2)!
@@ -164,8 +164,8 @@ struct Ordinal_ProtocolTests {
 
 // MARK: - Ordinal - Array Subscripting
 
-@Suite("Ordinal - Array Subscripting")
-struct Ordinal_ArraySubscriptTests {
+@Suite
+struct `Ordinal - Array Subscripting` {
     @Test
     func `array subscript with ordinal`() {
         let array = ["a", "b", "c", "d", "e"]
@@ -184,8 +184,8 @@ struct Ordinal_ArraySubscriptTests {
 
 // MARK: - Ordinal - Type Alias
 
-@Suite("Ordinal - Type Alias")
-struct Ordinal_TypeAliasTests {
+@Suite
+struct `Ordinal - Type Alias` {
     @Test
     func `Fin is alias for Ordinal`() {
         let ord: Ordinal<5> = Ordinal(2)!

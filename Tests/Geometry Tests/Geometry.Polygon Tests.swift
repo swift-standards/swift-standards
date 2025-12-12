@@ -10,10 +10,10 @@ import Testing
 
 // MARK: - Initialization Tests
 
-@Suite("Geometry.Polygon - Initialization")
-struct GeometryPolygon_InitializationTests {
-    @Test("Polygon initialization")
-    func polygonInit() {
+@Suite
+struct `Geometry.Polygon - Initialization` {
+    @Test
+    func `Polygon initialization`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
@@ -27,10 +27,10 @@ struct GeometryPolygon_InitializationTests {
 
 // MARK: - Validity Tests
 
-@Suite("Geometry.Polygon - Validity")
-struct GeometryPolygon_ValidityTests {
-    @Test("Valid polygon with 3 vertices")
-    func validPolygon() {
+@Suite
+struct `Geometry.Polygon - Validity` {
+    @Test
+    func `Valid polygon with 3 vertices`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
@@ -39,8 +39,8 @@ struct GeometryPolygon_ValidityTests {
         #expect(polygon.isValid)
     }
 
-    @Test("Invalid polygon with 2 vertices")
-    func invalidPolygon() {
+    @Test
+    func `Invalid polygon with 2 vertices`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
@@ -51,10 +51,10 @@ struct GeometryPolygon_ValidityTests {
 
 // MARK: - Edges Tests
 
-@Suite("Geometry.Polygon - Edges")
-struct GeometryPolygon_EdgesTests {
-    @Test("Edges of triangle")
-    func triangleEdges() {
+@Suite
+struct `Geometry.Polygon - Edges` {
+    @Test
+    func `Edges of triangle`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
@@ -68,8 +68,8 @@ struct GeometryPolygon_EdgesTests {
         #expect(edges[2].end.x == 0)
     }
 
-    @Test("Edges of square")
-    func squareEdges() {
+    @Test
+    func `Edges of square`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
@@ -83,10 +83,10 @@ struct GeometryPolygon_EdgesTests {
 
 // MARK: - Static Functions Tests
 
-@Suite("Geometry.Polygon - Static Functions")
-struct GeometryPolygon_StaticTests {
-    @Test("Geometry.area(of:) unit square")
-    func staticAreaSquare() {
+@Suite
+struct `Geometry.Polygon - Static Functions` {
+    @Test
+    func `Geometry.area(of:) unit square`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
@@ -97,8 +97,8 @@ struct GeometryPolygon_StaticTests {
         #expect(abs(area - 1) < 1e-10)
     }
 
-    @Test("Geometry.area(of:) rectangle")
-    func staticAreaRectangle() {
+    @Test
+    func `Geometry.area(of:) rectangle`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
@@ -109,8 +109,8 @@ struct GeometryPolygon_StaticTests {
         #expect(abs(area - 12) < 1e-10)
     }
 
-    @Test("Geometry.area(of:) triangle")
-    func staticAreaTriangle() {
+    @Test
+    func `Geometry.area(of:) triangle`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
@@ -120,8 +120,8 @@ struct GeometryPolygon_StaticTests {
         #expect(abs(area - 6) < 1e-10)
     }
 
-    @Test("Geometry.signedDoubleArea(of:) CCW positive")
-    func staticSignedDoubleAreaCCW() {
+    @Test
+    func `Geometry.signedDoubleArea(of:) CCW positive`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
@@ -132,8 +132,8 @@ struct GeometryPolygon_StaticTests {
         #expect(signedArea > 0)
     }
 
-    @Test("Geometry.signedDoubleArea(of:) CW negative")
-    func staticSignedDoubleAreaCW() {
+    @Test
+    func `Geometry.signedDoubleArea(of:) CW negative`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 0, y: 1),
@@ -144,8 +144,8 @@ struct GeometryPolygon_StaticTests {
         #expect(signedArea < 0)
     }
 
-    @Test("Geometry.perimeter(of:) unit square")
-    func staticPerimeterSquare() {
+    @Test
+    func `Geometry.perimeter(of:) unit square`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
@@ -156,8 +156,8 @@ struct GeometryPolygon_StaticTests {
         #expect(abs(perimeter.value - 4) < 1e-10)
     }
 
-    @Test("Geometry.perimeter(of:) 3-4-5 triangle")
-    func staticPerimeterTriangle() {
+    @Test
+    func `Geometry.perimeter(of:) 3-4-5 triangle`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 3, y: 0),
@@ -167,8 +167,8 @@ struct GeometryPolygon_StaticTests {
         #expect(abs(perimeter.value - 12) < 1e-10)
     }
 
-    @Test("Geometry.centroid(of:) square")
-    func staticCentroidSquare() {
+    @Test
+    func `Geometry.centroid(of:) square`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 2, y: 0),
@@ -181,8 +181,8 @@ struct GeometryPolygon_StaticTests {
         #expect(abs(centroid!.y.value - 1) < 1e-10)
     }
 
-    @Test("Geometry.centroid(of:) triangle")
-    func staticCentroidTriangle() {
+    @Test
+    func `Geometry.centroid(of:) triangle`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 6, y: 0),
@@ -196,10 +196,10 @@ struct GeometryPolygon_StaticTests {
 
 // MARK: - Area and Perimeter Properties Tests
 
-@Suite("Geometry.Polygon - Area and Perimeter Properties")
-struct GeometryPolygon_AreaTests {
-    @Test("Area property matches static function")
-    func areaProperty() {
+@Suite
+struct `Geometry.Polygon - Area and Perimeter Properties` {
+    @Test
+    func `Area property matches static function`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
@@ -209,8 +209,8 @@ struct GeometryPolygon_AreaTests {
         #expect(abs(polygon.area - 12) < 1e-10)
     }
 
-    @Test("Perimeter property matches static function")
-    func perimeterProperty() {
+    @Test
+    func `Perimeter property matches static function`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
@@ -223,10 +223,10 @@ struct GeometryPolygon_AreaTests {
 
 // MARK: - Centroid Tests
 
-@Suite("Geometry.Polygon - Centroid")
-struct GeometryPolygon_CentroidTests {
-    @Test("Centroid of square")
-    func centroidSquare() {
+@Suite
+struct `Geometry.Polygon - Centroid` {
+    @Test
+    func `Centroid of square`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 2, y: 0),
@@ -242,10 +242,10 @@ struct GeometryPolygon_CentroidTests {
 
 // MARK: - Bounding Box Tests
 
-@Suite("Geometry.Polygon - Bounding Box")
-struct GeometryPolygon_BoundingBoxTests {
-    @Test("Bounding box")
-    func boundingBox() {
+@Suite
+struct `Geometry.Polygon - Bounding Box` {
+    @Test
+    func `Bounding box`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 1, y: 2),
             .init(x: 5, y: 3),
@@ -262,10 +262,10 @@ struct GeometryPolygon_BoundingBoxTests {
 
 // MARK: - Convexity Tests
 
-@Suite("Geometry.Polygon - Convexity")
-struct GeometryPolygon_ConvexityTests {
-    @Test("Square is convex")
-    func squareIsConvex() {
+@Suite
+struct `Geometry.Polygon - Convexity` {
+    @Test
+    func `Square is convex`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
@@ -275,8 +275,8 @@ struct GeometryPolygon_ConvexityTests {
         #expect(polygon.isConvex)
     }
 
-    @Test("L-shape is not convex")
-    func lShapeNotConvex() {
+    @Test
+    func `L-shape is not convex`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 2, y: 0),
@@ -288,8 +288,8 @@ struct GeometryPolygon_ConvexityTests {
         #expect(!polygon.isConvex)
     }
 
-    @Test("Triangle is always convex")
-    func triangleIsConvex() {
+    @Test
+    func `Triangle is always convex`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 5, y: 0),
@@ -301,10 +301,10 @@ struct GeometryPolygon_ConvexityTests {
 
 // MARK: - Winding Tests
 
-@Suite("Geometry.Polygon - Winding")
-struct GeometryPolygon_WindingTests {
-    @Test("Counter-clockwise")
-    func counterClockwise() {
+@Suite
+struct `Geometry.Polygon - Winding` {
+    @Test
+    func `Counter-clockwise`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
@@ -315,8 +315,8 @@ struct GeometryPolygon_WindingTests {
         #expect(!polygon.isClockwise)
     }
 
-    @Test("Clockwise")
-    func clockwise() {
+    @Test
+    func `Clockwise`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 0, y: 1),
@@ -327,8 +327,8 @@ struct GeometryPolygon_WindingTests {
         #expect(!polygon.isCounterClockwise)
     }
 
-    @Test("Reversed polygon")
-    func reversed() {
+    @Test
+    func `Reversed polygon`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
@@ -342,10 +342,10 @@ struct GeometryPolygon_WindingTests {
 
 // MARK: - Containment Tests
 
-@Suite("Geometry.Polygon - Containment")
-struct GeometryPolygon_ContainmentTests {
-    @Test("Contains interior point")
-    func containsInterior() {
+@Suite
+struct `Geometry.Polygon - Containment` {
+    @Test
+    func `Contains interior point`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
@@ -356,8 +356,8 @@ struct GeometryPolygon_ContainmentTests {
         #expect(polygon.contains(point))
     }
 
-    @Test("Does not contain exterior point")
-    func doesNotContainExterior() {
+    @Test
+    func `Does not contain exterior point`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
@@ -368,8 +368,8 @@ struct GeometryPolygon_ContainmentTests {
         #expect(!polygon.contains(point))
     }
 
-    @Test("Contains point in L-shape")
-    func containsInLShape() {
+    @Test
+    func `Contains point in L-shape`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 2, y: 0),
@@ -385,8 +385,8 @@ struct GeometryPolygon_ContainmentTests {
         #expect(!polygon.contains(outside))
     }
 
-    @Test("Point on boundary")
-    func pointOnBoundary() {
+    @Test
+    func `Point on boundary`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
@@ -403,10 +403,10 @@ struct GeometryPolygon_ContainmentTests {
 
 // MARK: - Transformation Tests
 
-@Suite("Geometry.Polygon - Transformations")
-struct GeometryPolygon_TransformationTests {
-    @Test("Translation")
-    func translation() {
+@Suite
+struct `Geometry.Polygon - Transformations` {
+    @Test
+    func `Translation`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
@@ -417,8 +417,8 @@ struct GeometryPolygon_TransformationTests {
         #expect(translated.vertices[0].y == 10)
     }
 
-    @Test("Scaling about centroid")
-    func scalingAboutCentroid() {
+    @Test
+    func `Scaling about centroid`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 2, y: 0),
@@ -433,8 +433,8 @@ struct GeometryPolygon_TransformationTests {
         #expect(abs(originalCentroid.y.value - scaledCentroid.y.value) < 1e-10)
     }
 
-    @Test("Scaling about point")
-    func scalingAboutPoint() {
+    @Test
+    func `Scaling about point`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),
@@ -451,10 +451,10 @@ struct GeometryPolygon_TransformationTests {
 
 // MARK: - Triangulation Tests
 
-@Suite("Geometry.Polygon - Triangulation")
-struct GeometryPolygon_TriangulationTests {
-    @Test("Triangulate triangle")
-    func triangulateTriangle() {
+@Suite
+struct `Geometry.Polygon - Triangulation` {
+    @Test
+    func `Triangulate triangle`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
@@ -464,8 +464,8 @@ struct GeometryPolygon_TriangulationTests {
         #expect(triangles.count == 1)
     }
 
-    @Test("Triangulate square")
-    func triangulateSquare() {
+    @Test
+    func `Triangulate square`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
@@ -479,8 +479,8 @@ struct GeometryPolygon_TriangulationTests {
         #expect(abs(totalArea - polygon.area) < 1e-10)
     }
 
-    @Test("Triangulate pentagon")
-    func triangulatePentagon() {
+    @Test
+    func `Triangulate pentagon`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 4, y: 0),
@@ -498,10 +498,10 @@ struct GeometryPolygon_TriangulationTests {
 
 // MARK: - Functorial Map Tests
 
-@Suite("Geometry.Polygon - Functorial Map")
-struct GeometryPolygon_MapTests {
-    @Test("Polygon map to different scalar type")
-    func polygonMap() {
+@Suite
+struct `Geometry.Polygon - Functorial Map` {
+    @Test
+    func `Polygon map to different scalar type`() {
         let polygon: Geometry<Double, Void>.Polygon = .init(vertices: [
             .init(x: 0, y: 0),
             .init(x: 1, y: 0),

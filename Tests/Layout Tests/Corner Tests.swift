@@ -5,9 +5,9 @@ import Testing
 @testable import Dimension
 @testable import Layout
 
-@Suite("Corner")
-struct CornerTests {
-    @Test("Corner presets", arguments: Corner.allCases)
+@Suite
+struct `Corner Tests` {
+    @Test(arguments: Corner.allCases)
     func presets(corner: Corner) {
         // Test that each corner has the correct components
         if corner == .topLeading {
@@ -25,7 +25,7 @@ struct CornerTests {
         }
     }
 
-    @Test("Corner opposite", arguments: Corner.allCases)
+    @Test(arguments: Corner.allCases)
     func opposite(corner: Corner) {
         let result = Corner.opposite(corner)
         #expect(result == corner.opposite)
@@ -33,35 +33,35 @@ struct CornerTests {
         #expect(result.opposite == corner)
     }
 
-    @Test("Corner isTop", arguments: Corner.allCases)
+    @Test(arguments: Corner.allCases)
     func isTop(corner: Corner) {
         let result = Corner.isTop(corner)
         #expect(result == corner.isTop)
         #expect(result == (corner.vertical == .top))
     }
 
-    @Test("Corner isBottom", arguments: Corner.allCases)
+    @Test(arguments: Corner.allCases)
     func isBottom(corner: Corner) {
         let result = Corner.isBottom(corner)
         #expect(result == corner.isBottom)
         #expect(result == (corner.vertical == .bottom))
     }
 
-    @Test("Corner isLeading", arguments: Corner.allCases)
+    @Test(arguments: Corner.allCases)
     func isLeading(corner: Corner) {
         let result = Corner.isLeading(corner)
         #expect(result == corner.isLeading)
         #expect(result == (corner.horizontal == .leading))
     }
 
-    @Test("Corner isTrailing", arguments: Corner.allCases)
+    @Test(arguments: Corner.allCases)
     func isTrailing(corner: Corner) {
         let result = Corner.isTrailing(corner)
         #expect(result == corner.isTrailing)
         #expect(result == (corner.horizontal == .trailing))
     }
 
-    @Test("Corner horizontalAdjacent", arguments: Corner.allCases)
+    @Test(arguments: Corner.allCases)
     func horizontalAdjacent(corner: Corner) {
         let result = Corner.horizontalAdjacent(corner)
         #expect(result == corner.horizontalAdjacent)
@@ -69,7 +69,7 @@ struct CornerTests {
         #expect(result.horizontal != corner.horizontal)
     }
 
-    @Test("Corner verticalAdjacent", arguments: Corner.allCases)
+    @Test(arguments: Corner.allCases)
     func verticalAdjacent(corner: Corner) {
         let result = Corner.verticalAdjacent(corner)
         #expect(result == corner.verticalAdjacent)
@@ -78,9 +78,9 @@ struct CornerTests {
     }
 }
 
-@Suite("Horizontal.Alignment.Side")
-struct HorizontalAlignmentSideTests {
-    @Test("Horizontal.Alignment.Side opposite", arguments: Horizontal.Alignment.Side.allCases)
+@Suite
+struct `Horizontal.Alignment.Side` {
+    @Test(arguments: Horizontal.Alignment.Side.allCases)
     func opposite(side: Horizontal.Alignment.Side) {
         let result = Horizontal.Alignment.Side.opposite(side)
         #expect(result == side.opposite)
@@ -88,9 +88,9 @@ struct HorizontalAlignmentSideTests {
     }
 }
 
-@Suite("Vertical.Alignment.Side")
-struct VerticalAlignmentSideTests {
-    @Test("Vertical.Alignment.Side opposite", arguments: Vertical.Alignment.Side.allCases)
+@Suite
+struct `Vertical.Alignment.Side` {
+    @Test(arguments: Vertical.Alignment.Side.allCases)
     func opposite(side: Vertical.Alignment.Side) {
         let result = Vertical.Alignment.Side.opposite(side)
         #expect(result == side.opposite)

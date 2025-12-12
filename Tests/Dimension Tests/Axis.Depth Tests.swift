@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Axis.Depth Typealias Tests (3D)
 
-@Suite("Axis.Depth - 3D Typealias")
-struct AxisDepth3_TypealiasTests {
+@Suite
+struct `Axis.Depth - 3D Typealias` {
     @Test
     func `Axis3 Depth is identical to Depth`() {
         let axisDepth: Axis<3>.Depth = .backward
@@ -36,8 +36,8 @@ struct AxisDepth3_TypealiasTests {
 
 // MARK: - Axis.Depth Typealias Tests (4D)
 
-@Suite("Axis.Depth - 4D Typealias")
-struct AxisDepth4_TypealiasTests {
+@Suite
+struct `Axis.Depth - 4D Typealias` {
     // Note: Axis<4>.Depth is defined in a separate extension where N == 4
     // We test it separately to avoid cross-extension type issues
 

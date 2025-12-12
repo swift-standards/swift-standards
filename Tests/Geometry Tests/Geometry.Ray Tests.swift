@@ -10,10 +10,10 @@ import Testing
 
 // MARK: - Initialization Tests
 
-@Suite("Geometry.Ray - Initialization")
-struct GeometryRay_InitializationTests {
-    @Test("Ray from origin and direction")
-    func rayInit() {
+@Suite
+struct `Geometry.Ray - Initialization` {
+    @Test
+    func `Ray from origin and direction`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .init(x: 1, y: 2),
             direction: .init(dx: 3, dy: 4)
@@ -24,8 +24,8 @@ struct GeometryRay_InitializationTests {
         #expect(ray.direction.dy == 4)
     }
 
-    @Test("Ray from two points")
-    func rayFromPoints() {
+    @Test
+    func `Ray from two points`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             from: .init(x: 0, y: 0),
             through: .init(x: 3, y: 4)
@@ -36,8 +36,8 @@ struct GeometryRay_InitializationTests {
         #expect(ray.direction.dy == 4)
     }
 
-    @Test("Ray in direction")
-    func rayInDirection() {
+    @Test
+    func `Ray in direction`() {
         let ray: Geometry<Double, Void>.Ray = .init(origin: .zero, in: .right)
         #expect(ray.origin.x == 0)
         #expect(ray.origin.y == 0)
@@ -48,10 +48,10 @@ struct GeometryRay_InitializationTests {
 
 // MARK: - Properties Tests
 
-@Suite("Geometry.Ray - Properties")
-struct GeometryRay_PropertiesTests {
-    @Test("Unit direction")
-    func unitDirection() {
+@Suite
+struct `Geometry.Ray - Properties` {
+    @Test
+    func `Unit direction`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .zero,
             direction: .init(dx: 3, dy: 4)
@@ -61,8 +61,8 @@ struct GeometryRay_PropertiesTests {
         #expect(abs(unit!.length - 1) < 1e-10)
     }
 
-    @Test("Unit direction for zero direction")
-    func unitDirectionZero() {
+    @Test
+    func `Unit direction for zero direction`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .zero,
             direction: .zero
@@ -70,8 +70,8 @@ struct GeometryRay_PropertiesTests {
         #expect(ray.unitDirection == nil)
     }
 
-    @Test("Conversion to line")
-    func toLine() {
+    @Test
+    func `Conversion to line`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .init(x: 5, y: 10),
             direction: .init(dx: 3, dy: 4)
@@ -86,10 +86,10 @@ struct GeometryRay_PropertiesTests {
 
 // MARK: - Parametric Point Tests
 
-@Suite("Geometry.Ray - Parametric Points")
-struct GeometryRay_ParametricTests {
-    @Test("Point at parameter 0")
-    func pointAt0() {
+@Suite
+struct `Geometry.Ray - Parametric Points` {
+    @Test
+    func `Point at parameter 0`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .init(x: 5, y: 10),
             direction: .init(dx: 3, dy: 4)
@@ -99,8 +99,8 @@ struct GeometryRay_ParametricTests {
         #expect(point.y == 10)
     }
 
-    @Test("Point at parameter 1")
-    func pointAt1() {
+    @Test
+    func `Point at parameter 1`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .init(x: 5, y: 10),
             direction: .init(dx: 3, dy: 4)
@@ -110,8 +110,8 @@ struct GeometryRay_ParametricTests {
         #expect(point.y == 14)
     }
 
-    @Test("Point at parameter 2")
-    func pointAt2() {
+    @Test
+    func `Point at parameter 2`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 0)
@@ -124,10 +124,10 @@ struct GeometryRay_ParametricTests {
 
 // MARK: - Containment Tests
 
-@Suite("Geometry.Ray - Containment")
-struct GeometryRay_ContainmentTests {
-    @Test("Contains origin")
-    func containsOrigin() {
+@Suite
+struct `Geometry.Ray - Containment` {
+    @Test
+    func `Contains origin`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .init(x: 5, y: 5),
             direction: .init(dx: 1, dy: 0)
@@ -135,8 +135,8 @@ struct GeometryRay_ContainmentTests {
         #expect(ray.contains(ray.origin))
     }
 
-    @Test("Contains point along ray")
-    func containsPointAlong() {
+    @Test
+    func `Contains point along ray`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .zero,
             direction: .init(dx: 1, dy: 1)
@@ -145,8 +145,8 @@ struct GeometryRay_ContainmentTests {
         #expect(ray.contains(point))
     }
 
-    @Test("Does not contain point behind origin")
-    func doesNotContainBehind() {
+    @Test
+    func `Does not contain point behind origin`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .zero,
             direction: .init(dx: 1, dy: 0)
@@ -155,8 +155,8 @@ struct GeometryRay_ContainmentTests {
         #expect(!ray.contains(point))
     }
 
-    @Test("Does not contain point off ray")
-    func doesNotContainOff() {
+    @Test
+    func `Does not contain point off ray`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .zero,
             direction: .init(dx: 1, dy: 0)
@@ -168,10 +168,10 @@ struct GeometryRay_ContainmentTests {
 
 // MARK: - Line Intersection Tests
 
-@Suite("Geometry.Ray - Line Intersection")
-struct GeometryRay_LineIntersectionTests {
-    @Test("Ray intersects line")
-    func intersectsLine() {
+@Suite
+struct `Geometry.Ray - Line Intersection` {
+    @Test
+    func `Ray intersects line`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .zero,
             direction: .init(dx: 1, dy: 1)
@@ -187,8 +187,8 @@ struct GeometryRay_LineIntersectionTests {
         #expect(abs(intersection!.y.value - 5) < 1e-10)
     }
 
-    @Test("Ray does not intersect line behind origin")
-    func doesNotIntersectBehind() {
+    @Test
+    func `Ray does not intersect line behind origin`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .init(x: 0, y: 10),
             direction: .init(dx: 1, dy: 1)
@@ -202,8 +202,8 @@ struct GeometryRay_LineIntersectionTests {
         #expect(intersection == nil)
     }
 
-    @Test("Ray parallel to line")
-    func parallelToLine() {
+    @Test
+    func `Ray parallel to line`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .zero,
             direction: .init(dx: 1, dy: 0)
@@ -220,10 +220,10 @@ struct GeometryRay_LineIntersectionTests {
 
 // MARK: - Segment Intersection Tests
 
-@Suite("Geometry.Ray - Segment Intersection")
-struct GeometryRay_SegmentIntersectionTests {
-    @Test("Ray intersects segment")
-    func intersectsSegment() {
+@Suite
+struct `Geometry.Ray - Segment Intersection` {
+    @Test
+    func `Ray intersects segment`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .zero,
             direction: .init(dx: 1, dy: 1)
@@ -239,8 +239,8 @@ struct GeometryRay_SegmentIntersectionTests {
         #expect(abs(intersection!.y.value - 5) < 1e-10)
     }
 
-    @Test("Ray misses segment")
-    func missesSegment() {
+    @Test
+    func `Ray misses segment`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .zero,
             direction: .init(dx: 1, dy: 1)
@@ -257,10 +257,10 @@ struct GeometryRay_SegmentIntersectionTests {
 
 // MARK: - Circle Intersection Tests
 
-@Suite("Geometry.Ray - Circle Intersection")
-struct GeometryRay_CircleIntersectionTests {
-    @Test("Ray through circle center")
-    func throughCenter() {
+@Suite
+struct `Geometry.Ray - Circle Intersection` {
+    @Test
+    func `Ray through circle center`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .zero,
             direction: .init(dx: 1, dy: 0)
@@ -278,8 +278,8 @@ struct GeometryRay_CircleIntersectionTests {
         #expect(abs(sorted[1].x.value - 15) < 1e-10)
     }
 
-    @Test("Ray tangent to circle")
-    func tangentToCircle() {
+    @Test
+    func `Ray tangent to circle`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .init(x: 0, y: 5),
             direction: .init(dx: 1, dy: 0)
@@ -292,8 +292,8 @@ struct GeometryRay_CircleIntersectionTests {
         #expect(abs(intersections[0].y.value - 5) < 1e-10)
     }
 
-    @Test("Ray misses circle")
-    func missesCircle() {
+    @Test
+    func `Ray misses circle`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .init(x: 0, y: 10),
             direction: .init(dx: 1, dy: 0)
@@ -304,8 +304,8 @@ struct GeometryRay_CircleIntersectionTests {
         #expect(intersections.isEmpty)
     }
 
-    @Test("Ray origin inside circle")
-    func originInside() {
+    @Test
+    func `Ray origin inside circle`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .zero,
             direction: .init(dx: 1, dy: 0)
@@ -320,10 +320,10 @@ struct GeometryRay_CircleIntersectionTests {
 
 // MARK: - Functorial Map Tests
 
-@Suite("Geometry.Ray - Functorial Map")
-struct GeometryRay_MapTests {
-    @Test("Ray map to different scalar type")
-    func rayMap() {
+@Suite
+struct `Geometry.Ray - Functorial Map` {
+    @Test
+    func `Ray map to different scalar type`() {
         let ray: Geometry<Double, Void>.Ray = .init(
             origin: .init(x: 1, y: 2),
             direction: .init(dx: 3, dy: 4)

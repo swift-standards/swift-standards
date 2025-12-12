@@ -3,8 +3,8 @@ import Testing
 
 @testable import Algebra
 
-@Suite("Boundary - Static Functions")
-struct Boundary_StaticTests {
+@Suite
+struct `Boundary - Static Functions` {
     @Test(arguments: Boundary.allCases)
     func `opposite is involution`(boundary: Boundary) {
         #expect(Boundary.opposite(of: Boundary.opposite(of: boundary)) == boundary)
@@ -17,8 +17,8 @@ struct Boundary_StaticTests {
     }
 }
 
-@Suite("Boundary - Properties")
-struct Boundary_PropertyTests {
+@Suite
+struct `Boundary - Properties` {
     @Test
     func `cases exist`() {
         #expect(Boundary.allCases.count == 2)

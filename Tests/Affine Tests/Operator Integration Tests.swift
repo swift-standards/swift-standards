@@ -19,11 +19,11 @@ private typealias Transform = A.Transform
 
 // MARK: - Affine Geometry Operators
 
-@Suite("Affine Geometry - Point/Vector Arithmetic")
-struct AffineGeometryOperatorTests {
+@Suite
+struct `Affine Geometry - Point/Vector Arithmetic` {
 
-    @Test("Point - Point yields Vector displacement")
-    func pointMinusPoint() {
+    @Test
+    func `Point - Point yields Vector displacement`() {
         let p1 = Point2(x: 10, y: 20)
         let p2 = Point2(x: 3, y: 8)
 
@@ -33,8 +33,8 @@ struct AffineGeometryOperatorTests {
         #expect(displacement.dy.value == 12)
     }
 
-    @Test("Point + Vector yields translated Point")
-    func pointPlusVector() {
+    @Test
+    func `Point + Vector yields translated Point`() {
         let p = Point2(x: 10, y: 20)
         let v = Vector2(dx: 5, dy: -3)
 
@@ -44,8 +44,8 @@ struct AffineGeometryOperatorTests {
         #expect(result.y.value == 17)
     }
 
-    @Test("Point - Vector yields translated Point")
-    func pointMinusVector() {
+    @Test
+    func `Point - Vector yields translated Point`() {
         let p = Point2(x: 10, y: 20)
         let v = Vector2(dx: 3, dy: 5)
 
@@ -55,8 +55,8 @@ struct AffineGeometryOperatorTests {
         #expect(result.y.value == 15)
     }
 
-    @Test("Point arithmetic round-trip: (p1 - p2) + p2 == p1")
-    func pointArithmeticRoundTrip() {
+    @Test
+    func `Point arithmetic round-trip: (p1 - p2) + p2 == p1`() {
         let p1 = Point2(x: 100, y: 200)
         let p2 = Point2(x: 30, y: 50)
 
@@ -70,12 +70,12 @@ struct AffineGeometryOperatorTests {
 
 // MARK: - Tagged Coordinate/Displacement Operators
 
-@Suite("Tagged - Coordinate/Displacement Arithmetic")
-struct TaggedCoordinateDisplacementTests {
+@Suite
+struct `Tagged - Coordinate/Displacement Arithmetic` {
 
     // X-axis tests
-    @Test("X + Dx yields X coordinate")
-    func xPlusDx() {
+    @Test
+    func `X + Dx yields X coordinate`() {
         let x: A.X = 10
         let dx: A.Dx = 5
 
@@ -84,8 +84,8 @@ struct TaggedCoordinateDisplacementTests {
         #expect(result.value == 15)
     }
 
-    @Test("X - X yields Dx displacement")
-    func xMinusX() {
+    @Test
+    func `X - X yields Dx displacement`() {
         let x1: A.X = 10
         let x2: A.X = 3
 
@@ -94,8 +94,8 @@ struct TaggedCoordinateDisplacementTests {
         #expect(result.value == 7)
     }
 
-    @Test("X - Dx yields X coordinate")
-    func xMinusDx() {
+    @Test
+    func `X - Dx yields X coordinate`() {
         let x: A.X = 10
         let dx: A.Dx = 3
 
@@ -104,8 +104,8 @@ struct TaggedCoordinateDisplacementTests {
         #expect(result.value == 7)
     }
 
-    @Test("Dx + X yields X coordinate (commutative)")
-    func dxPlusX() {
+    @Test
+    func `Dx + X yields X coordinate (commutative)`() {
         let dx: A.Dx = 5
         let x: A.X = 10
 
@@ -115,8 +115,8 @@ struct TaggedCoordinateDisplacementTests {
     }
 
     // Y-axis tests
-    @Test("Y + Dy yields Y coordinate")
-    func yPlusDy() {
+    @Test
+    func `Y + Dy yields Y coordinate`() {
         let y: A.Y = 20
         let dy: A.Dy = 8
 
@@ -125,8 +125,8 @@ struct TaggedCoordinateDisplacementTests {
         #expect(result.value == 28)
     }
 
-    @Test("Y - Y yields Dy displacement")
-    func yMinusY() {
+    @Test
+    func `Y - Y yields Dy displacement`() {
         let y1: A.Y = 20
         let y2: A.Y = 8
 
@@ -136,8 +136,8 @@ struct TaggedCoordinateDisplacementTests {
     }
 
     // Displacement + Displacement
-    @Test("Dx + Dx yields Dx")
-    func dxPlusDx() {
+    @Test
+    func `Dx + Dx yields Dx`() {
         let dx1: A.Dx = 5
         let dx2: A.Dx = 3
 
@@ -146,8 +146,8 @@ struct TaggedCoordinateDisplacementTests {
         #expect(result.value == 8)
     }
 
-    @Test("Dy + Dy yields Dy")
-    func dyPlusDy() {
+    @Test
+    func `Dy + Dy yields Dy`() {
         let dy1: A.Dy = 10
         let dy2: A.Dy = 7
 
@@ -159,11 +159,11 @@ struct TaggedCoordinateDisplacementTests {
 
 // MARK: - Tagged Scalar Operations
 
-@Suite("Tagged - Scalar Multiplication/Division")
-struct TaggedScalarOperationsTests {
+@Suite
+struct `Tagged - Scalar Multiplication/Division` {
 
-    @Test("Dx * Scalar yields Dx")
-    func displacementTimesScalar() {
+    @Test
+    func `Dx * Scalar yields Dx`() {
         let dx: A.Dx = 5
 
         let result: A.Dx = dx * 3.0
@@ -171,8 +171,8 @@ struct TaggedScalarOperationsTests {
         #expect(result.value == 15)
     }
 
-    @Test("Scalar * Dx yields Dx (commutative)")
-    func scalarTimesDisplacement() {
+    @Test
+    func `Scalar * Dx yields Dx (commutative)`() {
         let dx: A.Dx = 5
 
         let result: A.Dx = 3.0 * dx
@@ -180,8 +180,8 @@ struct TaggedScalarOperationsTests {
         #expect(result.value == 15)
     }
 
-    @Test("Dx / Scalar yields Dx")
-    func displacementDividedByScalar() {
+    @Test
+    func `Dx / Scalar yields Dx`() {
         let dx: A.Dx = 15
 
         let result: A.Dx = dx / 3.0
@@ -189,8 +189,8 @@ struct TaggedScalarOperationsTests {
         #expect(result.value == 5)
     }
 
-    @Test("Dx / Dx yields Scalar (ratio)")
-    func displacementDividedByDisplacement() {
+    @Test
+    func `Dx / Dx yields Scalar (ratio)`() {
         let dx1: A.Dx = 15
         let dx2: A.Dx = 3
 
@@ -199,8 +199,8 @@ struct TaggedScalarOperationsTests {
         #expect(ratio == 5)
     }
 
-    @Test("Dx * Dx yields Scalar (squared)")
-    func displacementSquared() {
+    @Test
+    func `Dx * Dx yields Scalar (squared)`() {
         let dx: A.Dx = 4
 
         let squared: Double = dx * dx
@@ -211,11 +211,11 @@ struct TaggedScalarOperationsTests {
 
 // MARK: - Cross-Axis Multiplication
 
-@Suite("Tagged - Cross-Axis Multiplication")
-struct CrossAxisMultiplicationTests {
+@Suite
+struct `Tagged - Cross-Axis Multiplication` {
 
-    @Test("Dx * Dy yields Scalar (area)")
-    func dxTimesDy() {
+    @Test
+    func `Dx * Dy yields Scalar (area)`() {
         let width: L.Dx = 10
         let height: L.Dy = 5
 
@@ -224,8 +224,8 @@ struct CrossAxisMultiplicationTests {
         #expect(area == 50)
     }
 
-    @Test("Dy * Dx yields Scalar (commutative area)")
-    func dyTimesDx() {
+    @Test
+    func `Dy * Dx yields Scalar (commutative area)`() {
         let width: L.Dx = 10
         let height: L.Dy = 5
 
@@ -237,11 +237,11 @@ struct CrossAxisMultiplicationTests {
 
 // MARK: - Magnitude/Coordinate Arithmetic
 
-@Suite("Tagged - Magnitude/Coordinate Arithmetic")
-struct MagnitudeCoordinateTests {
+@Suite
+struct `Tagged - Magnitude/Coordinate Arithmetic` {
 
-    @Test("X + Magnitude yields X (center + radius pattern)")
-    func coordinatePlusMagnitude() {
+    @Test
+    func `X + Magnitude yields X (center + radius pattern)`() {
         let centerX: A.X = 100
         let radius: A.Distance = 25
 
@@ -250,8 +250,8 @@ struct MagnitudeCoordinateTests {
         #expect(right.value == 125)
     }
 
-    @Test("X - Magnitude yields X (center - radius pattern)")
-    func coordinateMinusMagnitude() {
+    @Test
+    func `X - Magnitude yields X (center - radius pattern)`() {
         let centerX: A.X = 100
         let radius: A.Distance = 25
 
@@ -260,8 +260,8 @@ struct MagnitudeCoordinateTests {
         #expect(left.value == 75)
     }
 
-    @Test("Magnitude + X yields X (commutative)")
-    func magnitudePlusCoordinate() {
+    @Test
+    func `Magnitude + X yields X (commutative)`() {
         let radius: A.Distance = 25
         let centerX: A.X = 100
 
@@ -273,11 +273,11 @@ struct MagnitudeCoordinateTests {
 
 // MARK: - Linear Vector Operators
 
-@Suite("Linear Vector - Arithmetic Operations")
-struct LinearVectorOperatorTests {
+@Suite
+struct `Linear Vector - Arithmetic Operations` {
 
-    @Test("Vector + Vector yields Vector")
-    func vectorPlusVector() {
+    @Test
+    func `Vector + Vector yields Vector`() {
         let v1 = Vector2(dx: 3, dy: 4)
         let v2 = Vector2(dx: 1, dy: 2)
 
@@ -287,8 +287,8 @@ struct LinearVectorOperatorTests {
         #expect(result.dy.value == 6)
     }
 
-    @Test("Vector - Vector yields Vector")
-    func vectorMinusVector() {
+    @Test
+    func `Vector - Vector yields Vector`() {
         let v1 = Vector2(dx: 5, dy: 7)
         let v2 = Vector2(dx: 2, dy: 3)
 
@@ -298,8 +298,8 @@ struct LinearVectorOperatorTests {
         #expect(result.dy.value == 4)
     }
 
-    @Test("Vector * Scalar yields Vector")
-    func vectorTimesScalar() {
+    @Test
+    func `Vector * Scalar yields Vector`() {
         let v = Vector2(dx: 3, dy: 4)
 
         let result: Vector2 = v * 2.0
@@ -308,8 +308,8 @@ struct LinearVectorOperatorTests {
         #expect(result.dy.value == 8)
     }
 
-    @Test("Scalar * Vector yields Vector (commutative)")
-    func scalarTimesVector() {
+    @Test
+    func `Scalar * Vector yields Vector (commutative)`() {
         let v = Vector2(dx: 3, dy: 4)
 
         let result: Vector2 = 2.0 * v
@@ -318,8 +318,8 @@ struct LinearVectorOperatorTests {
         #expect(result.dy.value == 8)
     }
 
-    @Test("Vector / Scalar yields Vector")
-    func vectorDividedByScalar() {
+    @Test
+    func `Vector / Scalar yields Vector`() {
         let v = Vector2(dx: 6, dy: 8)
 
         let result: Vector2 = v / 2.0
@@ -328,8 +328,8 @@ struct LinearVectorOperatorTests {
         #expect(result.dy.value == 4)
     }
 
-    @Test("-Vector yields negated Vector")
-    func vectorNegation() {
+    @Test
+    func `-Vector yields negated Vector`() {
         let v = Vector2(dx: 3, dy: -4)
 
         let result: Vector2 = -v
@@ -341,11 +341,11 @@ struct LinearVectorOperatorTests {
 
 // MARK: - Linear Matrix Operators
 
-@Suite("Linear Matrix - Arithmetic Operations")
-struct LinearMatrixOperatorTests {
+@Suite
+struct `Linear Matrix - Arithmetic Operations` {
 
-    @Test("Matrix + Matrix yields Matrix")
-    func matrixPlusMatrix() {
+    @Test
+    func `Matrix + Matrix yields Matrix`() {
         let m1 = Matrix2x2(a: 1, b: 2, c: 3, d: 4)
         let m2 = Matrix2x2(a: 5, b: 6, c: 7, d: 8)
 
@@ -357,8 +357,8 @@ struct LinearMatrixOperatorTests {
         #expect(result.d == 12)
     }
 
-    @Test("Matrix - Matrix yields Matrix")
-    func matrixMinusMatrix() {
+    @Test
+    func `Matrix - Matrix yields Matrix`() {
         let m1 = Matrix2x2(a: 5, b: 6, c: 7, d: 8)
         let m2 = Matrix2x2(a: 1, b: 2, c: 3, d: 4)
 
@@ -370,8 +370,8 @@ struct LinearMatrixOperatorTests {
         #expect(result.d == 4)
     }
 
-    @Test("Matrix * Scalar yields Matrix")
-    func matrixTimesScalar() {
+    @Test
+    func `Matrix * Scalar yields Matrix`() {
         let m = Matrix2x2(a: 1, b: 2, c: 3, d: 4)
 
         let result: Matrix2x2 = m * 2.0
@@ -382,8 +382,8 @@ struct LinearMatrixOperatorTests {
         #expect(result.d == 8)
     }
 
-    @Test("Scalar * Matrix yields Matrix (commutative)")
-    func scalarTimesMatrix() {
+    @Test
+    func `Scalar * Matrix yields Matrix (commutative)`() {
         let m = Matrix2x2(a: 1, b: 2, c: 3, d: 4)
 
         let result: Matrix2x2 = 2.0 * m
@@ -394,8 +394,8 @@ struct LinearMatrixOperatorTests {
         #expect(result.d == 8)
     }
 
-    @Test("Matrix * Vector yields Vector (typed)")
-    func matrixTimesVector() {
+    @Test
+    func `Matrix * Vector yields Vector (typed)`() {
         // Rotation by 90 degrees: [[0, -1], [1, 0]]
         let rotation = Matrix2x2(a: 0, b: -1, c: 1, d: 0)
         let v = Vector2(dx: 1, dy: 0)
@@ -407,8 +407,8 @@ struct LinearMatrixOperatorTests {
         #expect(abs(result.dy.value - 1) < 1e-10)
     }
 
-    @Test("Matrix * Matrix yields Matrix (composition)")
-    func matrixTimesMatrix() {
+    @Test
+    func `Matrix * Matrix yields Matrix (composition)`() {
         // Scale by 2
         let scale = Matrix2x2(a: 2, b: 0, c: 0, d: 2)
         // Rotation by 90 degrees
@@ -428,11 +428,11 @@ struct LinearMatrixOperatorTests {
 
 // MARK: - Translation Operators
 
-@Suite("Affine Translation - Arithmetic Operations")
-struct TranslationOperatorTests {
+@Suite
+struct `Affine Translation - Arithmetic Operations` {
 
-    @Test("Translation + Translation yields Translation")
-    func translationPlusTranslation() {
+    @Test
+    func `Translation + Translation yields Translation`() {
         let t1 = A.Translation(dx: 10, dy: 20)
         let t2 = A.Translation(dx: 5, dy: 8)
 
@@ -442,8 +442,8 @@ struct TranslationOperatorTests {
         #expect(result.dy.value == 28)
     }
 
-    @Test("Translation - Translation yields Translation")
-    func translationMinusTranslation() {
+    @Test
+    func `Translation - Translation yields Translation`() {
         let t1 = A.Translation(dx: 10, dy: 20)
         let t2 = A.Translation(dx: 3, dy: 5)
 
@@ -453,8 +453,8 @@ struct TranslationOperatorTests {
         #expect(result.dy.value == 15)
     }
 
-    @Test("Translation.vector returns typed Vector2")
-    func translationVector() {
+    @Test
+    func `Translation.vector returns typed Vector2`() {
         let t = A.Translation(dx: 10, dy: 20)
 
         let v: Vector2 = t.vector
@@ -466,11 +466,11 @@ struct TranslationOperatorTests {
 
 // MARK: - Transform Composition
 
-@Suite("Affine Transform - Composition Operators")
-struct TransformCompositionTests {
+@Suite
+struct `Affine Transform - Composition Operators` {
 
-    @Test("Transform composition follows right-to-left execution order")
-    func compositionOrder() {
+    @Test
+    func `Transform composition follows right-to-left execution order`() {
         // scale ∘ translate: translate first, then scale
         let translate = Transform.translation(dx: 10, dy: 0)
         let scale = Transform.scale(2)
@@ -485,8 +485,8 @@ struct TransformCompositionTests {
         #expect(abs(result.y.value - 0) < 1e-10)
     }
 
-    @Test("Transform inverse undoes transformation")
-    func transformInverse() {
+    @Test
+    func `Transform inverse undoes transformation`() {
         let t = Transform.rotation(Degree(45)).scaled(by: 2).translated(dx: 100, dy: 50)
         guard let inv = Transform.inverted(t) else {
             Issue.record("Transform should be invertible")
@@ -501,8 +501,8 @@ struct TransformCompositionTests {
         #expect(abs(recovered.y.value - p.y.value) < 1e-10)
     }
 
-    @Test("Transform.apply to Vector ignores translation")
-    func transformApplyToVector() {
+    @Test
+    func `Transform.apply to Vector ignores translation`() {
         let t = Transform.translation(dx: 100, dy: 100).scaled(by: 2)
         let v = Vector2(dx: 3, dy: 4)
 
@@ -516,35 +516,35 @@ struct TransformCompositionTests {
 
 // MARK: - Compound Assignment Operators
 
-@Suite("Compound Assignment Operators")
-struct CompoundAssignmentTests {
+@Suite
+struct `Compound Assignment Operators` {
 
-    @Test("Dx += Dx modifies in place")
-    func dxPlusEquals() {
+    @Test
+    func `Dx += Dx modifies in place`() {
         var dx: A.Dx = 10
         dx += A.Dx(5)
 
         #expect(dx.value == 15)
     }
 
-    @Test("Dx -= Dx modifies in place")
-    func dxMinusEquals() {
+    @Test
+    func `Dx -= Dx modifies in place`() {
         var dx: A.Dx = 10
         dx -= A.Dx(3)
 
         #expect(dx.value == 7)
     }
 
-    @Test("Dx *= Scalar modifies in place")
-    func dxTimesEquals() {
+    @Test
+    func `Dx *= Scalar modifies in place`() {
         var dx: A.Dx = 10
         dx *= 2.0
 
         #expect(dx.value == 20)
     }
 
-    @Test("Dx /= Scalar modifies in place")
-    func dxDivideEquals() {
+    @Test
+    func `Dx /= Scalar modifies in place`() {
         var dx: A.Dx = 20
         dx /= 4.0
 
@@ -554,11 +554,11 @@ struct CompoundAssignmentTests {
 
 // MARK: - Algebraic Properties
 
-@Suite("Algebraic Properties")
-struct AlgebraicPropertyTests {
+@Suite
+struct `Algebraic Properties` {
 
-    @Test("Vector addition is commutative")
-    func vectorAdditionCommutative() {
+    @Test
+    func `Vector addition is commutative`() {
         let v1 = Vector2(dx: 3, dy: 4)
         let v2 = Vector2(dx: 1, dy: 2)
 
@@ -568,8 +568,8 @@ struct AlgebraicPropertyTests {
         #expect(r1 == r2)
     }
 
-    @Test("Vector addition is associative")
-    func vectorAdditionAssociative() {
+    @Test
+    func `Vector addition is associative`() {
         let v1 = Vector2(dx: 1, dy: 2)
         let v2 = Vector2(dx: 3, dy: 4)
         let v3 = Vector2(dx: 5, dy: 6)
@@ -580,8 +580,8 @@ struct AlgebraicPropertyTests {
         #expect(r1 == r2)
     }
 
-    @Test("Vector zero is identity for addition")
-    func vectorZeroIdentity() {
+    @Test
+    func `Vector zero is identity for addition`() {
         let v = Vector2(dx: 3, dy: 4)
 
         let r1 = v + .zero
@@ -591,8 +591,8 @@ struct AlgebraicPropertyTests {
         #expect(r2 == v)
     }
 
-    @Test("Scalar multiplication distributes over vector addition")
-    func scalarMultiplicationDistributive() {
+    @Test
+    func `Scalar multiplication distributes over vector addition`() {
         let v1 = Vector2(dx: 3, dy: 4)
         let v2 = Vector2(dx: 1, dy: 2)
         let s: Double = 2
@@ -603,8 +603,8 @@ struct AlgebraicPropertyTests {
         #expect(r1 == r2)
     }
 
-    @Test("Transform identity leaves points unchanged")
-    func transformIdentity() {
+    @Test
+    func `Transform identity leaves points unchanged`() {
         let p = Point2(x: 42, y: 17)
 
         let result = Transform.apply(.identity, to: p)
@@ -612,8 +612,8 @@ struct AlgebraicPropertyTests {
         #expect(result == p)
     }
 
-    @Test("Transform composition is associative")
-    func transformCompositionAssociative() {
+    @Test
+    func `Transform composition is associative`() {
         let t1 = Transform.translation(dx: 10, dy: 20)
         let t2 = Transform.scale(2)
         let t3 = Transform.rotation(Degree(30))
@@ -632,11 +632,11 @@ struct AlgebraicPropertyTests {
 
 // MARK: - Type Safety Verification
 
-@Suite("Type Safety - Operator Return Types")
-struct TypeSafetyTests {
+@Suite
+struct `Type Safety - Operator Return Types` {
 
-    @Test("All coordinate/displacement operators preserve types correctly")
-    func typePreservation() {
+    @Test
+    func `All coordinate/displacement operators preserve types correctly`() {
         // These assignments verify compile-time type correctness
         let x: A.X = 10
         let dx: A.Dx = 5

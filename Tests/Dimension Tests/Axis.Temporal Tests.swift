@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Axis.Temporal Typealias Tests
 
-@Suite("Axis.Temporal - Typealias")
-struct AxisTemporal_TypealiasTests {
+@Suite
+struct `Axis.Temporal - Typealias` {
     @Test
     func `Axis Temporal is identical to Temporal`() {
         let axisTemporal: Axis<4>.Temporal = .future

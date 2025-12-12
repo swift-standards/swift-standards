@@ -10,10 +10,10 @@ import Testing
 
 // MARK: - Line Initialization Tests
 
-@Suite("Geometry.Line - Initialization")
-struct GeometryLine_InitializationTests {
-    @Test("Line from point and direction")
-    func lineFromPointAndDirection() {
+@Suite
+struct `Geometry.Line - Initialization` {
+    @Test
+    func `Line from point and direction`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 1)
@@ -24,8 +24,8 @@ struct GeometryLine_InitializationTests {
         #expect(line.direction.dy == 1)
     }
 
-    @Test("Line from two points")
-    func lineFromTwoPoints() {
+    @Test
+    func `Line from two points`() {
         let line: Geometry<Double, Void>.Line = .init(
             from: .init(x: 0, y: 0),
             to: .init(x: 10, y: 20)
@@ -39,10 +39,10 @@ struct GeometryLine_InitializationTests {
 
 // MARK: - Line Properties Tests
 
-@Suite("Geometry.Line - Properties")
-struct GeometryLine_PropertiesTests {
-    @Test("Normalized direction vector")
-    func normalizedDirection() {
+@Suite
+struct `Geometry.Line - Properties` {
+    @Test
+    func `Normalized direction vector`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .zero,
             direction: .init(dx: 3, dy: 4)
@@ -51,8 +51,8 @@ struct GeometryLine_PropertiesTests {
         #expect(abs(normalized.length - 1) < 1e-10)
     }
 
-    @Test("Point at parameter")
-    func pointAtParameter() {
+    @Test
+    func `Point at parameter`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 10, dy: 10)
@@ -65,10 +65,10 @@ struct GeometryLine_PropertiesTests {
 
 // MARK: - Line Static Functions Tests
 
-@Suite("Geometry.Line - Static Functions")
-struct GeometryLine_StaticTests {
-    @Test("Geometry.distance(from:to:) horizontal line")
-    func staticDistanceHorizontalLine() {
+@Suite
+struct `Geometry.Line - Static Functions` {
+    @Test
+    func `Geometry.distance(from:to:) horizontal line`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 0)
@@ -79,8 +79,8 @@ struct GeometryLine_StaticTests {
         #expect(distance! == 3)
     }
 
-    @Test("Geometry.distance(from:to:) vertical line")
-    func staticDistanceVerticalLine() {
+    @Test
+    func `Geometry.distance(from:to:) vertical line`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 3, y: 0),
             direction: .init(dx: 0, dy: 1)
@@ -91,8 +91,8 @@ struct GeometryLine_StaticTests {
         #expect(distance! == 4)
     }
 
-    @Test("Geometry.distance(from:to:) returns nil for zero direction")
-    func staticDistanceZeroDirection() {
+    @Test
+    func `Geometry.distance(from:to:) returns nil for zero direction`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 0, dy: 0)
@@ -101,8 +101,8 @@ struct GeometryLine_StaticTests {
         #expect(Geometry.distance(from: line, to: point) == nil)
     }
 
-    @Test("Geometry.intersection(_:_:) intersecting lines")
-    func staticIntersectionLines() {
+    @Test
+    func `Geometry.intersection(_:_:) intersecting lines`() {
         let line1: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 1)
@@ -117,8 +117,8 @@ struct GeometryLine_StaticTests {
         #expect(abs(intersection!.y.value - 1) < 1e-10)
     }
 
-    @Test("Geometry.intersection(_:_:) parallel lines")
-    func staticIntersectionParallelLines() {
+    @Test
+    func `Geometry.intersection(_:_:) parallel lines`() {
         let line1: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 0)
@@ -130,8 +130,8 @@ struct GeometryLine_StaticTests {
         #expect(Geometry.intersection(line1, line2) == nil)
     }
 
-    @Test("Geometry.projection(of:onto:) onto horizontal line")
-    func staticProjectionHorizontal() {
+    @Test
+    func `Geometry.projection(of:onto:) onto horizontal line`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 0)
@@ -143,8 +143,8 @@ struct GeometryLine_StaticTests {
         #expect(abs(projection!.y.value - 0) < 1e-10)
     }
 
-    @Test("Geometry.projection(of:onto:) onto diagonal line")
-    func staticProjectionDiagonal() {
+    @Test
+    func `Geometry.projection(of:onto:) onto diagonal line`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 1)
@@ -159,10 +159,10 @@ struct GeometryLine_StaticTests {
 
 // MARK: - Line Method Tests
 
-@Suite("Geometry.Line - Instance Methods")
-struct GeometryLine_MethodTests {
-    @Test("Distance to point")
-    func distanceToPoint() {
+@Suite
+struct `Geometry.Line - Instance Methods` {
+    @Test
+    func `Distance to point`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 0)
@@ -171,8 +171,8 @@ struct GeometryLine_MethodTests {
         #expect(line.distance(to: point) == 3)
     }
 
-    @Test("Intersection with another line")
-    func intersectionWithLine() {
+    @Test
+    func `Intersection with another line`() {
         let horizontal: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 5),
             direction: .init(dx: 1, dy: 0)
@@ -187,8 +187,8 @@ struct GeometryLine_MethodTests {
         #expect(abs(intersection!.y.value - 5) < 1e-10)
     }
 
-    @Test("Projection of point onto line")
-    func projectionOfPoint() {
+    @Test
+    func `Projection of point onto line`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 1)
@@ -200,8 +200,8 @@ struct GeometryLine_MethodTests {
         #expect(abs(projection!.y.value - 2) < 1e-10)
     }
 
-    @Test("Reflection across horizontal line")
-    func reflectionHorizontal() {
+    @Test
+    func `Reflection across horizontal line`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 0)
@@ -213,8 +213,8 @@ struct GeometryLine_MethodTests {
         #expect(abs(reflection!.y.value - (-3)) < 1e-10)
     }
 
-    @Test("Reflection across vertical line")
-    func reflectionVertical() {
+    @Test
+    func `Reflection across vertical line`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 5, y: 0),
             direction: .init(dx: 0, dy: 1)
@@ -226,8 +226,8 @@ struct GeometryLine_MethodTests {
         #expect(abs(reflection!.y.value - 7) < 1e-10)
     }
 
-    @Test("Point on line has same projection")
-    func pointOnLineProjection() {
+    @Test
+    func `Point on line has same projection`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 1)
@@ -239,8 +239,8 @@ struct GeometryLine_MethodTests {
         #expect(abs(projection!.y.value - 3) < 1e-10)
     }
 
-    @Test("Coincident lines return nil for intersection")
-    func coincidentLines() {
+    @Test
+    func `Coincident lines return nil for intersection`() {
         let line1: Geometry<Double, Void>.Line = .init(
             point: .init(x: 0, y: 0),
             direction: .init(dx: 1, dy: 1)
@@ -255,10 +255,10 @@ struct GeometryLine_MethodTests {
 
 // MARK: - Line.Segment Initialization Tests
 
-@Suite("Geometry.Line.Segment - Initialization")
-struct GeometryLineSegment_InitializationTests {
-    @Test("Segment from start and end points")
-    func segmentFromPoints() {
+@Suite
+struct `Geometry.Line.Segment - Initialization` {
+    @Test
+    func `Segment from start and end points`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 3, y: 4)
@@ -269,8 +269,8 @@ struct GeometryLineSegment_InitializationTests {
         #expect(segment.end.y == 4)
     }
 
-    @Test("LineSegment typealias")
-    func lineSegmentTypealias() {
+    @Test
+    func `LineSegment typealias`() {
         let segment: Geometry<Double, Void>.LineSegment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 3, y: 4)
@@ -281,10 +281,10 @@ struct GeometryLineSegment_InitializationTests {
 
 // MARK: - Line.Segment Properties Tests
 
-@Suite("Geometry.Line.Segment - Properties")
-struct GeometryLineSegment_PropertiesTests {
-    @Test("Segment length")
-    func segmentLength() {
+@Suite
+struct `Geometry.Line.Segment - Properties` {
+    @Test
+    func `Segment length`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 3, y: 4)
@@ -292,8 +292,8 @@ struct GeometryLineSegment_PropertiesTests {
         #expect(segment.length == 5)
     }
 
-    @Test("Segment length squared")
-    func segmentLengthSquared() {
+    @Test
+    func `Segment length squared`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 3, y: 4)
@@ -301,8 +301,8 @@ struct GeometryLineSegment_PropertiesTests {
         #expect(segment.lengthSquared == 25)
     }
 
-    @Test("Segment midpoint")
-    func segmentMidpoint() {
+    @Test
+    func `Segment midpoint`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 10)
@@ -311,8 +311,8 @@ struct GeometryLineSegment_PropertiesTests {
         #expect(segment.midpoint.y == 5)
     }
 
-    @Test("Segment vector")
-    func segmentVector() {
+    @Test
+    func `Segment vector`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 10, y: 20),
             end: .init(x: 30, y: 50)
@@ -321,8 +321,8 @@ struct GeometryLineSegment_PropertiesTests {
         #expect(segment.vector.dy == 30)
     }
 
-    @Test("Segment to line conversion")
-    func segmentToLine() {
+    @Test
+    func `Segment to line conversion`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 10, y: 20),
             end: .init(x: 30, y: 50)
@@ -334,8 +334,8 @@ struct GeometryLineSegment_PropertiesTests {
         #expect(line.direction.dy == 30)
     }
 
-    @Test("Reversed segment")
-    func reversedSegment() {
+    @Test
+    func `Reversed segment`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 5, y: 10)
@@ -350,10 +350,10 @@ struct GeometryLineSegment_PropertiesTests {
 
 // MARK: - Line.Segment Parametric Tests
 
-@Suite("Geometry.Line.Segment - Parametric Points")
-struct GeometryLineSegment_ParametricTests {
-    @Test("Point at parameter 0")
-    func pointAtZero() {
+@Suite
+struct `Geometry.Line.Segment - Parametric Points` {
+    @Test
+    func `Point at parameter 0`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 10)
@@ -363,8 +363,8 @@ struct GeometryLineSegment_ParametricTests {
         #expect(point.y == 0)
     }
 
-    @Test("Point at parameter 0.25")
-    func pointAtQuarter() {
+    @Test
+    func `Point at parameter 0.25`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 10)
@@ -374,8 +374,8 @@ struct GeometryLineSegment_ParametricTests {
         #expect(point.y == 2.5)
     }
 
-    @Test("Point at parameter 1")
-    func pointAtOne() {
+    @Test
+    func `Point at parameter 1`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 10)
@@ -388,10 +388,10 @@ struct GeometryLineSegment_ParametricTests {
 
 // MARK: - Line.Segment Static Functions Tests
 
-@Suite("Geometry.Line.Segment - Static Functions")
-struct GeometryLineSegment_StaticTests {
-    @Test("Geometry.intersection(_:_:) intersecting segments")
-    func staticIntersectionSegments() {
+@Suite
+struct `Geometry.Line.Segment - Static Functions` {
+    @Test
+    func `Geometry.intersection(_:_:) intersecting segments`() {
         let seg1: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 10)
@@ -406,8 +406,8 @@ struct GeometryLineSegment_StaticTests {
         #expect(abs(intersection!.y.value - 5) < 1e-10)
     }
 
-    @Test("Geometry.intersection(_:_:) non-intersecting parallel segments")
-    func staticIntersectionParallelSegments() {
+    @Test
+    func `Geometry.intersection(_:_:) non-intersecting parallel segments`() {
         let seg1: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 0)
@@ -419,8 +419,8 @@ struct GeometryLineSegment_StaticTests {
         #expect(Geometry.intersection(seg1, seg2) == nil)
     }
 
-    @Test("Geometry.intersection(_:_:) would intersect if extended")
-    func staticIntersectionWouldExtend() {
+    @Test
+    func `Geometry.intersection(_:_:) would intersect if extended`() {
         let seg1: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 2, y: 2)
@@ -432,8 +432,8 @@ struct GeometryLineSegment_StaticTests {
         #expect(Geometry.intersection(seg1, seg2) == nil)
     }
 
-    @Test("Geometry.intersection(_:_:) T-junction")
-    func staticIntersectionTJunction() {
+    @Test
+    func `Geometry.intersection(_:_:) T-junction`() {
         let horizontal: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 5),
             end: .init(x: 10, y: 5)
@@ -448,8 +448,8 @@ struct GeometryLineSegment_StaticTests {
         #expect(abs(intersection!.y.value - 5) < 1e-10)
     }
 
-    @Test("Geometry.intersection(_:_:) at endpoint")
-    func staticIntersectionEndpoint() {
+    @Test
+    func `Geometry.intersection(_:_:) at endpoint`() {
         let seg1: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 5, y: 5)
@@ -464,8 +464,8 @@ struct GeometryLineSegment_StaticTests {
         #expect(abs(intersection!.y.value - 5) < 1e-10)
     }
 
-    @Test("Geometry.distance(from:to:) point on segment")
-    func staticDistancePointOnSegment() {
+    @Test
+    func `Geometry.distance(from:to:) point on segment`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 0)
@@ -475,8 +475,8 @@ struct GeometryLineSegment_StaticTests {
         #expect(abs(distance.value) < 1e-10)
     }
 
-    @Test("Geometry.distance(from:to:) point near segment")
-    func staticDistancePointNearSegment() {
+    @Test
+    func `Geometry.distance(from:to:) point near segment`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 0)
@@ -486,8 +486,8 @@ struct GeometryLineSegment_StaticTests {
         #expect(abs(distance.value - 3) < 1e-10)
     }
 
-    @Test("Geometry.distance(from:to:) point past segment end")
-    func staticDistancePointPastEnd() {
+    @Test
+    func `Geometry.distance(from:to:) point past segment end`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 0)
@@ -497,8 +497,8 @@ struct GeometryLineSegment_StaticTests {
         #expect(abs(distance.value - 5) < 1e-10)
     }
 
-    @Test("Geometry.distance(from:to:) point before segment start")
-    func staticDistancePointBeforeStart() {
+    @Test
+    func `Geometry.distance(from:to:) point before segment start`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 0)
@@ -508,8 +508,8 @@ struct GeometryLineSegment_StaticTests {
         #expect(abs(distance.value - 5) < 1e-10)
     }
 
-    @Test("Geometry.distance(from:to:) degenerate segment")
-    func staticDistanceDegenerateSegment() {
+    @Test
+    func `Geometry.distance(from:to:) degenerate segment`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 5, y: 5),
             end: .init(x: 5, y: 5)
@@ -522,10 +522,10 @@ struct GeometryLineSegment_StaticTests {
 
 // MARK: - Line.Segment Method Tests
 
-@Suite("Geometry.Line.Segment - Instance Methods")
-struct GeometryLineSegment_MethodTests {
-    @Test("Intersection with another segment")
-    func intersectionWithSegment() {
+@Suite
+struct `Geometry.Line.Segment - Instance Methods` {
+    @Test
+    func `Intersection with another segment`() {
         let seg1: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 10)
@@ -540,8 +540,8 @@ struct GeometryLineSegment_MethodTests {
         #expect(abs(intersection!.y.value - 5) < 1e-10)
     }
 
-    @Test("Intersects method")
-    func intersectsMethod() {
+    @Test
+    func `Intersects method`() {
         let seg1: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 10)
@@ -553,8 +553,8 @@ struct GeometryLineSegment_MethodTests {
         #expect(seg1.intersects(with: seg2))
     }
 
-    @Test("Distance to point")
-    func distanceToPoint() {
+    @Test
+    func `Distance to point`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 10, y: 0)
@@ -566,10 +566,10 @@ struct GeometryLineSegment_MethodTests {
 
 // MARK: - Functorial Map Tests
 
-@Suite("Geometry.Line - Functorial Map")
-struct GeometryLine_MapTests {
-    @Test("Line map to different scalar type")
-    func lineMap() {
+@Suite
+struct `Geometry.Line - Functorial Map` {
+    @Test
+    func `Line map to different scalar type`() {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 1, y: 2),
             direction: .init(dx: 3, dy: 4)
@@ -581,8 +581,8 @@ struct GeometryLine_MapTests {
         #expect(mapped.direction.dy.value == 4)
     }
 
-    @Test("Segment map to different scalar type")
-    func segmentMap() {
+    @Test
+    func `Segment map to different scalar type`() {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 5, y: 10)

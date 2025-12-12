@@ -2,46 +2,46 @@ import Testing
 
 @testable import StandardLibraryExtensions
 
-@Suite("String.Builder Tests")
-struct StringBuilderTests {
+@Suite
+struct `String.Builder Tests` {
 
-    @Suite("Expression Building")
-    struct ExpressionBuildingTests {
+    @Suite
+    struct `Expression Building` {
 
-        @Test("String expression")
-        func stringExpression() {
+        @Test
+        func `String expression`() {
             let result = String.Builder.buildExpression("Hello")
             #expect(result == "Hello")
         }
 
-        @Test("Optional string expression - some")
-        func optionalStringExpressionSome() {
+        @Test
+        func `Optional string expression - some`() {
             let value: String? = "Hello"
             let result = String.Builder.buildExpression(value)
             #expect(result == "Hello")
         }
 
-        @Test("Optional string expression - none")
-        func optionalStringExpressionNone() {
+        @Test
+        func `Optional string expression - none`() {
             let value: String? = nil
             let result = String.Builder.buildExpression(value)
             #expect(result.isEmpty)
         }
     }
 
-    @Suite("Basic String Building")
-    struct BasicStringBuildingTests {
+    @Suite
+    struct `Basic String Building` {
 
-        @Test("Single string")
-        func singleString() {
+        @Test
+        func `Single string`() {
             let result = String {
                 "Hello World"
             }
             #expect(result == "Hello World")
         }
 
-        @Test("Multiple strings joined with newlines")
-        func multipleStringsJoinedWithNewlines() {
+        @Test
+        func `Multiple strings joined with newlines`() {
             let result = String {
                 "First line"
                 "Second line"
@@ -50,27 +50,27 @@ struct StringBuilderTests {
             #expect(result == "First line\nSecond line\nThird line")
         }
 
-        @Test("Empty string building")
-        func emptyStringBuilding() {
+        @Test
+        func `Empty string building`() {
             let result = String {
                 ""
             }
             #expect(result.isEmpty)
         }
 
-        @Test("Empty block")
-        func emptyBlock() {
+        @Test
+        func `Empty block`() {
             let result = String {
             }
             #expect(result.isEmpty)
         }
     }
 
-    @Suite("Control Flow")
-    struct ControlFlowTests {
+    @Suite
+    struct `Control Flow` {
 
-        @Test("Conditional strings - if true")
-        func conditionalStringsIfTrue() {
+        @Test
+        func `Conditional strings - if true`() {
             let includeGreeting = true
             let result = String {
                 if includeGreeting {
@@ -83,8 +83,8 @@ struct StringBuilderTests {
             #expect(result == "Hello\nWorld")
         }
 
-        @Test("Conditional strings - if false")
-        func conditionalStringsIfFalse() {
+        @Test
+        func `Conditional strings - if false`() {
             let includeGreeting = false
             let result = String {
                 if includeGreeting {
@@ -97,8 +97,8 @@ struct StringBuilderTests {
             #expect(result == "Goodbye\nWorld")
         }
 
-        @Test("Optional strings - some")
-        func optionalStringsSome() {
+        @Test
+        func `Optional strings - some`() {
             let optionalLine: String? = "Optional content"
             let result = String {
                 "Start"
@@ -110,8 +110,8 @@ struct StringBuilderTests {
             #expect(result == "Start\nOptional content\nEnd")
         }
 
-        @Test("Optional strings - none")
-        func optionalStringsNone() {
+        @Test
+        func `Optional strings - none`() {
             let optionalLine: String? = nil
             let result = String {
                 "Start"
@@ -123,8 +123,8 @@ struct StringBuilderTests {
             #expect(result == "Start\n\nEnd")
         }
 
-        @Test("For loop string building")
-        func forLoopStringBuilding() {
+        @Test
+        func `For loop string building`() {
             let result = String {
                 "Header"
                 for i in 1...3 {
@@ -136,11 +136,11 @@ struct StringBuilderTests {
         }
     }
 
-    @Suite("Real-World Usage Patterns")
-    struct RealWorldUsagePatternsTests {
+    @Suite
+    struct `Real-World Usage Patterns` {
 
-        @Test("Building configuration text")
-        func buildingConfigurationText() {
+        @Test
+        func `Building configuration text`() {
             let debugMode = true
             let version = "1.0.0"
 
@@ -167,8 +167,8 @@ struct StringBuilderTests {
             #expect(config == expected)
         }
 
-        @Test("Building error messages")
-        func buildingErrorMessages() {
+        @Test
+        func `Building error messages`() {
             let errors = ["Invalid input", "Missing field", "Timeout occurred"]
 
             let errorReport = String {
@@ -191,8 +191,8 @@ struct StringBuilderTests {
             #expect(errorReport == expected)
         }
 
-        @Test("Building formatted output")
-        func buildingFormattedOutput() {
+        @Test
+        func `Building formatted output`() {
             let items = ["Apple", "Banana", "Cherry"]
             let showNumbers = true
 
@@ -219,11 +219,11 @@ struct StringBuilderTests {
         }
     }
 
-    @Suite("Edge Cases")
-    struct EdgeCasesTests {
+    @Suite
+    struct `Edge Cases` {
 
-        @Test("Empty strings in builder")
-        func emptyStringsInBuilder() {
+        @Test
+        func `Empty strings in builder`() {
             let result = String {
                 "Start"
                 ""
@@ -234,8 +234,8 @@ struct StringBuilderTests {
             #expect(result == "Start\n\nMiddle\n\nEnd")
         }
 
-        @Test("Nested conditionals")
-        func nestedConditionals() {
+        @Test
+        func `Nested conditionals`() {
             let condition1 = true
             let condition2 = false
 
@@ -261,8 +261,8 @@ struct StringBuilderTests {
             #expect(result == expected)
         }
 
-        @Test("Large string building")
-        func largeStringBuilding() {
+        @Test
+        func `Large string building`() {
             let result = String {
                 "Large String Test"
                 for i in 1...100 {
@@ -279,8 +279,8 @@ struct StringBuilderTests {
             #expect(lines[100] == "Line 100")
         }
 
-        @Test("Special characters and unicode")
-        func specialCharactersAndUnicode() {
+        @Test
+        func `Special characters and unicode`() {
             let result = String {
                 "Special Characters Test"
                 "Emoji: 🚀 🎉 ✨"
@@ -295,82 +295,82 @@ struct StringBuilderTests {
         }
     }
 
-    @Suite("Static Method Tests")
-    struct StaticMethodTests {
+    @Suite
+    struct `Static Method Tests` {
 
-        @Test("buildPartialBlock first")
-        func buildPartialBlockFirst() {
+        @Test
+        func `buildPartialBlock first`() {
             let result = String.Builder.buildPartialBlock(first: "First string")
             #expect(result == "First string")
         }
 
-        @Test("buildPartialBlock first void")
-        func buildPartialBlockFirstVoid() {
+        @Test
+        func `buildPartialBlock first void`() {
             let result = String.Builder.buildPartialBlock(first: ())
             #expect(result.isEmpty)
         }
 
-        @Test("buildPartialBlock accumulated and next")
-        func buildPartialBlockAccumulatedAndNext() {
+        @Test
+        func `buildPartialBlock accumulated and next`() {
             let result = String.Builder.buildPartialBlock(accumulated: "First", next: "Second")
             #expect(result == "First\nSecond")
         }
 
-        @Test("buildPartialBlock accumulated empty and next")
-        func buildPartialBlockAccumulatedEmptyAndNext() {
+        @Test
+        func `buildPartialBlock accumulated empty and next`() {
             let result = String.Builder.buildPartialBlock(accumulated: "", next: "Second")
             #expect(result == "Second")
         }
 
-        @Test("buildEither first")
-        func buildEitherFirst() {
+        @Test
+        func `buildEither first`() {
             let result = String.Builder.buildEither(first: "First option")
             #expect(result == "First option")
         }
 
-        @Test("buildEither second")
-        func buildEitherSecond() {
+        @Test
+        func `buildEither second`() {
             let result = String.Builder.buildEither(second: "Second option")
             #expect(result == "Second option")
         }
 
-        @Test("buildOptional with value")
-        func buildOptionalWithValue() {
+        @Test
+        func `buildOptional with value`() {
             let result = String.Builder.buildOptional("Some value")
             #expect(result == "Some value")
         }
 
-        @Test("buildOptional with nil")
-        func buildOptionalWithNil() {
+        @Test
+        func `buildOptional with nil`() {
             let result = String.Builder.buildOptional(nil)
             #expect(result.isEmpty)
         }
 
-        @Test("buildArray")
-        func buildArray() {
+        @Test
+        func `buildArray`() {
             let components = ["Line 1", "Line 2", "Line 3"]
             let result = String.Builder.buildArray(components)
             #expect(result == "Line 1\nLine 2\nLine 3")
         }
 
-        @Test("buildArray with empty array")
-        func buildArrayWithEmptyArray() {
+        @Test
+        func `buildArray with empty array`() {
             let result = String.Builder.buildArray([])
             #expect(result.isEmpty)
         }
 
-        @Test("buildLimitedAvailability")
-        func buildLimitedAvailability() {
+        @Test
+        func `buildLimitedAvailability`() {
             let result = String.Builder.buildLimitedAvailability("Available content")
             #expect(result == "Available content")
         }
     }
 
-    @Suite("Limited Availability")
-    struct LimitedAvailabilityTests {
+    @Suite
+    struct `Limited Availability` {
 
-        @Test("Limited availability passthrough")
-        func limitedAvailabilityPassthrough() {
+        @Test
+        func `Limited availability passthrough`() {
             let result = String {
                 "Always present"
                 if #available(macOS 26, iOS 26, *) {

@@ -2,14 +2,14 @@ import Testing
 
 @testable import StandardLibraryExtensions
 
-@Suite("CollectionOfOne.Builder Tests")
-struct CollectionOfOneBuilderTests {
+@Suite
+struct `CollectionOfOne.Builder Tests` {
 
-    @Suite("Basic Construction")
-    struct BasicConstructionTests {
+    @Suite
+    struct `Basic Construction` {
 
-        @Test("Single element")
-        func singleElement() {
+        @Test
+        func `Single element`() {
             let collection: CollectionOfOne<Int> = CollectionOfOne {
                 42
             }
@@ -17,8 +17,8 @@ struct CollectionOfOneBuilderTests {
             #expect(collection.count == 1)
         }
 
-        @Test("Single string element")
-        func singleStringElement() {
+        @Test
+        func `Single string element`() {
             let collection: CollectionOfOne<String> = CollectionOfOne {
                 "Hello"
             }
@@ -26,11 +26,11 @@ struct CollectionOfOneBuilderTests {
         }
     }
 
-    @Suite("Control Flow")
-    struct ControlFlowTests {
+    @Suite
+    struct `Control Flow` {
 
-        @Test("If-else first branch")
-        func ifElseFirstBranch() {
+        @Test
+        func `If-else first branch`() {
             let condition = true
             let collection: CollectionOfOne<String> = CollectionOfOne {
                 if condition {
@@ -42,8 +42,8 @@ struct CollectionOfOneBuilderTests {
             #expect(collection.first == "first")
         }
 
-        @Test("If-else second branch")
-        func ifElseSecondBranch() {
+        @Test
+        func `If-else second branch`() {
             let condition = false
             let collection: CollectionOfOne<String> = CollectionOfOne {
                 if condition {
@@ -55,8 +55,8 @@ struct CollectionOfOneBuilderTests {
             #expect(collection.first == "second")
         }
 
-        @Test("Nested if-else")
-        func nestedIfElse() {
+        @Test
+        func `Nested if-else`() {
             let a = false
             let b = true
 
@@ -75,46 +75,46 @@ struct CollectionOfOneBuilderTests {
         }
     }
 
-    @Suite("Static Method Tests")
-    struct StaticMethodTests {
+    @Suite
+    struct `Static Method Tests` {
 
-        @Test("buildExpression")
-        func buildExpression() {
+        @Test
+        func `buildExpression`() {
             let result = CollectionOfOne<Int>.Builder.buildExpression(42)
             #expect(result == 42)
         }
 
-        @Test("buildBlock")
-        func buildBlock() {
+        @Test
+        func `buildBlock`() {
             let result = CollectionOfOne<Int>.Builder.buildBlock(42)
             #expect(result == 42)
         }
 
-        @Test("buildEither first")
-        func buildEitherFirst() {
+        @Test
+        func `buildEither first`() {
             let result = CollectionOfOne<Int>.Builder.buildEither(first: 42)
             #expect(result == 42)
         }
 
-        @Test("buildEither second")
-        func buildEitherSecond() {
+        @Test
+        func `buildEither second`() {
             let result = CollectionOfOne<Int>.Builder.buildEither(second: 100)
             #expect(result == 100)
         }
 
-        @Test("buildFinalResult")
-        func buildFinalResult() {
+        @Test
+        func `buildFinalResult`() {
             let result = CollectionOfOne<Int>.Builder.buildFinalResult(42)
             #expect(result.first == 42)
             #expect(result.count == 1)
         }
     }
 
-    @Suite("Collection Conformance")
-    struct CollectionConformanceTests {
+    @Suite
+    struct `Collection Conformance` {
 
-        @Test("Iteration")
-        func iteration() {
+        @Test
+        func `Iteration`() {
             let collection: CollectionOfOne<Int> = CollectionOfOne {
                 42
             }
@@ -127,24 +127,24 @@ struct CollectionOfOneBuilderTests {
             #expect(values == [42])
         }
 
-        @Test("Count is always one")
-        func countIsAlwaysOne() {
+        @Test
+        func `Count is always one`() {
             let collection: CollectionOfOne<String> = CollectionOfOne {
                 "value"
             }
             #expect(collection.count == 1)
         }
 
-        @Test("isEmpty is always false")
-        func isEmptyIsAlwaysFalse() {
+        @Test
+        func `isEmpty is always false`() {
             let collection: CollectionOfOne<Int> = CollectionOfOne {
                 0
             }
             #expect(collection.isEmpty == false)
         }
 
-        @Test("First and last are same")
-        func firstAndLastAreSame() {
+        @Test
+        func `First and last are same`() {
             let collection: CollectionOfOne<Int> = CollectionOfOne {
                 42
             }
@@ -152,11 +152,11 @@ struct CollectionOfOneBuilderTests {
         }
     }
 
-    @Suite("Real-World Patterns")
-    struct RealWorldPatternsTests {
+    @Suite
+    struct `Real-World Patterns` {
 
-        @Test("Configuration value selection")
-        func configurationValueSelection() {
+        @Test
+        func `Configuration value selection`() {
             let isDebug = false
 
             let config: CollectionOfOne<String> = CollectionOfOne {
@@ -170,8 +170,8 @@ struct CollectionOfOneBuilderTests {
             #expect(config.first == "production-endpoint")
         }
 
-        @Test("Default value selection")
-        func defaultValueSelection() {
+        @Test
+        func `Default value selection`() {
             let hasCustomValue = true
             let customValue = 100
 
@@ -187,11 +187,11 @@ struct CollectionOfOneBuilderTests {
         }
     }
 
-    @Suite("Limited Availability")
-    struct LimitedAvailabilityTests {
+    @Suite
+    struct `Limited Availability` {
 
-        @Test("Limited availability passthrough")
-        func limitedAvailabilityPassthrough() {
+        @Test
+        func `Limited availability passthrough`() {
             let collection: CollectionOfOne<Int> = CollectionOfOne {
                 if #available(macOS 26, iOS 26, *) {
                     42

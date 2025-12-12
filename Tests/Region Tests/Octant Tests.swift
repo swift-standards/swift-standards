@@ -5,8 +5,8 @@ import Testing
 
 @testable import Region
 
-@Suite("Octant - Opposite")
-struct OctantOppositeTests {
+@Suite
+struct `Octant - Opposite` {
     @Test(arguments: Region.Octant.allCases)
     func `opposite is involution`(octant: Region.Octant) {
         let opposite = Region.Octant.opposite(of: octant)
@@ -34,8 +34,8 @@ struct OctantOppositeTests {
     }
 }
 
-@Suite("Octant - X Sign Property")
-struct OctantXSignTests {
+@Suite
+struct `Octant - X Sign Property` {
     @Test(arguments: Region.Octant.allCases)
     func `hasPositiveX property matches static function`(octant: Region.Octant) {
         let property = octant.hasPositiveX
@@ -56,8 +56,8 @@ struct OctantXSignTests {
     }
 }
 
-@Suite("Octant - Y Sign Property")
-struct OctantYSignTests {
+@Suite
+struct `Octant - Y Sign Property` {
     @Test(arguments: Region.Octant.allCases)
     func `hasPositiveY property matches static function`(octant: Region.Octant) {
         let property = octant.hasPositiveY
@@ -78,8 +78,8 @@ struct OctantYSignTests {
     }
 }
 
-@Suite("Octant - Z Sign Property")
-struct OctantZSignTests {
+@Suite
+struct `Octant - Z Sign Property` {
     @Test(arguments: Region.Octant.allCases)
     func `hasPositiveZ property matches static function`(octant: Region.Octant) {
         let property = octant.hasPositiveZ

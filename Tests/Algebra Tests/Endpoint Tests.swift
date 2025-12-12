@@ -3,8 +3,8 @@ import Testing
 
 @testable import Algebra
 
-@Suite("Endpoint - Static Functions")
-struct Endpoint_StaticTests {
+@Suite
+struct `Endpoint - Static Functions` {
     @Test(arguments: Endpoint.allCases)
     func `opposite is involution`(endpoint: Endpoint) {
         #expect(Endpoint.opposite(of: Endpoint.opposite(of: endpoint)) == endpoint)
@@ -17,8 +17,8 @@ struct Endpoint_StaticTests {
     }
 }
 
-@Suite("Endpoint - Properties")
-struct Endpoint_PropertyTests {
+@Suite
+struct `Endpoint - Properties` {
     @Test
     func `cases exist`() {
         #expect(Endpoint.allCases.count == 2)

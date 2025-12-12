@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Tagged - Static Functions
 
-@Suite("Tagged - Static Functions")
-struct Tagged_StaticTests {
+@Suite
+struct `Tagged - Static Functions` {
     enum Tag1 {}
     enum Tag2 {}
 
@@ -42,8 +42,8 @@ struct Tagged_StaticTests {
 
 // MARK: - Tagged - Properties
 
-@Suite("Tagged - Properties")
-struct Tagged_PropertyTests {
+@Suite
+struct `Tagged - Properties` {
     enum TestTag {}
 
     @Test
@@ -80,8 +80,8 @@ struct Tagged_PropertyTests {
 
 // MARK: - Tagged - Initializers
 
-@Suite("Tagged - Initializers")
-struct Tagged_InitializerTests {
+@Suite
+struct `Tagged - Initializers` {
     enum TestTag {}
 
     @Test
@@ -123,8 +123,8 @@ struct Tagged_InitializerTests {
 
 // MARK: - Tagged - Protocol Conformances
 
-@Suite("Tagged - Protocol Conformances")
-struct Tagged_ProtocolTests {
+@Suite
+struct `Tagged - Protocol Conformances` {
     enum TestTag {}
 
     @Test
@@ -169,8 +169,8 @@ struct Tagged_ProtocolTests {
 
 // MARK: - Tagged - Arithmetic
 
-@Suite("Tagged - Arithmetic")
-struct Tagged_ArithmeticTests {
+@Suite
+struct `Tagged - Arithmetic` {
     enum TestTag {}
 
     @Test
@@ -281,8 +281,8 @@ struct Tagged_ArithmeticTests {
 
 // MARK: - Tagged - Free Functions
 
-@Suite("Tagged - Free Functions")
-struct Tagged_FreeFunctionsTests {
+@Suite
+struct `Tagged - Free Functions` {
     enum TestTag {}
 
     @Test
@@ -311,8 +311,8 @@ struct Tagged_FreeFunctionsTests {
 
 // MARK: - Tagged - Strideable
 
-@Suite("Tagged - Strideable")
-struct Tagged_StrideableTests {
+@Suite
+struct `Tagged - Strideable` {
     enum TestTag {}
 
     @Test

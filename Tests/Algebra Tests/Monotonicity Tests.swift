@@ -3,8 +3,8 @@ import Testing
 
 @testable import Algebra
 
-@Suite("Monotonicity - Static Functions")
-struct Monotonicity_StaticTests {
+@Suite
+struct `Monotonicity - Static Functions` {
     @Test(arguments: Monotonicity.allCases)
     func `reversed is involution for increasing and decreasing`(monotonicity: Monotonicity) {
         if monotonicity != .constant {
@@ -30,8 +30,8 @@ struct Monotonicity_StaticTests {
     }
 }
 
-@Suite("Monotonicity - Properties")
-struct Monotonicity_PropertyTests {
+@Suite
+struct `Monotonicity - Properties` {
     @Test
     func `cases exist`() {
         #expect(Monotonicity.allCases.count == 3)

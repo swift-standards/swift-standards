@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Direction - Static Functions
 
-@Suite("Direction - Static Functions")
-struct Direction_StaticTests {
+@Suite
+struct `Direction - Static Functions` {
     @Test(arguments: [Direction.positive, Direction.negative])
     func `opposite is involution`(direction: Direction) {
         #expect(Direction.opposite(of: Direction.opposite(of: direction)) == direction)
@@ -26,8 +26,8 @@ struct Direction_StaticTests {
 
 // MARK: - Direction - Properties
 
-@Suite("Direction - Properties")
-struct Direction_PropertyTests {
+@Suite
+struct `Direction - Properties` {
     @Test(arguments: [Direction.positive, Direction.negative])
     func `opposite property delegates to static function`(direction: Direction) {
         #expect(direction.opposite == Direction.opposite(of: direction))
@@ -70,8 +70,8 @@ struct Direction_PropertyTests {
 
 // MARK: - Direction - Operators
 
-@Suite("Direction - Operators")
-struct Direction_OperatorTests {
+@Suite
+struct `Direction - Operators` {
     @Test(arguments: [Direction.positive, Direction.negative])
     func `negation operator is involution`(direction: Direction) {
         #expect(!(!direction) == direction)
@@ -90,8 +90,8 @@ struct Direction_OperatorTests {
 
 // MARK: - Direction - Initializers
 
-@Suite("Direction - Initializers")
-struct Direction_InitializerTests {
+@Suite
+struct `Direction - Initializers` {
     @Test(arguments: [Direction.positive, Direction.negative])
     func `init from direction is identity`(direction: Direction) {
         #expect(Direction(direction: direction) == direction)
@@ -123,8 +123,8 @@ struct Direction_InitializerTests {
 
 // MARK: - Direction - Protocol Conformances
 
-@Suite("Direction - Protocol Conformances")
-struct Direction_ProtocolTests {
+@Suite
+struct `Direction - Protocol Conformances` {
     @Test
     func `allCases contains exactly two cases`() {
         #expect(Direction.allCases.count == 2)

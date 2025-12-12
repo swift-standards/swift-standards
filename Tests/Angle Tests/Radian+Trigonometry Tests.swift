@@ -6,8 +6,8 @@ import Testing
 import RealModule
 @testable import Angle
 
-@Suite("Radian - Static Trigonometric Functions")
-struct RadianTrigonometryStaticTests {
+@Suite
+struct `Radian - Static Trigonometric Functions` {
     @Test(arguments: [
         (Radian.zero, 0.0),
         (Radian.halfPi, 1.0),
@@ -75,8 +75,8 @@ struct RadianTrigonometryStaticTests {
     }
 }
 
-@Suite("Radian - Instance Trigonometric Properties")
-struct RadianTrigonometryInstanceTests {
+@Suite
+struct `Radian - Instance Trigonometric Properties` {
     @Test
     func `sin property`() {
         let angle = Radian(.pi / 6)
@@ -120,8 +120,8 @@ struct RadianTrigonometryInstanceTests {
     }
 }
 
-@Suite("Radian - Inverse Trigonometric Functions")
-struct RadianInverseTrigonometryTests {
+@Suite
+struct `Radian - Inverse Trigonometric Functions` {
     @Test(arguments: [
         (0.0, 0.0),
         (1.0, .pi / 2),
@@ -219,8 +219,8 @@ struct RadianInverseTrigonometryTests {
     }
 }
 
-@Suite("Radian - Constants")
-struct RadianConstantsTests {
+@Suite
+struct `Radian - Constants` {
     @Test
     func pi() {
         #expect(abs(Radian.pi.value - Double.pi) < 1e-15)
@@ -266,8 +266,8 @@ struct RadianConstantsTests {
     }
 }
 
-@Suite("Radian - Normalization (Static)")
-struct RadianNormalizationStaticTests {
+@Suite
+struct `Radian - Normalization (Static)` {
     @Test(arguments: [
         (Radian(0), Radian(0)),
         (Radian(.pi), Radian(.pi)),
@@ -310,8 +310,8 @@ struct RadianNormalizationStaticTests {
     }
 }
 
-@Suite("Radian - Normalization (Instance)")
-struct RadianNormalizationInstanceTests {
+@Suite
+struct `Radian - Normalization (Instance)` {
     @Test
     func `normalized property`() {
         let angle = Radian(3 * .pi)

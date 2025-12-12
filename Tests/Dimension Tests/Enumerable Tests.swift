@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Enumerable Tests
 
-@Suite("Enumerable - Protocol")
-struct Enumerable_ProtocolTests {
+@Suite
+struct `Enumerable - Protocol` {
     // Test with Ordinal which conforms to Enumerable
 
     @Test
@@ -62,8 +62,8 @@ struct Enumerable_ProtocolTests {
 
 // MARK: - Enumerable with Ordinal
 
-@Suite("Enumerable - Ordinal Tests")
-struct Enumerable_OrdinalTests {
+@Suite
+struct `Enumerable - Ordinal Tests` {
     @Test
     func `Ordinal conforms to Enumerable`() {
         let ordinal: Ordinal<5> = Ordinal(2)!
@@ -88,8 +88,8 @@ struct Enumerable_OrdinalTests {
 
 // MARK: - Enumerable with Axis
 
-@Suite("Enumerable - Axis Tests")
-struct Enumerable_AxisTests {
+@Suite
+struct `Enumerable - Axis Tests` {
     @Test
     func `Axis conforms to Enumerable`() {
         let axis: Axis<3> = .secondary

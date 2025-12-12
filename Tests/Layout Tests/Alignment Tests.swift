@@ -4,10 +4,10 @@ import Testing
 
 @testable import Layout
 
-@Suite("Alignment")
-struct AlignmentTests {
-    @Test("Alignment presets")
-    func presets() {
+@Suite
+struct `Alignment` {
+    @Test
+    func `Alignment presets`() {
         let topLeading: Alignment = .topLeading
         #expect(topLeading.horizontal == .leading)
         #expect(topLeading.vertical == .top)
@@ -21,15 +21,15 @@ struct AlignmentTests {
         #expect(bottomTrailing.vertical == .bottom)
     }
 
-    @Test("Alignment custom")
-    func custom() {
+    @Test
+    func `Alignment custom`() {
         let custom: Alignment = .init(horizontal: .trailing, vertical: .top)
         #expect(custom.horizontal == .trailing)
         #expect(custom.vertical == .top)
     }
 
-    @Test("Alignment Equatable")
-    func equatable() {
+    @Test
+    func `Alignment Equatable`() {
         let a: Alignment = .center
         let b: Alignment = .init(horizontal: .center, vertical: .center)
         #expect(a == b)

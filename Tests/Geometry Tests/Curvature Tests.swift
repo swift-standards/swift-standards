@@ -7,10 +7,10 @@ import Testing
 
 // TODO: Add comprehensive tests for Curvature functionality
 
-@Suite("Curvature - Placeholder")
-struct Curvature_PlaceholderTests {
-    @Test("Placeholder test")
-    func placeholder() {
+@Suite
+struct `Curvature - Placeholder` {
+    @Test
+    func `Placeholder test`() {
         // Add tests here once Curvature functionality is better understood
         #expect(true)
     }

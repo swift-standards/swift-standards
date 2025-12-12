@@ -2,14 +2,14 @@ import Testing
 
 @testable import StandardLibraryExtensions
 
-@Suite("Optional.Builder Tests")
-struct OptionalBuilderTests {
+@Suite
+struct `Optional.Builder Tests` {
 
-    @Suite("Basic Coalescing")
-    struct BasicCoalescingTests {
+    @Suite
+    struct `Basic Coalescing` {
 
-        @Test("First non-nil value is returned")
-        func firstNonNilValueIsReturned() {
+        @Test
+        func `First non-nil value is returned`() {
             let a: Int? = nil
             let b: Int? = 42
             let c: Int? = 100
@@ -23,8 +23,8 @@ struct OptionalBuilderTests {
             #expect(result == 42)
         }
 
-        @Test("Returns nil when all values are nil")
-        func returnsNilWhenAllValuesAreNil() {
+        @Test
+        func `Returns nil when all values are nil`() {
             let a: Int? = nil
             let b: Int? = nil
             let c: Int? = nil
@@ -38,8 +38,8 @@ struct OptionalBuilderTests {
             #expect(result == nil)
         }
 
-        @Test("Single non-nil value")
-        func singleNonNilValue() {
+        @Test
+        func `Single non-nil value`() {
             let result = Optional.first {
                 42
             }
@@ -47,8 +47,8 @@ struct OptionalBuilderTests {
             #expect(result == 42)
         }
 
-        @Test("Single nil value")
-        func singleNilValue() {
+        @Test
+        func `Single nil value`() {
             let value: String? = nil
             let result = Optional.first {
                 value
@@ -57,8 +57,8 @@ struct OptionalBuilderTests {
             #expect(result == nil)
         }
 
-        @Test("Empty block returns nil")
-        func emptyBlockReturnsNil() {
+        @Test
+        func `Empty block returns nil`() {
             let result: Int? = Optional.first {
             }
 
@@ -66,11 +66,11 @@ struct OptionalBuilderTests {
         }
     }
 
-    @Suite("Control Flow")
-    struct ControlFlowTests {
+    @Suite
+    struct `Control Flow` {
 
-        @Test("Conditional inclusion - true branch")
-        func conditionalInclusionTrueBranch() {
+        @Test
+        func `Conditional inclusion - true branch`() {
             let useFirst = true
             let result = Optional.first {
                 if useFirst {
@@ -81,8 +81,8 @@ struct OptionalBuilderTests {
             #expect(result == 42)
         }
 
-        @Test("Conditional inclusion - false branch")
-        func conditionalInclusionFalseBranch() {
+        @Test
+        func `Conditional inclusion - false branch`() {
             let useFirst = false
             let result: Int? = Optional.first {
                 if useFirst {
@@ -93,8 +93,8 @@ struct OptionalBuilderTests {
             #expect(result == nil)
         }
 
-        @Test("If-else first branch")
-        func ifElseFirstBranch() {
+        @Test
+        func `If-else first branch`() {
             let condition = true
             let result = Optional.first {
                 if condition {
@@ -107,8 +107,8 @@ struct OptionalBuilderTests {
             #expect(result == "first")
         }
 
-        @Test("If-else second branch")
-        func ifElseSecondBranch() {
+        @Test
+        func `If-else second branch`() {
             let condition = false
             let result = Optional.first {
                 if condition {
@@ -121,8 +121,8 @@ struct OptionalBuilderTests {
             #expect(result == "second")
         }
 
-        @Test("For loop - first match wins")
-        func forLoopFirstMatchWins() {
+        @Test
+        func `For loop - first match wins`() {
             let values: [Int?] = [nil, nil, 42, 100]
             let result = Optional.first {
                 for value in values {
@@ -133,8 +133,8 @@ struct OptionalBuilderTests {
             #expect(result == 42)
         }
 
-        @Test("For loop - all nil")
-        func forLoopAllNil() {
+        @Test
+        func `For loop - all nil`() {
             let values: [Int?] = [nil, nil, nil]
             let result = Optional.first {
                 for value in values {
@@ -146,11 +146,11 @@ struct OptionalBuilderTests {
         }
     }
 
-    @Suite("Expression Building")
-    struct ExpressionBuildingTests {
+    @Suite
+    struct `Expression Building` {
 
-        @Test("Non-optional expression is wrapped")
-        func nonOptionalExpressionIsWrapped() {
+        @Test
+        func `Non-optional expression is wrapped`() {
             let result = Optional.first {
                 42
             }
@@ -158,8 +158,8 @@ struct OptionalBuilderTests {
             #expect(result == 42)
         }
 
-        @Test("Optional expression passes through")
-        func optionalExpressionPassesThrough() {
+        @Test
+        func `Optional expression passes through`() {
             let value: Int? = 42
             let result = Optional.first {
                 value
@@ -169,66 +169,66 @@ struct OptionalBuilderTests {
         }
     }
 
-    @Suite("Static Method Tests")
-    struct StaticMethodTests {
+    @Suite
+    struct `Static Method Tests` {
 
-        @Test("buildPartialBlock first")
-        func buildPartialBlockFirst() {
+        @Test
+        func `buildPartialBlock first`() {
             let result = Int?.Builder.buildPartialBlock(first: 42)
             #expect(result == 42)
         }
 
-        @Test("buildPartialBlock first void")
-        func buildPartialBlockFirstVoid() {
+        @Test
+        func `buildPartialBlock first void`() {
             let result = Int?.Builder.buildPartialBlock(first: ())
             #expect(result == nil)
         }
 
-        @Test("buildPartialBlock accumulated with first non-nil")
-        func buildPartialBlockAccumulatedWithFirstNonNil() {
+        @Test
+        func `buildPartialBlock accumulated with first non-nil`() {
             let result = Int?.Builder.buildPartialBlock(accumulated: 42, next: 100)
             #expect(result == 42)
         }
 
-        @Test("buildPartialBlock accumulated with first nil")
-        func buildPartialBlockAccumulatedWithFirstNil() {
+        @Test
+        func `buildPartialBlock accumulated with first nil`() {
             let result = Int?.Builder.buildPartialBlock(accumulated: nil, next: 100)
             #expect(result == 100)
         }
 
-        @Test("buildOptional some")
-        func buildOptionalSome() {
+        @Test
+        func `buildOptional some`() {
             let inner: Int? = 42
             let result = Int?.Builder.buildOptional(inner)
             #expect(result == 42)
         }
 
-        @Test("buildOptional none")
-        func buildOptionalNone() {
+        @Test
+        func `buildOptional none`() {
             let result = Int?.Builder.buildOptional(nil)
             #expect(result == nil)
         }
 
-        @Test("buildArray first non-nil")
-        func buildArrayFirstNonNil() {
+        @Test
+        func `buildArray first non-nil`() {
             let components: [Int?] = [nil, 42, 100]
             let result = Int?.Builder.buildArray(components)
             #expect(result == 42)
         }
 
-        @Test("buildArray all nil")
-        func buildArrayAllNil() {
+        @Test
+        func `buildArray all nil`() {
             let components: [Int?] = [nil, nil, nil]
             let result = Int?.Builder.buildArray(components)
             #expect(result == nil)
         }
     }
 
-    @Suite("Real-World Patterns")
-    struct RealWorldPatternsTests {
+    @Suite
+    struct `Real-World Patterns` {
 
-        @Test("Fallback chain pattern")
-        func fallbackChainPattern() {
+        @Test
+        func `Fallback chain pattern`() {
             let cached: String? = nil
             let computed: String? = nil
             let defaultValue = "default"
@@ -242,8 +242,8 @@ struct OptionalBuilderTests {
             #expect(result == "default")
         }
 
-        @Test("Configuration lookup pattern")
-        func configurationLookupPattern() {
+        @Test
+        func `Configuration lookup pattern`() {
             let envVar: String? = nil
             let configFile: String? = "from-config"
             let hardcoded = "hardcoded"
@@ -258,11 +258,11 @@ struct OptionalBuilderTests {
         }
     }
 
-    @Suite("Limited Availability")
-    struct LimitedAvailabilityTests {
+    @Suite
+    struct `Limited Availability` {
 
-        @Test("Limited availability passthrough")
-        func limitedAvailabilityPassthrough() {
+        @Test
+        func `Limited availability passthrough`() {
             let result = Optional.first {
                 if #available(macOS 26, iOS 26, *) {
                     42

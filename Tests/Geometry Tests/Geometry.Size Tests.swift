@@ -7,10 +7,10 @@ import Testing
 
 // TODO: Add comprehensive tests for Geometry.Size functionality
 
-@Suite("Geometry.Size - Placeholder")
-struct GeometrySize_PlaceholderTests {
-    @Test("Placeholder test")
-    func placeholder() {
+@Suite
+struct `Geometry.Size - Placeholder` {
+    @Test
+    func `Placeholder test`() {
         // Add tests here once Size functionality is better understood
         #expect(true)
     }

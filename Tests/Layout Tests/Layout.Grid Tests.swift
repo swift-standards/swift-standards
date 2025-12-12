@@ -6,10 +6,10 @@ import Testing
 
 // MARK: - Grid Tests
 
-@Suite("Layout.Grid")
-struct GridTests {
-    @Test("Grid basic creation")
-    func basicCreation() {
+@Suite
+struct `Layout.Grid` {
+    @Test
+    func `Grid basic creation`() {
         let grid: Layout<Double>.Grid<[[Int]]> = .init(
             spacing: .init(row: 10.0, column: 8.0),
             alignment: .center,
@@ -21,8 +21,8 @@ struct GridTests {
         #expect(grid.alignment == .center)
     }
 
-    @Test("Grid uniform convenience")
-    func uniformConvenience() {
+    @Test
+    func `Grid uniform convenience`() {
         let grid: Layout<Double>.Grid<[[Int]]> = .uniform(
             spacing: 10.0,
             content: [[1, 2], [3, 4]]
@@ -32,8 +32,8 @@ struct GridTests {
         #expect(grid.spacing.column == 10.0)
     }
 
-    @Test("Grid default alignment")
-    func defaultAlignment() {
+    @Test
+    func `Grid default alignment`() {
         let grid: Layout<Double>.Grid<[[Int]]> = .init(
             spacing: .init(row: 10.0, column: 8.0),
             content: [[1, 2], [3, 4]]
@@ -42,8 +42,8 @@ struct GridTests {
         #expect(grid.alignment == .center)
     }
 
-    @Test("Grid Equatable")
-    func equatable() {
+    @Test
+    func `Grid Equatable`() {
         let a: Layout<Double>.Grid<[[Int]]> = .uniform(spacing: 10, content: [[1, 2]])
         let b: Layout<Double>.Grid<[[Int]]> = .uniform(spacing: 10, content: [[1, 2]])
         let c: Layout<Double>.Grid<[[Int]]> = .uniform(spacing: 20, content: [[1, 2]])
@@ -52,8 +52,8 @@ struct GridTests {
         #expect(a != c)
     }
 
-    @Test("Grid map spacing")
-    func mapSpacing() throws {
+    @Test
+    func `Grid map spacing`() throws {
         let grid: Layout<Double>.Grid<[[Int]]> = .uniform(spacing: 10, content: [[1, 2]])
 
         let mapped: Layout<TestSpacing>.Grid<[[Int]]> = try grid.map.spacing { TestSpacing($0) }
@@ -61,8 +61,8 @@ struct GridTests {
         #expect(mapped.spacing.column == TestSpacing(10))
     }
 
-    @Test("Grid is Sendable")
-    func sendable() {
+    @Test
+    func `Grid is Sendable`() {
         let grid: Layout<Double>.Grid<[[Int]]> = .uniform(spacing: 10, content: [[1, 2]])
         let _: any Sendable = grid
     }

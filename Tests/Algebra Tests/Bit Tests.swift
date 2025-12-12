@@ -3,8 +3,8 @@ import Testing
 
 @testable import Algebra
 
-@Suite("Bit - Static Functions")
-struct Bit_StaticTests {
+@Suite
+struct `Bit - Static Functions` {
     @Test(arguments: Bit.allCases)
     func `flipped is involution`(bit: Bit) {
         #expect(Bit.flipped(Bit.flipped(bit)) == bit)
@@ -47,8 +47,8 @@ struct Bit_StaticTests {
     }
 }
 
-@Suite("Bit - Properties")
-struct Bit_PropertyTests {
+@Suite
+struct `Bit - Properties` {
     @Test
     func `cases exist`() {
         #expect(Bit.allCases.count == 2)

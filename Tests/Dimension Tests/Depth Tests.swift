@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Depth - Static Functions
 
-@Suite("Depth - Static Functions")
-struct Depth_StaticTests {
+@Suite
+struct `Depth - Static Functions` {
     @Test(arguments: [Depth.forward, Depth.backward])
     func `opposite is involution`(depth: Depth) {
         #expect(Depth.opposite(of: Depth.opposite(of: depth)) == depth)
@@ -26,8 +26,8 @@ struct Depth_StaticTests {
 
 // MARK: - Depth - Properties
 
-@Suite("Depth - Properties")
-struct Depth_PropertyTests {
+@Suite
+struct `Depth - Properties` {
     @Test(arguments: [Depth.forward, Depth.backward])
     func `opposite property delegates to static function`(depth: Depth) {
         #expect(depth.opposite == Depth.opposite(of: depth))
@@ -76,8 +76,8 @@ struct Depth_PropertyTests {
 
 // MARK: - Depth - Initializers
 
-@Suite("Depth - Initializers")
-struct Depth_InitializerTests {
+@Suite
+struct `Depth - Initializers` {
     @Test
     func `init from positive direction creates forward`() {
         #expect(Depth(direction: .positive) == .forward)
@@ -106,8 +106,8 @@ struct Depth_InitializerTests {
 
 // MARK: - Depth - Protocol Conformances
 
-@Suite("Depth - Protocol Conformances")
-struct Depth_ProtocolTests {
+@Suite
+struct `Depth - Protocol Conformances` {
     @Test
     func `allCases contains exactly two cases`() {
         #expect(Depth.allCases.count == 2)
@@ -149,8 +149,8 @@ struct Depth_ProtocolTests {
 
 // MARK: - Depth - Operators
 
-@Suite("Depth - Operators")
-struct Depth_OperatorTests {
+@Suite
+struct `Depth - Operators` {
     @Test(arguments: [Depth.forward, Depth.backward])
     func `negation operator is involution`(depth: Depth) {
         #expect(!(!depth) == depth)

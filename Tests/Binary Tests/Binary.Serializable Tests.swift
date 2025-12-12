@@ -80,11 +80,11 @@ private struct LargeContent: Binary.Serializable {
 
 // MARK: - Basic Serialization Tests
 
-@Suite("Binary.Serializable - Basic Usage")
-struct SerializableBasicTests {
+@Suite
+struct `Binary.Serializable - Basic Usage` {
 
-    @Test("Serialize into byte array using serialize(into:)")
-    func serializeIntoBuffer() {
+    @Test
+    func `Serialize into byte array using serialize(into:)`() {
         let greeting = Greeting(name: "World")
 
         // Ideal usage: serialize into a mutable buffer
@@ -94,8 +94,8 @@ struct SerializableBasicTests {
         #expect(buffer == Array("Hello, World!".utf8))
     }
 
-    @Test("Get bytes using .bytes property")
-    func bytesProperty() {
+    @Test
+    func `Get bytes using .bytes property`() {
         let greeting = Greeting(name: "Swift")
 
         // Convenience: get bytes directly
@@ -104,8 +104,8 @@ struct SerializableBasicTests {
         #expect(bytes == Array("Hello, Swift!".utf8))
     }
 
-    @Test("Get bytes from static serialize")
-    func staticSerializeBytes() {
+    @Test
+    func `Get bytes from static serialize`() {
         let content = LargeContent(lines: ["Line 1", "Line 2", "Line 3"])
 
         let bytes: [UInt8] = LargeContent.serialize(content)
@@ -113,8 +113,8 @@ struct SerializableBasicTests {
         #expect(bytes == Array("Line 1\nLine 2\nLine 3".utf8))
     }
 
-    @Test("Convert to String")
-    func stringConversion() {
+    @Test
+    func `Convert to String`() {
         let element = Element(tag: "p", content: "Hello")
 
         // Convert streaming value to String
@@ -123,8 +123,8 @@ struct SerializableBasicTests {
         #expect(string == "<p>Hello</p>")
     }
 
-    @Test("Use static serialize function")
-    func staticSerialize() {
+    @Test
+    func `Use static serialize function`() {
         let greeting = Greeting(name: "API")
 
         // Static function style (compatible with Binary.ASCII.Serializable)
@@ -136,11 +136,11 @@ struct SerializableBasicTests {
 
 // MARK: - Composition Tests
 
-@Suite("Binary.Serializable - Composition")
-struct SerializableCompositionTests {
+@Suite
+struct `Binary.Serializable - Composition` {
 
-    @Test("Nested streaming types compose naturally")
-    func nestedComposition() {
+    @Test
+    func `Nested streaming types compose naturally`() {
         let container = Container(children: [
             Element(tag: "h1", content: "Title"),
             Element(tag: "p", content: "Paragraph"),
@@ -151,8 +151,8 @@ struct SerializableCompositionTests {
         #expect(result == "<div><h1>Title</h1><p>Paragraph</p></div>")
     }
 
-    @Test("Serialize multiple values into same buffer")
-    func multipleValuesIntoBuffer() {
+    @Test
+    func `Serialize multiple values into same buffer`() {
         let header = Element(tag: "header", content: "Header")
         let main = Element(tag: "main", content: "Content")
         let footer = Element(tag: "footer", content: "Footer")
@@ -167,8 +167,8 @@ struct SerializableCompositionTests {
         #expect(result == "<header>Header</header><main>Content</main><footer>Footer</footer>")
     }
 
-    @Test("Pre-allocate buffer for efficiency")
-    func preAllocatedBuffer() {
+    @Test
+    func `Pre-allocate buffer for efficiency`() {
         let lines = (1...100).map { "Line \($0)" }
         let content = LargeContent(lines: lines)
 
@@ -184,11 +184,11 @@ struct SerializableCompositionTests {
 
 // MARK: - Buffer Type Tests
 
-@Suite("Binary.Serializable - Buffer Types")
-struct SerializableBufferTests {
+@Suite
+struct `Binary.Serializable - Buffer Types` {
 
-    @Test("Serialize into [UInt8]")
-    func serializeIntoArray() {
+    @Test
+    func `Serialize into [UInt8]`() {
         let greeting = Greeting(name: "Array")
 
         var buffer: [UInt8] = []
@@ -197,8 +197,8 @@ struct SerializableBufferTests {
         #expect(buffer == Array("Hello, Array!".utf8))
     }
 
-    @Test("Serialize into ContiguousArray")
-    func serializeIntoContiguousArray() {
+    @Test
+    func `Serialize into ContiguousArray`() {
         let greeting = Greeting(name: "Contiguous")
 
         var buffer: ContiguousArray<UInt8> = []
@@ -207,8 +207,8 @@ struct SerializableBufferTests {
         #expect(Array(buffer) == Array("Hello, Contiguous!".utf8))
     }
 
-    @Test("Append to existing buffer content")
-    func appendToExistingContent() {
+    @Test
+    func `Append to existing buffer content`() {
         let greeting = Greeting(name: "Append")
 
         // Start with existing content
@@ -221,18 +221,18 @@ struct SerializableBufferTests {
 
 // MARK: - Edge Cases
 
-@Suite("Binary.Serializable - Edge Cases")
-struct SerializableEdgeCaseTests {
+@Suite
+struct `Binary.Serializable - Edge Cases` {
 
-    @Test("Empty content serializes correctly")
-    func emptyContent() {
+    @Test
+    func `Empty content serializes correctly`() {
         let empty = Element(tag: "br", content: "")
 
         #expect(empty.bytes == Array("<br></br>".utf8))
     }
 
-    @Test("Unicode content serializes as UTF-8")
-    func unicodeContent() {
+    @Test
+    func `Unicode content serializes as UTF-8`() {
         let unicode = Element(tag: "span", content: "Hello 👋 World 🌍")
 
         let bytes = unicode.bytes
@@ -241,8 +241,8 @@ struct SerializableEdgeCaseTests {
         #expect(roundTrip == "<span>Hello 👋 World 🌍</span>")
     }
 
-    @Test("Large content doesn't overflow")
-    func largeContent() {
+    @Test
+    func `Large content doesn't overflow`() {
         let lines = (1...10000).map { "Line number \($0) with some content" }
         let content = LargeContent(lines: lines)
 
@@ -254,11 +254,11 @@ struct SerializableEdgeCaseTests {
 
 // MARK: - API Design Demonstration
 
-@Suite("Binary.Serializable - API Patterns")
-struct SerializableAPIPatternTests {
+@Suite
+struct `Binary.Serializable - API Patterns` {
 
-    @Test("Pattern: Direct buffer writing for maximum control")
-    func directBufferWriting() {
+    @Test
+    func `Pattern: Direct buffer writing for maximum control`() {
         // When you need maximum control over the buffer
         var buffer: [UInt8] = []
         buffer.reserveCapacity(256)
@@ -275,8 +275,8 @@ struct SerializableAPIPatternTests {
         #expect(buffer == Array("<a>Link</a><b>Bold</b>".utf8))
     }
 
-    @Test("Pattern: Quick conversion via .bytes")
-    func quickConversion() {
+    @Test
+    func `Pattern: Quick conversion via .bytes`() {
         // When you just need bytes quickly
         let element = Element(tag: "code", content: "swift")
         let bytes = element.bytes
@@ -284,8 +284,8 @@ struct SerializableAPIPatternTests {
         #expect(bytes == Array("<code>swift</code>".utf8))
     }
 
-    @Test("Pattern: String output via String(_:)")
-    func stringOutput() {
+    @Test
+    func `Pattern: String output via String(_:)`() {
         // When you need a String result
         let element = Element(tag: "em", content: "emphasis")
         let string = String(element)
@@ -293,8 +293,8 @@ struct SerializableAPIPatternTests {
         #expect(string == "<em>emphasis</em>")
     }
 
-    @Test("Pattern: Reusable buffer for repeated serialization")
-    func reusableBuffer() {
+    @Test
+    func `Pattern: Reusable buffer for repeated serialization`() {
         // Reuse buffer to avoid allocations
         var buffer: [UInt8] = []
 

@@ -5,8 +5,8 @@ import Testing
 
 @testable import Region
 
-@Suite("Clock - Rotation")
-struct ClockRotationTests {
+@Suite
+struct `Clock - Rotation` {
     @Test(arguments: Region.Clock.allCases)
     func `clockwise is cyclic`(clock: Region.Clock) {
         var current = clock
@@ -71,8 +71,8 @@ struct ClockRotationTests {
     }
 }
 
-@Suite("Clock - Quadrant")
-struct ClockQuadrantTests {
+@Suite
+struct `Clock - Quadrant` {
     @Test(arguments: Region.Clock.allCases)
     func `quadrant property matches static function`(clock: Region.Clock) {
         let property = clock.quadrant
@@ -104,8 +104,8 @@ struct ClockQuadrantTests {
     }
 }
 
-@Suite("Clock - Cardinal Direction")
-struct ClockCardinalTests {
+@Suite
+struct `Clock - Cardinal Direction` {
     @Test(arguments: Region.Clock.allCases)
     func `nearestCardinal property matches static function`(clock: Region.Clock) {
         let property = clock.nearestCardinal
@@ -137,8 +137,8 @@ struct ClockCardinalTests {
     }
 }
 
-@Suite("Clock - Position Properties")
-struct ClockPositionTests {
+@Suite
+struct `Clock - Position Properties` {
     @Test(arguments: Region.Clock.allCases)
     func `isCardinal property matches static function`(clock: Region.Clock) {
         let property = clock.isCardinal

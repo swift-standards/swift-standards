@@ -7,10 +7,10 @@ import Testing
 
 // TODO: Add comprehensive tests for Geometry.EdgeInsets functionality
 
-@Suite("Geometry.EdgeInsets - Placeholder")
-struct GeometryEdgeInsets_PlaceholderTests {
-    @Test("Placeholder test")
-    func placeholder() {
+@Suite
+struct `Geometry.EdgeInsets - Placeholder` {
+    @Test
+    func `Placeholder test`() {
         // Add tests here once EdgeInsets functionality is better understood
         #expect(true)
     }

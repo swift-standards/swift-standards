@@ -3,8 +3,8 @@ import Testing
 
 @testable import Algebra
 
-@Suite("Sign - Static Functions")
-struct Sign_StaticTests {
+@Suite
+struct `Sign - Static Functions` {
     @Test(arguments: Sign.allCases)
     func `negated is involution`(sign: Sign) {
         #expect(Sign.negated(Sign.negated(sign)) == sign)
@@ -29,8 +29,8 @@ struct Sign_StaticTests {
     }
 }
 
-@Suite("Sign - Properties")
-struct Sign_PropertyTests {
+@Suite
+struct `Sign - Properties` {
     @Test
     func `cases exist`() {
         #expect(Sign.allCases.count == 3)

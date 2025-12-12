@@ -6,8 +6,8 @@ import Testing
 
 // MARK: - Horizontal - Static Functions
 
-@Suite("Horizontal - Static Functions")
-struct Horizontal_StaticTests {
+@Suite
+struct `Horizontal - Static Functions` {
     @Test(arguments: [Horizontal.rightward, Horizontal.leftward])
     func `opposite is involution`(horizontal: Horizontal) {
         #expect(Horizontal.opposite(of: Horizontal.opposite(of: horizontal)) == horizontal)
@@ -26,8 +26,8 @@ struct Horizontal_StaticTests {
 
 // MARK: - Horizontal - Properties
 
-@Suite("Horizontal - Properties")
-struct Horizontal_PropertyTests {
+@Suite
+struct `Horizontal - Properties` {
     @Test(arguments: [Horizontal.rightward, Horizontal.leftward])
     func `opposite property delegates to static function`(horizontal: Horizontal) {
         #expect(horizontal.opposite == Horizontal.opposite(of: horizontal))
@@ -76,8 +76,8 @@ struct Horizontal_PropertyTests {
 
 // MARK: - Horizontal - Initializers
 
-@Suite("Horizontal - Initializers")
-struct Horizontal_InitializerTests {
+@Suite
+struct `Horizontal - Initializers` {
     @Test
     func `init from positive direction creates rightward`() {
         #expect(Horizontal(direction: .positive) == .rightward)
@@ -106,8 +106,8 @@ struct Horizontal_InitializerTests {
 
 // MARK: - Horizontal - Protocol Conformances
 
-@Suite("Horizontal - Protocol Conformances")
-struct Horizontal_ProtocolTests {
+@Suite
+struct `Horizontal - Protocol Conformances` {
     @Test
     func `allCases contains exactly two cases`() {
         #expect(Horizontal.allCases.count == 2)
@@ -149,8 +149,8 @@ struct Horizontal_ProtocolTests {
 
 // MARK: - Horizontal - Operators
 
-@Suite("Horizontal - Operators")
-struct Horizontal_OperatorTests {
+@Suite
+struct `Horizontal - Operators` {
     @Test(arguments: [Horizontal.rightward, Horizontal.leftward])
     func `negation operator is involution`(horizontal: Horizontal) {
         #expect(!(!horizontal) == horizontal)

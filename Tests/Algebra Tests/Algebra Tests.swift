@@ -5,8 +5,8 @@ import Testing
 
 // MARK: - Bool XOR Tests
 
-@Suite("Bool - XOR Operator")
-struct BoolXORTests {
+@Suite
+struct `Bool - XOR Operator` {
     @Test(arguments: [
         (false, false, false),
         (false, true, true),
@@ -28,8 +28,8 @@ struct BoolXORTests {
 
 // MARK: - Product Tests
 
-@Suite("Product - Creation")
-struct Product_CreationTests {
+@Suite
+struct `Product - Creation` {
     @Test
     func `pair creation works`() {
         let pair = Product(1, "hello")
@@ -53,8 +53,8 @@ struct Product_CreationTests {
     }
 }
 
-@Suite("Product - Equatable")
-struct Product_EquatableTests {
+@Suite
+struct `Product - Equatable` {
     @Test
     func `equal products compare equal`() {
         let p1 = Product(1, "hello")
@@ -77,8 +77,8 @@ struct Product_EquatableTests {
     }
 }
 
-@Suite("Product - Hashable")
-struct Product_HashableTests {
+@Suite
+struct `Product - Hashable` {
     @Test
     func `equal products have same hash`() {
         let p1 = Product(1, "hello")
@@ -107,8 +107,8 @@ struct Product_HashableTests {
     }
 }
 
-@Suite("Product - Sendable")
-struct Product_SendableTests {
+@Suite
+struct `Product - Sendable` {
     @Test
     func `product is sendable`() {
         let p: Product<Int, String> = Product(1, "test")
@@ -119,8 +119,8 @@ struct Product_SendableTests {
 
 // MARK: - Algebra Namespace
 
-@Suite("Algebra - Namespace")
-struct AlgebraNamespaceTests {
+@Suite
+struct `Algebra - Namespace` {
     @Test
     func `Algebra is enum`() {
         // Algebra is a namespace enum

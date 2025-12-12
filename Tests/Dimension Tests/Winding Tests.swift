@@ -7,8 +7,8 @@ import Testing
 
 // MARK: - Winding - Static Functions
 
-@Suite("Winding - Static Functions")
-struct Winding_StaticTests {
+@Suite
+struct `Winding - Static Functions` {
     @Test(arguments: [Winding.clockwise, Winding.counterclockwise])
     func `opposite is involution`(winding: Winding) {
         #expect(Winding.opposite(of: Winding.opposite(of: winding)) == winding)
@@ -27,8 +27,8 @@ struct Winding_StaticTests {
 
 // MARK: - Winding - Properties
 
-@Suite("Winding - Properties")
-struct Winding_PropertyTests {
+@Suite
+struct `Winding - Properties` {
     @Test(arguments: [Winding.clockwise, Winding.counterclockwise])
     func `opposite property delegates to static function`(winding: Winding) {
         #expect(winding.opposite == Winding.opposite(of: winding))
@@ -47,8 +47,8 @@ struct Winding_PropertyTests {
 
 // MARK: - Winding - Operators
 
-@Suite("Winding - Operators")
-struct Winding_OperatorTests {
+@Suite
+struct `Winding - Operators` {
     @Test(arguments: [Winding.clockwise, Winding.counterclockwise])
     func `negation operator is involution`(winding: Winding) {
         #expect(!(!winding) == winding)
@@ -67,8 +67,8 @@ struct Winding_OperatorTests {
 
 // MARK: - Winding - Protocol Conformances
 
-@Suite("Winding - Protocol Conformances")
-struct Winding_ProtocolTests {
+@Suite
+struct `Winding - Protocol Conformances` {
     @Test
     func `allCases contains exactly two cases`() {
         #expect(Winding.allCases.count == 2)
@@ -112,8 +112,8 @@ struct Winding_ProtocolTests {
 
 // MARK: - Winding - Value Typealias
 
-@Suite("Winding - Value Typealias")
-struct Winding_ValueTests {
+@Suite
+struct `Winding - Value Typealias` {
     @Test
     func `Value typealias for Pair`() {
         let paired: Winding.Value<Double> = Pair(.clockwise, 3.14)

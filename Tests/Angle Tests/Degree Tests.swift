@@ -6,8 +6,8 @@ import Testing
 import RealModule
 @testable import Angle
 
-@Suite("Degree - Basic Structure & Arithmetic")
-struct DegreeBasicTests {
+@Suite
+struct `Degree - Basic Structure & Arithmetic` {
     @Test
     func initialization() {
         let angle = Degree(90)
@@ -108,8 +108,8 @@ struct DegreeBasicTests {
     }
 }
 
-@Suite("Degree - Conversion")
-struct DegreeConversionTests {
+@Suite
+struct `Degree - Conversion` {
     @Test
     func conversionToRadians() {
         let degrees = Degree(180)
@@ -159,8 +159,8 @@ struct DegreeConversionTests {
     }
 }
 
-@Suite("Degree - Common Angles")
-struct DegreeCommonAnglesTests {
+@Suite
+struct `Degree - Common Angles` {
     @Test
     func rightAngle() {
         #expect(Degree.rightAngle.value == 90)
@@ -192,8 +192,8 @@ struct DegreeCommonAnglesTests {
     }
 }
 
-@Suite("Degree - Static Trigonometric Functions")
-struct DegreeTrigonometryStaticTests {
+@Suite
+struct `Degree - Static Trigonometric Functions` {
     @Test(arguments: [
         (Degree(0), 0.0),
         (Degree(90), 1.0),
@@ -265,8 +265,8 @@ struct DegreeTrigonometryStaticTests {
     }
 }
 
-@Suite("Degree - Instance Trigonometric Properties")
-struct DegreeTrigonometryInstanceTests {
+@Suite
+struct `Degree - Instance Trigonometric Properties` {
     @Test
     func `sin property`() {
         let angle = Degree(30)

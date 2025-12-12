@@ -3,8 +3,8 @@ import Testing
 
 @testable import Algebra
 
-@Suite("Polarity - Static Functions")
-struct Polarity_StaticTests {
+@Suite
+struct `Polarity - Static Functions` {
     @Test(arguments: Polarity.allCases)
     func `opposite is involution for positive and negative`(polarity: Polarity) {
         if polarity != .neutral {
@@ -20,8 +20,8 @@ struct Polarity_StaticTests {
     }
 }
 
-@Suite("Polarity - Properties")
-struct Polarity_PropertyTests {
+@Suite
+struct `Polarity - Properties` {
     @Test
     func `cases exist`() {
         #expect(Polarity.allCases.count == 3)
