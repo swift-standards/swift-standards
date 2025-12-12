@@ -91,8 +91,17 @@ extension Time.Month {
     /// Returns the number of days in this month for a given year (28-31).
     ///
     /// February varies by leap year (28 or 29 days).
+    @inlinable
     public func days(in year: Time.Year) -> Int {
-        Time.Calendar.Gregorian.daysInMonth(year, self)
+        Self.days(in: year, month: self)
+    }
+
+    /// Returns the number of days in a specific month for a given year (28-31).
+    ///
+    /// February varies by leap year (28 or 29 days).
+    @inlinable
+    public static func days(in year: Time.Year, month: Time.Month) -> Int {
+        Time.Calendar.Gregorian.daysInMonth(year, month)
     }
 }
 

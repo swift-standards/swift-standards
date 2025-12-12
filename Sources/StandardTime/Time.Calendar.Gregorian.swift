@@ -59,12 +59,14 @@ extension Time.Calendar.Gregorian {
     /// Time.Calendar.Gregorian.isLeapYear(Time.Year(2100)) // false (÷100, not ÷400)
     /// Time.Calendar.Gregorian.isLeapYear(Time.Year(2024)) // true (÷4, not ÷100)
     /// ```
+    @inlinable
     public static func isLeapYear(_ year: Time.Year) -> Bool {
         let y = year.rawValue
         return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0)
     }
 
     /// Determines if a year is a leap year (convenience overload).
+    @inlinable
     public static func isLeapYear(_ year: Int) -> Bool {
         isLeapYear(Time.Year(year))
     }
@@ -75,15 +77,18 @@ extension Time.Calendar.Gregorian {
 extension Time.Calendar.Gregorian {
     /// Days in each month for a common (non-leap) year
     /// Index 0 = January, Index 11 = December
-    private static let daysInCommonYearMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    @usableFromInline
+    internal static let daysInCommonYearMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
     /// Days in each month for a leap year
     /// Index 0 = January, Index 11 = December
-    private static let daysInLeapYearMonths = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+    @usableFromInline
+    internal static let daysInLeapYearMonths = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
     /// Returns the number of days in a specific month.
     ///
     /// February varies by year (28 or 29 days depending on leap year).
+    @inlinable
     public static func daysInMonth(_ year: Time.Year, _ month: Time.Month) -> Int {
         let monthArray = isLeapYear(year) ? daysInLeapYearMonths : daysInCommonYearMonths
         // SAFE: month.value is guaranteed to be in range 1-12 by Time.Month invariant
@@ -91,6 +96,7 @@ extension Time.Calendar.Gregorian {
     }
 
     /// Returns array of days in each month for a given year (12 integers).
+    @inlinable
     public static func daysInMonths(year: Int) -> [Int] {
         isLeapYear(year) ? daysInLeapYearMonths : daysInCommonYearMonths
     }
@@ -100,6 +106,7 @@ extension Time.Calendar.Gregorian {
     /// Internal convenience for epoch conversion code.
     ///
     /// - Warning: Caller must guarantee month is 1-12
+    @inlinable
     internal static func daysInMonth(year: Int, month: Int) -> Int {
         let months = daysInMonths(year: year)
         // UNSAFE: Caller must guarantee month ∈ [1,12]

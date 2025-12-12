@@ -302,7 +302,24 @@ extension Time {
     /// Total nanoseconds within the current second (0-999,999,999).
     ///
     /// Combines millisecond, microsecond, and nanosecond fields into a single value.
+    @inlinable
     public var totalNanoseconds: Int {
+        Self.totalNanoseconds(
+            millisecond: millisecond,
+            microsecond: microsecond,
+            nanosecond: nanosecond
+        )
+    }
+
+    /// Calculates total nanoseconds within the current second (0-999,999,999).
+    ///
+    /// Static function that combines millisecond, microsecond, and nanosecond fields into a single value.
+    @inlinable
+    public static func totalNanoseconds(
+        millisecond: Time.Millisecond,
+        microsecond: Time.Microsecond,
+        nanosecond: Time.Nanosecond
+    ) -> Int {
         millisecond.value * 1_000_000 + microsecond.value * 1000 + nanosecond.value
     }
 
@@ -316,7 +333,16 @@ extension Time {
     /// let time = try Time(year: 2024, month: 1, day: 15, hour: 10, minute: 30, second: 0)
     /// print(time.weekday) // .monday
     /// ```
+    @inlinable
     public var weekday: Time.Weekday {
+        Self.weekday(year: year, month: month, day: day)
+    }
+
+    /// Calculates the day of the week for a given date.
+    ///
+    /// Uses Zeller's congruence algorithm to determine the weekday.
+    @inlinable
+    public static func weekday(year: Time.Year, month: Time.Month, day: Time.Month.Day) -> Time.Weekday {
         Time.Weekday(year: year, month: month, day: day)
     }
 
@@ -334,8 +360,17 @@ extension Time {
     /// let time2 = try Time(year: 2024, month: 1, day: 1, hour: 0, minute: 0, second: 0)
     /// print(time2.secondsSinceEpoch) // 1704067200
     /// ```
+    @inlinable
     public var secondsSinceEpoch: Int {
-        Time.Epoch.Conversion.secondsSinceEpoch(from: self)
+        Self.secondsSinceEpoch(from: self)
+    }
+
+    /// Calculates seconds since Unix epoch (1970-01-01 00:00:00 UTC).
+    ///
+    /// O(1) algorithm based on Gregorian calendar cycle structure.
+    @inlinable
+    public static func secondsSinceEpoch(from time: Time) -> Int {
+        Time.Epoch.Conversion.secondsSinceEpoch(from: time)
     }
 }
 

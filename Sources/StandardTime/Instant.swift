@@ -104,7 +104,14 @@ extension Instant {
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 extension Instant {
+    @inlinable
     public static func < (lhs: Instant, rhs: Instant) -> Bool {
+        Self.isLessThan(lhs: lhs, rhs: rhs)
+    }
+
+    /// Compares two instants to determine if the first is less than the second.
+    @inlinable
+    public static func isLessThan(lhs: Instant, rhs: Instant) -> Bool {
         if lhs.secondsSinceUnixEpoch == rhs.secondsSinceUnixEpoch {
             return lhs.nanosecondFraction < rhs.nanosecondFraction
         }
@@ -122,15 +129,23 @@ extension Instant {
     @inlinable
     @_disfavoredOverload
     public static func + (lhs: Instant, rhs: Duration) -> Instant {
-        let (durationSeconds, attoseconds) = rhs.components
+        Self.add(instant: lhs, duration: rhs)
+    }
+
+    /// Adds a duration to an instant.
+    ///
+    /// Sub-nanosecond precision is lost (Duration has attosecond precision, Instant has nanosecond).
+    @inlinable
+    public static func add(instant: Instant, duration: Duration) -> Instant {
+        let (durationSeconds, attoseconds) = duration.components
 
         // Convert attoseconds to nanoseconds (loses sub-nanosecond precision)
         // attoseconds / 10^9 = nanoseconds
         let nanosFromDuration = attoseconds / 1_000_000_000
 
         // Add seconds and nanoseconds separately
-        var totalSeconds = lhs.secondsSinceUnixEpoch + durationSeconds
-        var totalNanos = Int64(lhs.nanosecondFraction) + nanosFromDuration
+        var totalSeconds = instant.secondsSinceUnixEpoch + durationSeconds
+        var totalNanos = Int64(instant.nanosecondFraction) + nanosFromDuration
 
         // Normalize: ensure nanos in range [0, 1_000_000_000)
         while totalNanos >= 1_000_000_000 {
@@ -155,14 +170,22 @@ extension Instant {
     @inlinable
     @_disfavoredOverload
     public static func - (lhs: Instant, rhs: Duration) -> Instant {
-        let (durationSeconds, attoseconds) = rhs.components
+        Self.subtract(duration: rhs, from: lhs)
+    }
+
+    /// Subtracts a duration from an instant.
+    ///
+    /// Sub-nanosecond precision is lost (Duration has attosecond precision, Instant has nanosecond).
+    @inlinable
+    public static func subtract(duration: Duration, from instant: Instant) -> Instant {
+        let (durationSeconds, attoseconds) = duration.components
 
         // Convert attoseconds to nanoseconds (loses sub-nanosecond precision)
         let nanosFromDuration = attoseconds / 1_000_000_000
 
         // Subtract seconds and nanoseconds separately
-        var totalSeconds = lhs.secondsSinceUnixEpoch - durationSeconds
-        var totalNanos = Int64(lhs.nanosecondFraction) - nanosFromDuration
+        var totalSeconds = instant.secondsSinceUnixEpoch - durationSeconds
+        var totalNanos = Int64(instant.nanosecondFraction) - nanosFromDuration
 
         // Normalize: ensure nanos in range [0, 1_000_000_000)
         while totalNanos >= 1_000_000_000 {
@@ -184,9 +207,18 @@ extension Instant {
     /// Calculates duration between two instants.
     ///
     /// Returns positive duration if lhs > rhs, negative if lhs < rhs.
+    @inlinable
     public static func - (lhs: Instant, rhs: Instant) -> Duration {
-        let secondsDiff = lhs.secondsSinceUnixEpoch - rhs.secondsSinceUnixEpoch
-        let nanosDiff = lhs.nanosecondFraction - rhs.nanosecondFraction
+        Self.duration(from: rhs, to: lhs)
+    }
+
+    /// Calculates duration between two instants.
+    ///
+    /// Returns positive duration if to > from, negative if to < from.
+    @inlinable
+    public static func duration(from: Instant, to: Instant) -> Duration {
+        let secondsDiff = to.secondsSinceUnixEpoch - from.secondsSinceUnixEpoch
+        let nanosDiff = to.nanosecondFraction - from.nanosecondFraction
 
         return Duration.seconds(secondsDiff) + Duration.nanoseconds(Int64(nanosDiff))
     }

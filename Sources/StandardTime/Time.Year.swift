@@ -45,8 +45,17 @@ extension Time.Year {
 
 extension Time.Year {
     /// Whether this year is a leap year in the Gregorian calendar
+    @inlinable
     public var isLeapYear: Bool {
-        Time.Calendar.Gregorian.isLeapYear(self)
+        Self.isLeapYear(self)
+    }
+
+    /// Determines if a year is a leap year in the Gregorian calendar.
+    ///
+    /// Applies Gregorian rules: divisible by 4, except century years unless divisible by 400.
+    @inlinable
+    public static func isLeapYear(_ year: Time.Year) -> Bool {
+        Time.Calendar.Gregorian.isLeapYear(year)
     }
 }
 

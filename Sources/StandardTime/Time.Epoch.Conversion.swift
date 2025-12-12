@@ -20,6 +20,7 @@ extension Time.Epoch.Conversion {
     /// Calculates seconds since Unix epoch from time components.
     ///
     /// Returns whole seconds only. Use `components.totalNanoseconds` for sub-second precision.
+    @inlinable
     public static func secondsSinceEpoch(from components: Time) -> Int {
         secondsSinceEpoch(
             year: components.year,
@@ -38,6 +39,7 @@ extension Time.Epoch.Conversion {
     /// Calculates seconds since epoch from refined type components (internal).
     ///
     /// Type-safe version that guarantees all values are pre-validated.
+    @inlinable
     internal static func secondsSinceEpoch(
         year: Time.Year,
         month: Time.Month,
@@ -56,6 +58,7 @@ extension Time.Epoch.Conversion {
     /// Extracts date-time components from seconds since epoch (internal).
     ///
     /// Returns raw tuple with values guaranteed valid by algorithmic construction.
+    @inlinable
     internal static func componentsRaw(
         fromSecondsSinceEpoch secondsSinceEpoch: Int
     ) -> (year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int) {
@@ -96,6 +99,7 @@ extension Time.Epoch.Conversion {
     /// Calculates year and remaining days from days since epoch (internal).
     ///
     /// O(1) algorithm using Gregorian calendar's 400-year cycle structure (exactly 146,097 days).
+    @inlinable
     internal static func yearAndDays(
         fromDaysSinceEpoch days: Int
     ) -> (year: Int, remainingDays: Int) {
@@ -162,6 +166,7 @@ extension Time.Epoch.Conversion {
     /// Calculates days since Unix epoch for a given date (internal).
     ///
     /// O(1) algorithm using leap year counting formula (no year-by-year iteration).
+    @inlinable
     internal static func daysSinceEpoch(
         year: Time.Year,
         month: Time.Month,

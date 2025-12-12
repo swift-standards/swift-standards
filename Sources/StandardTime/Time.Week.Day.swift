@@ -53,11 +53,24 @@ extension Time.Weekday {
     /// Calculates the weekday for a given date using Zeller's congruence.
     ///
     /// Cannot fail because all parameters are pre-validated refined types.
+    @inlinable
     public init(
         year: Time.Year,
         month: Time.Month,
         day: Time.Month.Day
     ) {
+        self = Self.calculate(year: year, month: month, day: day)
+    }
+
+    /// Calculates the weekday for a given date using Zeller's congruence.
+    ///
+    /// Static function that implements the core algorithm. Cannot fail because all parameters are pre-validated refined types.
+    @inlinable
+    public static func calculate(
+        year: Time.Year,
+        month: Time.Month,
+        day: Time.Month.Day
+    ) -> Time.Weekday {
         var y = year.rawValue
         var m = month.rawValue
 
@@ -79,13 +92,13 @@ extension Time.Weekday {
         let gregorianDay = (h + 6) % 7
 
         switch gregorianDay {
-        case 0: self = .sunday
-        case 1: self = .monday
-        case 2: self = .tuesday
-        case 3: self = .wednesday
-        case 4: self = .thursday
-        case 5: self = .friday
-        default: self = .saturday  // Must be 6 (only remaining case)
+        case 0: return .sunday
+        case 1: return .monday
+        case 2: return .tuesday
+        case 3: return .wednesday
+        case 4: return .thursday
+        case 5: return .friday
+        default: return .saturday  // Must be 6 (only remaining case)
         }
     }
 
