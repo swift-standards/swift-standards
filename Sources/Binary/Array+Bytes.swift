@@ -22,6 +22,7 @@ extension [UInt8] {
     /// - Parameters:
     ///   - value: The integer value to serialize
     ///   - endianness: Byte order for the output (defaults to little-endian)
+    @inlinable
     public init<T: FixedWidthInteger>(_ value: T, endianness: Binary.Endianness = .little) {
         let converted: T
         switch endianness {
@@ -52,6 +53,7 @@ extension [UInt8] {
     /// - Parameters:
     ///   - values: Collection of integers to serialize
     ///   - endianness: Byte order for the output (defaults to little-endian)
+    @inlinable
     public init<C: Collection>(serializing values: C, endianness: Binary.Endianness = .little)
     where C.Element: FixedWidthInteger {
         var result: [UInt8] = []
@@ -78,6 +80,7 @@ extension [UInt8] {
     /// ```
     ///
     /// - Parameter string: The string to encode as UTF-8 bytes
+    @inlinable
     public init(utf8 string: some StringProtocol) {
         self = Array(string.utf8)
     }
@@ -95,40 +98,63 @@ extension [UInt8] {
     ///
     /// ```swift
     /// let data: [UInt8] = [1, 2, 0, 0, 3, 4, 0, 0, 5]
-    /// let parts = data.split(separator: [0, 0])
+    /// let parts = [UInt8].split(data, separator: [0, 0])
     /// // [[1, 2], [3, 4], [5]]
     /// ```
     ///
-    /// - Parameter separator: The byte sequence to split on
+    /// - Parameters:
+    ///   - bytes: The byte array to split
+    ///   - separator: The byte sequence to split on
     /// - Returns: Array of byte arrays separated by the delimiter
-    public func split(separator: [UInt8]) -> [[UInt8]] {
-        guard !separator.isEmpty else { return [self] }
+    @inlinable
+    public static func split(_ bytes: [UInt8], separator: [UInt8]) -> [[UInt8]] {
+        guard !separator.isEmpty else { return [bytes] }
 
         var result: [[UInt8]] = []
         var start = 0
 
-        while start < count {
-            guard start + separator.count <= count else {
-                result.append(Array(self[start...]))
+        while start < bytes.count {
+            guard start + separator.count <= bytes.count else {
+                result.append(Array(bytes[start...]))
                 break
             }
 
             var found = false
-            for i in start...(count - separator.count)
-            where self[i..<i + separator.count].elementsEqual(separator) {
-                result.append(Array(self[start..<i]))
+            for i in start...(bytes.count - separator.count)
+            where bytes[i..<i + separator.count].elementsEqual(separator) {
+                result.append(Array(bytes[start..<i]))
                 start = i + separator.count
                 found = true
                 break
             }
 
             if !found {
-                result.append(Array(self[start...]))
+                result.append(Array(bytes[start...]))
                 break
             }
         }
 
         return result
+    }
+
+    /// Splits the byte array at each occurrence of a delimiter sequence.
+    ///
+    /// Returns an array of subarrays separated by the delimiter.
+    /// The delimiter itself is not included in the results.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let data: [UInt8] = [1, 2, 0, 0, 3, 4, 0, 0, 5]
+    /// let parts = data.split(separator: [0, 0])
+    /// // [[1, 2], [3, 4], [5]]
+    /// ```
+    ///
+    /// - Parameter separator: The byte sequence to split on
+    /// - Returns: Array of byte arrays separated by the delimiter
+    @inlinable
+    public func split(separator: [UInt8]) -> [[UInt8]] {
+        Self.split(self, separator: separator)
     }
 }
 
@@ -140,6 +166,7 @@ extension [UInt8] {
     /// - Parameters:
     ///   - value: The value to append
     ///   - endianness: Byte order for serialization (defaults to little-endian)
+    @inlinable
     public mutating func append(_ value: UInt16, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
@@ -149,6 +176,7 @@ extension [UInt8] {
     /// - Parameters:
     ///   - value: The value to append
     ///   - endianness: Byte order for serialization (defaults to little-endian)
+    @inlinable
     public mutating func append(_ value: UInt32, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
@@ -158,6 +186,7 @@ extension [UInt8] {
     /// - Parameters:
     ///   - value: The value to append
     ///   - endianness: Byte order for serialization (defaults to little-endian)
+    @inlinable
     public mutating func append(_ value: UInt64, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
@@ -167,6 +196,7 @@ extension [UInt8] {
     /// - Parameters:
     ///   - value: The value to append
     ///   - endianness: Byte order for serialization (defaults to little-endian)
+    @inlinable
     public mutating func append(_ value: Int16, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
@@ -176,6 +206,7 @@ extension [UInt8] {
     /// - Parameters:
     ///   - value: The value to append
     ///   - endianness: Byte order for serialization (defaults to little-endian)
+    @inlinable
     public mutating func append(_ value: Int32, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
@@ -185,6 +216,7 @@ extension [UInt8] {
     /// - Parameters:
     ///   - value: The value to append
     ///   - endianness: Byte order for serialization (defaults to little-endian)
+    @inlinable
     public mutating func append(_ value: Int64, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
@@ -194,6 +226,7 @@ extension [UInt8] {
     /// - Parameters:
     ///   - value: The value to append
     ///   - endianness: Byte order for serialization (defaults to little-endian)
+    @inlinable
     public mutating func append(_ value: Int, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
@@ -203,6 +236,7 @@ extension [UInt8] {
     /// - Parameters:
     ///   - value: The value to append
     ///   - endianness: Byte order for serialization (defaults to little-endian)
+    @inlinable
     public mutating func append(_ value: UInt, endianness: Binary.Endianness = .little) {
         append(contentsOf: value.bytes(endianness: endianness))
     }

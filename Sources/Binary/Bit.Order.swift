@@ -49,11 +49,19 @@ extension Bit.Order {
     ///
     /// Returns `.lsb` for `.msb` and vice versa.
     @inlinable
-    public var opposite: Bit.Order {
-        switch self {
+    public static func opposite(_ order: Bit.Order) -> Bit.Order {
+        switch order {
         case .msb: return .lsb
         case .lsb: return .msb
         }
+    }
+
+    /// The opposite bit order.
+    ///
+    /// Returns `.lsb` for `.msb` and vice versa.
+    @inlinable
+    public var opposite: Bit.Order {
+        Self.opposite(self)
     }
 
     /// Returns the opposite bit order.
@@ -61,7 +69,7 @@ extension Bit.Order {
     /// Equivalent to the `opposite` property.
     @inlinable
     public static prefix func ! (value: Bit.Order) -> Bit.Order {
-        value.opposite
+        opposite(value)
     }
 }
 

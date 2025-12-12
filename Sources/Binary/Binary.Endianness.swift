@@ -42,11 +42,19 @@ extension Binary.Endianness {
     ///
     /// Returns `.big` for `.little` and vice versa.
     @inlinable
-    public var opposite: Binary.Endianness {
-        switch self {
+    public static func opposite(_ endianness: Binary.Endianness) -> Binary.Endianness {
+        switch endianness {
         case .little: return .big
         case .big: return .little
         }
+    }
+
+    /// The opposite byte order.
+    ///
+    /// Returns `.big` for `.little` and vice versa.
+    @inlinable
+    public var opposite: Binary.Endianness {
+        Self.opposite(self)
     }
 
     /// Returns the opposite byte order.
@@ -54,7 +62,7 @@ extension Binary.Endianness {
     /// Equivalent to the `opposite` property.
     @inlinable
     public static prefix func ! (value: Binary.Endianness) -> Binary.Endianness {
-        value.opposite
+        opposite(value)
     }
 }
 

@@ -22,6 +22,7 @@ extension Collection<UInt8> {
     ///   - bytes: The byte collection to trim
     ///   - predicate: Returns `true` for bytes to remove
     /// - Returns: A subsequence with matching bytes trimmed from both ends
+    @inlinable
     public static func trimming<C: Collection>(
         _ bytes: C,
         where predicate: (UInt8) -> Bool
@@ -59,6 +60,7 @@ extension Collection<UInt8> {
     ///   - bytes: The byte collection to trim
     ///   - byteSet: The set of bytes to remove
     /// - Returns: A subsequence with the specified bytes trimmed from both ends
+    @inlinable
     public static func trimming<C: Collection>(
         _ bytes: C,
         of byteSet: Set<UInt8>
@@ -70,6 +72,7 @@ extension Collection<UInt8> {
     ///
     /// - Parameter predicate: Returns `true` for bytes to remove
     /// - Returns: A subsequence with matching bytes trimmed from both ends
+    @inlinable
     public func trimming(where predicate: (UInt8) -> Bool) -> SubSequence {
         Self.trimming(self, where: predicate)
     }
@@ -78,6 +81,7 @@ extension Collection<UInt8> {
     ///
     /// - Parameter byteSet: The set of bytes to remove
     /// - Returns: A subsequence with the specified bytes trimmed from both ends
+    @inlinable
     public func trimming(_ byteSet: Set<UInt8>) -> SubSequence {
         Self.trimming(self, of: byteSet)
     }
@@ -88,15 +92,21 @@ extension Collection<UInt8> {
 extension Collection<UInt8> {
     /// Finds the first occurrence of a byte subsequence.
     ///
-    /// - Parameter needle: The byte sequence to search for
+    /// - Parameters:
+    ///   - haystack: The collection to search in
+    ///   - needle: The byte sequence to search for
     /// - Returns: Index of the first occurrence, or `nil` if not found
-    public func firstIndex<C: Collection>(of needle: C) -> Index?
-    where C.Element == UInt8 {
-        guard !needle.isEmpty else { return startIndex }
-        guard needle.count <= count else { return nil }
+    @inlinable
+    public static func firstIndex<Haystack: Collection, C: Collection>(
+        of needle: C,
+        in haystack: Haystack
+    ) -> Haystack.Index?
+    where Haystack.Element == UInt8, C.Element == UInt8 {
+        guard !needle.isEmpty else { return haystack.startIndex }
+        guard needle.count <= haystack.count else { return nil }
 
-        var i = startIndex
-        let searchEnd = index(endIndex, offsetBy: -needle.count + 1)
+        var i = haystack.startIndex
+        let searchEnd = haystack.index(haystack.endIndex, offsetBy: -needle.count + 1)
 
         while i < searchEnd {
             var matches = true
@@ -104,18 +114,55 @@ extension Collection<UInt8> {
             var needleIndex = needle.startIndex
 
             while needleIndex != needle.endIndex {
-                if self[selfIndex] != needle[needleIndex] {
+                if haystack[selfIndex] != needle[needleIndex] {
                     matches = false
                     break
                 }
-                selfIndex = index(after: selfIndex)
+                selfIndex = haystack.index(after: selfIndex)
                 needleIndex = needle.index(after: needleIndex)
             }
 
             if matches {
                 return i
             }
-            i = index(after: i)
+            i = haystack.index(after: i)
+        }
+
+        return nil
+    }
+
+    /// Finds the first occurrence of a byte subsequence.
+    ///
+    /// - Parameter needle: The byte sequence to search for
+    /// - Returns: Index of the first occurrence, or `nil` if not found
+    @inlinable
+    public func firstIndex<C: Collection>(of needle: C) -> Index?
+    where C.Element == UInt8 {
+        Self.firstIndex(of: needle, in: self)
+    }
+
+    /// Finds the last occurrence of a byte subsequence.
+    ///
+    /// - Parameters:
+    ///   - haystack: The collection to search in
+    ///   - needle: The byte sequence to search for
+    /// - Returns: Index of the last occurrence, or `nil` if not found
+    @inlinable
+    public static func lastIndex<Haystack: Collection, C: Collection>(
+        of needle: C,
+        in haystack: Haystack
+    ) -> Haystack.Index?
+    where Haystack.Element == UInt8, C.Element == UInt8 {
+        guard !needle.isEmpty else { return haystack.endIndex }
+        guard needle.count <= haystack.count else { return nil }
+
+        let selfArray = Array(haystack)
+        let needleArray = Array(needle)
+
+        for i in stride(from: selfArray.count - needleArray.count, through: 0, by: -1) {
+            if selfArray[i..<i + needleArray.count].elementsEqual(needleArray) {
+                return haystack.index(haystack.startIndex, offsetBy: i)
+            }
         }
 
         return nil
@@ -125,29 +172,34 @@ extension Collection<UInt8> {
     ///
     /// - Parameter needle: The byte sequence to search for
     /// - Returns: Index of the last occurrence, or `nil` if not found
+    @inlinable
     public func lastIndex<C: Collection>(of needle: C) -> Index?
     where C.Element == UInt8 {
-        guard !needle.isEmpty else { return endIndex }
-        guard needle.count <= count else { return nil }
+        Self.lastIndex(of: needle, in: self)
+    }
 
-        let selfArray = Array(self)
-        let needleArray = Array(needle)
-
-        for i in stride(from: selfArray.count - needleArray.count, through: 0, by: -1) {
-            if selfArray[i..<i + needleArray.count].elementsEqual(needleArray) {
-                return index(startIndex, offsetBy: i)
-            }
-        }
-
-        return nil
+    /// Checks if the collection contains a byte subsequence.
+    ///
+    /// - Parameters:
+    ///   - haystack: The collection to search in
+    ///   - needle: The byte sequence to search for
+    /// - Returns: `true` if the subsequence is found, `false` otherwise
+    @inlinable
+    public static func contains<Haystack: Collection, C: Collection>(
+        _ needle: C,
+        in haystack: Haystack
+    ) -> Bool
+    where Haystack.Element == UInt8, C.Element == UInt8 {
+        firstIndex(of: needle, in: haystack) != nil
     }
 
     /// Checks if the collection contains a byte subsequence.
     ///
     /// - Parameter needle: The byte sequence to search for
     /// - Returns: `true` if the subsequence is found, `false` otherwise
+    @inlinable
     public func contains<C: Collection>(_ needle: C) -> Bool
     where C.Element == UInt8 {
-        firstIndex(of: needle) != nil
+        Self.contains(needle, in: self)
     }
 }
