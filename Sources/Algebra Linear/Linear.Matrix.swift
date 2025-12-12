@@ -188,16 +188,22 @@ extension Linear.Matrix where Scalar: SignedNumeric {
 extension Linear.Matrix {
     /// The transpose of the matrix (rows become columns).
     @inlinable
-    public var transpose: Linear.Matrix<Columns, Rows> {
+    public static func transpose(_ matrix: Self) -> Linear.Matrix<Columns, Rows> {
         var result = InlineArray<Columns, InlineArray<Rows, Scalar>>(
-            repeating: InlineArray(repeating: rows[0][0])
+            repeating: InlineArray(repeating: matrix.rows[0][0])
         )
         for i in 0..<Rows {
             for j in 0..<Columns {
-                result[j][i] = rows[i][j]
+                result[j][i] = matrix.rows[i][j]
             }
         }
         return Linear.Matrix<Columns, Rows>(rows: result)
+    }
+
+    /// The transpose of the matrix (rows become columns).
+    @inlinable
+    public var transpose: Linear.Matrix<Columns, Rows> {
+        Self.transpose(self)
     }
 }
 
@@ -256,12 +262,18 @@ extension Linear.Matrix where Scalar: AdditiveArithmetic & Numeric {
 extension Linear.Matrix where Rows == Columns, Scalar: AdditiveArithmetic {
     /// The trace (sum of diagonal elements).
     @inlinable
-    public var trace: Scalar {
+    public static func trace(_ matrix: Self) -> Scalar {
         var sum: Scalar = .zero
         for i in 0..<Rows {
-            sum += self[i, i]
+            sum += matrix[i, i]
         }
         return sum
+    }
+
+    /// The trace (sum of diagonal elements).
+    @inlinable
+    public var trace: Scalar {
+        Self.trace(self)
     }
 }
 
@@ -308,30 +320,48 @@ extension Linear.Matrix where Rows == 2, Columns == 2 {
 extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: Numeric {
     /// The determinant of the 2×2 matrix.
     @inlinable
+    public static func determinant(_ matrix: Self) -> Scalar {
+        matrix.a * matrix.d - matrix.b * matrix.c
+    }
+
+    /// The determinant of the 2×2 matrix.
+    @inlinable
     public var determinant: Scalar {
-        a * d - b * c
+        Self.determinant(self)
     }
 }
 
 extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint {
     /// Whether the matrix is invertible (determinant is non-zero).
     @inlinable
+    public static func isInvertible(_ matrix: Self) -> Bool {
+        determinant(matrix) != 0
+    }
+
+    /// Whether the matrix is invertible (determinant is non-zero).
+    @inlinable
     public var isInvertible: Bool {
-        determinant != 0
+        Self.isInvertible(self)
+    }
+
+    /// The inverse of the matrix, or `nil` if singular.
+    @inlinable
+    public static func inverse(_ matrix: Self) -> Self? {
+        let det = determinant(matrix)
+        guard det != 0 else { return nil }
+        let invDet: Scalar = 1 / det
+        return Self(
+            a: matrix.d * invDet,
+            b: -matrix.b * invDet,
+            c: -matrix.c * invDet,
+            d: matrix.a * invDet
+        )
     }
 
     /// The inverse of the matrix, or `nil` if singular.
     @inlinable
     public var inverse: Self? {
-        let det = determinant
-        guard det != 0 else { return nil }
-        let invDet: Scalar = 1 / det
-        return Self(
-            a: d * invDet,
-            b: -b * invDet,
-            c: -c * invDet,
-            d: a * invDet
-        )
+        Self.inverse(self)
     }
 }
 
@@ -421,8 +451,16 @@ extension Linear.Matrix where Rows == 2, Columns == 2, Scalar == Double {
     ///
     /// Exact for pure rotations; approximates the rotational component if scale or shear is present.
     @inlinable
+    public static func rotationAngle(_ matrix: Self) -> Radian {
+        Radian.atan2(y: matrix.c, x: matrix.a)
+    }
+
+    /// Extracts the rotation angle from the matrix.
+    ///
+    /// Exact for pure rotations; approximates the rotational component if scale or shear is present.
+    @inlinable
     public var rotationAngle: Radian {
-        Radian.atan2(y: c, x: a)
+        Self.rotationAngle(self)
     }
 }
 
@@ -431,10 +469,18 @@ extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint {
     ///
     /// Returns approximate scale along X and Y axes if shear is present.
     @inlinable
-    public var scaleFactors: (x: Scalar, y: Scalar) {
-        let sx = (a * a + c * c).squareRoot()
-        let sy = (b * b + d * d).squareRoot()
+    public static func scaleFactors(_ matrix: Self) -> (x: Scalar, y: Scalar) {
+        let sx = (matrix.a * matrix.a + matrix.c * matrix.c).squareRoot()
+        let sy = (matrix.b * matrix.b + matrix.d * matrix.d).squareRoot()
         return (sx, sy)
+    }
+
+    /// Extracts the scale factors from the matrix.
+    ///
+    /// Returns approximate scale along X and Y axes if shear is present.
+    @inlinable
+    public var scaleFactors: (x: Scalar, y: Scalar) {
+        Self.scaleFactors(self)
     }
 }
 
@@ -443,16 +489,16 @@ extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint {
 extension Linear.Matrix where Rows == 3, Columns == 3, Scalar: Numeric {
     /// The determinant of the 3×3 matrix.
     @inlinable
-    public var determinant: Scalar {
-        let a = self[0, 0]
-        let b = self[0, 1]
-        let c = self[0, 2]
-        let d = self[1, 0]
-        let e = self[1, 1]
-        let f = self[1, 2]
-        let g = self[2, 0]
-        let h = self[2, 1]
-        let i = self[2, 2]
+    public static func determinant(_ matrix: Self) -> Scalar {
+        let a = matrix[0, 0]
+        let b = matrix[0, 1]
+        let c = matrix[0, 2]
+        let d = matrix[1, 0]
+        let e = matrix[1, 1]
+        let f = matrix[1, 2]
+        let g = matrix[2, 0]
+        let h = matrix[2, 1]
+        let i = matrix[2, 2]
 
         // Break up expression for type-checker
         let cofactor0 = e * i - f * h
@@ -460,6 +506,12 @@ extension Linear.Matrix where Rows == 3, Columns == 3, Scalar: Numeric {
         let cofactor2 = d * h - e * g
 
         return a * cofactor0 - b * cofactor1 + c * cofactor2
+    }
+
+    /// The determinant of the 3×3 matrix.
+    @inlinable
+    public var determinant: Scalar {
+        Self.determinant(self)
     }
 }
 

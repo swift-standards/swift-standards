@@ -11,8 +11,14 @@ public import RealModule
 extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// The angle of this vector from the positive X-axis.
     @inlinable
+    public static func angle(_ vector: Self) -> Radian {
+        .atan2(y: Double(vector.dy.value), x: Double(vector.dx.value))
+    }
+
+    /// The angle of this vector from the positive X-axis.
+    @inlinable
     public var angle: Radian {
-        .atan2(y: Double(dy.value), x: Double(dx.value))
+        Self.angle(self)
     }
 }
 
@@ -42,11 +48,29 @@ extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
     ///
     /// Returns an angle in the range [0, π].
     @inlinable
-    public func angle(to other: Self) -> Radian {
-        let dotProduct = self.dot(other)
-        let magnitudes = self.length * other.length
+    public static func angle(_ lhs: Self, to rhs: Self) -> Radian {
+        let dotProduct = dot(lhs, rhs)
+        let magnitudes = length(lhs) * length(rhs)
         guard magnitudes > 0 else { return .zero }
         return .acos(Double(dotProduct / magnitudes))
+    }
+
+    /// Computes the unsigned angle between this vector and another.
+    ///
+    /// Returns an angle in the range [0, π].
+    @inlinable
+    public func angle(to other: Self) -> Radian {
+        Self.angle(self, to: other)
+    }
+
+    /// Computes the signed angle from this vector to another.
+    ///
+    /// Returns an angle in (-π, π], positive for counter-clockwise rotation.
+    @inlinable
+    public static func signedAngle(_ lhs: Self, to rhs: Self) -> Radian {
+        let cross = cross(lhs, rhs)
+        let dot = dot(lhs, rhs)
+        return .atan2(y: Double(cross), x: Double(dot))
     }
 
     /// Computes the signed angle from this vector to another.
@@ -54,9 +78,7 @@ extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// Returns an angle in (-π, π], positive for counter-clockwise rotation.
     @inlinable
     public func signedAngle(to other: Self) -> Radian {
-        let cross = self.cross(other)
-        let dot = self.dot(other)
-        return .atan2(y: Double(cross), x: Double(dot))
+        Self.signedAngle(self, to: other)
     }
 }
 
@@ -65,20 +87,32 @@ extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
 extension Linear.Vector where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// Rotates this vector by an angle in radians.
     @inlinable
-    public func rotated(by angle: Radian) -> Self {
+    public static func rotated(_ vector: Self, by angle: Radian) -> Self {
         let c = Scalar(angle.cos)
         let s = Scalar(angle.sin)
-        let x = dx.value
-        let y = dy.value
+        let x = vector.dx.value
+        let y = vector.dy.value
         return Self(
             dx: Linear.Dx(x * c - y * s),
             dy: Linear.Dy(x * s + y * c)
         )
     }
 
+    /// Rotates this vector by an angle in radians.
+    @inlinable
+    public func rotated(by angle: Radian) -> Self {
+        Self.rotated(self, by: angle)
+    }
+
+    /// Rotates this vector by an angle in degrees.
+    @inlinable
+    public static func rotated(_ vector: Self, by angle: Degree) -> Self {
+        rotated(vector, by: angle.radians)
+    }
+
     /// Rotates this vector by an angle in degrees.
     @inlinable
     public func rotated(by angle: Degree) -> Self {
-        rotated(by: angle.radians)
+        Self.rotated(self, by: angle)
     }
 }

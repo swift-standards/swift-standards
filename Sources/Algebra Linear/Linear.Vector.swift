@@ -225,18 +225,42 @@ extension Linear.Vector where Scalar: FloatingPoint {
     ///
     /// Use when comparing magnitudes to avoid the square root computation.
     @inlinable
-    public var lengthSquared: Scalar {
+    public static func lengthSquared(_ vector: Self) -> Scalar {
         var sum = Scalar.zero
         for i in 0..<N {
-            sum += components[i] * components[i]
+            sum += vector.components[i] * vector.components[i]
         }
         return sum
+    }
+
+    /// The squared length of the vector.
+    ///
+    /// Use when comparing magnitudes to avoid the square root computation.
+    @inlinable
+    public var lengthSquared: Scalar {
+        Self.lengthSquared(self)
+    }
+
+    /// The length (magnitude) of the vector.
+    @inlinable
+    public static func length(_ vector: Self) -> Scalar {
+        lengthSquared(vector).squareRoot()
     }
 
     /// The length (magnitude) of the vector.
     @inlinable
     public var length: Scalar {
-        lengthSquared.squareRoot()
+        Self.length(self)
+    }
+
+    /// A unit vector in the same direction.
+    ///
+    /// Returns the zero vector if this vector has zero length.
+    @inlinable
+    public static func normalized(_ vector: Self) -> Self {
+        let len = length(vector)
+        guard len > 0 else { return .zero }
+        return vector / len
     }
 
     /// A unit vector in the same direction.
@@ -244,9 +268,7 @@ extension Linear.Vector where Scalar: FloatingPoint {
     /// Returns the zero vector if this vector has zero length.
     @inlinable
     public var normalized: Self {
-        let len = length
-        guard len > 0 else { return .zero }
-        return self / len
+        Self.normalized(self)
     }
 }
 
@@ -255,12 +277,29 @@ extension Linear.Vector where Scalar: FloatingPoint {
 extension Linear.Vector where Scalar: FloatingPoint {
     /// Computes the dot product with another vector.
     @inlinable
-    public func dot(_ other: borrowing Self) -> Scalar {
+    public static func dot(_ lhs: Self, _ rhs: Self) -> Scalar {
         var sum = Scalar.zero
         for i in 0..<N {
-            sum += components[i] * other.components[i]
+            sum += lhs.components[i] * rhs.components[i]
         }
         return sum
+    }
+
+    /// Computes the dot product with another vector.
+    @inlinable
+    public func dot(_ other: borrowing Self) -> Scalar {
+        Self.dot(self, other)
+    }
+
+    /// Projects this vector onto another vector.
+    ///
+    /// Returns the component of this vector in the direction of `other`, or zero if `other` has zero length.
+    @inlinable
+    public static func projection(_ vector: Self, onto other: Self) -> Self {
+        let otherLenSq = lengthSquared(other)
+        guard otherLenSq > 0 else { return .zero }
+        let scale = dot(vector, other) / otherLenSq
+        return other * scale
     }
 
     /// Projects this vector onto another vector.
@@ -268,10 +307,15 @@ extension Linear.Vector where Scalar: FloatingPoint {
     /// Returns the component of this vector in the direction of `other`, or zero if `other` has zero length.
     @inlinable
     public func projection(onto other: borrowing Self) -> Self {
-        let otherLenSq = other.lengthSquared
-        guard otherLenSq > 0 else { return .zero }
-        let scale = dot(other) / otherLenSq
-        return other * scale
+        Self.projection(self, onto: other)
+    }
+
+    /// Computes the rejection (orthogonal component) from another vector.
+    ///
+    /// Returns the component of this vector perpendicular to `other`. Satisfies: `self = projection(onto: other) + rejection(from: other)`.
+    @inlinable
+    public static func rejection(_ vector: Self, from other: Self) -> Self {
+        vector - projection(vector, onto: other)
     }
 
     /// Computes the rejection (orthogonal component) from another vector.
@@ -279,13 +323,19 @@ extension Linear.Vector where Scalar: FloatingPoint {
     /// Returns the component of this vector perpendicular to `other`. Satisfies: `self = projection(onto: other) + rejection(from: other)`.
     @inlinable
     public func rejection(from other: borrowing Self) -> Self {
-        self - projection(onto: other)
+        Self.rejection(self, from: other)
+    }
+
+    /// Computes the distance between vector endpoints.
+    @inlinable
+    public static func distance(_ lhs: Self, to rhs: Self) -> Scalar {
+        length(lhs - rhs)
     }
 
     /// Computes the distance between vector endpoints.
     @inlinable
     public func distance(to other: borrowing Self) -> Scalar {
-        (self - other).length
+        Self.distance(self, to: other)
     }
 }
 
@@ -320,8 +370,16 @@ extension Linear.Vector where N == 2, Scalar: SignedNumeric {
     ///
     /// Returns the signed area of the parallelogram formed by the vectors. Positive if `other` is counter-clockwise from `self`.
     @inlinable
+    public static func cross(_ lhs: Self, _ rhs: Self) -> Scalar {
+        lhs.dx * rhs.dy - lhs.dy * rhs.dx
+    }
+
+    /// Computes the 2D cross product (signed Z-component).
+    ///
+    /// Returns the signed area of the parallelogram formed by the vectors. Positive if `other` is counter-clockwise from `self`.
+    @inlinable
     public func cross(_ other: borrowing Self) -> Scalar {
-        dx * other.dy - dy * other.dx
+        Self.cross(self, other)
     }
 }
 
@@ -370,12 +428,18 @@ extension Linear.Vector where N == 3 {
 extension Linear.Vector where N == 3, Scalar: SignedNumeric {
     /// Computes the 3D cross product with another vector.
     @inlinable
-    public func cross(_ other: borrowing Self) -> Self {
+    public static func cross(_ lhs: Self, _ rhs: Self) -> Self {
         Self(
-            dx: Linear.Dx(dy * other.dz - dz * other.dy),
-            dy: Linear.Dy(dz * other.dx - dx * other.dz),
-            dz: Linear.Dz(dx * other.dy - dy * other.dx)
+            dx: Linear.Dx(lhs.dy * rhs.dz - lhs.dz * rhs.dy),
+            dy: Linear.Dy(lhs.dz * rhs.dx - lhs.dx * rhs.dz),
+            dz: Linear.Dz(lhs.dx * rhs.dy - lhs.dy * rhs.dx)
         )
+    }
+
+    /// Computes the 3D cross product with another vector.
+    @inlinable
+    public func cross(_ other: borrowing Self) -> Self {
+        Self.cross(self, other)
     }
 }
 
