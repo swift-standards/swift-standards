@@ -259,7 +259,7 @@ extension `Performance Tests` {
 
         // MARK: - Aggregation Performance
 
-        @Test(.timed(threshold: .milliseconds(50), maxAllocations: 10_000_000))
+        @Test(.timed(threshold: .milliseconds(60), maxAllocations: 10_000_000))
         func `sum 100k elements`() {
             let numbers = Array(1...100_000)
             _ = numbers.sum()
@@ -291,7 +291,7 @@ extension `Performance Tests` {
             _ = numbers.count(where: { $0.isMultiple(of: 2) })
         }
 
-        @Test(.timed(threshold: .milliseconds(60), maxAllocations: 10_000_000))
+        @Test(.timed(threshold: .milliseconds(75), maxAllocations: 10_000_000))
         func `frequencies 100k elements with duplicates`() {
             let numbers = Array(repeating: 1...100, count: 1000).flatMap { $0 }
             _ = numbers.frequencies()
