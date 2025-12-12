@@ -118,7 +118,13 @@ extension Layout.Stack {
 extension Layout.Stack {
     /// Namespace for functorial transformation operations.
     @inlinable
-    public var map: Map { Map(stack: self) }
+    public static func map(_ stack: Layout<Spacing>.Stack<Content>) -> Map {
+        Map(stack: stack)
+    }
+
+    /// Namespace for functorial transformation operations.
+    @inlinable
+    public var map: Map { Self.map(self) }
 
     /// Functorial transformation operations for `Stack`.
     public struct Map {

@@ -196,9 +196,15 @@ extension Layout.Flow {
 }
 
 extension Layout.Flow {
+    /// Returns the functorial transformation namespace for the given flow.
+    @inlinable
+    public static func map(_ flow: Layout<Spacing>.Flow<Content>) -> Map {
+        Map(flow: flow)
+    }
+
     /// Namespace for functorial transformation operations.
     @inlinable
-    public var map: Map { Map(flow: self) }
+    public var map: Map { Self.map(self) }
 
     /// Functorial transformation operations for `Flow`.
     public struct Map {

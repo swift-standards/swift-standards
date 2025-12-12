@@ -158,9 +158,15 @@ extension Layout.Grid {
 }
 
 extension Layout.Grid {
+    /// Returns the functorial transformation namespace for the given grid.
+    @inlinable
+    public static func map(_ grid: Layout<Spacing>.Grid<Content>) -> Map {
+        Map(grid: grid)
+    }
+
     /// Namespace for functorial transformation operations.
     @inlinable
-    public var map: Map { Map(grid: self) }
+    public var map: Map { Self.map(self) }
 
     /// Functorial transformation operations for `Grid`.
     public struct Map {

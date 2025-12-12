@@ -49,11 +49,17 @@ extension Horizontal.Alignment {
 
         /// Returns the opposite side.
         @inlinable
-        public var opposite: Side {
-            switch self {
+        public static func opposite(_ side: Side) -> Side {
+            switch side {
             case .leading: return .trailing
             case .trailing: return .leading
             }
+        }
+
+        /// Returns the opposite side.
+        @inlinable
+        public var opposite: Side {
+            Self.opposite(self)
         }
     }
 }
@@ -87,11 +93,17 @@ extension Vertical.Alignment {
 
         /// Returns the opposite side.
         @inlinable
-        public var opposite: Side {
-            switch self {
+        public static func opposite(_ side: Side) -> Side {
+            switch side {
             case .top: return .bottom
             case .bottom: return .top
             }
+        }
+
+        /// Returns the opposite side.
+        @inlinable
+        public var opposite: Side {
+            Self.opposite(self)
         }
     }
 }
@@ -136,10 +148,16 @@ extension Corner: CaseIterable {
 // MARK: - Opposite
 
 extension Corner {
+    /// Returns the diagonally opposite corner.
+    @inlinable
+    public static func opposite(_ corner: Corner) -> Corner {
+        Corner(horizontal: .opposite(corner.horizontal), vertical: .opposite(corner.vertical))
+    }
+
     /// Diagonally opposite corner
     @inlinable
     public var opposite: Corner {
-        Corner(horizontal: horizontal.opposite, vertical: vertical.opposite)
+        Self.opposite(self)
     }
 
     /// Returns the diagonally opposite corner.
@@ -154,34 +172,70 @@ extension Corner {
 extension Corner {
     /// Whether this corner is on the top edge
     @inlinable
-    public var isTop: Bool { vertical == .top }
+    public static func isTop(_ corner: Corner) -> Bool {
+        corner.vertical == .top
+    }
+
+    /// Whether this corner is on the top edge
+    @inlinable
+    public var isTop: Bool { Self.isTop(self) }
 
     /// Whether this corner is on the bottom edge
     @inlinable
-    public var isBottom: Bool { vertical == .bottom }
+    public static func isBottom(_ corner: Corner) -> Bool {
+        corner.vertical == .bottom
+    }
+
+    /// Whether this corner is on the bottom edge
+    @inlinable
+    public var isBottom: Bool { Self.isBottom(self) }
 
     /// Whether this corner is on the leading edge
     @inlinable
-    public var isLeading: Bool { horizontal == .leading }
+    public static func isLeading(_ corner: Corner) -> Bool {
+        corner.horizontal == .leading
+    }
+
+    /// Whether this corner is on the leading edge
+    @inlinable
+    public var isLeading: Bool { Self.isLeading(self) }
 
     /// Whether this corner is on the trailing edge
     @inlinable
-    public var isTrailing: Bool { horizontal == .trailing }
+    public static func isTrailing(_ corner: Corner) -> Bool {
+        corner.horizontal == .trailing
+    }
+
+    /// Whether this corner is on the trailing edge
+    @inlinable
+    public var isTrailing: Bool { Self.isTrailing(self) }
 }
 
 // MARK: - Adjacent Corners
 
 extension Corner {
+    /// Returns the corner horizontally adjacent along the same edge.
+    @inlinable
+    public static func horizontalAdjacent(_ corner: Corner) -> Corner {
+        Corner(horizontal: .opposite(corner.horizontal), vertical: corner.vertical)
+    }
+
     /// Corner horizontally adjacent along the same edge
     @inlinable
     public var horizontalAdjacent: Corner {
-        Corner(horizontal: horizontal.opposite, vertical: vertical)
+        Self.horizontalAdjacent(self)
+    }
+
+    /// Returns the corner vertically adjacent along the same edge.
+    @inlinable
+    public static func verticalAdjacent(_ corner: Corner) -> Corner {
+        Corner(horizontal: corner.horizontal, vertical: .opposite(corner.vertical))
     }
 
     /// Corner vertically adjacent along the same edge
     @inlinable
     public var verticalAdjacent: Corner {
-        Corner(horizontal: horizontal, vertical: vertical.opposite)
+        Self.verticalAdjacent(self)
     }
 }
 

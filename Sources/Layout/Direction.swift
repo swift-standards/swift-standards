@@ -45,10 +45,16 @@ extension Layout.Direction {
 extension Layout.Direction {
     /// Returns the opposite layout direction.
     @inlinable
-    public var opposite: Layout.Direction {
-        switch self {
+    public static func opposite(_ direction: Layout.Direction) -> Layout.Direction {
+        switch direction {
         case .leftToRight: return .rightToLeft
         case .rightToLeft: return .leftToRight
         }
+    }
+
+    /// Returns the opposite layout direction.
+    @inlinable
+    public var opposite: Layout.Direction {
+        Self.opposite(self)
     }
 }
