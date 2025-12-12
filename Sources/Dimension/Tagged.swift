@@ -53,6 +53,22 @@ extension Tagged: Comparable where RawValue: Comparable {
     public static func < (lhs: Tagged, rhs: Tagged) -> Bool {
         lhs.rawValue < rhs.rawValue
     }
+
+    /// Returns the greater of two tagged values.
+    ///
+    /// Equivalent to `Swift.max(a, b)` but avoids verbose type annotations.
+    @inlinable
+    public static func max(_ a: Self, _ b: Self) -> Self {
+        a.rawValue >= b.rawValue ? a : b
+    }
+
+    /// Returns the lesser of two tagged values.
+    ///
+    /// Equivalent to `Swift.min(a, b)` but avoids verbose type annotations.
+    @inlinable
+    public static func min(_ a: Self, _ b: Self) -> Self {
+        a.rawValue <= b.rawValue ? a : b
+    }
 }
 
 // MARK: - Functor
