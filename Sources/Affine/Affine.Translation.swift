@@ -45,16 +45,6 @@ extension Affine.Translation: Hashable where Scalar: Hashable {}
 // MARK: - Convenience Initializers
 
 extension Affine.Translation {
-    /// Creates translation from raw scalar displacement values.
-    @inlinable
-    public init(
-        dx: Scalar,
-        dy: Scalar
-    ) {
-        self.dx = Linear<Scalar, Space>.Dx(dx)
-        self.dy = Linear<Scalar, Space>.Dy(dy)
-    }
-
     /// Creates translation from 2D displacement vector.
     @inlinable
     public init(_ vector: Linear<Scalar, Space>.Vector<2>) {

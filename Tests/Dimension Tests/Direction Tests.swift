@@ -1,108 +1,159 @@
 // Direction Tests.swift
 
+import StandardsTestSupport
 import Testing
-
 @testable import Dimension
 
-// MARK: - Direction Tests
+// MARK: - Direction - Static Functions
 
-@Suite
-struct DirectionTests {
-    @Test
-    func `Direction cases`() {
-        let positive: Direction = .positive
-        let negative: Direction = .negative
-        #expect(positive != negative)
+@Suite("Direction - Static Functions")
+struct Direction_StaticTests {
+    @Test(arguments: [Direction.positive, Direction.negative])
+    func `opposite is involution`(direction: Direction) {
+        #expect(Direction.opposite(of: Direction.opposite(of: direction)) == direction)
     }
 
     @Test
-    func `Direction opposite`() {
-        #expect(Direction.positive.opposite == .negative)
-        #expect(Direction.negative.opposite == .positive)
+    func `opposite maps positive to negative`() {
+        #expect(Direction.opposite(of: .positive) == .negative)
     }
 
     @Test
-    func `Direction negation operator`() {
-        #expect(!Direction.positive == .negative)
-        #expect(!Direction.negative == .positive)
-        #expect(!(!Direction.positive) == .positive)
-    }
-
-    @Test
-    func `Direction sign Int`() {
-        #expect(Direction.positive.sign == 1)
-        #expect(Direction.negative.sign == -1)
-    }
-
-    @Test
-    func `Direction CaseIterable`() {
-        #expect(Direction.allCases.count == 2)
-        #expect(Direction.allCases.contains(.positive))
-        #expect(Direction.allCases.contains(.negative))
-    }
-
-    @Test
-    func `Direction Equatable`() {
-        #expect(Direction.positive == Direction.positive)
-        #expect(Direction.negative == Direction.negative)
-        #expect(Direction.positive != Direction.negative)
-    }
-
-    @Test
-    func `Direction Hashable`() {
-        let set: Set<Direction> = [.positive, .negative, .positive]
-        #expect(set.count == 2)
+    func `opposite maps negative to positive`() {
+        #expect(Direction.opposite(of: .negative) == .positive)
     }
 }
 
-// MARK: - Axis.Direction Typealias Tests
+// MARK: - Direction - Properties
 
-@Suite
-struct AxisDirectionTypealiasTests {
-    /// Direction is dimension-independent - same type across all Axis<N>.
-    ///
-    /// Mathematically, direction along an axis is just a sign (+1 or -1), which is
-    /// the same concept regardless of the dimension of the space.
-    @Test
-    func `Direction is same type across all dimensions`() {
-        let dir2: Axis<2>.Direction = .positive
-        let dir3: Axis<3>.Direction = .positive
-        let dir4: Axis<4>.Direction = .negative
-
-        // These ARE the same type (via typealias to Direction)
-        #expect(dir2 == dir3)
-        #expect(dir2 != dir4)
-
-        // Can use Direction directly
-        let dir: Direction = .positive
-        #expect(dir == dir2)
-        #expect(dir == dir3)
+@Suite("Direction - Properties")
+struct Direction_PropertyTests {
+    @Test(arguments: [Direction.positive, Direction.negative])
+    func `opposite property delegates to static function`(direction: Direction) {
+        #expect(direction.opposite == Direction.opposite(of: direction))
     }
 
     @Test
-    func `Axis Direction accessed via any dimension`() {
-        // All of these resolve to the same Direction type
-        let dir1: Axis<1>.Direction = .positive
-        let dir2: Axis<2>.Direction = .positive
-        let dir3: Axis<3>.Direction = .positive
-        let dir4: Axis<4>.Direction = .positive
-
-        #expect(dir1 == dir2)
-        #expect(dir2 == dir3)
-        #expect(dir3 == dir4)
-
-        // Opposite works the same way
-        #expect(dir1.opposite == Direction.negative)
-        #expect(dir2.opposite == Direction.negative)
+    func `direction property returns self`() {
+        #expect(Direction.positive.direction == .positive)
+        #expect(Direction.negative.direction == .negative)
     }
 
     @Test
-    func `Axis Direction has all Direction functionality`() {
-        // Accessed via Axis<N>.Direction, but same underlying type
-        let dir: Axis<2>.Direction = .negative
+    func `sign returns 1 for positive`() {
+        #expect(Direction.positive.sign == 1)
+    }
 
-        #expect(dir.sign == -1)
-        #expect(Double(dir.sign) == -1.0)
-        #expect(dir.opposite == .positive)
+    @Test
+    func `sign returns -1 for negative`() {
+        #expect(Direction.negative.sign == -1)
+    }
+
+    @Test(arguments: [Direction.positive, Direction.negative])
+    func `isPositive property`(direction: Direction) {
+        if direction == .positive {
+            #expect(direction.isPositive)
+        } else {
+            #expect(!direction.isPositive)
+        }
+    }
+
+    @Test(arguments: [Direction.positive, Direction.negative])
+    func `isNegative property`(direction: Direction) {
+        if direction == .negative {
+            #expect(direction.isNegative)
+        } else {
+            #expect(!direction.isNegative)
+        }
+    }
+}
+
+// MARK: - Direction - Operators
+
+@Suite("Direction - Operators")
+struct Direction_OperatorTests {
+    @Test(arguments: [Direction.positive, Direction.negative])
+    func `negation operator is involution`(direction: Direction) {
+        #expect(!(!direction) == direction)
+    }
+
+    @Test
+    func `negation maps positive to negative`() {
+        #expect(!Direction.positive == .negative)
+    }
+
+    @Test
+    func `negation maps negative to positive`() {
+        #expect(!Direction.negative == .positive)
+    }
+}
+
+// MARK: - Direction - Initializers
+
+@Suite("Direction - Initializers")
+struct Direction_InitializerTests {
+    @Test(arguments: [Direction.positive, Direction.negative])
+    func `init from direction is identity`(direction: Direction) {
+        #expect(Direction(direction: direction) == direction)
+    }
+
+    @Test
+    func `init from non-negative sign creates positive`() {
+        #expect(Direction(sign: 0) == .positive)
+        #expect(Direction(sign: 1) == .positive)
+        #expect(Direction(sign: 100) == .positive)
+    }
+
+    @Test
+    func `init from negative sign creates negative`() {
+        #expect(Direction(sign: -1) == .negative)
+        #expect(Direction(sign: -100) == .negative)
+    }
+
+    @Test
+    func `init from true creates positive`() {
+        #expect(Direction(true) == .positive)
+    }
+
+    @Test
+    func `init from false creates negative`() {
+        #expect(Direction(false) == .negative)
+    }
+}
+
+// MARK: - Direction - Protocol Conformances
+
+@Suite("Direction - Protocol Conformances")
+struct Direction_ProtocolTests {
+    @Test
+    func `allCases contains exactly two cases`() {
+        #expect(Direction.allCases.count == 2)
+    }
+
+    @Test
+    func `allCases contains positive`() {
+        #expect(Direction.allCases.contains(.positive))
+    }
+
+    @Test
+    func `allCases contains negative`() {
+        #expect(Direction.allCases.contains(.negative))
+    }
+
+    @Test(arguments: [Direction.positive, Direction.negative])
+    func `Equatable reflexivity`(direction: Direction) {
+        #expect(direction == direction)
+    }
+
+    @Test
+    func `Equatable symmetry`() {
+        #expect(Direction.positive != Direction.negative)
+        #expect(Direction.negative != Direction.positive)
+    }
+
+    @Test
+    func `Hashable produces unique hashes`() {
+        let set: Set<Direction> = [.positive, .negative, .positive]
+        #expect(set.count == 2)
     }
 }

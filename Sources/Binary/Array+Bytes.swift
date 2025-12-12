@@ -225,9 +225,10 @@ extension [UInt8] {
     ///
     /// - Parameters:
     ///   - value: The value to append
-    ///   - endianness: Byte order for serialization (defaults to little-endian)
+    ///   - endianness: Byte order for serialization
+    /// - Note: Endianness is required to avoid ambiguity with single-byte append.
     @inlinable
-    public mutating func append(_ value: Int, endianness: Binary.Endianness = .little) {
+    public mutating func append(_ value: Int, endianness: Binary.Endianness) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
 
@@ -235,9 +236,10 @@ extension [UInt8] {
     ///
     /// - Parameters:
     ///   - value: The value to append
-    ///   - endianness: Byte order for serialization (defaults to little-endian)
+    ///   - endianness: Byte order for serialization
+    /// - Note: Endianness is required to avoid ambiguity with single-byte append.
     @inlinable
-    public mutating func append(_ value: UInt, endianness: Binary.Endianness = .little) {
+    public mutating func append(_ value: UInt, endianness: Binary.Endianness) {
         append(contentsOf: value.bytes(endianness: endianness))
     }
 }

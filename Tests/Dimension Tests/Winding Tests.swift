@@ -1,62 +1,130 @@
 // Winding Tests.swift
 
-import Algebra
 import Foundation
+import StandardsTestSupport
 import Testing
-
 @testable import Dimension
 
-@Suite
-struct WindingTests {
+// MARK: - Winding - Static Functions
+
+@Suite("Winding - Static Functions")
+struct Winding_StaticTests {
+    @Test(arguments: [Winding.clockwise, Winding.counterclockwise])
+    func `opposite is involution`(winding: Winding) {
+        #expect(Winding.opposite(of: Winding.opposite(of: winding)) == winding)
+    }
+
     @Test
-    func `Winding cases`() {
+    func `opposite maps clockwise to counterclockwise`() {
+        #expect(Winding.opposite(of: .clockwise) == .counterclockwise)
+    }
+
+    @Test
+    func `opposite maps counterclockwise to clockwise`() {
+        #expect(Winding.opposite(of: .counterclockwise) == .clockwise)
+    }
+}
+
+// MARK: - Winding - Properties
+
+@Suite("Winding - Properties")
+struct Winding_PropertyTests {
+    @Test(arguments: [Winding.clockwise, Winding.counterclockwise])
+    func `opposite property delegates to static function`(winding: Winding) {
+        #expect(winding.opposite == Winding.opposite(of: winding))
+    }
+
+    @Test
+    func `cw is alias for clockwise`() {
+        #expect(Winding.cw == .clockwise)
+    }
+
+    @Test
+    func `ccw is alias for counterclockwise`() {
+        #expect(Winding.ccw == .counterclockwise)
+    }
+}
+
+// MARK: - Winding - Operators
+
+@Suite("Winding - Operators")
+struct Winding_OperatorTests {
+    @Test(arguments: [Winding.clockwise, Winding.counterclockwise])
+    func `negation operator is involution`(winding: Winding) {
+        #expect(!(!winding) == winding)
+    }
+
+    @Test
+    func `negation maps clockwise to counterclockwise`() {
+        #expect(!Winding.clockwise == .counterclockwise)
+    }
+
+    @Test
+    func `negation maps counterclockwise to clockwise`() {
+        #expect(!Winding.counterclockwise == .clockwise)
+    }
+}
+
+// MARK: - Winding - Protocol Conformances
+
+@Suite("Winding - Protocol Conformances")
+struct Winding_ProtocolTests {
+    @Test
+    func `allCases contains exactly two cases`() {
         #expect(Winding.allCases.count == 2)
+    }
+
+    @Test
+    func `allCases contains clockwise`() {
         #expect(Winding.allCases.contains(.clockwise))
+    }
+
+    @Test
+    func `allCases contains counterclockwise`() {
         #expect(Winding.allCases.contains(.counterclockwise))
     }
 
-    @Test
-    func `Winding opposite is involution`() {
-        #expect(Winding.clockwise.opposite == .counterclockwise)
-        #expect(Winding.counterclockwise.opposite == .clockwise)
-        #expect(Winding.clockwise.opposite.opposite == .clockwise)
-        #expect(Winding.counterclockwise.opposite.opposite == .counterclockwise)
+    @Test(arguments: [Winding.clockwise, Winding.counterclockwise])
+    func `Equatable reflexivity`(winding: Winding) {
+        #expect(winding == winding)
     }
 
     @Test
-    func `Winding negation operator`() {
-        #expect(!Winding.clockwise == .counterclockwise)
-        #expect(!Winding.counterclockwise == .clockwise)
-        #expect(!(!Winding.clockwise) == .clockwise)
+    func `Equatable symmetry`() {
+        #expect(Winding.clockwise != Winding.counterclockwise)
+        #expect(Winding.counterclockwise != Winding.clockwise)
     }
 
     @Test
-    func `Winding aliases`() {
-        #expect(Winding.cw == .clockwise)
-        #expect(Winding.ccw == .counterclockwise)
-    }
-
-    @Test
-    func `Winding Value typealias`() {
-        let paired: Winding.Value<Double> = .init(.clockwise, .pi)
-        #expect(paired.first == .clockwise)
-        #expect(paired.second == .pi)
-    }
-
-    @Test
-    func `Winding Hashable`() {
+    func `Hashable produces unique hashes`() {
         let set: Set<Winding> = [.clockwise, .counterclockwise, .clockwise]
         #expect(set.count == 2)
     }
 
     @Test
-    func `Winding Codable`() throws {
-        let encoder = JSONEncoder()
-        let decoder = JSONDecoder()
-
+    func `Codable roundtrip`() throws {
         let original = Winding.clockwise
-        let data = try encoder.encode(original)
-        let decoded = try decoder.decode(Winding.self, from: data)
+        let encoded = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(Winding.self, from: encoded)
         #expect(decoded == original)
+    }
+}
+
+// MARK: - Winding - Value Typealias
+
+@Suite("Winding - Value Typealias")
+struct Winding_ValueTests {
+    @Test
+    func `Value typealias for Pair`() {
+        let paired: Winding.Value<Double> = Pair(.clockwise, 3.14)
+        #expect(paired.first == .clockwise)
+        #expect(paired.second == 3.14)
+    }
+
+    @Test
+    func `Value is Pair type`() {
+        let value: Winding.Value<Double> = Pair(.ccw, 45.0)
+        #expect(value.first == .counterclockwise)
+        #expect(value.second == 45.0)
     }
 }

@@ -56,8 +56,8 @@ extension Affine.Transform: Hashable where Scalar: Hashable {}
             let b = try container.decode(Scalar.self, forKey: .b)
             let c = try container.decode(Scalar.self, forKey: .c)
             let d = try container.decode(Scalar.self, forKey: .d)
-            let tx = try container.decode(Scalar.self, forKey: .tx)
-            let ty = try container.decode(Scalar.self, forKey: .ty)
+            let tx = try container.decode(Linear<Scalar, Space>.Dx.self, forKey: .tx)
+            let ty = try container.decode(Linear<Scalar, Space>.Dy.self, forKey: .ty)
             self.init(a: a, b: b, c: c, d: d, tx: tx, ty: ty)
         }
 
@@ -150,17 +150,6 @@ extension Affine.Transform {
 // MARK: - Raw Component Initializer
 
 extension Affine.Transform {
-    /// Creates transform from raw matrix components.
-    ///
-    /// - Parameters:
-    ///   - a, b, c, d: Linear transformation coefficients
-    ///   - tx, ty: Translation displacement components
-    @inlinable
-    public init(a: Scalar, b: Scalar, c: Scalar, d: Scalar, tx: Scalar, ty: Scalar) {
-        self.linear = Linear<Scalar, Space>.Matrix(a: a, b: b, c: c, d: d)
-        self.translation = Affine.Translation(dx: tx, dy: ty)
-    }
-
     /// Creates transform from matrix components with type-safe translation.
     ///
     /// - Parameters:
@@ -194,8 +183,8 @@ extension Affine.Transform where Scalar: FloatingPoint {
         // Translation part: apply transform's linear to other's translation, then add transform's translation
         let otherTx = other.translation.dx.value
         let otherTy = other.translation.dy.value
-        let newTx = transform.linear.a * otherTx + transform.linear.b * otherTy + transform.translation.dx.value
-        let newTy = transform.linear.c * otherTx + transform.linear.d * otherTy + transform.translation.dy.value
+        let newTx = transform.linear.a * otherTx + transform.linear.b * otherTy + transform.translation.dx
+        let newTy = transform.linear.c * otherTx + transform.linear.d * otherTy + transform.translation.dy
 
         return Self(
             linear: newLinear,
@@ -390,14 +379,11 @@ extension Affine.Transform where Scalar: FloatingPoint {
         guard let invLinear = transform.linear.inverse else { return nil }
 
         // inv(T) = -inv(L) * t
-        let tx = transform.translation.dx.value
-        let ty = transform.translation.dy.value
-        let newTx = -(invLinear.a * tx + invLinear.b * ty)
-        let newTy = -(invLinear.c * tx + invLinear.d * ty)
+        let negatedTranslation = -(invLinear * transform.translation.vector)
 
         return Self(
             linear: invLinear,
-            translation: Affine.Translation(dx: newTx, dy: newTy)
+            translation: Affine.Translation(negatedTranslation)
         )
     }
 

@@ -1,94 +1,168 @@
 // Depth Tests.swift
 
-import Algebra
+import StandardsTestSupport
 import Testing
-
 @testable import Dimension
 
-@Suite
-struct DepthTests {
-    @Test
-    func `Depth cases`() {
-        let forward: Depth = .forward
-        let backward: Depth = .backward
-        #expect(forward != backward)
+// MARK: - Depth - Static Functions
+
+@Suite("Depth - Static Functions")
+struct Depth_StaticTests {
+    @Test(arguments: [Depth.forward, Depth.backward])
+    func `opposite is involution`(depth: Depth) {
+        #expect(Depth.opposite(of: Depth.opposite(of: depth)) == depth)
     }
 
     @Test
-    func `Depth opposite`() {
-        #expect(Depth.forward.opposite == .backward)
-        #expect(Depth.backward.opposite == .forward)
+    func `opposite maps forward to backward`() {
+        #expect(Depth.opposite(of: .forward) == .backward)
     }
 
     @Test
-    func `Depth negation operator`() {
-        #expect(!Depth.forward == .backward)
-        #expect(!Depth.backward == .forward)
-        #expect(!(!Depth.forward) == .forward)
+    func `opposite maps backward to forward`() {
+        #expect(Depth.opposite(of: .backward) == .forward)
+    }
+}
+
+// MARK: - Depth - Properties
+
+@Suite("Depth - Properties")
+struct Depth_PropertyTests {
+    @Test(arguments: [Depth.forward, Depth.backward])
+    func `opposite property delegates to static function`(depth: Depth) {
+        #expect(depth.opposite == Depth.opposite(of: depth))
     }
 
     @Test
-    func `Depth CaseIterable`() {
+    func `direction maps forward to positive`() {
+        #expect(Depth.forward.direction == .positive)
+    }
+
+    @Test
+    func `direction maps backward to negative`() {
+        #expect(Depth.backward.direction == .negative)
+    }
+
+    @Test
+    func `isForward property`() {
+        #expect(Depth.forward.isForward)
+        #expect(!Depth.backward.isForward)
+    }
+
+    @Test
+    func `isBackward property`() {
+        #expect(Depth.backward.isBackward)
+        #expect(!Depth.forward.isBackward)
+    }
+
+    @Test(arguments: [Depth.forward, Depth.backward])
+    func `isPositive property`(depth: Depth) {
+        if depth == .forward {
+            #expect(depth.isPositive)
+        } else {
+            #expect(!depth.isPositive)
+        }
+    }
+
+    @Test(arguments: [Depth.forward, Depth.backward])
+    func `isNegative property`(depth: Depth) {
+        if depth == .backward {
+            #expect(depth.isNegative)
+        } else {
+            #expect(!depth.isNegative)
+        }
+    }
+}
+
+// MARK: - Depth - Initializers
+
+@Suite("Depth - Initializers")
+struct Depth_InitializerTests {
+    @Test
+    func `init from positive direction creates forward`() {
+        #expect(Depth(direction: .positive) == .forward)
+    }
+
+    @Test
+    func `init from negative direction creates backward`() {
+        #expect(Depth(direction: .negative) == .backward)
+    }
+
+    @Test(arguments: [Depth.forward, Depth.backward])
+    func `direction roundtrip`(depth: Depth) {
+        #expect(Depth(direction: depth.direction) == depth)
+    }
+
+    @Test
+    func `init from true creates forward`() {
+        #expect(Depth(true) == .forward)
+    }
+
+    @Test
+    func `init from false creates backward`() {
+        #expect(Depth(false) == .backward)
+    }
+}
+
+// MARK: - Depth - Protocol Conformances
+
+@Suite("Depth - Protocol Conformances")
+struct Depth_ProtocolTests {
+    @Test
+    func `allCases contains exactly two cases`() {
         #expect(Depth.allCases.count == 2)
+    }
+
+    @Test
+    func `allCases contains forward`() {
         #expect(Depth.allCases.contains(.forward))
+    }
+
+    @Test
+    func `allCases contains backward`() {
         #expect(Depth.allCases.contains(.backward))
     }
 
-    @Test
-    func `Depth Equatable`() {
-        #expect(Depth.forward == Depth.forward)
-        #expect(Depth.backward == Depth.backward)
-        #expect(Depth.forward != Depth.backward)
+    @Test(arguments: [Depth.forward, Depth.backward])
+    func `Equatable reflexivity`(depth: Depth) {
+        #expect(depth == depth)
     }
 
     @Test
-    func `Depth Hashable`() {
+    func `Equatable symmetry`() {
+        #expect(Depth.forward != Depth.backward)
+        #expect(Depth.backward != Depth.forward)
+    }
+
+    @Test
+    func `Hashable produces unique hashes`() {
         let set: Set<Depth> = [.forward, .backward, .forward]
         #expect(set.count == 2)
     }
-}
 
-// MARK: - Depth.Value Struct Tests
-
-@Suite
-struct DepthValueTests {
-    @Test
-    func `Depth Value holds direction and value`() {
-        let d: Depth.Value<Double> = .init(.forward, 10.0)
-        #expect(d.first == .forward)
-        #expect(d.second == 10.0)
-    }
-
-    @Test
-    func `Depth Value Equatable`() {
-        let d1: Depth.Value<Double> = .init(.forward, 10.0)
-        let d2: Depth.Value<Double> = .init(.forward, 10.0)
-        let d3: Depth.Value<Double> = .init(.backward, 10.0)
-        #expect(d1 == d2)
-        #expect(d1 != d3)
+    @Test(arguments: [Depth.forward, Depth.backward])
+    func `description property`(depth: Depth) {
+        let desc = depth.description
+        #expect(desc == "forward" || desc == "backward")
     }
 }
 
-// MARK: - Axis.Depth Typealias Tests
+// MARK: - Depth - Operators
 
-@Suite
-struct AxisDepthTypealiasTests {
-    @Test
-    func `Depth is same type across dimensions`() {
-        let d3: Axis<3>.Depth = .forward
-        let d4: Depth = .forward
-
-        // Both resolve to the same underlying Depth type
-        #expect(d3 == d4)
-
-        let d: Depth = .forward
-        #expect(d == d3)
+@Suite("Depth - Operators")
+struct Depth_OperatorTests {
+    @Test(arguments: [Depth.forward, Depth.backward])
+    func `negation operator is involution`(depth: Depth) {
+        #expect(!(!depth) == depth)
     }
 
     @Test
-    func `Axis Depth not available on Axis 1 or 2`() {
-        // Axis<1>.Depth and Axis<2>.Depth should not exist
-        // This is a compile-time check
-        let _: Axis<3>.Depth = .forward
+    func `negation maps forward to backward`() {
+        #expect(!Depth.forward == .backward)
+    }
+
+    @Test
+    func `negation maps backward to forward`() {
+        #expect(!Depth.backward == .forward)
     }
 }

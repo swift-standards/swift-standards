@@ -363,6 +363,17 @@ extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint {
     public var inverse: Self? {
         Self.inverse(self)
     }
+
+    /// Multiplies the 2×2 matrix by a typed 2D vector, preserving coordinate types.
+    ///
+    /// This operator handles the dimensional analysis internally, allowing matrix elements
+    /// (which are dimensionless) to transform typed displacement components.
+    @inlinable
+    public static func * (lhs: Self, rhs: Linear<Scalar, Space>.Vector<2>) -> Linear<Scalar, Space>.Vector<2> {
+        let x = lhs.a * rhs.dx.value + lhs.b * rhs.dy.value
+        let y = lhs.c * rhs.dx.value + lhs.d * rhs.dy.value
+        return Linear<Scalar, Space>.Vector(dx: .init(x), dy: .init(y))
+    }
 }
 
 // MARK: - 2×2 Codable
