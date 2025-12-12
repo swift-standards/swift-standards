@@ -190,12 +190,39 @@ extension Scale where N == 3 {
 // MARK: - Composition
 
 extension Scale {
+    /// Static composition: Multiplies scale factors component-wise.
+    ///
+    /// - Parameters:
+    ///   - lhs: Left-hand side scale
+    ///   - rhs: Right-hand side scale to apply first
+    /// - Returns: Scale with component-wise multiplied factors
+    @inlinable
+    public static func concatenate(
+        _ lhs: Self,
+        with rhs: Self
+    ) -> Self {
+        var result = lhs.factors
+        for i in 0..<N {
+            result[i] = lhs.factors[i] * rhs.factors[i]
+        }
+        return Self(result)
+    }
+
     /// Composes two scales by multiplying factors component-wise.
     @inlinable
     public func concatenating(_ other: Self) -> Self {
-        var result = factors
+        Self.concatenate(self, with: other)
+    }
+
+    /// Static inversion: Computes the inverse scale with reciprocal factors.
+    ///
+    /// - Parameter scale: The scale to invert
+    /// - Returns: Scale with reciprocal factors (1/factor per dimension)
+    @inlinable
+    public static func inverted(_ scale: Self) -> Self {
+        var result = scale.factors
         for i in 0..<N {
-            result[i] = factors[i] * other.factors[i]
+            result[i] = 1 / scale.factors[i]
         }
         return Self(result)
     }
@@ -203,11 +230,7 @@ extension Scale {
     /// Inverse scale with reciprocal factors (1/factor per dimension).
     @inlinable
     public var inverted: Self {
-        var result = factors
-        for i in 0..<N {
-            result[i] = 1 / factors[i]
-        }
-        return Self(result)
+        Self.inverted(self)
     }
 }
 

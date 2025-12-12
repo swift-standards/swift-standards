@@ -3,6 +3,7 @@
 
 public import Algebra_Linear
 public import Angle
+import Foundation
 import RealModule
 
 /// An N-dimensional rotation in Euclidean space.
@@ -121,7 +122,7 @@ extension Rotation where N == 2, Scalar: ExpressibleByIntegerLiteral {
 extension Rotation where N == 2 {
     /// Rotation angle in radians.
     public var angle: Radian {
-        get { Radian(Double.atan2(y: Double(matrix[1][0]), x: Double(matrix[0][0]))) }
+        get { Radian(atan2(Double(matrix[1][0]), Double(matrix[0][0]))) }
         set { self = Self(angle: newValue) }
     }
 
@@ -163,16 +164,22 @@ extension Rotation where N == 2 {
 // MARK: - Composition
 
 extension Rotation where N == 2 {
-    /// Composes two rotations by matrix multiplication.
+    /// Static composition: Multiplies two rotation matrices.
     ///
-    /// - Returns: Rotation applying `other` first, then `self`.
+    /// - Parameters:
+    ///   - lhs: Left-hand side rotation
+    ///   - rhs: Right-hand side rotation to apply first
+    /// - Returns: Result of matrix multiplication (rhs applied first, then lhs)
     @inlinable
-    public func concatenating(_ other: Self) -> Self {
+    public static func concatenate(
+        _ lhs: Self,
+        with rhs: Self
+    ) -> Self {
         // 2x2 matrix multiplication
-        let a = matrix[0][0] * other.matrix[0][0] + matrix[0][1] * other.matrix[1][0]
-        let b = matrix[0][0] * other.matrix[0][1] + matrix[0][1] * other.matrix[1][1]
-        let c = matrix[1][0] * other.matrix[0][0] + matrix[1][1] * other.matrix[1][0]
-        let d = matrix[1][0] * other.matrix[0][1] + matrix[1][1] * other.matrix[1][1]
+        let a = lhs.matrix[0][0] * rhs.matrix[0][0] + lhs.matrix[0][1] * rhs.matrix[1][0]
+        let b = lhs.matrix[0][0] * rhs.matrix[0][1] + lhs.matrix[0][1] * rhs.matrix[1][1]
+        let c = lhs.matrix[1][0] * rhs.matrix[0][0] + lhs.matrix[1][1] * rhs.matrix[1][0]
+        let d = lhs.matrix[1][0] * rhs.matrix[0][1] + lhs.matrix[1][1] * rhs.matrix[1][1]
         var m = InlineArray<2, InlineArray<2, Scalar>>(
             repeating: InlineArray<2, Scalar>(repeating: .zero)
         )
@@ -183,18 +190,35 @@ extension Rotation where N == 2 {
         return Self(matrix: m)
     }
 
-    /// Inverse rotation (matrix transpose for orthogonal matrices).
+    /// Composes two rotations by matrix multiplication.
+    ///
+    /// - Returns: Rotation applying `other` first, then `self`.
     @inlinable
-    public var inverted: Self {
+    public func concatenating(_ other: Self) -> Self {
+        Self.concatenate(self, with: other)
+    }
+
+    /// Static inversion: Computes the inverse rotation (transpose for orthogonal matrices).
+    ///
+    /// - Parameter rotation: The rotation to invert
+    /// - Returns: Inverse rotation with transposed matrix
+    @inlinable
+    public static func inverted(_ rotation: Self) -> Self {
         // For 2D: transpose (inverse = transpose for orthogonal matrices)
         var m = InlineArray<2, InlineArray<2, Scalar>>(
             repeating: InlineArray<2, Scalar>(repeating: .zero)
         )
-        m[0][0] = matrix[0][0]
-        m[0][1] = matrix[1][0]
-        m[1][0] = matrix[0][1]
-        m[1][1] = matrix[1][1]
+        m[0][0] = rotation.matrix[0][0]
+        m[0][1] = rotation.matrix[1][0]
+        m[1][0] = rotation.matrix[0][1]
+        m[1][1] = rotation.matrix[1][1]
         return Self(matrix: m)
+    }
+
+    /// Inverse rotation (matrix transpose for orthogonal matrices).
+    @inlinable
+    public var inverted: Self {
+        Self.inverted(self)
     }
 }
 
@@ -218,16 +242,19 @@ extension Rotation where N == 2 {
 
 extension Rotation where N == 2 {
     /// 90-degree counter-clockwise rotation.
+    @inlinable
     public static var quarterTurn: Self {
         Self(angle: .halfPi)
     }
 
     /// 180-degree rotation.
+    @inlinable
     public static var halfTurn: Self {
         Self(angle: .pi)
     }
 
     /// 90-degree clockwise rotation.
+    @inlinable
     public static var quarterTurnClockwise: Self {
         Self(angle: -.halfPi)
     }
