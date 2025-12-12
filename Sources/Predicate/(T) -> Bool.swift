@@ -18,7 +18,7 @@ public func && <T>(
     lhs: @escaping (T) -> Bool,
     rhs: @escaping (T) -> Bool
 ) -> Predicate<T> {
-    Predicate(lhs).and(Predicate(rhs))
+    Predicate.and(Predicate(lhs), Predicate(rhs))
 }
 
 /// Combines two boolean closures with logical OR.
@@ -36,7 +36,7 @@ public func || <T>(
     lhs: @escaping (T) -> Bool,
     rhs: @escaping (T) -> Bool
 ) -> Predicate<T> {
-    Predicate(lhs).or(Predicate(rhs))
+    Predicate.or(Predicate(lhs), Predicate(rhs))
 }
 
 /// Combines two boolean closures with exclusive OR.
@@ -54,7 +54,7 @@ public func ^ <T>(
     lhs: @escaping (T) -> Bool,
     rhs: @escaping (T) -> Bool
 ) -> Predicate<T> {
-    Predicate(lhs).xor(Predicate(rhs))
+    Predicate.xor(Predicate(lhs), Predicate(rhs))
 }
 
 /// Negates a boolean closure.
@@ -70,7 +70,7 @@ public func ^ <T>(
 public prefix func ! <T>(
     closure: @escaping (T) -> Bool
 ) -> Predicate<T> {
-    Predicate(closure).negated
+    Predicate.negated(Predicate(closure))
 }
 
 // MARK: - Mixed Operators (Predicate with (T) -> Bool)
@@ -79,37 +79,37 @@ extension Predicate {
     /// Combines predicate with closure using logical AND.
     @inlinable
     public static func && (lhs: Predicate, rhs: @escaping (T) -> Bool) -> Predicate {
-        lhs.and(Predicate(rhs))
+        Self.and(lhs, Predicate(rhs))
     }
 
     /// Combines closure with predicate using logical AND.
     @inlinable
     public static func && (lhs: @escaping (T) -> Bool, rhs: Predicate) -> Predicate {
-        Predicate(lhs).and(rhs)
+        Self.and(Predicate(lhs), rhs)
     }
 
     /// Combines predicate with closure using logical OR.
     @inlinable
     public static func || (lhs: Predicate, rhs: @escaping (T) -> Bool) -> Predicate {
-        lhs.or(Predicate(rhs))
+        Self.or(lhs, Predicate(rhs))
     }
 
     /// Combines closure with predicate using logical OR.
     @inlinable
     public static func || (lhs: @escaping (T) -> Bool, rhs: Predicate) -> Predicate {
-        Predicate(lhs).or(rhs)
+        Self.or(Predicate(lhs), rhs)
     }
 
     /// Combines predicate with closure using exclusive OR.
     @inlinable
     public static func ^ (lhs: Predicate, rhs: @escaping (T) -> Bool) -> Predicate {
-        lhs.xor(Predicate(rhs))
+        Self.xor(lhs, Predicate(rhs))
     }
 
     /// Combines closure with predicate using exclusive OR.
     @inlinable
     public static func ^ (lhs: @escaping (T) -> Bool, rhs: Predicate) -> Predicate {
-        Predicate(lhs).xor(rhs)
+        Self.xor(Predicate(lhs), rhs)
     }
 }
 

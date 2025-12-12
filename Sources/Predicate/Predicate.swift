@@ -38,6 +38,12 @@ public struct Predicate<T>: @unchecked Sendable {
 // MARK: - Call as Function
 
 extension Predicate {
+    /// Tests whether the value satisfies the predicate's condition.
+    @inlinable
+    public static func callAsFunction(_ predicate: Predicate, _ value: T) -> Bool {
+        predicate.evaluate(value)
+    }
+
     /// Tests whether the value satisfies this predicate's condition.
     ///
     /// ## Example
@@ -49,7 +55,7 @@ extension Predicate {
     /// ```
     @inlinable
     public func callAsFunction(_ value: T) -> Bool {
-        evaluate(value)
+        Self.callAsFunction(self, value)
     }
 }
 
@@ -76,6 +82,12 @@ extension Predicate {
 // MARK: - Negation
 
 extension Predicate {
+    /// Returns the logical inverse of the predicate.
+    @inlinable
+    public static func negated(_ predicate: Predicate) -> Predicate {
+        Predicate { !predicate.evaluate($0) }
+    }
+
     /// Logical inverse of this predicate.
     ///
     /// ## Example
@@ -88,19 +100,27 @@ extension Predicate {
     /// ```
     @inlinable
     public var negated: Predicate {
-        Predicate { !self.evaluate($0) }
+        Self.negated(self)
     }
 
     /// Returns the logical negation of the predicate.
     @inlinable
     public static prefix func ! (predicate: Predicate) -> Predicate {
-        predicate.negated
+        Self.negated(predicate)
     }
 }
 
 // MARK: - Conjunction (AND)
 
 extension Predicate {
+    /// Combines two predicates using logical AND.
+    ///
+    /// Returns `true` only when both predicates succeed. Short-circuits if the first predicate fails.
+    @inlinable
+    public static func and(_ lhs: Predicate, _ rhs: Predicate) -> Predicate {
+        Predicate { lhs.evaluate($0) && rhs.evaluate($0) }
+    }
+
     /// Combines this predicate with another using logical AND.
     ///
     /// Returns `true` only when both predicates succeed. Short-circuits if this predicate fails.
@@ -117,19 +137,27 @@ extension Predicate {
     /// ```
     @inlinable
     public func and(_ other: Predicate) -> Predicate {
-        Predicate { self.evaluate($0) && other.evaluate($0) }
+        Self.and(self, other)
     }
 
     /// Combines two predicates using logical AND.
     @inlinable
     public static func && (lhs: Predicate, rhs: Predicate) -> Predicate {
-        lhs.and(rhs)
+        Self.and(lhs, rhs)
     }
 }
 
 // MARK: - Disjunction (OR)
 
 extension Predicate {
+    /// Combines two predicates using logical OR.
+    ///
+    /// Returns `true` when either predicate succeeds. Short-circuits if the first predicate succeeds.
+    @inlinable
+    public static func or(_ lhs: Predicate, _ rhs: Predicate) -> Predicate {
+        Predicate { lhs.evaluate($0) || rhs.evaluate($0) }
+    }
+
     /// Combines this predicate with another using logical OR.
     ///
     /// Returns `true` when either predicate succeeds. Short-circuits if this predicate succeeds.
@@ -146,19 +174,27 @@ extension Predicate {
     /// ```
     @inlinable
     public func or(_ other: Predicate) -> Predicate {
-        Predicate { self.evaluate($0) || other.evaluate($0) }
+        Self.or(self, other)
     }
 
     /// Combines two predicates using logical OR.
     @inlinable
     public static func || (lhs: Predicate, rhs: Predicate) -> Predicate {
-        lhs.or(rhs)
+        Self.or(lhs, rhs)
     }
 }
 
 // MARK: - Exclusive Or (XOR)
 
 extension Predicate {
+    /// Combines two predicates using exclusive OR.
+    ///
+    /// Returns `true` when exactly one predicate succeeds.
+    @inlinable
+    public static func xor(_ lhs: Predicate, _ rhs: Predicate) -> Predicate {
+        Predicate { lhs.evaluate($0) != rhs.evaluate($0) }
+    }
+
     /// Combines this predicate with another using exclusive OR.
     ///
     /// Returns `true` when exactly one predicate succeeds.
@@ -176,25 +212,41 @@ extension Predicate {
     /// ```
     @inlinable
     public func xor(_ other: Predicate) -> Predicate {
-        Predicate { self.evaluate($0) != other.evaluate($0) }
+        Self.xor(self, other)
     }
 
     /// Combines two predicates using exclusive OR.
     @inlinable
     public static func ^ (lhs: Predicate, rhs: Predicate) -> Predicate {
-        lhs.xor(rhs)
+        Self.xor(lhs, rhs)
     }
 }
 
 // MARK: - NAND / NOR
 
 extension Predicate {
+    /// Combines two predicates using NAND (not both).
+    ///
+    /// Returns `true` unless both predicates succeed. Equivalent to `!(lhs && rhs)`.
+    @inlinable
+    public static func nand(_ lhs: Predicate, _ rhs: Predicate) -> Predicate {
+        Predicate { !lhs.evaluate($0) || !rhs.evaluate($0) }
+    }
+
+    /// Combines two predicates using NOR (neither).
+    ///
+    /// Returns `true` only when both predicates fail. Equivalent to `!(lhs || rhs)`.
+    @inlinable
+    public static func nor(_ lhs: Predicate, _ rhs: Predicate) -> Predicate {
+        Predicate { !lhs.evaluate($0) && !rhs.evaluate($0) }
+    }
+
     /// Combines this predicate with another using NAND (not both).
     ///
     /// Returns `true` unless both predicates succeed. Equivalent to `!(self && other)`.
     @inlinable
     public func nand(_ other: Predicate) -> Predicate {
-        Predicate { !self.evaluate($0) || !other.evaluate($0) }
+        Self.nand(self, other)
     }
 
     /// Combines this predicate with another using NOR (neither).
@@ -202,13 +254,37 @@ extension Predicate {
     /// Returns `true` only when both predicates fail. Equivalent to `!(self || other)`.
     @inlinable
     public func nor(_ other: Predicate) -> Predicate {
-        Predicate { !self.evaluate($0) && !other.evaluate($0) }
+        Self.nor(self, other)
     }
 }
 
 // MARK: - Implication
 
 extension Predicate {
+    /// Creates logical implication: if lhs, then rhs must hold.
+    ///
+    /// Returns `true` unless lhs succeeds and rhs fails. Equivalent to `!lhs || rhs`.
+    @inlinable
+    public static func implies(_ lhs: Predicate, _ rhs: Predicate) -> Predicate {
+        Self.or(Self.negated(lhs), rhs)
+    }
+
+    /// Creates biconditional: both must have the same result.
+    ///
+    /// Returns `true` when both succeed or both fail. Equivalent to `!(lhs.xor(rhs))`.
+    @inlinable
+    public static func iff(_ lhs: Predicate, _ rhs: Predicate) -> Predicate {
+        Self.negated(Self.xor(lhs, rhs))
+    }
+
+    /// Creates reverse implication: lhs holds unless condition is true.
+    ///
+    /// Reads naturally for validation rules. Equivalent to `condition.implies(lhs)`.
+    @inlinable
+    public static func unless(_ lhs: Predicate, condition: Predicate) -> Predicate {
+        Self.implies(condition, lhs)
+    }
+
     /// Creates logical implication: if this, then other must hold.
     ///
     /// Returns `true` unless this succeeds and other fails. Equivalent to `!self || other`.
@@ -223,7 +299,7 @@ extension Predicate {
     /// ```
     @inlinable
     public func implies(_ other: Predicate) -> Predicate {
-        self.negated.or(other)
+        Self.implies(self, other)
     }
 
     /// Creates biconditional: both must have the same result.
@@ -231,7 +307,7 @@ extension Predicate {
     /// Returns `true` when both succeed or both fail. Equivalent to `!(self.xor(other))`.
     @inlinable
     public func iff(_ other: Predicate) -> Predicate {
-        self.xor(other).negated
+        Self.iff(self, other)
     }
 
     /// Creates reverse implication: this holds unless condition is true.
@@ -248,13 +324,27 @@ extension Predicate {
     /// ```
     @inlinable
     public func unless(_ condition: Predicate) -> Predicate {
-        condition.implies(self)
+        Self.unless(self, condition: condition)
     }
 }
 
 // MARK: - Contravariant Mapping
 
 extension Predicate {
+    /// Adapts a predicate to test a different type via transformation.
+    ///
+    /// Applies the transform first, then evaluates the predicate on the result.
+    @inlinable
+    public static func pullback<U>(_ predicate: Predicate, _ transform: @escaping (U) -> T) -> Predicate<U> {
+        Predicate<U> { predicate.evaluate(transform($0)) }
+    }
+
+    /// Adapts a predicate to test a property via key path.
+    @inlinable
+    public static func pullback<U>(_ predicate: Predicate, _ keyPath: KeyPath<U, T>) -> Predicate<U> {
+        Self.pullback(predicate) { $0[keyPath: keyPath] }
+    }
+
     /// Adapts this predicate to test a different type via transformation.
     ///
     /// Applies the transform first, then evaluates this predicate on the result.
@@ -269,7 +359,7 @@ extension Predicate {
     /// ```
     @inlinable
     public func pullback<U>(_ transform: @escaping (U) -> T) -> Predicate<U> {
-        Predicate<U> { self.evaluate(transform($0)) }
+        Self.pullback(self, transform)
     }
 
     /// Adapts this predicate to test a property via key path.
@@ -282,7 +372,7 @@ extension Predicate {
     /// ```
     @inlinable
     public func pullback<U>(_ keyPath: KeyPath<U, T>) -> Predicate<U> {
-        pullback { $0[keyPath: keyPath] }
+        Self.pullback(self, keyPath)
     }
 }
 
@@ -321,6 +411,17 @@ extension Predicate {
 // MARK: - Optional Lifting
 
 extension Predicate {
+    /// Adapts a predicate to handle optional values with a default result.
+    ///
+    /// Returns the default for `nil`, otherwise evaluates the wrapped value.
+    @inlinable
+    public static func optional(_ predicate: Predicate, default defaultValue: Bool) -> Predicate<T?> {
+        Predicate<T?> { value in
+            guard let value else { return defaultValue }
+            return predicate.evaluate(value)
+        }
+    }
+
     /// Adapts this predicate to handle optional values with a default result.
     ///
     /// Returns the default for `nil`, otherwise evaluates the wrapped value.
@@ -335,16 +436,49 @@ extension Predicate {
     /// ```
     @inlinable
     public func optional(default defaultValue: Bool) -> Predicate<T?> {
-        Predicate<T?> { value in
-            guard let value else { return defaultValue }
-            return self.evaluate(value)
-        }
+        Self.optional(self, default: defaultValue)
     }
 }
 
 // MARK: - Quantifiers
 
 extension Predicate {
+    /// Creates a predicate that checks if all array elements satisfy the condition.
+    @inlinable
+    public static func all(_ predicate: Predicate) -> Predicate<[T]> {
+        Predicate<[T]> { $0.allSatisfy(predicate.evaluate) }
+    }
+
+    /// Creates a predicate that checks if any array element satisfies the condition.
+    @inlinable
+    public static func any(_ predicate: Predicate) -> Predicate<[T]> {
+        Predicate<[T]> { $0.contains(where: predicate.evaluate) }
+    }
+
+    /// Creates a predicate that checks if no array elements satisfy the condition.
+    @inlinable
+    public static func none(_ predicate: Predicate) -> Predicate<[T]> {
+        Predicate<[T]> { !$0.contains(where: predicate.evaluate) }
+    }
+
+    /// Creates predicate that checks if all sequence elements satisfy the condition.
+    @inlinable
+    public static func forAll<S: Sequence>(_ predicate: Predicate) -> Predicate<S> where S.Element == T {
+        Predicate<S> { $0.allSatisfy(predicate.evaluate) }
+    }
+
+    /// Creates predicate that checks if any sequence element satisfies the condition.
+    @inlinable
+    public static func forAny<S: Sequence>(_ predicate: Predicate) -> Predicate<S> where S.Element == T {
+        Predicate<S> { $0.contains(where: predicate.evaluate) }
+    }
+
+    /// Creates predicate that checks if no sequence elements satisfy the condition.
+    @inlinable
+    public static func forNone<S: Sequence>(_ predicate: Predicate) -> Predicate<S> where S.Element == T {
+        Predicate<S> { !$0.contains(where: predicate.evaluate) }
+    }
+
     /// Predicate that checks if all array elements satisfy this condition.
     ///
     /// ## Example
@@ -357,7 +491,7 @@ extension Predicate {
     /// ```
     @inlinable
     public var all: Predicate<[T]> {
-        Predicate<[T]> { $0.allSatisfy(self.evaluate) }
+        Self.all(self)
     }
 
     /// Predicate that checks if any array element satisfies this condition.
@@ -372,31 +506,31 @@ extension Predicate {
     /// ```
     @inlinable
     public var any: Predicate<[T]> {
-        Predicate<[T]> { $0.contains(where: self.evaluate) }
+        Self.any(self)
     }
 
     /// Predicate that checks if no array elements satisfy this condition.
     @inlinable
     public var none: Predicate<[T]> {
-        Predicate<[T]> { !$0.contains(where: self.evaluate) }
+        Self.none(self)
     }
 
     /// Creates predicate that checks if all sequence elements satisfy this condition.
     @inlinable
     public func forAll<S: Sequence>() -> Predicate<S> where S.Element == T {
-        Predicate<S> { $0.allSatisfy(self.evaluate) }
+        Self.forAll(self)
     }
 
     /// Creates predicate that checks if any sequence element satisfies this condition.
     @inlinable
     public func forAny<S: Sequence>() -> Predicate<S> where S.Element == T {
-        Predicate<S> { $0.contains(where: self.evaluate) }
+        Self.forAny(self)
     }
 
     /// Creates predicate that checks if no sequence elements satisfy this condition.
     @inlinable
     public func forNone<S: Sequence>() -> Predicate<S> where S.Element == T {
-        Predicate<S> { !$0.contains(where: self.evaluate) }
+        Self.forNone(self)
     }
 }
 
@@ -724,11 +858,11 @@ extension Predicate {
 extension Predicate.Count {
     /// Tests whether at least N array elements satisfy the predicate.
     @inlinable
-    public func atLeast(_ n: Int) -> Predicate<[T]> {
+    public static func atLeast(_ predicate: Predicate, _ n: Int) -> Predicate<[T]> {
         Predicate<[T]> { array in
             var count = 0
             for element in array {
-                if self.predicate.evaluate(element) {
+                if predicate.evaluate(element) {
                     count += 1
                     if count >= n { return true }
                 }
@@ -739,11 +873,11 @@ extension Predicate.Count {
 
     /// Tests whether at most N array elements satisfy the predicate.
     @inlinable
-    public func atMost(_ n: Int) -> Predicate<[T]> {
+    public static func atMost(_ predicate: Predicate, _ n: Int) -> Predicate<[T]> {
         Predicate<[T]> { array in
             var count = 0
             for element in array {
-                if self.predicate.evaluate(element) {
+                if predicate.evaluate(element) {
                     count += 1
                     if count > n { return false }
                 }
@@ -754,11 +888,11 @@ extension Predicate.Count {
 
     /// Tests whether exactly N array elements satisfy the predicate.
     @inlinable
-    public func exactly(_ n: Int) -> Predicate<[T]> {
+    public static func exactly(_ predicate: Predicate, _ n: Int) -> Predicate<[T]> {
         Predicate<[T]> { array in
             var count = 0
             for element in array {
-                if self.predicate.evaluate(element) {
+                if predicate.evaluate(element) {
                     count += 1
                     if count > n { return false }
                 }
@@ -769,9 +903,43 @@ extension Predicate.Count {
 
     /// Tests whether zero array elements satisfy the predicate.
     @inlinable
-    public var zero: Predicate<[T]> { exactly(0) }
+    public static func zero(_ predicate: Predicate) -> Predicate<[T]> {
+        Self.exactly(predicate, 0)
+    }
 
     /// Tests whether exactly one array element satisfies the predicate.
     @inlinable
-    public var one: Predicate<[T]> { exactly(1) }
+    public static func one(_ predicate: Predicate) -> Predicate<[T]> {
+        Self.exactly(predicate, 1)
+    }
+
+    /// Tests whether at least N array elements satisfy the predicate.
+    @inlinable
+    public func atLeast(_ n: Int) -> Predicate<[T]> {
+        Self.atLeast(self.predicate, n)
+    }
+
+    /// Tests whether at most N array elements satisfy the predicate.
+    @inlinable
+    public func atMost(_ n: Int) -> Predicate<[T]> {
+        Self.atMost(self.predicate, n)
+    }
+
+    /// Tests whether exactly N array elements satisfy the predicate.
+    @inlinable
+    public func exactly(_ n: Int) -> Predicate<[T]> {
+        Self.exactly(self.predicate, n)
+    }
+
+    /// Tests whether zero array elements satisfy the predicate.
+    @inlinable
+    public var zero: Predicate<[T]> {
+        Self.zero(self.predicate)
+    }
+
+    /// Tests whether exactly one array element satisfies the predicate.
+    @inlinable
+    public var one: Predicate<[T]> {
+        Self.one(self.predicate)
+    }
 }

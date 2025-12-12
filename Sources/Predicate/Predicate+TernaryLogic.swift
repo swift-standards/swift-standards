@@ -6,6 +6,16 @@ public import TernaryLogic
 // MARK: - Three-Valued Evaluation
 
 extension Predicate {
+    /// Evaluates a predicate on an optional value with three-valued logic.
+    ///
+    /// Returns `.unknown` for `nil` input, following Strong Kleene semantics.
+    /// This enables composable three-valued logic with optional values.
+    @inlinable
+    public static func callAsFunction<L: TernaryLogic.`Protocol`>(_ predicate: Predicate, _ value: T?) -> L {
+        guard let value else { return .unknown }
+        return predicate.evaluate(value) ? .true : .false
+    }
+
     /// Evaluates this predicate on an optional value with three-valued logic.
     ///
     /// Returns `.unknown` for `nil` input, following Strong Kleene semantics.
@@ -27,7 +37,6 @@ extension Predicate {
     /// ```
     @inlinable
     public func callAsFunction<L: TernaryLogic.`Protocol`>(_ value: T?) -> L {
-        guard let value else { return .unknown }
-        return evaluate(value) ? .true : .false
+        Self.callAsFunction(self, value)
     }
 }
