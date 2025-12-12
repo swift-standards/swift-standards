@@ -7,7 +7,7 @@ import Testing
 // MARK: - Flow Tests
 
 @Suite
-struct `Layout.Flow` {
+struct `Layout.Flow Tests` {
     @Test
     func `Flow basic creation`() {
         let flow: Layout<Double>.Flow<[String]> = .init(

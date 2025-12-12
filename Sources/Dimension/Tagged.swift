@@ -412,7 +412,6 @@ public func * <Space, Scalar: Numeric>(
 // MARK: X Axis
 
 /// Adds a displacement to an X coordinate, returning a coordinate.
-/// For quantized spaces (Space: Quantized), the more specific operators in Quantized.swift are preferred.
 @_disfavoredOverload
 @inlinable
 public func + <Space, Scalar: AdditiveArithmetic>(
@@ -453,7 +452,6 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Subtracts an X coordinate from a displacement, returning a coordinate.
-/// Useful for coordinate system conversions (e.g., pageWidth - x).
 @_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
@@ -506,7 +504,6 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Subtracts a Y coordinate from a displacement, returning a coordinate.
-/// Useful for coordinate system conversions (e.g., pageHeight - y).
 @_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(
@@ -559,7 +556,6 @@ public func + <Space, Scalar: AdditiveArithmetic>(
 }
 
 /// Subtracts a Z coordinate from a displacement, returning a coordinate.
-/// Useful for coordinate system conversions (e.g., pageDepth - z).
 @_disfavoredOverload
 @inlinable
 public func - <Space, Scalar: AdditiveArithmetic>(

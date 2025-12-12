@@ -8,7 +8,7 @@ import Testing
 // MARK: - Stack Tests
 
 @Suite
-struct `Layout.Stack` {
+struct `Layout.Stack Tests` {
     @Test
     func `Stack vertical convenience`() {
         let stack: Layout<Double>.Stack<[Int]> = .vertical(

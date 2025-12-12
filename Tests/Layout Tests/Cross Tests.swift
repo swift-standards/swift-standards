@@ -5,7 +5,7 @@ import Testing
 @testable import Layout
 
 @Suite
-struct `Cross.Alignment` {
+struct `Cross.Alignment Tests` {
     @Test(arguments: Cross.Alignment.allCases)
     func cases(alignment: Cross.Alignment) {
         // Verify each case is distinct

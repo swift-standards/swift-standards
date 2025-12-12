@@ -6,7 +6,7 @@ import Testing
 @testable import Layout
 
 @Suite
-struct `Horizontal.Alignment` {
+struct `Horizontal.Alignment Tests` {
     @Test(arguments: Horizontal.Alignment.allCases)
     func cases(alignment: Horizontal.Alignment) {
         // Verify each case is distinct

@@ -5,7 +5,7 @@ import Testing
 @testable import Layout
 
 @Suite
-struct `Alignment` {
+struct `Alignment Tests` {
     @Test
     func `Alignment presets`() {
         let topLeading: Alignment = .topLeading

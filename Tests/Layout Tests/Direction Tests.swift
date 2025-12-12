@@ -5,7 +5,7 @@ import Testing
 @testable import Layout
 
 @Suite
-struct `Direction` {
+struct `Direction Tests` {
     @Test(arguments: Direction.allCases)
     func cases(direction: Direction) {
         // Verify each case is distinct

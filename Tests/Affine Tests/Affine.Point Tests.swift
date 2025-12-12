@@ -245,7 +245,7 @@ struct `Affine.Point Tests` {
     // MARK: - Distance Tests
 
     @Suite
-    struct `Distance` {
+    struct `Distance Tests` {
         @Test(arguments: [
             (Point2(x: 0, y: 0), Point2(x: 3, y: 4), 25.0),
             (Point2(x: 1, y: 1), Point2(x: 4, y: 5), 25.0),

@@ -7,7 +7,7 @@ import Testing
 // MARK: - Grid Tests
 
 @Suite
-struct `Layout.Grid` {
+struct `Layout.Grid Tests` {
     @Test
     func `Grid basic creation`() {
         let grid: Layout<Double>.Grid<[[Int]]> = .init(
