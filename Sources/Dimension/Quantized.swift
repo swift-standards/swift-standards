@@ -59,3 +59,13 @@ extension Quantized {
     }
 }
 
+// MARK: - Quantized Displacement Tag Protocol
+
+/// Marker protocol for displacement tags in quantized spaces.
+///
+/// This protocol enables static method operators for displacement arithmetic
+/// that win over AdditiveArithmetic's operators.
+public protocol QuantizedDisplacementTag {
+    associatedtype Space: Quantized
+}
+

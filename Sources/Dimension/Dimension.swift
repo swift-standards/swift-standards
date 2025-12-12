@@ -74,3 +74,10 @@ extension Index {
     /// radii, and lengths.
     public enum Magnitude<Space> {}
 }
+
+// MARK: - Quantized Displacement Conformances
+
+extension Index.X.Displacement: QuantizedDisplacementTag where Space: Quantized {}
+extension Index.Y.Displacement: QuantizedDisplacementTag where Space: Quantized {}
+extension Index.Z.Displacement: QuantizedDisplacementTag where Space: Quantized {}
+extension Index.W.Displacement: QuantizedDisplacementTag where Space: Quantized {}
