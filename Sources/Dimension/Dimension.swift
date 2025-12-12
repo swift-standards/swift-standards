@@ -32,7 +32,7 @@
 /// - Use a specific type (e.g., `ISO_32000.UserSpace`) for concrete coordinate systems
 /// - Arithmetic only works between types with the same `Space`
 public enum Index {
-
+    
     /// Phantom type tags for the X (horizontal) dimension.
     public enum X {
         /// Horizontal position in affine space, parameterized by coordinate system.
@@ -40,7 +40,7 @@ public enum Index {
         /// Horizontal extent or displacement, parameterized by coordinate system.
         public enum Displacement<Space> {}
     }
-
+    
     /// Phantom type tags for the Y (vertical) dimension.
     public enum Y {
         /// Vertical position in affine space, parameterized by coordinate system.
@@ -48,7 +48,7 @@ public enum Index {
         /// Vertical extent or displacement, parameterized by coordinate system.
         public enum Displacement<Space> {}
     }
-
+    
     /// Phantom type tags for the Z (depth) dimension.
     public enum Z {
         /// Depth position in affine space, parameterized by coordinate system.
@@ -56,7 +56,7 @@ public enum Index {
         /// Depth extent or displacement, parameterized by coordinate system.
         public enum Displacement<Space> {}
     }
-
+    
     /// Phantom type tags for the W (homogeneous/temporal) dimension.
     public enum W {
         /// Fourth-dimension position, parameterized by coordinate system.
@@ -64,7 +64,9 @@ public enum Index {
         /// Fourth-dimension displacement, parameterized by coordinate system.
         public enum Displacement<Space> {}
     }
+}
 
+extension Index {
     /// Phantom type tag for scalar magnitudes, parameterized by coordinate system.
     ///
     /// Unlike coordinates (positions) and displacements (directed extents),

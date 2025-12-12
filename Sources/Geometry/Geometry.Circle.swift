@@ -86,8 +86,8 @@ extension Geometry.Circle where Scalar: ExpressibleByIntegerLiteral & AdditiveAr
 extension Geometry.Circle where Scalar: FloatingPoint {
     /// Diameter (2 × radius).
     @inlinable
-    public var diameter: Geometry.Diameter {
-        radius * 2
+    public var diameter: Geometry.Magnitude {
+        Geometry.Magnitude(radius * 2)
     }
 
     /// Circumference (2π × radius).

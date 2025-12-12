@@ -129,3 +129,53 @@ extension Geometry {
     /// See ``Linear/Vector``
     public typealias Vector<let N: Int> = Linear<Scalar, Space>.Vector<N>
 }
+
+// MARK: - Magnitude with Projections
+
+extension Geometry {
+    /// A non-directional scalar magnitude with projections to Width and Height.
+    ///
+    /// Use for diameter, radius, or other scalar quantities that may need to be
+    /// projected as directional displacements.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let circle = Geometry<Double, Void>.Circle(center: .zero, radius: 10)
+    /// let markerWidth: Geometry<Double, Void>.Width = circle.diameter.width
+    /// ```
+    public struct Magnitude {
+        /// Underlying raw magnitude value.
+        public var rawValue: Linear<Scalar, Space>.Magnitude
+
+        /// Creates a magnitude from a raw value.
+        @inlinable
+        public init(_ rawValue: Linear<Scalar, Space>.Magnitude) {
+            self.rawValue = rawValue
+        }
+    }
+}
+
+extension Geometry.Magnitude: Sendable where Scalar: Sendable {}
+extension Geometry.Magnitude: Equatable where Scalar: Equatable {}
+extension Geometry.Magnitude: Hashable where Scalar: Hashable {}
+
+extension Geometry.Magnitude {
+    /// Project magnitude as horizontal displacement (width).
+    @inlinable
+    public var width: Geometry.Width {
+        Geometry.Width(rawValue.rawValue)
+    }
+
+    /// Project magnitude as vertical displacement (height).
+    @inlinable
+    public var height: Geometry.Height {
+        Geometry.Height(rawValue.rawValue)
+    }
+
+    /// Underlying scalar value.
+    @inlinable
+    public var value: Scalar {
+        rawValue.rawValue
+    }
+}
