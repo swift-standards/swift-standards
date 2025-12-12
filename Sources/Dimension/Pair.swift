@@ -41,7 +41,48 @@ extension Pair: Hashable where First: Hashable, Second: Hashable {}
     extension Pair: Codable where First: Codable, Second: Codable {}
 #endif
 
-// MARK: - Functor
+// MARK: - Functor (Static Implementation)
+
+extension Pair {
+    /// Transforms the second component of a pair while preserving the first.
+    @inlinable
+    public static func map<NewSecond>(
+        _ pair: Pair,
+        transform: (Second) throws -> NewSecond
+    ) rethrows -> Pair<First, NewSecond> {
+        Pair<First, NewSecond>(pair.first, try transform(pair.second))
+    }
+
+    /// Transforms the first component of a pair while preserving the second.
+    @inlinable
+    public static func mapFirst<NewFirst>(
+        _ pair: Pair,
+        transform: (First) throws -> NewFirst
+    ) rethrows -> Pair<NewFirst, Second> {
+        Pair<NewFirst, Second>(try transform(pair.first), pair.second)
+    }
+
+    /// Transforms both components of a pair.
+    @inlinable
+    public static func bimap<NewFirst, NewSecond>(
+        _ pair: Pair,
+        first firstTransform: (First) throws -> NewFirst,
+        second secondTransform: (Second) throws -> NewSecond
+    ) rethrows -> Pair<NewFirst, NewSecond> {
+        Pair<NewFirst, NewSecond>(
+            try firstTransform(pair.first),
+            try secondTransform(pair.second)
+        )
+    }
+
+    /// Returns a pair with components swapped.
+    @inlinable
+    public static func swapped(_ pair: Pair) -> Pair<Second, First> {
+        Pair<Second, First>(pair.second, pair.first)
+    }
+}
+
+// MARK: - Functor (Instance Convenience)
 
 extension Pair {
     /// Transforms the second component while preserving the first.
@@ -49,7 +90,7 @@ extension Pair {
     public func map<NewSecond>(
         _ transform: (Second) throws -> NewSecond
     ) rethrows -> Pair<First, NewSecond> {
-        Pair<First, NewSecond>(first, try transform(second))
+        try Self.map(self, transform: transform)
     }
 
     /// Transforms the second component while preserving the first.
@@ -65,7 +106,7 @@ extension Pair {
     public func mapFirst<NewFirst>(
         _ transform: (First) throws -> NewFirst
     ) rethrows -> Pair<NewFirst, Second> {
-        Pair<NewFirst, Second>(try transform(first), second)
+        try Self.mapFirst(self, transform: transform)
     }
 
     /// Transforms both components.
@@ -74,20 +115,17 @@ extension Pair {
         first firstTransform: (First) throws -> NewFirst,
         second secondTransform: (Second) throws -> NewSecond
     ) rethrows -> Pair<NewFirst, NewSecond> {
-        Pair<NewFirst, NewSecond>(
-            try firstTransform(first),
-            try secondTransform(second)
-        )
+        try Self.bimap(self, first: firstTransform, second: secondTransform)
     }
 }
 
-// MARK: - Swap
+// MARK: - Swap (Instance Convenience)
 
 extension Pair {
     /// Returns the pair with components swapped.
     @inlinable
     public var swapped: Pair<Second, First> {
-        Pair<Second, First>(second, first)
+        Self.swapped(self)
     }
 }
 

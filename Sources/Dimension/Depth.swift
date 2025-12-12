@@ -22,7 +22,20 @@ public enum Depth: Sendable, Hashable, Codable {
     case backward
 }
 
-// MARK: - Orientation Conformance
+// MARK: - Orientation Conformance (Static Implementation)
+
+extension Depth {
+    /// Returns the opposite of a depth orientation.
+    @inlinable
+    public static func opposite(of orientation: Depth) -> Depth {
+        switch orientation {
+        case .forward: return .backward
+        case .backward: return .forward
+        }
+    }
+}
+
+// MARK: - Orientation Conformance (Instance Convenience)
 
 extension Depth: Orientation {
     /// Returns the canonical direction representation.
@@ -46,10 +59,7 @@ extension Depth: Orientation {
     /// Returns the opposite orientation.
     @inlinable
     public var opposite: Depth {
-        switch self {
-        case .forward: return .backward
-        case .backward: return .forward
-        }
+        Depth.opposite(of: self)
     }
 
     /// All depth orientations.

@@ -94,7 +94,27 @@ extension Ordinal: Comparable {
     }
 #endif
 
-// MARK: - Conversion
+// MARK: - Conversion (Static Implementation)
+
+extension Ordinal {
+    /// Injects an ordinal into a larger domain (safe upcast).
+    ///
+    /// - Precondition: `rawValue` must be less than M
+    @inlinable
+    public static func injected<let M: Int>(_ ordinal: Ordinal) -> Ordinal<M> {
+        Ordinal<M>(unchecked: ordinal.rawValue)
+    }
+
+    /// Attempts to project an ordinal into a smaller domain.
+    ///
+    /// - Returns: The converted ordinal, or `nil` if value is too large.
+    @inlinable
+    public static func projected<let M: Int>(_ ordinal: Ordinal) -> Ordinal<M>? {
+        Ordinal<M>(ordinal.rawValue)
+    }
+}
+
+// MARK: - Conversion (Instance Convenience)
 
 extension Ordinal {
     /// Converts to an `Ordinal` of a larger domain (safe upcast).
@@ -102,7 +122,7 @@ extension Ordinal {
     /// - Precondition: `rawValue` must be less than M
     @inlinable
     public func injected<let M: Int>() -> Ordinal<M> {
-        Ordinal<M>(unchecked: rawValue)
+        Self.injected(self)
     }
 
     /// Attempts to convert to an `Ordinal` of a smaller domain.
@@ -110,7 +130,7 @@ extension Ordinal {
     /// - Returns: The converted ordinal, or `nil` if value is too large.
     @inlinable
     public func projected<let M: Int>() -> Ordinal<M>? {
-        Ordinal<M>(rawValue)
+        Self.projected(self)
     }
 }
 

@@ -22,7 +22,20 @@ public enum Vertical: Sendable, Hashable, Codable {
     case downward
 }
 
-// MARK: - Orientation Conformance
+// MARK: - Orientation Conformance (Static Implementation)
+
+extension Vertical {
+    /// Returns the opposite of a vertical orientation.
+    @inlinable
+    public static func opposite(of orientation: Vertical) -> Vertical {
+        switch orientation {
+        case .upward: return .downward
+        case .downward: return .upward
+        }
+    }
+}
+
+// MARK: - Orientation Conformance (Instance Convenience)
 
 extension Vertical: Orientation {
     /// Returns the canonical direction representation.
@@ -46,10 +59,7 @@ extension Vertical: Orientation {
     /// Returns the opposite orientation.
     @inlinable
     public var opposite: Vertical {
-        switch self {
-        case .upward: return .downward
-        case .downward: return .upward
-        }
+        Vertical.opposite(of: self)
     }
 
     /// All vertical orientations.

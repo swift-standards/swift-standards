@@ -20,22 +20,32 @@ public enum Winding: Sendable, Hashable, Codable, CaseIterable {
     case counterclockwise
 }
 
-// MARK: - Opposite
+// MARK: - Opposite (Static Implementation)
+
+extension Winding {
+    /// Returns the opposite of a winding direction.
+    @inlinable
+    public static func opposite(of winding: Winding) -> Winding {
+        switch winding {
+        case .clockwise: return .counterclockwise
+        case .counterclockwise: return .clockwise
+        }
+    }
+}
+
+// MARK: - Opposite (Instance Convenience)
 
 extension Winding {
     /// Returns the opposite winding direction.
     @inlinable
     public var opposite: Winding {
-        switch self {
-        case .clockwise: return .counterclockwise
-        case .counterclockwise: return .clockwise
-        }
+        Winding.opposite(of: self)
     }
 
     /// Returns the opposite winding direction (prefix negation).
     @inlinable
     public static prefix func ! (value: Winding) -> Winding {
-        value.opposite
+        Winding.opposite(of: value)
     }
 }
 

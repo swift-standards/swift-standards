@@ -71,7 +71,29 @@ extension Tagged: Comparable where RawValue: Comparable {
     }
 }
 
-// MARK: - Functor
+// MARK: - Functor (Static Implementation)
+
+extension Tagged {
+    /// Transforms the raw value of a tagged value while preserving the tag.
+    @inlinable
+    public static func map<NewRawValue>(
+        _ tagged: Tagged,
+        transform: (RawValue) throws -> NewRawValue
+    ) rethrows -> Tagged<Tag, NewRawValue> {
+        Tagged<Tag, NewRawValue>(try transform(tagged.rawValue))
+    }
+
+    /// Changes the tag type of a tagged value while preserving the raw value (zero-cost conversion).
+    @inlinable
+    public static func retag<NewTag>(
+        _ tagged: Tagged,
+        to _: NewTag.Type = NewTag.self
+    ) -> Tagged<NewTag, RawValue> {
+        Tagged<NewTag, RawValue>(tagged.rawValue)
+    }
+}
+
+// MARK: - Functor (Instance Convenience)
 
 extension Tagged {
     /// Transforms the raw value while preserving the tag.
@@ -79,13 +101,13 @@ extension Tagged {
     public func map<NewRawValue>(
         _ transform: (RawValue) throws -> NewRawValue
     ) rethrows -> Tagged<Tag, NewRawValue> {
-        Tagged<Tag, NewRawValue>(try transform(rawValue))
+        try Self.map(self, transform: transform)
     }
 
     /// Changes the tag type while preserving the raw value (zero-cost conversion).
     @inlinable
     public func retag<NewTag>(_: NewTag.Type = NewTag.self) -> Tagged<NewTag, RawValue> {
-        Tagged<NewTag, RawValue>(rawValue)
+        Self.retag(self, to: NewTag.self)
     }
 }
 

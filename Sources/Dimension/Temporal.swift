@@ -22,7 +22,20 @@ public enum Temporal: Sendable, Hashable, Codable {
     case past
 }
 
-// MARK: - Orientation Conformance
+// MARK: - Orientation Conformance (Static Implementation)
+
+extension Temporal {
+    /// Returns the opposite of a temporal orientation.
+    @inlinable
+    public static func opposite(of orientation: Temporal) -> Temporal {
+        switch orientation {
+        case .future: return .past
+        case .past: return .future
+        }
+    }
+}
+
+// MARK: - Orientation Conformance (Instance Convenience)
 
 extension Temporal: Orientation {
     /// Returns the canonical direction representation.
@@ -46,10 +59,7 @@ extension Temporal: Orientation {
     /// Returns the opposite orientation.
     @inlinable
     public var opposite: Temporal {
-        switch self {
-        case .future: return .past
-        case .past: return .future
-        }
+        Temporal.opposite(of: self)
     }
 
     /// All temporal orientations.

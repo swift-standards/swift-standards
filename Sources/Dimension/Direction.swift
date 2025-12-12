@@ -25,16 +25,26 @@ public enum Direction: Sendable, Hashable, Codable {
     case negative
 }
 
-// MARK: - Orientation Conformance
+// MARK: - Orientation Conformance (Static Implementation)
+
+extension Direction {
+    /// Returns the opposite of a direction.
+    @inlinable
+    public static func opposite(of direction: Direction) -> Direction {
+        switch direction {
+        case .positive: return .negative
+        case .negative: return .positive
+        }
+    }
+}
+
+// MARK: - Orientation Conformance (Instance Convenience)
 
 extension Direction: Orientation {
     /// Returns the opposite direction.
     @inlinable
     public var opposite: Direction {
-        switch self {
-        case .positive: return .negative
-        case .negative: return .positive
-        }
+        Direction.opposite(of: self)
     }
 
     /// Returns self (identity, since `Direction` is canonical).

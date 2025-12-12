@@ -21,7 +21,20 @@ public enum Horizontal: Sendable, Hashable, Codable {
     case leftward
 }
 
-// MARK: - Orientation Conformance
+// MARK: - Orientation Conformance (Static Implementation)
+
+extension Horizontal {
+    /// Returns the opposite of a horizontal orientation.
+    @inlinable
+    public static func opposite(of orientation: Horizontal) -> Horizontal {
+        switch orientation {
+        case .rightward: return .leftward
+        case .leftward: return .rightward
+        }
+    }
+}
+
+// MARK: - Orientation Conformance (Instance Convenience)
 
 extension Horizontal: Orientation {
     /// Returns the canonical direction representation.
@@ -45,10 +58,7 @@ extension Horizontal: Orientation {
     /// Returns the opposite orientation.
     @inlinable
     public var opposite: Horizontal {
-        switch self {
-        case .rightward: return .leftward
-        case .leftward: return .rightward
-        }
+        Horizontal.opposite(of: self)
     }
 
     /// All horizontal orientations.

@@ -85,12 +85,20 @@ extension Axis where N == 2 {
     @inlinable
     public static var secondary: Self { Self(unchecked: 1) }
 
+    /// Returns the perpendicular axis of a 2D axis.
+    ///
+    /// In 2D, each axis has exactly one perpendicular: primary↔secondary.
+    @inlinable
+    public static func perpendicular(of axis: Self) -> Self {
+        Self(unchecked: 1 - axis.rawValue)
+    }
+
     /// Returns the perpendicular axis.
     ///
     /// In 2D, each axis has exactly one perpendicular: primary↔secondary.
     @inlinable
     public var perpendicular: Self {
-        Self(unchecked: 1 - rawValue)
+        Self.perpendicular(of: self)
     }
 }
 

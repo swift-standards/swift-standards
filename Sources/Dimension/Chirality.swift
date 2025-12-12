@@ -20,22 +20,32 @@ public enum Chirality: Sendable, Hashable, Codable, CaseIterable {
     case right
 }
 
-// MARK: - Opposite
+// MARK: - Opposite (Static Implementation)
+
+extension Chirality {
+    /// Returns the opposite of a chirality (mirror image).
+    @inlinable
+    public static func opposite(of chirality: Chirality) -> Chirality {
+        switch chirality {
+        case .left: return .right
+        case .right: return .left
+        }
+    }
+}
+
+// MARK: - Opposite (Instance Convenience)
 
 extension Chirality {
     /// Returns the opposite chirality (mirror image).
     @inlinable
     public var opposite: Chirality {
-        switch self {
-        case .left: return .right
-        case .right: return .left
-        }
+        Chirality.opposite(of: self)
     }
 
     /// Returns the opposite chirality (prefix negation).
     @inlinable
     public static prefix func ! (value: Chirality) -> Chirality {
-        value.opposite
+        Chirality.opposite(of: value)
     }
 
     /// Returns the mirrored chirality.
