@@ -187,3 +187,68 @@ extension Measure: Spatial {}
 extension Coordinate.Vector: Spatial {}
 extension Displacement.Vector: Spatial {}
 extension Extent.Vector: Spatial {}
+
+// MARK: - Value Typealiases
+
+// These typealiases provide convenient access to Tagged-wrapped values.
+// Usage: Coordinate.X<Space>.Value<Scalar> instead of Tagged<Coordinate.X<Space>, Scalar>
+
+extension Coordinate.X {
+    /// A tagged X coordinate value in the given space.
+    public typealias Value<Scalar> = Tagged<Coordinate.X<Space>, Scalar>
+}
+
+extension Coordinate.Y {
+    /// A tagged Y coordinate value in the given space.
+    public typealias Value<Scalar> = Tagged<Coordinate.Y<Space>, Scalar>
+}
+
+extension Coordinate.Z {
+    /// A tagged Z coordinate value in the given space.
+    public typealias Value<Scalar> = Tagged<Coordinate.Z<Space>, Scalar>
+}
+
+extension Coordinate.W {
+    /// A tagged W coordinate value in the given space.
+    public typealias Value<Scalar> = Tagged<Coordinate.W<Space>, Scalar>
+}
+
+extension Displacement.X {
+    /// A tagged X displacement value in the given space.
+    public typealias Value<Scalar> = Tagged<Displacement.X<Space>, Scalar>
+}
+
+extension Displacement.Y {
+    /// A tagged Y displacement value in the given space.
+    public typealias Value<Scalar> = Tagged<Displacement.Y<Space>, Scalar>
+}
+
+extension Displacement.Z {
+    /// A tagged Z displacement value in the given space.
+    public typealias Value<Scalar> = Tagged<Displacement.Z<Space>, Scalar>
+}
+
+extension Displacement.W {
+    /// A tagged W displacement value in the given space.
+    public typealias Value<Scalar> = Tagged<Displacement.W<Space>, Scalar>
+}
+
+extension Extent.X {
+    /// A tagged X extent (width) value in the given space.
+    public typealias Value<Scalar> = Tagged<Extent.X<Space>, Scalar>
+}
+
+extension Extent.Y {
+    /// A tagged Y extent (height) value in the given space.
+    public typealias Value<Scalar> = Tagged<Extent.Y<Space>, Scalar>
+}
+
+extension Extent.Z {
+    /// A tagged Z extent (depth) value in the given space.
+    public typealias Value<Scalar> = Tagged<Extent.Z<Space>, Scalar>
+}
+
+extension Measure {
+    /// A tagged measure value of dimension N in the given space.
+    public typealias Value<Scalar> = Tagged<Measure<N, Space>, Scalar>
+}

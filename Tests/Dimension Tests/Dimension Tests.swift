@@ -2,76 +2,76 @@
 
 import StandardsTestSupport
 import Testing
-@testable import Dimension
+@_spi(Internal) @testable import Dimension
 
-// MARK: - Index Phantom Types
+// MARK: - Dimension Phantom Types
 
 @Suite
-struct `Dimension - Index Phantom Types` {
+struct `Dimension - Phantom Types` {
     enum TestSpace {}
 
     @Test
-    func `Index X Coordinate type exists`() {
+    func `Coordinate X type exists`() {
         // Compile-time verification that phantom types are defined
-        let _: Index.X.Coordinate<TestSpace>? = nil
+        let _: Coordinate.X<TestSpace>? = nil
         #expect(true)
     }
 
     @Test
-    func `Index X Displacement type exists`() {
-        let _: Index.X.Displacement<TestSpace>? = nil
+    func `Displacement X type exists`() {
+        let _: Displacement.X<TestSpace>? = nil
         #expect(true)
     }
 
     @Test
-    func `Index Y types exist`() {
-        let _: Index.Y.Coordinate<TestSpace>? = nil
-        let _: Index.Y.Displacement<TestSpace>? = nil
+    func `Y types exist`() {
+        let _: Coordinate.Y<TestSpace>? = nil
+        let _: Displacement.Y<TestSpace>? = nil
         #expect(true)
     }
 
     @Test
-    func `Index Z types exist`() {
-        let _: Index.Z.Coordinate<TestSpace>? = nil
-        let _: Index.Z.Displacement<TestSpace>? = nil
+    func `Z types exist`() {
+        let _: Coordinate.Z<TestSpace>? = nil
+        let _: Displacement.Z<TestSpace>? = nil
         #expect(true)
     }
 
     @Test
-    func `Index W types exist`() {
-        let _: Index.W.Coordinate<TestSpace>? = nil
-        let _: Index.W.Displacement<TestSpace>? = nil
+    func `W types exist`() {
+        let _: Coordinate.W<TestSpace>? = nil
+        let _: Displacement.W<TestSpace>? = nil
         #expect(true)
     }
 
     @Test
-    func `Index Magnitude type exists`() {
-        let _: Index.Magnitude<TestSpace>? = nil
+    func `Magnitude type exists`() {
+        let _: Magnitude<TestSpace>? = nil
         #expect(true)
     }
 }
 
-// MARK: - Tagged Values with Index
+// MARK: - Tagged Values with Dimension Types
 
 @Suite
-struct `Dimension - Tagged with Index` {
+struct `Dimension - Tagged Values` {
     enum TestSpace {}
 
     @Test
     func `Tagged with X Coordinate`() {
-        let x: Tagged<Index.X.Coordinate<TestSpace>, Double> = Tagged(10.0)
+        let x: Coordinate.X<TestSpace>.Value<Double> = Tagged(10.0)
         #expect(x.rawValue == 10.0)
     }
 
     @Test
     func `Tagged with Y Displacement`() {
-        let dy: Tagged<Index.Y.Displacement<TestSpace>, Double> = Tagged(5.0)
+        let dy: Displacement.Y<TestSpace>.Value<Double> = Tagged(5.0)
         #expect(dy.rawValue == 5.0)
     }
 
     @Test
     func `Tagged with Magnitude`() {
-        let mag: Tagged<Index.Magnitude<TestSpace>, Double> = Tagged(3.14)
+        let mag: Magnitude<TestSpace>.Value<Double> = Tagged(3.14)
         #expect(mag.rawValue == 3.14)
     }
 
@@ -80,8 +80,8 @@ struct `Dimension - Tagged with Index` {
         enum Space1 {}
         enum Space2 {}
 
-        let x1: Tagged<Index.X.Coordinate<Space1>, Double> = Tagged(10.0)
-        let x2: Tagged<Index.X.Coordinate<Space2>, Double> = Tagged(10.0)
+        let x1: Coordinate.X<Space1>.Value<Double> = Tagged(10.0)
+        let x2: Coordinate.X<Space2>.Value<Double> = Tagged(10.0)
 
         // These are different types - cannot compare directly
         // This is a compile-time safety feature
@@ -90,8 +90,8 @@ struct `Dimension - Tagged with Index` {
 
     @Test
     func `Void space for generic geometry`() {
-        let x: Tagged<Index.X.Coordinate<Void>, Double> = Tagged(10.0)
-        let y: Tagged<Index.Y.Coordinate<Void>, Double> = Tagged(20.0)
+        let x: Coordinate.X<Void>.Value<Double> = Tagged(10.0)
+        let y: Coordinate.Y<Void>.Value<Double> = Tagged(20.0)
 
         #expect(x.rawValue == 10.0)
         #expect(y.rawValue == 20.0)

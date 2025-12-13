@@ -6,7 +6,7 @@
 //
 
 import Testing
-import Dimension
+@_spi(Internal) import Dimension
 
 // MARK: - Test Space
 
@@ -17,10 +17,10 @@ private enum TestSpace: Quantized {
 
 // MARK: - Type Aliases
 
-private typealias QX = Tagged<Index.X.Coordinate<TestSpace>, Double>
-private typealias QY = Tagged<Index.Y.Coordinate<TestSpace>, Double>
-private typealias QDx = Tagged<Index.X.Displacement<TestSpace>, Double>
-private typealias QDy = Tagged<Index.Y.Displacement<TestSpace>, Double>
+private typealias QX = Coordinate.X<TestSpace>.Value<Double>
+private typealias QY = Coordinate.Y<TestSpace>.Value<Double>
+private typealias QDx = Displacement.X<TestSpace>.Value<Double>
+private typealias QDy = Displacement.Y<TestSpace>.Value<Double>
 
 // MARK: - Tests
 

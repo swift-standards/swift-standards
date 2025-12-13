@@ -2,7 +2,7 @@
 
 import StandardsTestSupport
 import Testing
-@testable import Dimension
+@_spi(Internal) @testable import Dimension
 
 // MARK: - Tagged - Static Functions
 
@@ -64,7 +64,7 @@ struct `Tagged - Properties` {
         let tagged: Tagged<TestTag, Int> = Tagged(10)
         let result1 = tagged.map { $0 * 2 }
         let result2 = Tagged<TestTag, Int>.map(tagged) { $0 * 2 }
-        #expect(result1.rawValue == result2.rawValue)
+        #expect(result1 == result2)
     }
 
     @Test
@@ -74,7 +74,7 @@ struct `Tagged - Properties` {
         let tagged: Tagged<Tag1, Int> = Tagged(42)
         let result1: Tagged<Tag2, Int> = tagged.retag()
         let result2: Tagged<Tag2, Int> = Tagged<Tag1, Int>.retag(tagged)
-        #expect(result1.rawValue == result2.rawValue)
+        #expect(result1 == result2)
     }
 }
 
@@ -167,115 +167,235 @@ struct `Tagged - Protocol Conformances` {
     }
 }
 
-// MARK: - Tagged - Arithmetic
+// MARK: - Tagged - Affine Arithmetic (Displacement)
 
 @Suite
-struct `Tagged - Arithmetic` {
-    enum TestTag {}
+struct `Tagged - Displacement Arithmetic` {
+    enum TestSpace {}
 
     @Test
-    func `AdditiveArithmetic zero`() {
-        let zero: Tagged<TestTag, Int> = .zero
-        #expect(zero.rawValue == 0)
+    func `displacement + displacement`() {
+        let dx1: Displacement.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let dx2: Displacement.X<TestSpace>.Value<Double> = Tagged(20.0)
+        let result = dx1 + dx2
+        #expect(result.rawValue == 30.0)
     }
 
     @Test
-    func `addition of same-tagged values`() {
-        let tag1: Tagged<TestTag, Int> = Tagged(10)
-        let tag2: Tagged<TestTag, Int> = Tagged(20)
-        let result = tag1 + tag2
-        #expect(result.rawValue == 30)
+    func `displacement - displacement`() {
+        let dx1: Displacement.X<TestSpace>.Value<Double> = Tagged(30.0)
+        let dx2: Displacement.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let result = dx1 - dx2
+        #expect(result.rawValue == 20.0)
     }
 
     @Test
-    func `subtraction of same-tagged values`() {
-        let tag1: Tagged<TestTag, Int> = Tagged(30)
-        let tag2: Tagged<TestTag, Int> = Tagged(10)
-        let result = tag1 - tag2
-        #expect(result.rawValue == 20)
+    func `displacement negation`() {
+        let dx: Displacement.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let result = -dx
+        #expect(result.rawValue == -10.0)
     }
 
     @Test
-    func `scalar addition`() {
-        let tagged: Tagged<TestTag, Int> = Tagged(10)
-        let result1 = tagged + 5
-        let result2 = 5 + tagged
-        #expect(result1.rawValue == 15)
-        #expect(result2.rawValue == 15)
-    }
-
-    @Test
-    func `scalar subtraction`() {
-        let tagged: Tagged<TestTag, Int> = Tagged(10)
-        let result = tagged - 3
-        #expect(result.rawValue == 7)
-    }
-
-    @Test
-    func `negation`() {
-        let tagged: Tagged<TestTag, Int> = Tagged(10)
-        let result = -tagged
-        #expect(result.rawValue == -10)
-    }
-
-    @Test
-    func `scalar multiplication for FloatingPoint`() {
-        let tagged: Tagged<TestTag, Double> = Tagged(10.0)
-        let result1 = tagged * 2.0
-        let result2 = 2.0 * tagged
+    func `displacement scaling by scalar`() {
+        let dx: Displacement.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let result1 = dx * 2.0
+        let result2 = 2.0 * dx
         #expect(result1.rawValue == 20.0)
         #expect(result2.rawValue == 20.0)
     }
 
     @Test
-    func `scalar division for FloatingPoint`() {
-        let tagged: Tagged<TestTag, Double> = Tagged(10.0)
-        let result = tagged / 2.0
+    func `displacement division by scalar`() {
+        let dx: Displacement.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let result = dx / 2.0
         #expect(result.rawValue == 5.0)
     }
 
     @Test
-    func `same-tag multiplication returns raw value`() {
-        let tag1: Tagged<TestTag, Int> = Tagged(3)
-        let tag2: Tagged<TestTag, Int> = Tagged(4)
-        let result: Int = tag1 * tag2
-        #expect(result == 12)
+    func `displacement ratio returns scalar`() {
+        let dx1: Displacement.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let dx2: Displacement.X<TestSpace>.Value<Double> = Tagged(2.0)
+        let ratio: Double = dx1 / dx2
+        #expect(ratio == 5.0)
+    }
+}
+
+// MARK: - Tagged - Affine Arithmetic (Coordinate + Displacement)
+
+@Suite
+struct `Tagged - Coordinate Displacement Arithmetic` {
+    enum TestSpace {}
+
+    @Test
+    func `coordinate + displacement = coordinate`() {
+        let x: Coordinate.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let dx: Displacement.X<TestSpace>.Value<Double> = Tagged(5.0)
+        let result = x + dx
+        #expect(result.rawValue == 15.0)
     }
 
     @Test
-    func `same-tag division returns raw ratio`() {
-        let tag1: Tagged<TestTag, Double> = Tagged(10.0)
-        let tag2: Tagged<TestTag, Double> = Tagged(2.0)
-        let result: Double = tag1 / tag2
-        #expect(result == 5.0)
+    func `displacement + coordinate = coordinate`() {
+        let dx: Displacement.X<TestSpace>.Value<Double> = Tagged(5.0)
+        let x: Coordinate.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let result = dx + x
+        #expect(result.rawValue == 15.0)
     }
 
     @Test
-    func `compound addition assignment`() {
-        var tagged: Tagged<TestTag, Int> = Tagged(10)
-        tagged += Tagged(5)
-        #expect(tagged.rawValue == 15)
+    func `coordinate - displacement = coordinate`() {
+        let x: Coordinate.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let dx: Displacement.X<TestSpace>.Value<Double> = Tagged(3.0)
+        let result = x - dx
+        #expect(result.rawValue == 7.0)
     }
 
     @Test
-    func `compound subtraction assignment`() {
-        var tagged: Tagged<TestTag, Int> = Tagged(10)
-        tagged -= Tagged(3)
-        #expect(tagged.rawValue == 7)
+    func `coordinate - coordinate = displacement`() {
+        let x1: Coordinate.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let x2: Coordinate.X<TestSpace>.Value<Double> = Tagged(7.0)
+        let result: Displacement.X<TestSpace>.Value<Double> = x1 - x2
+        #expect(result.rawValue == 3.0)
+    }
+}
+
+// MARK: - Tagged - Angle Arithmetic
+
+@Suite
+struct `Tagged - Angle Arithmetic` {
+
+    @Test
+    func `radian + radian`() {
+        let r1: Radian<Double> = Tagged(.pi)
+        let r2: Radian<Double> = Tagged(.pi / 2)
+        let result = r1 + r2
+        #expect(result.rawValue == .pi * 1.5)
     }
 
     @Test
-    func `compound scalar addition assignment`() {
-        var tagged: Tagged<TestTag, Int> = Tagged(10)
-        tagged += 5
-        #expect(tagged.rawValue == 15)
+    func `radian - radian`() {
+        let r1: Radian<Double> = Tagged(.pi)
+        let r2: Radian<Double> = Tagged(.pi / 2)
+        let result = r1 - r2
+        #expect(result.rawValue == .pi / 2)
     }
 
     @Test
-    func `compound scalar multiplication assignment`() {
-        var tagged: Tagged<TestTag, Double> = Tagged(10.0)
-        tagged *= 2.0
-        #expect(tagged.rawValue == 20.0)
+    func `radian scaling by scalar`() {
+        let r: Radian<Double> = Tagged(.pi)
+        let result1 = r * 2.0
+        let result2 = 2.0 * r
+        #expect(result1.rawValue == .pi * 2)
+        #expect(result2.rawValue == .pi * 2)
+    }
+
+    @Test
+    func `radian division by scalar`() {
+        let r: Radian<Double> = Tagged(.pi)
+        let result = r / 2.0
+        #expect(result.rawValue == .pi / 2)
+    }
+
+    @Test
+    func `degree + degree`() {
+        let d1: Degree<Double> = Tagged(90.0)
+        let d2: Degree<Double> = Tagged(45.0)
+        let result = d1 + d2
+        #expect(result.rawValue == 135.0)
+    }
+
+    @Test
+    func `degree - degree`() {
+        let d1: Degree<Double> = Tagged(90.0)
+        let d2: Degree<Double> = Tagged(45.0)
+        let result = d1 - d2
+        #expect(result.rawValue == 45.0)
+    }
+}
+
+// MARK: - Tagged - Magnitude Arithmetic
+
+@Suite
+struct `Tagged - Magnitude Arithmetic` {
+    enum TestSpace {}
+
+    @Test
+    func `magnitude + magnitude`() {
+        let m1: Magnitude<TestSpace>.Value<Double> = Tagged(10.0)
+        let m2: Magnitude<TestSpace>.Value<Double> = Tagged(5.0)
+        let result = m1 + m2
+        #expect(result.rawValue == 15.0)
+    }
+
+    @Test
+    func `magnitude - magnitude`() {
+        let m1: Magnitude<TestSpace>.Value<Double> = Tagged(10.0)
+        let m2: Magnitude<TestSpace>.Value<Double> = Tagged(3.0)
+        let result = m1 - m2
+        #expect(result.rawValue == 7.0)
+    }
+
+    @Test
+    func `magnitude scaling`() {
+        let m: Magnitude<TestSpace>.Value<Double> = Tagged(10.0)
+        let result = m * 2.0
+        #expect(result.rawValue == 20.0)
+    }
+
+    @Test
+    func `coordinate + magnitude = coordinate`() {
+        let x: Coordinate.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let m: Magnitude<TestSpace>.Value<Double> = Tagged(5.0)
+        let result = x + m
+        #expect(result.rawValue == 15.0)
+    }
+
+    @Test
+    func `coordinate - magnitude = coordinate`() {
+        let x: Coordinate.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let m: Magnitude<TestSpace>.Value<Double> = Tagged(3.0)
+        let result = x - m
+        #expect(result.rawValue == 7.0)
+    }
+}
+
+// MARK: - Tagged - Dimensional Arithmetic
+
+@Suite
+struct `Tagged - Dimensional Arithmetic` {
+    enum TestSpace {}
+
+    @Test
+    func `displacement x displacement = area`() {
+        let dx: Displacement.X<TestSpace>.Value<Double> = Tagged(3.0)
+        let dy: Displacement.Y<TestSpace>.Value<Double> = Tagged(4.0)
+        let area: Area<TestSpace>.Value<Double> = dx * dy
+        #expect(area.rawValue == 12.0)
+    }
+
+    @Test
+    func `area + area`() {
+        let a1: Area<TestSpace>.Value<Double> = Tagged(10.0)
+        let a2: Area<TestSpace>.Value<Double> = Tagged(5.0)
+        let result = a1 + a2
+        #expect(result.rawValue == 15.0)
+    }
+
+    @Test
+    func `area - area`() {
+        let a1: Area<TestSpace>.Value<Double> = Tagged(10.0)
+        let a2: Area<TestSpace>.Value<Double> = Tagged(3.0)
+        let result = a1 - a2
+        #expect(result.rawValue == 7.0)
+    }
+
+    @Test
+    func `area div magnitude = magnitude`() {
+        let area: Area<TestSpace>.Value<Double> = Tagged(12.0)
+        let mag: Magnitude<TestSpace>.Value<Double> = Tagged(3.0)
+        let result: Magnitude<TestSpace>.Value<Double> = area / mag
+        #expect(result.rawValue == 4.0)
     }
 }
 
@@ -283,29 +403,29 @@ struct `Tagged - Arithmetic` {
 
 @Suite
 struct `Tagged - Free Functions` {
-    enum TestTag {}
+    enum TestSpace {}
 
     @Test
     func `abs function`() {
-        let negative: Tagged<TestTag, Int> = Tagged(-10)
+        let negative: Displacement.X<TestSpace>.Value<Double> = Tagged(-10.0)
         let result = abs(negative)
-        #expect(result.rawValue == 10)
+        #expect(result.rawValue == 10.0)
     }
 
     @Test
     func `min free function`() {
-        let tag1: Tagged<TestTag, Int> = Tagged(10)
-        let tag2: Tagged<TestTag, Int> = Tagged(20)
-        let result = min(tag1, tag2)
-        #expect(result.rawValue == 10)
+        let dx1: Displacement.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let dx2: Displacement.X<TestSpace>.Value<Double> = Tagged(20.0)
+        let result = min(dx1, dx2)
+        #expect(result.rawValue == 10.0)
     }
 
     @Test
     func `max free function`() {
-        let tag1: Tagged<TestTag, Int> = Tagged(10)
-        let tag2: Tagged<TestTag, Int> = Tagged(20)
-        let result = max(tag1, tag2)
-        #expect(result.rawValue == 20)
+        let dx1: Displacement.X<TestSpace>.Value<Double> = Tagged(10.0)
+        let dx2: Displacement.X<TestSpace>.Value<Double> = Tagged(20.0)
+        let result = max(dx1, dx2)
+        #expect(result.rawValue == 20.0)
     }
 }
 
@@ -328,5 +448,37 @@ struct `Tagged - Strideable` {
         let tagged: Tagged<TestTag, Int> = Tagged(10)
         let result = tagged.advanced(by: 5)
         #expect(result.rawValue == 15)
+    }
+}
+
+// MARK: - Tagged - AdditiveArithmetic Zero
+
+@Suite
+struct `Tagged - Zero` {
+    enum TestTag {}
+    enum TestSpace {}
+
+    @Test
+    func `zero for generic tag`() {
+        let zero: Tagged<TestTag, Int> = .zero
+        #expect(zero.rawValue == 0)
+    }
+
+    @Test
+    func `zero for displacement`() {
+        let zero: Displacement.X<TestSpace>.Value<Double> = .zero
+        #expect(zero.rawValue == 0.0)
+    }
+
+    @Test
+    func `zero for magnitude`() {
+        let zero: Magnitude<TestSpace>.Value<Double> = .zero
+        #expect(zero.rawValue == 0.0)
+    }
+
+    @Test
+    func `zero for radian`() {
+        let zero: Radian<Double> = .zero
+        #expect(zero.rawValue == 0.0)
     }
 }
