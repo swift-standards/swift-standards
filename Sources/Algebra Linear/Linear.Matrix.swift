@@ -236,6 +236,25 @@ extension Linear.Matrix where Scalar: AdditiveArithmetic & Numeric {
     }
 }
 
+// MARK: - Scalar Multiplication (Intentionally Omitted)
+
+// Note: Raw scalar multiplication (Matrix * Scalar) is intentionally not provided.
+//
+// This codebase maintains type safety by using typed wrappers like Scale<1, Scalar>
+// instead of raw scalars for scaling operations. This ensures:
+//
+// 1. Dimensional correctness: Scale factors are explicitly typed, preventing
+//    accidental mixing of dimensioned quantities with dimensionless scalars.
+//
+// 2. Consistency with vectors: Linear.Vector also restricts scalar multiplication
+//    to internal use, exposing only typed scaling via Scale<1, Scalar>.
+//
+// 3. Semantic clarity: To scale a transformation matrix, compose it with a
+//    scale matrix via Matrix.scale(_:) rather than element-wise multiplication.
+//
+// If you need element-wise scalar multiplication for numerical computation,
+// use the map(_:) method: matrix.map { $0 * scalar }
+
 // MARK: - Square Matrix Operations
 
 extension Linear.Matrix where Rows == Columns, Scalar: AdditiveArithmetic {
