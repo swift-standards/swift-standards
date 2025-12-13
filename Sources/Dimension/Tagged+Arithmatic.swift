@@ -60,48 +60,48 @@ public func max<Tag, T: Comparable>(_ x: Tagged<Tag, T>, _ y: Tagged<Tag, T>) ->
 /// Multiplies a radian angle by an integer.
 @inlinable
 public func * <Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Tagged<Angle.Radian, Scalar>, rhs: I
-) -> Tagged<Angle.Radian, Scalar> {
+    lhs: Angle.Radian.Value<Scalar>, rhs: I
+) -> Angle.Radian.Value<Scalar> {
     Tagged(lhs._rawValue * Scalar(rhs))
 }
 
 /// Multiplies an integer by a radian angle.
 @inlinable
 public func * <Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: I, rhs: Tagged<Angle.Radian, Scalar>
-) -> Tagged<Angle.Radian, Scalar> {
+    lhs: I, rhs: Angle.Radian.Value<Scalar>
+) -> Angle.Radian.Value<Scalar> {
     Tagged(Scalar(lhs) * rhs._rawValue)
 }
 
 /// Divides a radian angle by an integer.
 @inlinable
 public func / <Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Tagged<Angle.Radian, Scalar>, rhs: I
-) -> Tagged<Angle.Radian, Scalar> {
+    lhs: Angle.Radian.Value<Scalar>, rhs: I
+) -> Angle.Radian.Value<Scalar> {
     Tagged(lhs._rawValue / Scalar(rhs))
 }
 
 /// Multiplies a degree angle by an integer.
 @inlinable
 public func * <Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Tagged<Angle.Degree, Scalar>, rhs: I
-) -> Tagged<Angle.Degree, Scalar> {
+    lhs: Angle.Degree.Value<Scalar>, rhs: I
+) -> Angle.Degree.Value<Scalar> {
     Tagged(lhs._rawValue * Scalar(rhs))
 }
 
 /// Multiplies an integer by a degree angle.
 @inlinable
 public func * <Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: I, rhs: Tagged<Angle.Degree, Scalar>
-) -> Tagged<Angle.Degree, Scalar> {
+    lhs: I, rhs: Angle.Degree.Value<Scalar>
+) -> Angle.Degree.Value<Scalar> {
     Tagged(Scalar(lhs) * rhs._rawValue)
 }
 
 /// Divides a degree angle by an integer.
 @inlinable
 public func / <Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Tagged<Angle.Degree, Scalar>, rhs: I
-) -> Tagged<Angle.Degree, Scalar> {
+    lhs: Angle.Degree.Value<Scalar>, rhs: I
+) -> Angle.Degree.Value<Scalar> {
     Tagged(lhs._rawValue / Scalar(rhs))
 }
 
@@ -110,48 +110,48 @@ public func / <Scalar: FloatingPoint, I: BinaryInteger>(
 /// Multiplies a radian angle by a scalar.
 @inlinable
 public func * <Scalar: FloatingPoint>(
-    lhs: Tagged<Angle.Radian, Scalar>, rhs: Scalar
-) -> Tagged<Angle.Radian, Scalar> {
+    lhs: Angle.Radian.Value<Scalar>, rhs: Scalar
+) -> Angle.Radian.Value<Scalar> {
     Tagged(lhs._rawValue * rhs)
 }
 
 /// Multiplies a scalar by a radian angle.
 @inlinable
 public func * <Scalar: FloatingPoint>(
-    lhs: Scalar, rhs: Tagged<Angle.Radian, Scalar>
-) -> Tagged<Angle.Radian, Scalar> {
+    lhs: Scalar, rhs: Angle.Radian.Value<Scalar>
+) -> Angle.Radian.Value<Scalar> {
     Tagged(lhs * rhs._rawValue)
 }
 
 /// Divides a radian angle by a scalar.
 @inlinable
 public func / <Scalar: FloatingPoint>(
-    lhs: Tagged<Angle.Radian, Scalar>, rhs: Scalar
-) -> Tagged<Angle.Radian, Scalar> {
+    lhs: Angle.Radian.Value<Scalar>, rhs: Scalar
+) -> Angle.Radian.Value<Scalar> {
     Tagged(lhs._rawValue / rhs)
 }
 
 /// Multiplies a degree angle by a scalar.
 @inlinable
 public func * <Scalar: FloatingPoint>(
-    lhs: Tagged<Angle.Degree, Scalar>, rhs: Scalar
-) -> Tagged<Angle.Degree, Scalar> {
+    lhs: Angle.Degree.Value<Scalar>, rhs: Scalar
+) -> Angle.Degree.Value<Scalar> {
     Tagged(lhs._rawValue * rhs)
 }
 
 /// Multiplies a scalar by a degree angle.
 @inlinable
 public func * <Scalar: FloatingPoint>(
-    lhs: Scalar, rhs: Tagged<Angle.Degree, Scalar>
-) -> Tagged<Angle.Degree, Scalar> {
+    lhs: Scalar, rhs: Angle.Degree.Value<Scalar>
+) -> Angle.Degree.Value<Scalar> {
     Tagged(lhs * rhs._rawValue)
 }
 
 /// Divides a degree angle by a scalar.
 @inlinable
 public func / <Scalar: FloatingPoint>(
-    lhs: Tagged<Angle.Degree, Scalar>, rhs: Scalar
-) -> Tagged<Angle.Degree, Scalar> {
+    lhs: Angle.Degree.Value<Scalar>, rhs: Scalar
+) -> Angle.Degree.Value<Scalar> {
     Tagged(lhs._rawValue / rhs)
 }
 
@@ -254,36 +254,36 @@ public func -= <Space, Scalar: AdditiveArithmetic>(
 /// Adds two radian angles.
 @inlinable
 public func + <Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Angle.Radian, Scalar>,
-    rhs: Tagged<Angle.Radian, Scalar>
-) -> Tagged<Angle.Radian, Scalar> {
+    lhs: Angle.Radian.Value<Scalar>,
+    rhs: Angle.Radian.Value<Scalar>
+) -> Angle.Radian.Value<Scalar> {
     Tagged(lhs._rawValue + rhs._rawValue)
 }
 
 /// Subtracts two radian angles.
 @inlinable
 public func - <Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Angle.Radian, Scalar>,
-    rhs: Tagged<Angle.Radian, Scalar>
-) -> Tagged<Angle.Radian, Scalar> {
+    lhs: Angle.Radian.Value<Scalar>,
+    rhs: Angle.Radian.Value<Scalar>
+) -> Angle.Radian.Value<Scalar> {
     Tagged(lhs._rawValue - rhs._rawValue)
 }
 
 /// Adds two degree angles.
 @inlinable
 public func + <Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Angle.Degree, Scalar>,
-    rhs: Tagged<Angle.Degree, Scalar>
-) -> Tagged<Angle.Degree, Scalar> {
+    lhs: Angle.Degree.Value<Scalar>,
+    rhs: Angle.Degree.Value<Scalar>
+) -> Angle.Degree.Value<Scalar> {
     Tagged(lhs._rawValue + rhs._rawValue)
 }
 
 /// Subtracts two degree angles.
 @inlinable
 public func - <Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Angle.Degree, Scalar>,
-    rhs: Tagged<Angle.Degree, Scalar>
-) -> Tagged<Angle.Degree, Scalar> {
+    lhs: Angle.Degree.Value<Scalar>,
+    rhs: Angle.Degree.Value<Scalar>
+) -> Angle.Degree.Value<Scalar> {
     Tagged(lhs._rawValue - rhs._rawValue)
 }
 

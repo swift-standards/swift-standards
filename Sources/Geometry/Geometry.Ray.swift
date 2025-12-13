@@ -303,7 +303,7 @@ extension Geometry where Scalar: FloatingPoint {
         let projected = Geometry.point(of: ray, at: t)
         let distSq = point.distance.squared(to: projected)
         // Compare Area to Area - use a small epsilon squared as tolerance
-        let tolerance: Tagged<Dimension.Area<Space>, Scalar> = Tagged(Scalar.ulpOfOne * 100)
+        let tolerance: Linear<Scalar, Space>.Area = Tagged(Scalar.ulpOfOne * 100)
         return distSq < tolerance
     }
 

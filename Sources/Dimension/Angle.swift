@@ -39,3 +39,17 @@ public enum Angle {
     /// Angle measured in degrees (1/360 of a circle).
     public enum Degree {}
 }
+
+// MARK: - Value Typealiases
+
+// Usage: Angle.Radian.Value<Scalar> instead of Tagged<Angle.Radian, Scalar>
+
+extension Angle.Radian {
+    /// A tagged radian value.
+    public typealias Value<Scalar> = Tagged<Angle.Radian, Scalar>
+}
+
+extension Angle.Degree {
+    /// A tagged degree value.
+    public typealias Value<Scalar> = Tagged<Angle.Degree, Scalar>
+}

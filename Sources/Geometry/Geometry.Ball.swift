@@ -247,7 +247,7 @@ extension Geometry where Scalar: FloatingPoint {
     /// Calculate the area of a circle.
     @inlinable
     public static func area(of circle: Ball<2>) -> Area {
-        let radiusSq = circle.radius * circle.radius  // Tagged<Area<Space>, Scalar>
+        let radiusSq = circle.radius * circle.radius  // Linear.Area
         return Area(Scalar.pi * radiusSq._rawValue)
     }
 

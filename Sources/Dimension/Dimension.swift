@@ -27,9 +27,9 @@ public protocol Spatial {
 /// ## Example
 ///
 /// ```swift
-/// typealias X = Tagged<Coordinate.X<MySpace>, Double>
+/// typealias X = Coordinate.X<MySpace>.Value<Double>
 /// let x: X = 10.0
-/// let dx: Tagged<Displacement.X<MySpace>, Double> = 5.0
+/// let dx: Displacement.X<MySpace>.Value<Double> = 5.0
 /// let newX = x + dx  // OK: Coordinate + Displacement = Coordinate
 /// ```
 public enum Coordinate {
@@ -64,7 +64,7 @@ public enum Coordinate {
 /// ## Example
 ///
 /// ```swift
-/// typealias Dx = Tagged<Displacement.X<MySpace>, Double>
+/// typealias Dx = Displacement.X<MySpace>.Value<Double>
 /// let dx1: Dx = 5.0
 /// let dx2: Dx = 3.0
 /// let sum = dx1 + dx2  // OK: Displacement + Displacement = Displacement
@@ -96,8 +96,8 @@ public enum Displacement {
 /// ## Example
 ///
 /// ```swift
-/// typealias Width = Tagged<Extent.X<MySpace>, Double>
-/// typealias Height = Tagged<Extent.Y<MySpace>, Double>
+/// typealias Width = Extent.X<MySpace>.Value<Double>
+/// typealias Height = Extent.Y<MySpace>.Value<Double>
 /// let size = width * height  // Raw scalar (area)
 /// ```
 public enum Extent {
@@ -131,8 +131,8 @@ public enum Extent {
 /// ## Example
 ///
 /// ```swift
-/// typealias Radius = Tagged<Measure<1, MySpace>, Double>
-/// typealias Area = Tagged<Measure<2, MySpace>, Double>
+/// typealias Radius = Measure<1, MySpace>.Value<Double>
+/// typealias Area = Measure<2, MySpace>.Value<Double>
 /// let r: Radius = 5.0
 /// let area: Area = r * r  // Length × Length = Area
 /// ```
@@ -147,8 +147,8 @@ public enum Measure<let N: Int, Space> {}
 /// ## Example
 ///
 /// ```swift
-/// typealias Radius = Tagged<Magnitude<MySpace>, Double>
-/// let center: Tagged<Coordinate.X<MySpace>, Double> = 10.0
+/// typealias Radius = Magnitude<MySpace>.Value<Double>
+/// let center: Coordinate.X<MySpace>.Value<Double> = 10.0
 /// let radius: Radius = 5.0
 /// let edge = center + radius  // OK: Coordinate + Magnitude = Coordinate
 /// ```

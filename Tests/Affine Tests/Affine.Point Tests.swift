@@ -251,7 +251,7 @@ struct `Affine.Point Tests` {
             (Point2(x: 1, y: 1), Point2(x: 4, y: 5), 25.0),
             (Point2(x: 0, y: 0), Point2(x: 0, y: 0), 0.0)
         ])
-        func distanceSquared2D(p1: Point2, p2: Point2, expected: Tagged<Area<Void>, Double>) {
+        func distanceSquared2D(p1: Point2, p2: Point2, expected: A.Area) {
             let distSq = Point2.distance.squared(from: p1, to: p2)
             #expect(distSq == expected)
         }

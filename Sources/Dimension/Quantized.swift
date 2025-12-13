@@ -33,9 +33,9 @@
 /// }
 ///
 /// // All coordinates in PDFSpace snap to 0.01 increments
-/// let x: Tagged<Index.X.Coordinate<PDFSpace>, Double> = .init(1.234)
-/// // x.rawValue == 1.23 (quantized)
-/// // x.ticks == 123
+/// let x: Coordinate.X<PDFSpace>.Value<Double> = .init(1.234)
+/// // x._rawValue == 1.23 (quantized)
+/// // Internally computed as: ticks = 123
 /// ```
 public protocol Quantized {
     associatedtype Scalar: BinaryFloatingPoint

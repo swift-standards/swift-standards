@@ -84,8 +84,8 @@ extension Tagged where Tag == Angle.Radian, RawValue: Real {
     /// - Returns: Angle in range [-π, π]
     @inlinable
     public static func atan2<Space>(
-        y: Tagged<Displacement.Y<Space>, RawValue>,
-        x: Tagged<Displacement.X<Space>, RawValue>
+        y: Displacement.Y<Space>.Value<RawValue>,
+        x: Displacement.X<Space>.Value<RawValue>
     ) -> Self {
         Self(RawValue.atan2(y: y._rawValue, x: x._rawValue))
     }
