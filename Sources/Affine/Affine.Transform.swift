@@ -67,8 +67,8 @@ extension Affine.Transform: Hashable where Scalar: Hashable {}
             try container.encode(b, forKey: .b)
             try container.encode(c, forKey: .c)
             try container.encode(d, forKey: .d)
-            try container.encode(tx.value, forKey: .tx)
-            try container.encode(ty.value, forKey: .ty)
+            try container.encode(tx._rawValue, forKey: .tx)
+            try container.encode(ty._rawValue, forKey: .ty)
         }
     }
 #endif
@@ -181,14 +181,18 @@ extension Affine.Transform where Scalar: FloatingPoint {
         let newLinear = transform.linear.multiplied(by: other.linear)
 
         // Translation part: apply transform's linear to other's translation, then add transform's translation
-        let otherTx = other.translation.dx.value
-        let otherTy = other.translation.dy.value
-        let newTx = transform.linear.a * otherTx + transform.linear.b * otherTy + transform.translation.dx
-        let newTy = transform.linear.c * otherTx + transform.linear.d * otherTy + transform.translation.dy
+        // Work with raw values to avoid operator ambiguity
+        let otherTx = other.translation.dx._rawValue
+        let otherTy = other.translation.dy._rawValue
+        let selfTx = transform.translation.dx._rawValue
+        let selfTy = transform.translation.dy._rawValue
+
+        let newTxValue = transform.linear.a * otherTx + transform.linear.b * otherTy + selfTx
+        let newTyValue = transform.linear.c * otherTx + transform.linear.d * otherTy + selfTy
 
         return Self(
             linear: newLinear,
-            translation: Affine.Translation(dx: newTx, dy: newTy)
+            translation: Affine.Translation(dx: .init(newTxValue), dy: .init(newTyValue))
         )
     }
 
@@ -226,8 +230,8 @@ extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLit
     ///
     /// Scale factors are dimensionless ratios.
     @inlinable
-    public static func scale(_ factor: Scalar) -> Self {
-        Self(linear: Linear<Scalar, Space>.Matrix(a: factor, b: 0, c: 0, d: factor))
+    public static func scale(_ factor: Scale<1, Scalar>) -> Self {
+        Self(linear: Linear<Scalar, Space>.Matrix(a: factor.value, b: 0, c: 0, d: factor.value))
     }
 
     /// Creates non-uniform scaling transform with independent x and y factors.
@@ -235,7 +239,7 @@ extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLit
     /// Scale factors are dimensionless ratios.
     @inlinable
     public static func scale(x: Affine.X, y: Affine.Y) -> Self {
-        Self(linear: Linear<Scalar, Space>.Matrix(a: x.value, b: 0, c: 0, d: y.value))
+        Self(linear: Linear<Scalar, Space>.Matrix(a: x._rawValue, b: 0, c: 0, d: y._rawValue))
     }
 
     /// Creates shear transform with horizontal and vertical shear factors.
@@ -243,7 +247,7 @@ extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLit
     /// Shear factors are dimensionless ratios.
     @inlinable
     public static func shear(x: Affine.X, y: Affine.Y) -> Self {
-        Self(linear: Linear<Scalar, Space>.Matrix(a: 1, b: x.value, c: y.value, d: 1))
+        Self(linear: Linear<Scalar, Space>.Matrix(a: 1, b: x._rawValue, c: y._rawValue, d: 1))
     }
 }
 
@@ -252,9 +256,9 @@ extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLit
 extension Affine.Transform where Scalar: Real & BinaryFloatingPoint {
     /// Creates counterclockwise rotation transform around origin.
     @inlinable
-    public static func rotation(_ angle: Radian) -> Self {
-        let c = Scalar(angle.cos)
-        let s = Scalar(angle.sin)
+    public static func rotation(_ angle: Radian<Scalar>) -> Self {
+        let c = angle.cos.value
+        let s = angle.sin.value
         return Self(
             linear: Linear<Scalar, Space>.Matrix(a: c, b: -s, c: s, d: c),
             translation: .zero
@@ -263,7 +267,7 @@ extension Affine.Transform where Scalar: Real & BinaryFloatingPoint {
 
     /// Creates counterclockwise rotation transform from degrees.
     @inlinable
-    public static func rotation(_ angle: Degree) -> Self {
+    public static func rotation(_ angle: Degree<Scalar>) -> Self {
         rotation(angle.radians)
     }
 }
@@ -309,13 +313,13 @@ extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLit
 
     /// Returns new transform with additional uniform scaling applied.
     @inlinable
-    public static func scaled(_ transform: Self, by factor: Scalar) -> Self {
+    public static func scaled(_ transform: Self, by factor: Scale<1, Scalar>) -> Self {
         concatenating(transform, .scale(factor))
     }
 
     /// Returns new transform with additional uniform scaling applied.
     @inlinable
-    public func scaled(by factor: Scalar) -> Self {
+    public func scaled(by factor: Scale<1, Scalar>) -> Self {
         Self.scaled(self, by: factor)
     }
 
@@ -335,25 +339,25 @@ extension Affine.Transform where Scalar: FloatingPoint & ExpressibleByIntegerLit
 extension Affine.Transform where Scalar: Real & BinaryFloatingPoint {
     /// Returns new transform with additional rotation applied.
     @inlinable
-    public static func rotated(_ transform: Self, by angle: Radian) -> Self {
+    public static func rotated(_ transform: Self, by angle: Radian<Scalar>) -> Self {
         concatenating(transform, .rotation(angle))
     }
 
     /// Returns new transform with additional rotation applied.
     @inlinable
-    public func rotated(by angle: Radian) -> Self {
+    public func rotated(by angle: Radian<Scalar>) -> Self {
         Self.rotated(self, by: angle)
     }
 
     /// Returns new transform with additional rotation in degrees applied.
     @inlinable
-    public static func rotated(_ transform: Self, by angle: Degree) -> Self {
+    public static func rotated(_ transform: Self, by angle: Degree<Scalar>) -> Self {
         concatenating(transform, .rotation(angle))
     }
 
     /// Returns new transform with additional rotation in degrees applied.
     @inlinable
-    public func rotated(by angle: Degree) -> Self {
+    public func rotated(by angle: Degree<Scalar>) -> Self {
         Self.rotated(self, by: angle)
     }
 }
@@ -401,10 +405,10 @@ extension Affine.Transform where Scalar: FloatingPoint {
     @inlinable
     public static func apply(_ transform: Self, to point: Affine.Point<2>) -> Affine.Point<2> {
         // Matrix multiplication mixes X and Y components: new_x = a*x + b*y + tx
-        let px = point.x.value
-        let py = point.y.value
-        let newX = transform.linear.a * px + transform.linear.b * py + transform.translation.dx.value
-        let newY = transform.linear.c * px + transform.linear.d * py + transform.translation.dy.value
+        let px = point.x._rawValue
+        let py = point.y._rawValue
+        let newX = transform.linear.a * px + transform.linear.b * py + transform.translation.dx._rawValue
+        let newY = transform.linear.c * px + transform.linear.d * py + transform.translation.dy._rawValue
         return Affine.Point(x: Affine.X(newX), y: Affine.Y(newY))
     }
 
@@ -419,8 +423,8 @@ extension Affine.Transform where Scalar: FloatingPoint {
     public static func apply(_ transform: Self, to vector: Linear<Scalar, Space>.Vector<2>) -> Linear<Scalar, Space>.Vector<2>
     {
         // Matrix multiplication mixes X and Y components: new_x = a*x + b*y
-        let vx = vector.dx.value
-        let vy = vector.dy.value
+        let vx = vector.dx._rawValue
+        let vy = vector.dy._rawValue
         let newDx = transform.linear.a * vx + transform.linear.b * vy
         let newDy = transform.linear.c * vx + transform.linear.d * vy
         return Linear<Scalar, Space>.Vector(

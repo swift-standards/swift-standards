@@ -145,27 +145,6 @@ extension Linear.Matrix where Scalar: AdditiveArithmetic {
     }
 }
 
-// MARK: - Scalar Multiplication
-
-extension Linear.Matrix where Scalar: Numeric {
-    /// Scales the matrix by a scalar multiplier.
-    @inlinable
-    public static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
-        var result = lhs.rows
-        for i in 0..<Rows {
-            for j in 0..<Columns {
-                result[i][j] = lhs.rows[i][j] * rhs
-            }
-        }
-        return Self(rows: result)
-    }
-
-    /// Scales the matrix by a scalar multiplier.
-    @inlinable
-    public static func * (lhs: Scalar, rhs: borrowing Self) -> Self {
-        rhs * lhs
-    }
-}
 
 // MARK: - Negation
 
@@ -369,9 +348,12 @@ extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint {
     /// This operator handles the dimensional analysis internally, allowing matrix elements
     /// (which are dimensionless) to transform typed displacement components.
     @inlinable
-    public static func * (lhs: Self, rhs: Linear<Scalar, Space>.Vector<2>) -> Linear<Scalar, Space>.Vector<2> {
-        let x = lhs.a * rhs.dx.value + lhs.b * rhs.dy.value
-        let y = lhs.c * rhs.dx.value + lhs.d * rhs.dy.value
+    public static func * (
+        lhs: Self,
+        rhs: Linear<Scalar, Space>.Vector<2>
+    ) -> Linear<Scalar, Space>.Vector<2> {
+        let x = lhs.a * rhs.dx._rawValue + lhs.b * rhs.dy._rawValue
+        let y = lhs.c * rhs.dx._rawValue + lhs.d * rhs.dy._rawValue
         return Linear<Scalar, Space>.Vector(dx: .init(x), dy: .init(y))
     }
 }
@@ -409,8 +391,8 @@ extension Linear.Matrix
 where Rows == 2, Columns == 2, Scalar: FloatingPoint & ExpressibleByIntegerLiteral {
     /// Creates a uniform scaling matrix.
     @inlinable
-    public static func scale(_ factor: Scalar) -> Self {
-        Self(a: factor, b: 0, c: 0, d: factor)
+    public static func scale(_ factor: Scale<1, Scalar>) -> Self {
+        Self(a: factor.value, b: 0, c: 0, d: factor.value)
     }
 
     /// Creates a non-uniform scaling matrix.
@@ -438,19 +420,19 @@ where Rows == 2, Columns == 2, Scalar: SignedNumeric & ExpressibleByIntegerLiter
 }
 
 // MARK: - 2×2 Rotation Factory (Angle)
-
+@_spi(Internal) public import Dimension
 extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: Real & BinaryFloatingPoint {
     /// Creates a rotation matrix from an angle in radians.
     @inlinable
-    public static func rotation(_ angle: Radian) -> Self {
-        let c = Scalar(angle.cos)
-        let s = Scalar(angle.sin)
+    public static func rotation(_ angle: Radian<Scalar>) -> Self {
+        let c = angle.cos.value
+        let s = angle.sin.value
         return Self(a: c, b: -s, c: s, d: c)
     }
 
     /// Creates a rotation matrix from an angle in degrees.
     @inlinable
-    public static func rotation(_ angle: Degree) -> Self {
+    public static func rotation(_ angle: Degree<Scalar>) -> Self {
         rotation(angle.radians)
     }
 }
@@ -462,15 +444,15 @@ extension Linear.Matrix where Rows == 2, Columns == 2, Scalar == Double {
     ///
     /// Exact for pure rotations; approximates the rotational component if scale or shear is present.
     @inlinable
-    public static func rotationAngle(_ matrix: Self) -> Radian {
-        Radian.atan2(y: matrix.c, x: matrix.a)
+    public static func rotationAngle(_ matrix: Self) -> Radian<Scalar> {
+        Radian(Scalar.atan2(y: matrix.c, x: matrix.a))
     }
 
     /// Extracts the rotation angle from the matrix.
     ///
     /// Exact for pure rotations; approximates the rotational component if scale or shear is present.
     @inlinable
-    public var rotationAngle: Radian {
+    public var rotationAngle: Radian<Scalar> {
         Self.rotationAngle(self)
     }
 }

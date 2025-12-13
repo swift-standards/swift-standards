@@ -212,20 +212,20 @@ extension Affine.Point where N == 2 {
     @inlinable
     public var x: Affine.X {
         get { Affine.X(coordinates[0]) }
-        set { coordinates[0] = newValue.value }
+        set { coordinates[0] = newValue._rawValue }
     }
 
     /// Vertical coordinate position.
     @inlinable
     public var y: Affine.Y {
         get { Affine.Y(coordinates[1]) }
-        set { coordinates[1] = newValue.value }
+        set { coordinates[1] = newValue._rawValue }
     }
 
     /// Creates 2D point from type-safe coordinate components.
     @inlinable
     public init(x: Affine.X, y: Affine.Y) {
-        self.init([x.value, y.value])
+        self.init([x._rawValue, y._rawValue])
     }
 }
 
@@ -236,27 +236,27 @@ extension Affine.Point where N == 3 {
     @inlinable
     public var x: Affine.X {
         get { .init(coordinates[0]) }
-        set { coordinates[0] = newValue.value }
+        set { coordinates[0] = newValue._rawValue }
     }
 
     /// Vertical coordinate position.
     @inlinable
     public var y: Affine.Y {
         get { .init(coordinates[1]) }
-        set { coordinates[1] = newValue.value }
+        set { coordinates[1] = newValue._rawValue }
     }
 
     /// Depth coordinate position.
     @inlinable
     public var z: Affine.Z {
         get { .init(coordinates[2]) }
-        set { coordinates[2] = newValue.value }
+        set { coordinates[2] = newValue._rawValue }
     }
 
     /// Creates 3D point from type-safe coordinate components.
     @inlinable
     public init(x: Affine.X, y: Affine.Y, z: Affine.Z) {
-        self.init([x.value, y.value, z.value])
+        self.init([x._rawValue, y._rawValue, z._rawValue])
     }
 
     /// Creates 3D point by extending 2D point with depth coordinate.
@@ -273,34 +273,34 @@ extension Affine.Point where N == 4 {
     @inlinable
     public var x: Affine.X {
         get { .init(coordinates[0]) }
-        set { coordinates[0] = newValue.value }
+        set { coordinates[0] = newValue._rawValue }
     }
 
     /// Vertical coordinate position.
     @inlinable
     public var y: Affine.Y {
         get { .init(coordinates[1]) }
-        set { coordinates[1] = newValue.value }
+        set { coordinates[1] = newValue._rawValue }
     }
 
     /// Depth coordinate position.
     @inlinable
     public var z: Affine.Z {
         get { .init(coordinates[2]) }
-        set { coordinates[2] = newValue.value }
+        set { coordinates[2] = newValue._rawValue }
     }
 
     /// Homogeneous coordinate for projective transformations.
     @inlinable
     public var w: Affine.W {
         get { .init(coordinates[3]) }
-        set { coordinates[3] = newValue.value }
+        set { coordinates[3] = newValue._rawValue }
     }
 
     /// Creates 4D point from type-safe coordinate components.
     @inlinable
     public init(x: Affine.X, y: Affine.Y, z: Affine.Z, w: Affine.W) {
-        self.init([x.value, y.value, z.value, w.value])
+        self.init([x._rawValue, y._rawValue, z._rawValue, w._rawValue])
     }
 
     /// Creates 4D point by extending 3D point with homogeneous coordinate.
@@ -373,8 +373,8 @@ extension Affine.Point where N == 2, Scalar: FloatingPoint {
     /// Returns raw scalar for use in comparisons; use `distance(from:to:)` for typed result.
     @inlinable
     public static func distanceSquared(from point: Self, to other: Self) -> Scalar {
-        let dx = other.x.value - point.x.value
-        let dy = other.y.value - point.y.value
+        let dx = other.x._rawValue - point.x._rawValue
+        let dy = other.y._rawValue - point.y._rawValue
         return dx * dx + dy * dy
     }
 
@@ -408,8 +408,8 @@ extension Affine.Point where N == 2, Scalar: FloatingPoint {
     @inlinable
     public static func lerp(from point: Self, to other: Self, t: Scalar) -> Self {
         Self(
-            x: Affine.X(point.x.value + t * (other.x.value - point.x.value)),
-            y: Affine.Y(point.y.value + t * (other.y.value - point.y.value))
+            x: Affine.X(point.x._rawValue + t * (other.x._rawValue - point.x._rawValue)),
+            y: Affine.Y(point.y._rawValue + t * (other.y._rawValue - point.y._rawValue))
         )
     }
 
@@ -427,8 +427,8 @@ extension Affine.Point where N == 2, Scalar: FloatingPoint {
     @inlinable
     public static func midpoint(from point: Self, to other: Self) -> Self {
         Self(
-            x: Affine.X((point.x.value + other.x.value) / 2),
-            y: Affine.Y((point.y.value + other.y.value) / 2)
+            x: Affine.X((point.x._rawValue + other.x._rawValue) / 2),
+            y: Affine.Y((point.y._rawValue + other.y._rawValue) / 2)
         )
     }
 
@@ -494,9 +494,9 @@ extension Affine.Point where N == 3, Scalar: FloatingPoint {
     /// Computes squared Euclidean distance between two points.
     ///
     /// More efficient than `distance(from:to:)` when comparing distances.
-    /// Returns raw scalar for use in comparisons; use `distance(from:to:)` for typed result.
+    /// Returns typed Area (Length²) for proper dimensional analysis.
     @inlinable
-    public static func distanceSquared(from point: Self, to other: Self) -> Scalar {
+    public static func distanceSquared(from point: Self, to other: Self) -> Tagged<Area<Space>, Scalar> {
         let dx = other.x - point.x
         let dy = other.y - point.y
         let dz = other.z - point.z
@@ -506,16 +506,16 @@ extension Affine.Point where N == 3, Scalar: FloatingPoint {
     /// Computes squared Euclidean distance to another point.
     ///
     /// More efficient than `distance(to:)` when comparing distances.
-    /// Returns raw scalar for use in comparisons; use `distance(to:)` for typed result.
+    /// Returns typed Area (Length²) for proper dimensional analysis.
     @inlinable
-    public func distanceSquared(to other: Self) -> Scalar {
+    public func distanceSquared(to other: Self) -> Tagged<Area<Space>, Scalar> {
         Self.distanceSquared(from: self, to: other)
     }
 
     /// Computes Euclidean distance between two points.
     @inlinable
     public static func distance(from point: Self, to other: Self) -> Affine.Distance {
-        .init(distanceSquared(from: point, to: other).squareRoot())
+        .init(distanceSquared(from: point, to: other)._rawValue.squareRoot())
     }
 
     /// Computes Euclidean distance to another point.

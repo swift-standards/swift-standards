@@ -181,13 +181,13 @@ extension Linear.Vector where Scalar: SignedNumeric {
     }
 }
 
-// MARK: - Scalar Operations (FloatingPoint)
+// MARK: - Scalar Multiplication (internal for mathematical operations)
 
 extension Linear.Vector where Scalar: FloatingPoint {
-    /// Scales the vector by a scalar multiplier.
+    /// Scales the vector by a scalar multiplier (internal).
     @inlinable
-    @_disfavoredOverload
-    public static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
+    @usableFromInline
+    internal static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
         var result = lhs.components
         for i in 0..<N {
             result[i] = lhs.components[i] * rhs
@@ -195,21 +195,10 @@ extension Linear.Vector where Scalar: FloatingPoint {
         return Self(result)
     }
 
-    /// Scales the vector by a scalar multiplier.
+    /// Divides the vector by a scalar divisor (internal).
     @inlinable
-    @_disfavoredOverload
-    public static func * (lhs: Scalar, rhs: borrowing Self) -> Self {
-        var result = rhs.components
-        for i in 0..<N {
-            result[i] = lhs * rhs.components[i]
-        }
-        return Self(result)
-    }
-
-    /// Divides the vector by a scalar divisor.
-    @inlinable
-    @_disfavoredOverload
-    public static func / (lhs: borrowing Self, rhs: Scalar) -> Self {
+    @usableFromInline
+    internal static func / (lhs: borrowing Self, rhs: Scalar) -> Self {
         var result = lhs.components
         for i in 0..<N {
             result[i] = lhs.components[i] / rhs
@@ -251,6 +240,12 @@ extension Linear.Vector where Scalar: FloatingPoint {
     @inlinable
     public var length: Scalar {
         Self.length(self)
+    }
+
+    /// The magnitude (length) of the vector as a typed value.
+    @inlinable
+    public var magnitude: Linear.Magnitude {
+        Linear.Magnitude(Self.length(self))
     }
 
     /// A unit vector in the same direction.
@@ -328,13 +323,13 @@ extension Linear.Vector where Scalar: FloatingPoint {
 
     /// Computes the distance between vector endpoints.
     @inlinable
-    public static func distance(_ lhs: Self, to rhs: Self) -> Scalar {
-        length(lhs - rhs)
+    public static func distance(_ lhs: Self, to rhs: Self) -> Linear.Distance {
+        Linear.Distance(length(lhs - rhs))
     }
 
     /// Computes the distance between vector endpoints.
     @inlinable
-    public func distance(to other: borrowing Self) -> Scalar {
+    public func distance(to other: borrowing Self) -> Linear.Distance {
         Self.distance(self, to: other)
     }
 }
@@ -346,20 +341,20 @@ extension Linear.Vector where N == 2 {
     @inlinable
     public var dx: Linear.Dx {
         get { Linear.Dx(components[0]) }
-        set { components[0] = newValue.value }
+        set { components[0] = newValue._rawValue }
     }
 
     /// The Y-component (vertical displacement).
     @inlinable
     public var dy: Linear.Dy {
         get { Linear.Dy(components[1]) }
-        set { components[1] = newValue.value }
+        set { components[1] = newValue._rawValue }
     }
 
     /// Creates a 2D vector from typed displacement components.
     @inlinable
     public init(dx: Linear.Dx, dy: Linear.Dy) {
-        self.init([dx.value, dy.value])
+        self.init([dx._rawValue, dy._rawValue])
     }
 }
 
@@ -368,23 +363,22 @@ extension Linear.Vector where N == 2 {
 extension Linear.Vector where N == 2, Scalar: SignedNumeric {
     /// Computes the 2D cross product (signed Z-component).
     ///
-    /// Returns the signed area of the parallelogram formed by the vectors. Positive if `other` is counter-clockwise from `self`.
+    /// Returns the signed area of the parallelogram formed by the vectors.
+    /// Positive if `other` is counter-clockwise from `self`.
     @inlinable
-    public static func cross(_ lhs: Self, _ rhs: Self) -> Scalar {
+    public static func cross(_ lhs: Self, _ rhs: Self) -> Tagged<Area<Space>, Scalar> {
         lhs.dx * rhs.dy - lhs.dy * rhs.dx
     }
 
     /// Computes the 2D cross product (signed Z-component).
     ///
-    /// Returns the signed area of the parallelogram formed by the vectors. Positive if `other` is counter-clockwise from `self`.
+    /// Returns the signed area of the parallelogram formed by the vectors.
+    /// Positive if `other` is counter-clockwise from `self`.
     @inlinable
-    public func cross(_ other: borrowing Self) -> Scalar {
+    public func cross(_ other: borrowing Self) -> Tagged<Area<Space>, Scalar> {
         Self.cross(self, other)
     }
 }
-
-// Note: The cross product uses Tagged's cross-axis multiplication:
-// dx: Tagged<Algebra.X, Scalar> * other.dy: Tagged<Algebra.Y, Scalar> -> Scalar
 
 // MARK: - 3D Convenience
 
@@ -393,33 +387,33 @@ extension Linear.Vector where N == 3 {
     @inlinable
     public var dx: Linear.Dx {
         get { Linear.Dx(components[0]) }
-        set { components[0] = newValue.value }
+        set { components[0] = newValue._rawValue }
     }
 
     /// The Y-component.
     @inlinable
     public var dy: Linear.Dy {
         get { Linear.Dy(components[1]) }
-        set { components[1] = newValue.value }
+        set { components[1] = newValue._rawValue }
     }
 
     /// The Z-component.
     @inlinable
     public var dz: Linear.Dz {
         get { Linear.Dz(components[2]) }
-        set { components[2] = newValue.value }
+        set { components[2] = newValue._rawValue }
     }
 
     /// Creates a 3D vector from typed displacement components.
     @inlinable
     public init(dx: Linear.Dx, dy: Linear.Dy, dz: Linear.Dz) {
-        self.init([dx.value, dy.value, dz.value])
+        self.init([dx._rawValue, dy._rawValue, dz._rawValue])
     }
 
     /// Creates a 3D vector from a 2D vector by adding a Z-component.
     @inlinable
     public init(_ vector2: Linear.Vector<2>, dz: Linear.Dz) {
-        self.init([vector2.dx.value, vector2.dy.value, dz.value])
+        self.init([vector2.dx._rawValue, vector2.dy._rawValue, dz._rawValue])
     }
 }
 
@@ -427,12 +421,18 @@ extension Linear.Vector where N == 3 {
 
 extension Linear.Vector where N == 3, Scalar: SignedNumeric {
     /// Computes the 3D cross product with another vector.
+    ///
+    /// Note: Uses raw values internally. The cross product of two displacement vectors
+    /// is conventionally treated as returning a displacement vector, though dimensionally
+    /// it's Length² (a bivector in geometric algebra).
     @inlinable
     public static func cross(_ lhs: Self, _ rhs: Self) -> Self {
-        Self(
-            dx: Linear.Dx(lhs.dy * rhs.dz - lhs.dz * rhs.dy),
-            dy: Linear.Dy(lhs.dz * rhs.dx - lhs.dx * rhs.dz),
-            dz: Linear.Dz(lhs.dx * rhs.dy - lhs.dy * rhs.dx)
+        let lx = lhs.dx._rawValue, ly = lhs.dy._rawValue, lz = lhs.dz._rawValue
+        let rx = rhs.dx._rawValue, ry = rhs.dy._rawValue, rz = rhs.dz._rawValue
+        return Self(
+            dx: Linear.Dx(ly * rz - lz * ry),
+            dy: Linear.Dy(lz * rx - lx * rz),
+            dz: Linear.Dz(lx * ry - ly * rx)
         )
     }
 
@@ -450,40 +450,40 @@ extension Linear.Vector where N == 4 {
     @inlinable
     public var dx: Linear.Dx {
         get { Linear.Dx(components[0]) }
-        set { components[0] = newValue.value }
+        set { components[0] = newValue._rawValue }
     }
 
     /// The Y-component.
     @inlinable
     public var dy: Linear.Dy {
         get { Linear.Dy(components[1]) }
-        set { components[1] = newValue.value }
+        set { components[1] = newValue._rawValue }
     }
 
     /// The Z-component.
     @inlinable
     public var dz: Linear.Dz {
         get { Linear.Dz(components[2]) }
-        set { components[2] = newValue.value }
+        set { components[2] = newValue._rawValue }
     }
 
     /// The W-component.
     @inlinable
     public var dw: Linear.Dw {
         get { Linear.Dw(components[3]) }
-        set { components[3] = newValue.value }
+        set { components[3] = newValue._rawValue }
     }
 
     /// Creates a 4D vector from typed displacement components.
     @inlinable
     public init(dx: Linear.Dx, dy: Linear.Dy, dz: Linear.Dz, dw: Linear.Dw) {
-        self.init([dx.value, dy.value, dz.value, dw.value])
+        self.init([dx._rawValue, dy._rawValue, dz._rawValue, dw._rawValue])
     }
 
     /// Creates a 4D vector from a 3D vector by adding a W-component.
     @inlinable
     public init(_ vector3: Linear.Vector<3>, dw: Linear.Dw) {
-        self.init([vector3.dx.value, vector3.dy.value, vector3.dz.value, dw.value])
+        self.init([vector3.dx._rawValue, vector3.dy._rawValue, vector3.dz._rawValue, dw._rawValue])
     }
 }
 

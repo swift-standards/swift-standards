@@ -23,6 +23,6 @@ extension Tagged where RawValue: BinaryFloatingPoint {
     @inlinable
     public func formatted<S>(_ format: S) -> S.FormatOutput
     where S: FormatStyle, S.FormatInput: BinaryFloatingPoint {
-        format.format(S.FormatInput(value))
+        format.format(S.FormatInput(_rawValue))
     }
 }

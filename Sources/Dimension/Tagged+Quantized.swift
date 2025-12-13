@@ -1,187 +1,70 @@
-//
-//  Tagged+Quantized.swift
-//  swift-standards
-//
-//  Created by Coen ten Thije Boonkkamp on 12/12/2025.
-//
+// Tagged+Quantized.swift
+// Quantization support and affine arithmetic for Tagged types.
 
-// MARK: - Tagged Quantization
+// MARK: - Canonical Quantization
 
 extension Tagged where RawValue: BinaryFloatingPoint {
-    /// Creates a tagged value quantized to the given quantum.
+    /// Finalizes an arithmetic result, passing through unchanged.
     ///
-    /// Uses multiplication by reciprocal to avoid floating-point errors
-    /// with quantum values that can't be represented exactly (e.g., 0.01).
+    /// This overload is selected when Space does not conform to Quantized.
+    /// Zero runtime cost: compiles to a direct initialization.
     @inlinable
-    public init(quantized rawValue: RawValue, quantum: RawValue) {
-        let scale = 1.0 / Double(quantum)
-        let scaledValue = Double(rawValue) * scale
-        let rounded = scaledValue.rounded()
-        self.rawValue = RawValue(rounded / scale)
+    internal static func _quantize<S>(_ value: RawValue, in space: S.Type) -> Self {
+        Self(value)
+    }
+
+    /// Finalizes an arithmetic result with quantization to the grid.
+    ///
+    /// This overload is selected when Space conforms to Quantized.
+    /// Produces canonical representation: same tick always yields identical bits.
+    @inlinable
+    internal static func _quantize<S: Quantized>(_ value: RawValue, in space: S.Type) -> Self {
+        let q = S.quantum(as: RawValue.self)
+        let ticks = Int64((value / q).rounded())
+        return Self(RawValue(ticks) * q)
     }
 }
 
-// MARK: - Quantized Displacement Arithmetic (Static Methods)
+// MARK: - Tick Access
 
-// These MUST be static methods to win over AdditiveArithmetic's static methods.
-// Free functions lose to static methods regardless of constraints.
-
-extension Tagged where Tag: QuantizedDisplacementTag, RawValue: BinaryFloatingPoint {
-    /// Adds two displacements in a quantized space.
+extension Tagged where Tag: Spatial, Tag.Space: Quantized, RawValue: BinaryFloatingPoint {
+    /// The integer tick representing this quantized value.
+    ///
+    /// The tick is the canonical representation: `value ≈ tick × quantum`.
+    /// Two values with equal ticks represent the same grid point.
     @inlinable
-    public static func + (lhs: Self, rhs: Self) -> Self {
-        Self(quantized: lhs.rawValue + rhs.rawValue, quantum: Tag.Space.quantum(as: RawValue.self))
+    public var ticks: Int64 {
+        let q = Tag.Space.quantum(as: RawValue.self)
+        return Int64((_rawValue / q).rounded())
     }
 
-    /// Subtracts two displacements in a quantized space.
+    /// Creates a tagged value from an integer tick count.
+    ///
+    /// - Parameter ticks: The grid point index
     @inlinable
-    public static func - (lhs: Self, rhs: Self) -> Self {
-        Self(quantized: lhs.rawValue - rhs.rawValue, quantum: Tag.Space.quantum(as: RawValue.self))
+    public init(ticks: Int64) {
+        let q = Tag.Space.quantum(as: RawValue.self)
+        self.init(RawValue(ticks) * q)
     }
 }
 
-// MARK: - Quantized Coordinate/Displacement Arithmetic (Free Functions)
+// MARK: - Tick-Based Equality
 
-// These free functions work because they have DIFFERENT return types or operand types
-// than AdditiveArithmetic, so there's no competition.
+extension Tagged where Tag: Spatial, Tag.Space: Quantized, RawValue: BinaryFloatingPoint {
+    /// Compares two quantized values by their tick (grid point).
+    ///
+    /// This is the mathematically correct equality for quantized types:
+    /// two values are equal iff they represent the same grid point,
+    /// regardless of floating-point representation differences.
+    @inlinable
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.ticks == rhs.ticks
+    }
 
-// MARK: X Axis
-
-/// Adds a displacement to an X coordinate in a quantized space.
-@inlinable
-public func + <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.X.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.X.Displacement<Space>, Scalar>
-) -> Tagged<Index.X.Coordinate<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue + rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
+    /// Compares two quantized values by their tick (grid point).
+    @inlinable
+    public static func != (lhs: Self, rhs: Self) -> Bool {
+        lhs.ticks != rhs.ticks
+    }
 }
 
-/// Subtracts two X coordinates in a quantized space, returning a displacement.
-@inlinable
-public func - <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.X.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.X.Coordinate<Space>, Scalar>
-) -> Tagged<Index.X.Displacement<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue - rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}
-
-/// Subtracts a displacement from an X coordinate in a quantized space.
-@inlinable
-public func - <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.X.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.X.Displacement<Space>, Scalar>
-) -> Tagged<Index.X.Coordinate<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue - rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}
-
-/// Adds an X coordinate to a displacement in a quantized space (commutative).
-@inlinable
-public func + <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.X.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.X.Coordinate<Space>, Scalar>
-) -> Tagged<Index.X.Coordinate<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue + rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}
-
-/// Subtracts an X coordinate from a displacement in a quantized space.
-@inlinable
-public func - <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.X.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.X.Coordinate<Space>, Scalar>
-) -> Tagged<Index.X.Coordinate<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue - rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}
-
-// MARK: Y Axis
-
-/// Adds a displacement to a Y coordinate in a quantized space.
-@inlinable
-public func + <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.Y.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Y.Displacement<Space>, Scalar>
-) -> Tagged<Index.Y.Coordinate<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue + rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}
-
-/// Subtracts two Y coordinates in a quantized space, returning a displacement.
-@inlinable
-public func - <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.Y.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Y.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Y.Displacement<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue - rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}
-
-/// Subtracts a displacement from a Y coordinate in a quantized space.
-@inlinable
-public func - <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.Y.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Y.Displacement<Space>, Scalar>
-) -> Tagged<Index.Y.Coordinate<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue - rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}
-
-/// Adds a Y coordinate to a displacement in a quantized space (commutative).
-@inlinable
-public func + <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.Y.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.Y.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Y.Coordinate<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue + rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}
-
-/// Subtracts a Y coordinate from a displacement in a quantized space.
-@inlinable
-public func - <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.Y.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.Y.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Y.Coordinate<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue - rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}
-
-// MARK: Z Axis
-
-/// Adds a displacement to a Z coordinate in a quantized space.
-@inlinable
-public func + <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.Z.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Z.Displacement<Space>, Scalar>
-) -> Tagged<Index.Z.Coordinate<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue + rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}
-
-/// Subtracts two Z coordinates in a quantized space, returning a displacement.
-@inlinable
-public func - <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.Z.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Z.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Z.Displacement<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue - rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}
-
-/// Subtracts a displacement from a Z coordinate in a quantized space.
-@inlinable
-public func - <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.Z.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Z.Displacement<Space>, Scalar>
-) -> Tagged<Index.Z.Coordinate<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue - rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}
-
-/// Adds a Z coordinate to a displacement in a quantized space (commutative).
-@inlinable
-public func + <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.Z.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.Z.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Z.Coordinate<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue + rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}
-
-/// Subtracts a Z coordinate from a displacement in a quantized space.
-@inlinable
-public func - <Space: Quantized, Scalar: BinaryFloatingPoint>(
-    lhs: Tagged<Index.Z.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.Z.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Z.Coordinate<Space>, Scalar> {
-    Tagged(quantized: lhs.rawValue - rhs.rawValue, quantum: Space.quantum(as: Scalar.self))
-}

@@ -23,19 +23,34 @@
 /// // user == order  // Error: cannot compare different tagged types
 /// ```
 public struct Tagged<Tag, RawValue> {
+    /// Internal storage for the raw value.
+    ///
+    /// - Note: Use typed operators and methods instead of accessing raw values directly.
+    ///   This is `package` visible to allow `@inlinable` operators within the package.
+    @usableFromInline
+    package var _rawValue: RawValue
+
     /// Underlying raw value.
-    public var rawValue: RawValue
+    ///
+    /// - Note: Access to raw values is restricted via `@_spi(Internal)` to encourage
+    ///   staying in typed land. Use typed operators and methods instead.
+    @_spi(Internal)
+    @inlinable
+    public var rawValue: RawValue {
+        get { _rawValue }
+        set { _rawValue = newValue }
+    }
 
     /// Creates a tagged value from a raw value.
     @inlinable
     public init(_ rawValue: RawValue) {
-        self.rawValue = rawValue
+        self._rawValue = rawValue
     }
 
     /// Creates a tagged value from a raw value.
     @inlinable
     public init(rawValue: RawValue) {
-        self.rawValue = rawValue
+        self._rawValue = rawValue
     }
 }
 
@@ -51,7 +66,7 @@ extension Tagged: Hashable where RawValue: Hashable {}
 extension Tagged: Comparable where RawValue: Comparable {
     @inlinable
     public static func < (lhs: Tagged, rhs: Tagged) -> Bool {
-        lhs.rawValue < rhs.rawValue
+        lhs._rawValue < rhs._rawValue
     }
 
     /// Returns the greater of two tagged values.
@@ -59,7 +74,7 @@ extension Tagged: Comparable where RawValue: Comparable {
     /// Equivalent to `Swift.max(a, b)` but avoids verbose type annotations.
     @inlinable
     public static func max(_ a: Self, _ b: Self) -> Self {
-        a.rawValue >= b.rawValue ? a : b
+        a._rawValue >= b._rawValue ? a : b
     }
 
     /// Returns the lesser of two tagged values.
@@ -67,7 +82,7 @@ extension Tagged: Comparable where RawValue: Comparable {
     /// Equivalent to `Swift.min(a, b)` but avoids verbose type annotations.
     @inlinable
     public static func min(_ a: Self, _ b: Self) -> Self {
-        a.rawValue <= b.rawValue ? a : b
+        a._rawValue <= b._rawValue ? a : b
     }
 }
 
@@ -80,7 +95,7 @@ extension Tagged {
         _ tagged: Tagged,
         transform: (RawValue) throws -> NewRawValue
     ) rethrows -> Tagged<Tag, NewRawValue> {
-        Tagged<Tag, NewRawValue>(try transform(tagged.rawValue))
+        Tagged<Tag, NewRawValue>(try transform(tagged._rawValue))
     }
 
     /// Changes the tag type of a tagged value while preserving the raw value (zero-cost conversion).
@@ -89,7 +104,7 @@ extension Tagged {
         _ tagged: Tagged,
         to _: NewTag.Type = NewTag.self
     ) -> Tagged<NewTag, RawValue> {
-        Tagged<NewTag, RawValue>(tagged.rawValue)
+        Tagged<NewTag, RawValue>(tagged._rawValue)
     }
 }
 
@@ -116,14 +131,14 @@ extension Tagged {
 extension Tagged: ExpressibleByIntegerLiteral where RawValue: ExpressibleByIntegerLiteral {
     @inlinable
     public init(integerLiteral value: RawValue.IntegerLiteralType) {
-        self.rawValue = RawValue(integerLiteral: value)
+        self._rawValue = RawValue(integerLiteral: value)
     }
 }
 
 extension Tagged: ExpressibleByFloatLiteral where RawValue: ExpressibleByFloatLiteral {
     @inlinable
     public init(floatLiteral value: RawValue.FloatLiteralType) {
-        self.rawValue = RawValue(floatLiteral: value)
+        self._rawValue = RawValue(floatLiteral: value)
     }
 }
 
@@ -131,7 +146,7 @@ extension Tagged: ExpressibleByUnicodeScalarLiteral
 where RawValue: ExpressibleByUnicodeScalarLiteral {
     @inlinable
     public init(unicodeScalarLiteral value: RawValue.UnicodeScalarLiteralType) {
-        self.rawValue = RawValue(unicodeScalarLiteral: value)
+        self._rawValue = RawValue(unicodeScalarLiteral: value)
     }
 }
 
@@ -139,21 +154,21 @@ extension Tagged: ExpressibleByExtendedGraphemeClusterLiteral
 where RawValue: ExpressibleByExtendedGraphemeClusterLiteral {
     @inlinable
     public init(extendedGraphemeClusterLiteral value: RawValue.ExtendedGraphemeClusterLiteralType) {
-        self.rawValue = RawValue(extendedGraphemeClusterLiteral: value)
+        self._rawValue = RawValue(extendedGraphemeClusterLiteral: value)
     }
 }
 
 extension Tagged: ExpressibleByStringLiteral where RawValue: ExpressibleByStringLiteral {
     @inlinable
     public init(stringLiteral value: RawValue.StringLiteralType) {
-        self.rawValue = RawValue(stringLiteral: value)
+        self._rawValue = RawValue(stringLiteral: value)
     }
 }
 
 extension Tagged: ExpressibleByBooleanLiteral where RawValue: ExpressibleByBooleanLiteral {
     @inlinable
     public init(booleanLiteral value: RawValue.BooleanLiteralType) {
-        self.rawValue = RawValue(booleanLiteral: value)
+        self._rawValue = RawValue(booleanLiteral: value)
     }
 }
 
@@ -161,524 +176,13 @@ extension Tagged: ExpressibleByBooleanLiteral where RawValue: ExpressibleByBoole
 
 extension Tagged {
     /// Convenient alias for `rawValue`.
+    ///
+    /// - Note: Access to raw values is restricted via `@_spi(Internal)` to encourage
+    ///   staying in typed land. Use typed operators and methods instead.
+    @_spi(Internal)
     @inlinable
     public var value: RawValue {
-        get { rawValue }
-        set { rawValue = newValue }
-    }
-}
-
-// MARK: - AdditiveArithmetic
-
-extension Tagged: AdditiveArithmetic where RawValue: AdditiveArithmetic {
-    @inlinable
-    public static var zero: Self {
-        Self(.zero)
-    }
-
-    @inlinable
-    @_disfavoredOverload
-    public static func + (lhs: Self, rhs: Self) -> Self {
-        Self(lhs.rawValue + rhs.rawValue)
-    }
-
-    @inlinable
-    @_disfavoredOverload
-    public static func - (lhs: Self, rhs: Self) -> Self {
-        Self(lhs.rawValue - rhs.rawValue)
-    }
-}
-
-// MARK: - Scalar Arithmetic
-
-extension Tagged where RawValue: AdditiveArithmetic {
-    /// Adds a raw scalar to a tagged value.
-    @inlinable
-    @_disfavoredOverload
-    public static func + (lhs: Self, rhs: RawValue) -> Self {
-        Self(lhs.rawValue + rhs)
-    }
-
-    /// Adds a tagged value to a raw scalar.
-    @inlinable
-    @_disfavoredOverload
-    public static func + (lhs: RawValue, rhs: Self) -> Self {
-        Self(lhs + rhs.rawValue)
-    }
-
-    /// Subtracts a raw scalar from a tagged value.
-    @inlinable
-    @_disfavoredOverload
-    public static func - (lhs: Self, rhs: RawValue) -> Self {
-        Self(lhs.rawValue - rhs)
-    }
-
-    /// Subtracts a tagged value from a raw scalar.
-    @inlinable
-    @_disfavoredOverload
-    public static func - (lhs: RawValue, rhs: Self) -> Self {
-        Self(lhs - rhs.rawValue)
-    }
-}
-
-// MARK: - Negation
-
-extension Tagged where RawValue: SignedNumeric {
-    /// Returns the negation of this value.
-    @inlinable
-    public static prefix func - (value: Self) -> Self {
-        Self(-value.rawValue)
-    }
-}
-
-// MARK: - Absolute Value, Min, Max
-
-/// Returns the absolute value of a tagged value.
-@inlinable
-public func abs<Tag, T: SignedNumeric & Comparable>(_ x: Tagged<Tag, T>) -> Tagged<Tag, T> {
-    Tagged(abs(x.rawValue))
-}
-
-/// Returns the minimum of two tagged values.
-@inlinable
-public func min<Tag, T: Comparable>(_ x: Tagged<Tag, T>, _ y: Tagged<Tag, T>) -> Tagged<Tag, T> {
-    x.rawValue <= y.rawValue ? x : y
-}
-
-/// Returns the maximum of two tagged values.
-@inlinable
-public func max<Tag, T: Comparable>(_ x: Tagged<Tag, T>, _ y: Tagged<Tag, T>) -> Tagged<Tag, T> {
-    x.rawValue >= y.rawValue ? x : y
-}
-
-// MARK: - Multiplication/Division
-
-extension Tagged where RawValue: FloatingPoint {
-    /// Multiplies a tagged value by a scalar.
-    @inlinable
-    public static func * (lhs: Self, rhs: RawValue) -> Self {
-        Self(lhs.rawValue * rhs)
-    }
-
-    /// Multiplies a scalar by a tagged value.
-    @inlinable
-    public static func * (lhs: RawValue, rhs: Self) -> Self {
-        Self(lhs * rhs.rawValue)
-    }
-
-    /// Divides a tagged value by a scalar.
-    @inlinable
-    public static func / (lhs: Self, rhs: RawValue) -> Self {
-        Self(lhs.rawValue / rhs)
-    }
-}
-
-// MARK: - Squared (same tag multiplication)
-
-extension Tagged where RawValue: Numeric {
-    /// Multiplies two same-tagged values, returning the raw squared magnitude.
-    @inlinable
-    @_disfavoredOverload
-    public static func * (lhs: Self, rhs: Self) -> RawValue {
-        lhs.rawValue * rhs.rawValue
-    }
-}
-
-// MARK: - Same Tag Division (ratio)
-
-extension Tagged where RawValue: FloatingPoint {
-    /// Divides two same-tagged values, returning the raw ratio.
-    @inlinable
-    @_disfavoredOverload
-    public static func / (lhs: Self, rhs: Self) -> RawValue {
-        lhs.rawValue / rhs.rawValue
-    }
-}
-
-// MARK: - Compound Assignment Operators
-
-extension Tagged where RawValue: AdditiveArithmetic {
-    /// Add and assign
-    @inlinable
-    public static func += (lhs: inout Self, rhs: Self) {
-        lhs.rawValue = lhs.rawValue + rhs.rawValue
-    }
-
-    /// Subtract and assign
-    @inlinable
-    public static func -= (lhs: inout Self, rhs: Self) {
-        lhs.rawValue = lhs.rawValue - rhs.rawValue
-    }
-
-    /// Add scalar and assign
-    @inlinable
-    @_disfavoredOverload
-    public static func += (lhs: inout Self, rhs: RawValue) {
-        lhs.rawValue = lhs.rawValue + rhs
-    }
-
-    /// Subtract scalar and assign
-    @inlinable
-    @_disfavoredOverload
-    public static func -= (lhs: inout Self, rhs: RawValue) {
-        lhs.rawValue = lhs.rawValue - rhs
-    }
-}
-
-extension Tagged where RawValue: FloatingPoint {
-    /// Multiply and assign by scalar
-    @inlinable
-    public static func *= (lhs: inout Self, rhs: RawValue) {
-        lhs.rawValue = lhs.rawValue * rhs
-    }
-
-    /// Divide and assign by scalar
-    @inlinable
-    public static func /= (lhs: inout Self, rhs: RawValue) {
-        lhs.rawValue = lhs.rawValue / rhs
-    }
-}
-
-// MARK: - Cross-Axis Displacement Multiplication
-
-// Displacement cross products: Dx × Dy = Area (scalar), Width × Height = scalar
-// These are free functions generic over Space to work with any coordinate system.
-
-/// Multiplies X-displacement by Y-displacement, returning area (scalar).
-@inlinable
-@_disfavoredOverload
-public func * <Space, Scalar: Numeric>(
-    lhs: Tagged<Index.X.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.Y.Displacement<Space>, Scalar>
-) -> Scalar {
-    lhs.rawValue * rhs.rawValue
-}
-
-/// Multiplies X-displacement by Z-displacement, returning a scalar.
-@inlinable
-@_disfavoredOverload
-public func * <Space, Scalar: Numeric>(
-    lhs: Tagged<Index.X.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.Z.Displacement<Space>, Scalar>
-) -> Scalar {
-    lhs.rawValue * rhs.rawValue
-}
-
-/// Multiplies Y-displacement by X-displacement, returning area (scalar).
-@inlinable
-@_disfavoredOverload
-public func * <Space, Scalar: Numeric>(
-    lhs: Tagged<Index.Y.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.X.Displacement<Space>, Scalar>
-) -> Scalar {
-    lhs.rawValue * rhs.rawValue
-}
-
-/// Multiplies Y-displacement by Z-displacement, returning a scalar.
-@inlinable
-@_disfavoredOverload
-public func * <Space, Scalar: Numeric>(
-    lhs: Tagged<Index.Y.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.Z.Displacement<Space>, Scalar>
-) -> Scalar {
-    lhs.rawValue * rhs.rawValue
-}
-
-/// Multiplies Z-displacement by X-displacement, returning a scalar.
-@inlinable
-@_disfavoredOverload
-public func * <Space, Scalar: Numeric>(
-    lhs: Tagged<Index.Z.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.X.Displacement<Space>, Scalar>
-) -> Scalar {
-    lhs.rawValue * rhs.rawValue
-}
-
-/// Multiplies Z-displacement by Y-displacement, returning a scalar.
-@inlinable
-@_disfavoredOverload
-public func * <Space, Scalar: Numeric>(
-    lhs: Tagged<Index.Z.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.Y.Displacement<Space>, Scalar>
-) -> Scalar {
-    lhs.rawValue * rhs.rawValue
-}
-
-// MARK: - Mixed Coordinate/Displacement Arithmetic
-
-// Affine geometry: Point + Vector = Point, Point - Point = Vector, Point - Vector = Point
-// These are free functions generic over Space to work with any coordinate system.
-
-// MARK: X Axis
-
-/// Adds a displacement to an X coordinate, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func + <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.X.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.X.Displacement<Space>, Scalar>
-) -> Tagged<Index.X.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue + rhs.rawValue)
-}
-
-/// Subtracts two X coordinates, returning a displacement.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.X.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.X.Coordinate<Space>, Scalar>
-) -> Tagged<Index.X.Displacement<Space>, Scalar> {
-    Tagged(lhs.rawValue - rhs.rawValue)
-}
-
-/// Subtracts a displacement from an X coordinate, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.X.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.X.Displacement<Space>, Scalar>
-) -> Tagged<Index.X.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue - rhs.rawValue)
-}
-
-/// Adds an X coordinate to a displacement, returning a coordinate (commutative).
-@_disfavoredOverload
-@inlinable
-public func + <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.X.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.X.Coordinate<Space>, Scalar>
-) -> Tagged<Index.X.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue + rhs.rawValue)
-}
-
-/// Subtracts an X coordinate from a displacement, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.X.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.X.Coordinate<Space>, Scalar>
-) -> Tagged<Index.X.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue - rhs.rawValue)
-}
-
-// MARK: Y Axis
-
-/// Adds a displacement to a Y coordinate, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func + <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Y.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Y.Displacement<Space>, Scalar>
-) -> Tagged<Index.Y.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue + rhs.rawValue)
-}
-
-/// Subtracts two Y coordinates, returning a displacement.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Y.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Y.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Y.Displacement<Space>, Scalar> {
-    Tagged(lhs.rawValue - rhs.rawValue)
-}
-
-/// Subtracts a displacement from a Y coordinate, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Y.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Y.Displacement<Space>, Scalar>
-) -> Tagged<Index.Y.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue - rhs.rawValue)
-}
-
-/// Adds a Y coordinate to a displacement, returning a coordinate (commutative).
-@_disfavoredOverload
-@inlinable
-public func + <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Y.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.Y.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Y.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue + rhs.rawValue)
-}
-
-/// Subtracts a Y coordinate from a displacement, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Y.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.Y.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Y.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue - rhs.rawValue)
-}
-
-// MARK: Z Axis
-
-/// Adds a displacement to a Z coordinate, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func + <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Z.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Z.Displacement<Space>, Scalar>
-) -> Tagged<Index.Z.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue + rhs.rawValue)
-}
-
-/// Subtracts two Z coordinates, returning a displacement.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Z.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Z.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Z.Displacement<Space>, Scalar> {
-    Tagged(lhs.rawValue - rhs.rawValue)
-}
-
-/// Subtracts a displacement from a Z coordinate, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Z.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Z.Displacement<Space>, Scalar>
-) -> Tagged<Index.Z.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue - rhs.rawValue)
-}
-
-/// Adds a Z coordinate to a displacement, returning a coordinate (commutative).
-@_disfavoredOverload
-@inlinable
-public func + <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Z.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.Z.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Z.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue + rhs.rawValue)
-}
-
-/// Subtracts a Z coordinate from a displacement, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Z.Displacement<Space>, Scalar>,
-    rhs: Tagged<Index.Z.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Z.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue - rhs.rawValue)
-}
-
-// MARK: - Magnitude/Coordinate Arithmetic
-
-// Magnitude (non-directional distance) can be added/subtracted from coordinates.
-// This enables `center.x - radius` patterns in geometry code.
-// The magnitude is interpreted as distance along the axis of the coordinate.
-
-/// Adds a magnitude to an X coordinate, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func + <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.X.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Magnitude<Space>, Scalar>
-) -> Tagged<Index.X.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue + rhs.rawValue)
-}
-
-/// Subtracts a magnitude from an X coordinate, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.X.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Magnitude<Space>, Scalar>
-) -> Tagged<Index.X.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue - rhs.rawValue)
-}
-
-/// Adds an X coordinate to a magnitude, returning a coordinate (commutative).
-@_disfavoredOverload
-@inlinable
-public func + <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Magnitude<Space>, Scalar>,
-    rhs: Tagged<Index.X.Coordinate<Space>, Scalar>
-) -> Tagged<Index.X.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue + rhs.rawValue)
-}
-
-/// Adds a magnitude to a Y coordinate, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func + <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Y.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Magnitude<Space>, Scalar>
-) -> Tagged<Index.Y.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue + rhs.rawValue)
-}
-
-/// Subtracts a magnitude from a Y coordinate, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Y.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Magnitude<Space>, Scalar>
-) -> Tagged<Index.Y.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue - rhs.rawValue)
-}
-
-/// Adds a Y coordinate to a magnitude, returning a coordinate (commutative).
-@_disfavoredOverload
-@inlinable
-public func + <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Magnitude<Space>, Scalar>,
-    rhs: Tagged<Index.Y.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Y.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue + rhs.rawValue)
-}
-
-/// Adds a magnitude to a Z coordinate, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func + <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Z.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Magnitude<Space>, Scalar>
-) -> Tagged<Index.Z.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue + rhs.rawValue)
-}
-
-/// Subtracts a magnitude from a Z coordinate, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Z.Coordinate<Space>, Scalar>,
-    rhs: Tagged<Index.Magnitude<Space>, Scalar>
-) -> Tagged<Index.Z.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue - rhs.rawValue)
-}
-
-/// Adds a Z coordinate to a magnitude, returning a coordinate (commutative).
-@_disfavoredOverload
-@inlinable
-public func + <Space, Scalar: AdditiveArithmetic>(
-    lhs: Tagged<Index.Magnitude<Space>, Scalar>,
-    rhs: Tagged<Index.Z.Coordinate<Space>, Scalar>
-) -> Tagged<Index.Z.Coordinate<Space>, Scalar> {
-    Tagged(lhs.rawValue + rhs.rawValue)
-}
-
-// MARK: - Strideable
-
-extension Tagged: Strideable where RawValue: Strideable {
-    public typealias Stride = RawValue.Stride
-
-    @inlinable
-    public func distance(to other: Self) -> Stride {
-        rawValue.distance(to: other.rawValue)
-    }
-
-    @inlinable
-    public func advanced(by n: Stride) -> Self {
-        Self(rawValue.advanced(by: n))
-    }
-}
-
-extension Tagged where RawValue: BinaryFloatingPoint {
-    public init<I: BinaryInteger>(_ value: I) {
-        self.init(RawValue(value))
+        get { _rawValue }
+        set { _rawValue = newValue }
     }
 }

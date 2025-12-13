@@ -59,7 +59,7 @@ struct `Affine.Transform Tests` {
     // MARK: - Translation Tests
 
     @Suite
-    struct `Translation Tests` {
+    struct `Translations` {
         @Test
         func `Translation from dx/dy`() {
             let t = Transform.translation(dx: 10, dy: 20)

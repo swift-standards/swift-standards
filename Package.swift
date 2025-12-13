@@ -202,7 +202,10 @@ let package = Package(
             ]
         ),
         .target(
-            name: "Dimension"
+            name: "Dimension",
+            dependencies: [
+                .product(name: "RealModule", package: "swift-numerics"),
+            ]
         ),
         .target(
             name: "Positioning"
@@ -210,6 +213,7 @@ let package = Package(
         .target(
             name: "Angle",
             dependencies: [
+                "Dimension",
                 .product(name: "RealModule", package: "swift-numerics"),
             ]
         ),

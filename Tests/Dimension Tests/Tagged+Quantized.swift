@@ -2,7 +2,7 @@
 //  Tagged+Quantized Tests.swift
 //  swift-standards
 //
-//  Tests for Tagged quantized arithmetic operators.
+//  Tests for Tagged quantized arithmetic and tick-based equality.
 //
 
 import Testing
@@ -28,12 +28,45 @@ private typealias QDy = Tagged<Index.Y.Displacement<TestSpace>, Double>
 struct `Tagged+Quantized` {
 
     @Suite
-    struct `init(quantized:quantum:)` {
+    struct `Tick Representation` {
 
         @Test
-        func `quantizes value on init`() {
-            let value = Tagged<TestSpace, Double>(quantized: 1.234, quantum: 0.01)
-            #expect(value.rawValue == 1.23)
+        func `ticks property returns correct grid index`() {
+            let x: QX = .init(1.234)
+            #expect(x.ticks == 123)
+        }
+
+        @Test
+        func `init from ticks creates correct value`() {
+            let x = QX(ticks: 14940)
+            #expect(x.ticks == 14940)
+        }
+
+        @Test
+        func `same tick produces identical bits`() {
+            let x1 = QX(ticks: 14940)
+            let x2 = QX(ticks: 14940)
+            #expect(x1.rawValue == x2.rawValue)
+            #expect(x1.rawValue.bitPattern == x2.rawValue.bitPattern)
+        }
+    }
+
+    @Suite
+    struct `Tick Equality` {
+
+        @Test
+        func `equal ticks are equal`() {
+            let x1: QX = .init(149.4)
+            let x2: QX = .init(149.4000000001)  // Same tick after quantization
+            #expect(x1 == x2)
+            #expect(x1.ticks == x2.ticks)
+        }
+
+        @Test
+        func `different ticks are not equal`() {
+            let x1: QX = .init(149.4)
+            let x2: QX = .init(149.5)
+            #expect(x1 != x2)
         }
     }
 
@@ -45,7 +78,7 @@ struct `Tagged+Quantized` {
             let x: QX = .init(100.0)
             let dx: QDx = .init(21.8)
             let result = x + dx
-            #expect(result.rawValue == 121.8)
+            #expect(result.ticks == 12180)
         }
 
         @Test
@@ -56,9 +89,9 @@ struct `Tagged+Quantized` {
             let row2 = row1 + dx
             let row3 = row2 + dx
 
-            #expect(row1.rawValue == 105.8)
-            #expect(row2.rawValue == 127.6, "got \(row2.rawValue)")
-            #expect(row3.rawValue == 149.4, "got \(row3.rawValue)")
+            #expect(row1.ticks == 10580)
+            #expect(row2.ticks == 12760)
+            #expect(row3.ticks == 14940)
         }
 
         @Test
@@ -66,7 +99,7 @@ struct `Tagged+Quantized` {
             let x1: QX = .init(149.4)
             let x2: QX = .init(84.0)
             let dx: QDx = x1 - x2
-            #expect(dx.rawValue == 65.4)
+            #expect(dx.ticks == 6540)
         }
 
         @Test
@@ -74,7 +107,7 @@ struct `Tagged+Quantized` {
             let x: QX = .init(149.4)
             let dx: QDx = .init(21.8)
             let result = x - dx
-            #expect(result.rawValue == 127.6)
+            #expect(result.ticks == 12760)
         }
 
         @Test
@@ -83,7 +116,7 @@ struct `Tagged+Quantized` {
             let dx2: QDx = .init(21.8)
             let dx3: QDx = .init(21.8)
             let sum = dx1 + dx2 + dx3
-            #expect(sum.rawValue == 65.4)
+            #expect(sum.ticks == 6540)
         }
 
         @Test
@@ -91,7 +124,7 @@ struct `Tagged+Quantized` {
             let dx1: QDx = .init(65.4)
             let dx2: QDx = .init(21.8)
             let result = dx1 - dx2
-            #expect(result.rawValue == 43.6)
+            #expect(result.ticks == 4360)
         }
     }
 
@@ -103,7 +136,7 @@ struct `Tagged+Quantized` {
             let y: QY = .init(100.0)
             let dy: QDy = .init(21.8)
             let result = y + dy
-            #expect(result.rawValue == 121.8)
+            #expect(result.ticks == 12180)
         }
 
         @Test
@@ -111,7 +144,7 @@ struct `Tagged+Quantized` {
             let y1: QY = .init(149.4)
             let y2: QY = .init(84.0)
             let dy: QDy = y1 - y2
-            #expect(dy.rawValue == 65.4)
+            #expect(dy.ticks == 6540)
         }
 
         @Test
@@ -120,7 +153,7 @@ struct `Tagged+Quantized` {
             let dy2: QDy = .init(21.8)
             let dy3: QDy = .init(21.8)
             let sum = dy1 + dy2 + dy3
-            #expect(sum.rawValue == 65.4)
+            #expect(sum.ticks == 6540)
         }
     }
 
@@ -141,8 +174,23 @@ struct `Tagged+Quantized` {
             let total: QDy = .init(65.4)  // 3 * 21.8
             let spanEnd = start + total
 
-            #expect(row3End.rawValue == spanEnd.rawValue,
-                    "Accumulated: \(row3End.rawValue), Direct: \(spanEnd.rawValue)")
+            // Both should be tick 14940
+            #expect(row3End == spanEnd)
+            #expect(row3End.ticks == spanEnd.ticks)
+            #expect(row3End.ticks == 14940)
+        }
+
+        @Test
+        func `different computation paths produce same bits`() {
+            let start: QY = .init(84.0)
+            let step: QDy = .init(21.8)
+            let total: QDy = .init(65.4)
+
+            let accumulated = start + step + step + step
+            let direct = start + total
+
+            // Same tick means identical IEEE 754 bits
+            #expect(accumulated.rawValue.bitPattern == direct.rawValue.bitPattern)
         }
     }
 }

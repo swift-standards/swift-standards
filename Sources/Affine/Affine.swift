@@ -65,25 +65,25 @@ extension Affine {
     /// parameterized by coordinate space.
     ///
     /// Distinguishes position coordinates from displacement vectors for type safety.
-    public typealias X = Tagged<Index.X.Coordinate<Space>, Scalar>
+    public typealias X = Tagged<Coordinate.X<Space>, Scalar>
 
     /// Type-safe vertical coordinate representing absolute position on the y-axis,
     /// parameterized by coordinate space.
     ///
     /// Distinguishes position coordinates from displacement vectors for type safety.
-    public typealias Y = Tagged<Index.Y.Coordinate<Space>, Scalar>
+    public typealias Y = Tagged<Coordinate.Y<Space>, Scalar>
 
     /// Type-safe depth coordinate representing absolute position on the z-axis,
     /// parameterized by coordinate space.
     ///
     /// Distinguishes position coordinates from displacement vectors for type safety.
-    public typealias Z = Tagged<Index.Z.Coordinate<Space>, Scalar>
+    public typealias Z = Tagged<Coordinate.Z<Space>, Scalar>
 
     /// Type-safe homogeneous coordinate for projective transformations,
     /// parameterized by coordinate space.
     ///
     /// Used in 4D homogeneous coordinates where `w=1` represents standard 3D points.
-    public typealias W = Tagged<Index.W.Coordinate<Space>, Scalar>
+    public typealias W = Tagged<Coordinate.W<Space>, Scalar>
 }
 
 // MARK: - Displacement Type Aliases
