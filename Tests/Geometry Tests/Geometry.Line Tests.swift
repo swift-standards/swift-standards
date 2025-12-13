@@ -8,6 +8,33 @@ import Testing
 @testable import Algebra
 @testable import Geometry
 
+// MARK: - Test Helpers
+
+private typealias Geo = Geometry<Double, Void>
+private typealias X = Geo.X
+private typealias Y = Geo.Y
+private typealias Dx = Linear<Double, Void>.Dx
+private typealias Dy = Linear<Double, Void>.Dy
+private typealias Distance = Linear<Double, Void>.Magnitude
+
+private func isApprox(_ a: X, _ b: X, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Y, _ b: Y, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Distance, _ b: Distance, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Distance(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
 // MARK: - Line Initialization Tests
 
 @Suite
@@ -113,8 +140,8 @@ struct `Geometry.Line - Static Functions` {
         )
         let intersection = Geometry.intersection(line1, line2)
         #expect(intersection != nil)
-        #expect(abs(intersection!.x.value - 1) < 1e-10)
-        #expect(abs(intersection!.y.value - 1) < 1e-10)
+        #expect(isApprox(intersection!.x, X(1)))
+        #expect(isApprox(intersection!.y, Y(1)))
     }
 
     @Test
@@ -139,8 +166,8 @@ struct `Geometry.Line - Static Functions` {
         let point: Geometry<Double, Void>.Point<2> = .init(x: 5, y: 7)
         let projection = Geometry.projection(of: point, onto: line)
         #expect(projection != nil)
-        #expect(abs(projection!.x.value - 5) < 1e-10)
-        #expect(abs(projection!.y.value - 0) < 1e-10)
+        #expect(isApprox(projection!.x, X(5)))
+        #expect(isApprox(projection!.y, Y(0)))
     }
 
     @Test
@@ -152,8 +179,8 @@ struct `Geometry.Line - Static Functions` {
         let point: Geometry<Double, Void>.Point<2> = .init(x: 0, y: 4)
         let projection = Geometry.projection(of: point, onto: line)
         #expect(projection != nil)
-        #expect(abs(projection!.x.value - 2) < 1e-10)
-        #expect(abs(projection!.y.value - 2) < 1e-10)
+        #expect(isApprox(projection!.x, X(2)))
+        #expect(isApprox(projection!.y, Y(2)))
     }
 }
 
@@ -183,8 +210,8 @@ struct `Geometry.Line - Instance Methods` {
         )
         let intersection = horizontal.intersection(with: vertical)
         #expect(intersection != nil)
-        #expect(abs(intersection!.x.value - 3) < 1e-10)
-        #expect(abs(intersection!.y.value - 5) < 1e-10)
+        #expect(isApprox(intersection!.x, X(3)))
+        #expect(isApprox(intersection!.y, Y(5)))
     }
 
     @Test
@@ -196,8 +223,8 @@ struct `Geometry.Line - Instance Methods` {
         let point: Geometry<Double, Void>.Point<2> = .init(x: 0, y: 4)
         let projection = line.projection(of: point)
         #expect(projection != nil)
-        #expect(abs(projection!.x.value - 2) < 1e-10)
-        #expect(abs(projection!.y.value - 2) < 1e-10)
+        #expect(isApprox(projection!.x, X(2)))
+        #expect(isApprox(projection!.y, Y(2)))
     }
 
     @Test
@@ -209,8 +236,8 @@ struct `Geometry.Line - Instance Methods` {
         let point: Geometry<Double, Void>.Point<2> = .init(x: 5, y: 3)
         let reflection = line.reflection(of: point)
         #expect(reflection != nil)
-        #expect(abs(reflection!.x.value - 5) < 1e-10)
-        #expect(abs(reflection!.y.value - (-3)) < 1e-10)
+        #expect(isApprox(reflection!.x, X(5)))
+        #expect(isApprox(reflection!.y, Y(-3)))
     }
 
     @Test
@@ -222,8 +249,8 @@ struct `Geometry.Line - Instance Methods` {
         let point: Geometry<Double, Void>.Point<2> = .init(x: 3, y: 7)
         let reflection = line.reflection(of: point)
         #expect(reflection != nil)
-        #expect(abs(reflection!.x.value - 7) < 1e-10)
-        #expect(abs(reflection!.y.value - 7) < 1e-10)
+        #expect(isApprox(reflection!.x, X(7)))
+        #expect(isApprox(reflection!.y, Y(7)))
     }
 
     @Test
@@ -235,8 +262,8 @@ struct `Geometry.Line - Instance Methods` {
         let point: Geometry<Double, Void>.Point<2> = .init(x: 3, y: 3)
         let projection = line.projection(of: point)
         #expect(projection != nil)
-        #expect(abs(projection!.x.value - 3) < 1e-10)
-        #expect(abs(projection!.y.value - 3) < 1e-10)
+        #expect(isApprox(projection!.x, X(3)))
+        #expect(isApprox(projection!.y, Y(3)))
     }
 
     @Test
@@ -402,8 +429,8 @@ struct `Geometry.Line.Segment - Static Functions` {
         )
         let intersection = Geometry.intersection(seg1, seg2)
         #expect(intersection != nil)
-        #expect(abs(intersection!.x.value - 5) < 1e-10)
-        #expect(abs(intersection!.y.value - 5) < 1e-10)
+        #expect(isApprox(intersection!.x, X(5)))
+        #expect(isApprox(intersection!.y, Y(5)))
     }
 
     @Test
@@ -444,8 +471,8 @@ struct `Geometry.Line.Segment - Static Functions` {
         )
         let intersection = Geometry.intersection(horizontal, vertical)
         #expect(intersection != nil)
-        #expect(abs(intersection!.x.value - 5) < 1e-10)
-        #expect(abs(intersection!.y.value - 5) < 1e-10)
+        #expect(isApprox(intersection!.x, X(5)))
+        #expect(isApprox(intersection!.y, Y(5)))
     }
 
     @Test
@@ -460,8 +487,8 @@ struct `Geometry.Line.Segment - Static Functions` {
         )
         let intersection = Geometry.intersection(seg1, seg2)
         #expect(intersection != nil)
-        #expect(abs(intersection!.x.value - 5) < 1e-10)
-        #expect(abs(intersection!.y.value - 5) < 1e-10)
+        #expect(isApprox(intersection!.x, X(5)))
+        #expect(isApprox(intersection!.y, Y(5)))
     }
 
     @Test
@@ -472,7 +499,7 @@ struct `Geometry.Line.Segment - Static Functions` {
         )
         let point: Geometry<Double, Void>.Point<2> = .init(x: 5, y: 0)
         let distance = Geometry.distance(from: segment, to: point)
-        #expect(abs(distance.value) < 1e-10)
+        #expect(isApprox(distance, Distance(0)))
     }
 
     @Test
@@ -483,7 +510,7 @@ struct `Geometry.Line.Segment - Static Functions` {
         )
         let point: Geometry<Double, Void>.Point<2> = .init(x: 5, y: 3)
         let distance = Geometry.distance(from: segment, to: point)
-        #expect(abs(distance.value - 3) < 1e-10)
+        #expect(isApprox(distance, Distance(3)))
     }
 
     @Test
@@ -494,7 +521,7 @@ struct `Geometry.Line.Segment - Static Functions` {
         )
         let point: Geometry<Double, Void>.Point<2> = .init(x: 15, y: 0)
         let distance = Geometry.distance(from: segment, to: point)
-        #expect(abs(distance.value - 5) < 1e-10)
+        #expect(isApprox(distance, Distance(5)))
     }
 
     @Test
@@ -505,7 +532,7 @@ struct `Geometry.Line.Segment - Static Functions` {
         )
         let point: Geometry<Double, Void>.Point<2> = .init(x: -3, y: 4)
         let distance = Geometry.distance(from: segment, to: point)
-        #expect(abs(distance.value - 5) < 1e-10)
+        #expect(isApprox(distance, Distance(5)))
     }
 
     @Test
@@ -516,7 +543,7 @@ struct `Geometry.Line.Segment - Static Functions` {
         )
         let point: Geometry<Double, Void>.Point<2> = .init(x: 8, y: 9)
         let distance = Geometry.distance(from: segment, to: point)
-        #expect(abs(distance.value - 5) < 1e-10)  // 3-4-5 triangle
+        #expect(isApprox(distance, Distance(5)))  // 3-4-5 triangle
     }
 }
 
@@ -536,8 +563,8 @@ struct `Geometry.Line.Segment - Instance Methods` {
         )
         let intersection = seg1.intersection(with: seg2)
         #expect(intersection != nil)
-        #expect(abs(intersection!.x.value - 5) < 1e-10)
-        #expect(abs(intersection!.y.value - 5) < 1e-10)
+        #expect(isApprox(intersection!.x, X(5)))
+        #expect(isApprox(intersection!.y, Y(5)))
     }
 
     @Test
@@ -560,7 +587,7 @@ struct `Geometry.Line.Segment - Instance Methods` {
             end: .init(x: 10, y: 0)
         )
         let point: Geometry<Double, Void>.Point<2> = .init(x: 5, y: 3)
-        #expect(abs(segment.distance(to: point).value - 3) < 1e-10)
+        #expect(isApprox(segment.distance(to: point), Distance(3)))
     }
 }
 
@@ -575,10 +602,14 @@ struct `Geometry.Line - Functorial Map` {
             direction: .init(dx: 3, dy: 4)
         )
         let mapped: Geometry<Float, Void>.Line = try! line.map { Float($0) }
-        #expect(mapped.point.x.value == 1)
-        #expect(mapped.point.y.value == 2)
-        #expect(mapped.direction.dx.value == 3)
-        #expect(mapped.direction.dy.value == 4)
+        let expectedX: Geometry<Float, Void>.X = 1
+        let expectedY: Geometry<Float, Void>.Y = 2
+        let expectedDx: Linear<Float, Void>.Dx = 3
+        let expectedDy: Linear<Float, Void>.Dy = 4
+        #expect(mapped.point.x == expectedX)
+        #expect(mapped.point.y == expectedY)
+        #expect(mapped.direction.dx == expectedDx)
+        #expect(mapped.direction.dy == expectedDy)
     }
 
     @Test
@@ -588,7 +619,9 @@ struct `Geometry.Line - Functorial Map` {
             end: .init(x: 5, y: 10)
         )
         let mapped: Geometry<Float, Void>.Line.Segment = try! segment.map { Float($0) }
-        #expect(mapped.start.x.value == 0)
-        #expect(mapped.end.y.value == 10)
+        let expectedStartX: Geometry<Float, Void>.X = 0
+        let expectedEndY: Geometry<Float, Void>.Y = 10
+        #expect(mapped.start.x == expectedStartX)
+        #expect(mapped.end.y == expectedEndY)
     }
 }

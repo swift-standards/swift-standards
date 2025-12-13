@@ -55,7 +55,7 @@ extension Tagged where Tag == Angle.Degree, RawValue: Real {
 
 // MARK: - Conversion
 
-extension Tagged where Tag == Angle.Degree, RawValue: Real {
+extension Tagged where Tag == Angle.Degree, RawValue: BinaryFloatingPoint {
     /// Creates a degree angle from radians.
     ///
     /// ## Example
@@ -68,7 +68,9 @@ extension Tagged where Tag == Angle.Degree, RawValue: Real {
     public init(radians: Radian<RawValue>) {
         self.init(radians._rawValue * 180 / .pi)
     }
+}
 
+extension Tagged where Tag == Angle.Degree, RawValue: BinaryFloatingPoint {
     /// Converts to radians.
     ///
     /// ## Example
@@ -85,7 +87,7 @@ extension Tagged where Tag == Angle.Degree, RawValue: Real {
 
 // MARK: - Trigonometry (via Radians)
 
-extension Tagged where Tag == Angle.Degree, RawValue: Real {
+extension Tagged where Tag == Angle.Degree, RawValue: Real & BinaryFloatingPoint {
     /// Sine of the angle.
     @inlinable
     public var sin: Scale<1, RawValue> { radians.sin }

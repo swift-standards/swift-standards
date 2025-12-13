@@ -20,7 +20,7 @@ public import RealModule
 /// // [[cos(π/4), -sin(π/4)],
 /// //  [sin(π/4),  cos(π/4)]]
 /// ```
-public struct Rotation<let N: Int, Scalar: BinaryFloatingPoint> {
+public struct Rotation<let N: Int, Scalar> {
     /// Orthogonal matrix representation with determinant +1.
     public var matrix: InlineArray<N, InlineArray<N, Scalar>>
 
@@ -37,7 +37,7 @@ extension Rotation: Sendable where Scalar: Sendable {}
 
 // MARK: - Equatable (2D)
 
-extension Rotation: Equatable where N == 2 {
+extension Rotation: Equatable where N == 2, Scalar: Equatable {
     @inlinable
     public static func == (lhs: Self, rhs: Self) -> Bool {
         lhs.matrix[0][0] == rhs.matrix[0][0] && lhs.matrix[0][1] == rhs.matrix[0][1]
@@ -60,35 +60,35 @@ extension Rotation: Hashable where N == 2, Scalar: Hashable {
 // MARK: - Codable (2D)
 
 #if Codable
-    extension Rotation: Codable where N == 2, Scalar: Codable {
-        private enum CodingKeys: String, CodingKey {
-            case a, b, c, d
-        }
-
-        public init(from decoder: any Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            let a = try container.decode(Scalar.self, forKey: .a)
-            let b = try container.decode(Scalar.self, forKey: .b)
-            let c = try container.decode(Scalar.self, forKey: .c)
-            let d = try container.decode(Scalar.self, forKey: .d)
-            var m = InlineArray<2, InlineArray<2, Scalar>>(
-                repeating: InlineArray<2, Scalar>(repeating: .zero)
-            )
-            m[0][0] = a
-            m[0][1] = b
-            m[1][0] = c
-            m[1][1] = d
-            self.init(matrix: m)
-        }
-
-        public func encode(to encoder: any Encoder) throws {
-            var container = encoder.container(keyedBy: CodingKeys.self)
-            try container.encode(matrix[0][0], forKey: .a)
-            try container.encode(matrix[0][1], forKey: .b)
-            try container.encode(matrix[1][0], forKey: .c)
-            try container.encode(matrix[1][1], forKey: .d)
-        }
+extension Rotation: Codable where N == 2, Scalar: Codable, Scalar: BinaryFloatingPoint {
+    private enum CodingKeys: String, CodingKey {
+        case a, b, c, d
     }
+    
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let a = try container.decode(Scalar.self, forKey: .a)
+        let b = try container.decode(Scalar.self, forKey: .b)
+        let c = try container.decode(Scalar.self, forKey: .c)
+        let d = try container.decode(Scalar.self, forKey: .d)
+        var m = InlineArray<2, InlineArray<2, Scalar>>(
+            repeating: InlineArray<2, Scalar>(repeating: .zero)
+        )
+        m[0][0] = a
+        m[0][1] = b
+        m[1][0] = c
+        m[1][1] = d
+        self.init(matrix: m)
+    }
+    
+    public func encode(to encoder: any Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(matrix[0][0], forKey: .a)
+        try container.encode(matrix[0][1], forKey: .b)
+        try container.encode(matrix[1][0], forKey: .c)
+        try container.encode(matrix[1][1], forKey: .d)
+    }
+}
 #endif
 
 // MARK: - Identity
@@ -125,7 +125,9 @@ extension Rotation where N == 2, Scalar: Real {
         get { Radian(Scalar.atan2(y: matrix[1][0], x: matrix[0][0])) }
         set { self = Self(angle: newValue) }
     }
+}
 
+extension Rotation where N == 2, Scalar: Real {
     /// Creates a 2D rotation from an angle in radians.
     @inlinable
     public init(angle: Radian<Scalar>) {
@@ -140,13 +142,17 @@ extension Rotation where N == 2, Scalar: Real {
         m[1][1] = c
         self.init(matrix: m)
     }
+}
 
+extension Rotation where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// Creates a 2D rotation from an angle in degrees.
     @inlinable
     public init(degrees: Degree<Scalar>) {
         self.init(angle: degrees.radians)
     }
+}
 
+extension Rotation where N == 2, Scalar: Real {
     /// Creates a 2D rotation from precomputed cosine and sine values.
     @inlinable
     public init(cos: Scalar, sin: Scalar) {
@@ -163,7 +169,7 @@ extension Rotation where N == 2, Scalar: Real {
 
 // MARK: - Composition
 
-extension Rotation where N == 2 {
+extension Rotation where N == 2, Scalar: BinaryFloatingPoint {
     /// Static composition: Multiplies two rotation matrices.
     ///
     /// - Parameters:
@@ -189,7 +195,9 @@ extension Rotation where N == 2 {
         m[1][1] = d
         return Self(matrix: m)
     }
+}
 
+extension Rotation where N == 2, Scalar: BinaryFloatingPoint {
     /// Composes two rotations by matrix multiplication.
     ///
     /// - Returns: Rotation applying `other` first, then `self`.
@@ -197,7 +205,9 @@ extension Rotation where N == 2 {
     public func concatenating(_ other: Self) -> Self {
         Self.concatenate(self, with: other)
     }
+}
 
+extension Rotation where N == 2, Scalar: BinaryFloatingPoint {
     /// Static inversion: Computes the inverse rotation (transpose for orthogonal matrices).
     ///
     /// - Parameter rotation: The rotation to invert
@@ -214,7 +224,9 @@ extension Rotation where N == 2 {
         m[1][1] = rotation.matrix[1][1]
         return Self(matrix: m)
     }
+}
 
+extension Rotation where N == 2, Scalar: BinaryFloatingPoint {
     /// Inverse rotation (matrix transpose for orthogonal matrices).
     @inlinable
     public var inverted: Self {
@@ -224,13 +236,15 @@ extension Rotation where N == 2 {
 
 // MARK: - 2D Convenience Operations
 
-extension Rotation where N == 2, Scalar: Real {
+extension Rotation where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// Rotates by an additional angle in radians.
     @inlinable
     public func rotated(by angle: Radian<Scalar>) -> Self {
         concatenating(Self(angle: angle))
     }
+}
 
+extension Rotation where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// Rotates by an additional angle in degrees.
     @inlinable
     public func rotated(by degrees: Degree<Scalar>) -> Self {
@@ -246,13 +260,17 @@ extension Rotation where N == 2, Scalar: Real {
     public static var quarterTurn: Self {
         Self(angle: Radian<Scalar>(Scalar.pi / 2))
     }
+}
 
+extension Rotation where N == 2, Scalar: Real {
     /// 180-degree rotation.
     @inlinable
     public static var halfTurn: Self {
         Self(angle: Radian<Scalar>(Scalar.pi))
     }
+}
 
+extension Rotation where N == 2, Scalar: Real {
     /// 90-degree clockwise rotation.
     @inlinable
     public static var quarterTurnClockwise: Self {

@@ -78,11 +78,17 @@ extension Geometry {
     /// See ``Affine/Y``
     public typealias Y = Affine<Scalar, Space>.Y
 
+    /// See ``Linear/Width``
+    public typealias Width = Linear<Scalar, Space>.Width
+
+    /// See ``Linear/Height``
+    public typealias Height = Linear<Scalar, Space>.Height
+
     /// See ``Linear/Dx``
-    public typealias Width = Linear<Scalar, Space>.Dx
+    public typealias Dx = Linear<Scalar, Space>.Dx
 
     /// See ``Linear/Dy``
-    public typealias Height = Linear<Scalar, Space>.Dy
+    public typealias Dy = Linear<Scalar, Space>.Dy
 
     /// See ``Linear/Magnitude``
     public typealias Length = Linear<Scalar, Space>.Magnitude

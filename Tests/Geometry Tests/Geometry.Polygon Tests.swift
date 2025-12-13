@@ -8,6 +8,38 @@ import Testing
 @testable import Algebra_Linear
 @testable import Geometry
 
+// MARK: - Test Helpers
+
+private typealias Geo = Geometry<Double, Void>
+private typealias X = Geo.X
+private typealias Y = Geo.Y
+private typealias Dx = Linear<Double, Void>.Dx
+private typealias Dy = Linear<Double, Void>.Dy
+private typealias Distance = Linear<Double, Void>.Magnitude
+private typealias Area = Geo.Area
+
+private func isApprox(_ a: X, _ b: X, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Y, _ b: Y, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Distance, _ b: Distance, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Distance(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Area, _ b: Area, tol: Double = 1e-10) -> Bool {
+    return abs(a.rawValue - b.rawValue) < tol
+}
+
 // MARK: - Initialization Tests
 
 @Suite
@@ -153,7 +185,7 @@ struct `Geometry.Polygon - Static Functions` {
             .init(x: 0, y: 1),
         ])
         let perimeter = Geometry.perimeter(of: polygon)
-        #expect(abs(perimeter.value - 4) < 1e-10)
+        #expect(isApprox(perimeter, Distance(4)))
     }
 
     @Test
@@ -164,7 +196,7 @@ struct `Geometry.Polygon - Static Functions` {
             .init(x: 0, y: 4),
         ])
         let perimeter = Geometry.perimeter(of: polygon)
-        #expect(abs(perimeter.value - 12) < 1e-10)
+        #expect(isApprox(perimeter, Distance(12)))
     }
 
     @Test
@@ -177,8 +209,8 @@ struct `Geometry.Polygon - Static Functions` {
         ])
         let centroid = Geometry.centroid(of: polygon)
         #expect(centroid != nil)
-        #expect(abs(centroid!.x.value - 1) < 1e-10)
-        #expect(abs(centroid!.y.value - 1) < 1e-10)
+        #expect(isApprox(centroid!.x, X(1)))
+        #expect(isApprox(centroid!.y, Y(1)))
     }
 
     @Test
@@ -189,8 +221,8 @@ struct `Geometry.Polygon - Static Functions` {
             .init(x: 0, y: 6),
         ])
         let centroid = Geometry.centroid(of: polygon)!
-        #expect(abs(centroid.x.value - 2) < 1e-10)
-        #expect(abs(centroid.y.value - 2) < 1e-10)
+        #expect(isApprox(centroid.x, X(2)))
+        #expect(isApprox(centroid.y, Y(2)))
     }
 }
 
@@ -217,7 +249,7 @@ struct `Geometry.Polygon - Area and Perimeter Properties` {
             .init(x: 1, y: 1),
             .init(x: 0, y: 1),
         ])
-        #expect(abs(polygon.perimeter.value - 4) < 1e-10)
+        #expect(isApprox(polygon.perimeter, Distance(4)))
     }
 }
 
@@ -235,8 +267,8 @@ struct `Geometry.Polygon - Centroid` {
         ])
         let centroid = polygon.centroid
         #expect(centroid != nil)
-        #expect(abs(centroid!.x.value - 1) < 1e-10)
-        #expect(abs(centroid!.y.value - 1) < 1e-10)
+        #expect(isApprox(centroid!.x, X(1)))
+        #expect(isApprox(centroid!.y, Y(1)))
     }
 }
 
@@ -429,8 +461,8 @@ struct `Geometry.Polygon - Transformations` {
         #expect(abs(scaled.area - 16) < 1e-10)
         let originalCentroid = polygon.centroid!
         let scaledCentroid = scaled.centroid!
-        #expect(abs(originalCentroid.x.value - scaledCentroid.x.value) < 1e-10)
-        #expect(abs(originalCentroid.y.value - scaledCentroid.y.value) < 1e-10)
+        #expect(isApprox(originalCentroid.x, scaledCentroid.x))
+        #expect(isApprox(originalCentroid.y, scaledCentroid.y))
     }
 
     @Test
@@ -475,7 +507,7 @@ struct `Geometry.Polygon - Triangulation` {
         let triangles = polygon.triangulate()
         #expect(triangles.count == 2)
 
-        let totalArea = triangles.reduce(0.0) { $0 + $1.area }
+        let totalArea = triangles.reduce(0.0) { $0 + $1.area.rawValue }
         #expect(abs(totalArea - polygon.area) < 1e-10)
     }
 
@@ -491,7 +523,7 @@ struct `Geometry.Polygon - Triangulation` {
         let triangles = polygon.triangulate()
         #expect(triangles.count == 3)
 
-        let totalArea = triangles.reduce(0.0) { $0 + $1.area }
+        let totalArea = triangles.reduce(0.0) { $0 + $1.area.rawValue }
         #expect(abs(totalArea - polygon.area) < 1e-10)
     }
 }
@@ -509,7 +541,9 @@ struct `Geometry.Polygon - Functorial Map` {
         ])
         let mapped: Geometry<Float, Void>.Polygon = polygon.map { Float($0) }
         #expect(mapped.vertices.count == 3)
-        #expect(mapped.vertices[0].x.value == 0)
-        #expect(mapped.vertices[1].x.value == 1)
+        let expectedX0: Geometry<Float, Void>.X = 0
+        let expectedX1: Geometry<Float, Void>.X = 1
+        #expect(mapped.vertices[0].x == expectedX0)
+        #expect(mapped.vertices[1].x == expectedX1)
     }
 }

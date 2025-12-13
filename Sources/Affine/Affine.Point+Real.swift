@@ -110,3 +110,5 @@ extension Affine.Point where N == 2, Scalar: Real & BinaryFloatingPoint {
         Self.rotated(self, by: angle, around: center)
     }
 }
+
+

@@ -9,6 +9,49 @@ import Testing
 @testable import Algebra_Linear
 @testable import Geometry
 
+// MARK: - Test Helpers
+
+private typealias Geo = Geometry<Double, Void>
+private typealias X = Geo.X
+private typealias Y = Geo.Y
+private typealias Dx = Linear<Double, Void>.Dx
+private typealias Dy = Linear<Double, Void>.Dy
+private typealias Distance = Linear<Double, Void>.Magnitude
+
+private func isApprox(_ a: X, _ b: X, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Y, _ b: Y, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Dx, _ b: Dx, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Dy, _ b: Dy, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Distance, _ b: Distance, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Distance(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApproxScalar(_ a: Double, _ b: Double, tol: Double = 1e-10) -> Bool {
+    return abs(a - b) < tol
+}
+
 // MARK: - Initialization Tests
 
 @Suite
@@ -114,8 +157,8 @@ struct `Geometry.Bezier - Evaluation` {
         )
         let point = bezier.point(at: 0)
         #expect(point != nil)
-        #expect(abs(point!.x.value - 0) < 1e-10)
-        #expect(abs(point!.y.value - 0) < 1e-10)
+        #expect(isApprox(point!.x, X(0)))
+        #expect(isApprox(point!.y, Y(0)))
     }
 
     @Test
@@ -128,8 +171,8 @@ struct `Geometry.Bezier - Evaluation` {
         )
         let point = bezier.point(at: 1)
         #expect(point != nil)
-        #expect(abs(point!.x.value - 4) < 1e-10)
-        #expect(abs(point!.y.value - 0) < 1e-10)
+        #expect(isApprox(point!.x, X(4)))
+        #expect(isApprox(point!.y, Y(0)))
     }
 
     @Test
@@ -139,8 +182,8 @@ struct `Geometry.Bezier - Evaluation` {
             to: .init(x: 10, y: 10)
         )
         let point = bezier.point(at: 0.5)!
-        #expect(abs(point.x.value - 5) < 1e-10)
-        #expect(abs(point.y.value - 5) < 1e-10)
+        #expect(isApprox(point.x, X(5)))
+        #expect(isApprox(point.y, Y(5)))
     }
 
     @Test
@@ -151,8 +194,8 @@ struct `Geometry.Bezier - Evaluation` {
             to: .init(x: 4, y: 0)
         )
         let point = bezier.point(at: 0.5)!
-        #expect(abs(point.x.value - 2) < 1e-10)
-        #expect(abs(point.y.value - 2) < 1e-10)
+        #expect(isApprox(point.x, X(2)))
+        #expect(isApprox(point.y, Y(2)))
     }
 }
 
@@ -167,8 +210,8 @@ struct `Geometry.Bezier - Derivative` {
             to: .init(x: 10, y: 20)
         )
         let deriv = bezier.derivative(at: 0.5)!
-        #expect(abs(deriv.dx.value - 10) < 1e-10)
-        #expect(abs(deriv.dy.value - 20) < 1e-10)
+        #expect(isApprox(deriv.dx, Dx(10)))
+        #expect(isApprox(deriv.dy, Dy(20)))
     }
 
     @Test
@@ -180,7 +223,8 @@ struct `Geometry.Bezier - Derivative` {
             to: .init(x: 4, y: 0)
         )
         let tangent = bezier.tangent(at: 0.5)!
-        #expect(abs(tangent.length - 1) < 1e-10)
+        let expectedLength: Double = 1.0
+        #expect(abs(tangent.length - expectedLength) < 1e-10)
     }
 
     @Test
@@ -194,7 +238,7 @@ struct `Geometry.Bezier - Derivative` {
         let tangent = bezier.tangent(at: 0.5)!
         let normal = bezier.normal(at: 0.5)!
 
-        #expect(abs(tangent.dot(normal)) < 1e-10)
+        #expect(isApproxScalar(tangent.dot(normal), 0))
     }
 }
 
@@ -212,15 +256,15 @@ struct `Geometry.Bezier - Subdivision` {
         )
         let split = bezier.split(at: 0.5)!
 
-        #expect(abs(split.left.startPoint!.x.value - 0) < 1e-10)
-        #expect(abs(split.left.startPoint!.y.value - 0) < 1e-10)
+        #expect(isApprox(split.left.startPoint!.x, X(0)))
+        #expect(isApprox(split.left.startPoint!.y, Y(0)))
 
-        #expect(abs(split.right.endPoint!.x.value - 10) < 1e-10)
-        #expect(abs(split.right.endPoint!.y.value - 0) < 1e-10)
+        #expect(isApprox(split.right.endPoint!.x, X(10)))
+        #expect(isApprox(split.right.endPoint!.y, Y(0)))
 
         let midpoint = bezier.point(at: 0.5)!
-        #expect(abs(split.left.endPoint!.x.value - midpoint.x.value) < 1e-10)
-        #expect(abs(split.right.startPoint!.x.value - midpoint.x.value) < 1e-10)
+        #expect(isApprox(split.left.endPoint!.x, midpoint.x))
+        #expect(isApprox(split.right.startPoint!.x, midpoint.x))
     }
 
     @Test
@@ -234,8 +278,8 @@ struct `Geometry.Bezier - Subdivision` {
         let points = bezier.subdivide(into: 10)
         #expect(points.count == 11)
 
-        #expect(abs(points[0].x.value - 0) < 1e-10)
-        #expect(abs(points[10].x.value - 4) < 1e-10)
+        #expect(isApprox(points[0].x, X(0)))
+        #expect(isApprox(points[10].x, X(4)))
     }
 }
 
@@ -252,10 +296,10 @@ struct `Geometry.Bezier - Bounding Box` {
             to: .init(x: 4, y: 0)
         )
         let bbox = bezier.boundingBoxConservative!
-        #expect(bbox.llx == 0)
-        #expect(bbox.lly == 0)
-        #expect(bbox.urx == 4)
-        #expect(bbox.ury == 10)
+        #expect(bbox.llx == X(0))
+        #expect(bbox.lly == Y(0))
+        #expect(bbox.urx == X(4))
+        #expect(bbox.ury == Y(10))
     }
 }
 
@@ -298,10 +342,10 @@ struct `Geometry.Bezier - Transformations` {
             to: .init(x: 10, y: 10)
         )
         let translated = bezier.translated(by: .init(dx: 5, dy: 5))
-        #expect(translated.startPoint?.x == 5)
-        #expect(translated.startPoint?.y == 5)
-        #expect(translated.endPoint?.x == 15)
-        #expect(translated.endPoint?.y == 15)
+        #expect(translated.startPoint?.x == X(5))
+        #expect(translated.startPoint?.y == Y(5))
+        #expect(translated.endPoint?.x == X(15))
+        #expect(translated.endPoint?.y == Y(15))
     }
 
     @Test
@@ -311,8 +355,8 @@ struct `Geometry.Bezier - Transformations` {
             to: .init(x: 10, y: 0)
         )
         let scaled = bezier.scaled(by: 2, about: bezier.startPoint!)
-        #expect(scaled.startPoint?.x == 0)
-        #expect(scaled.endPoint?.x == 20)
+        #expect(scaled.startPoint?.x == X(0))
+        #expect(scaled.endPoint?.x == X(20))
     }
 
     @Test
@@ -324,8 +368,8 @@ struct `Geometry.Bezier - Transformations` {
             to: .init(x: 4, y: 0)
         )
         let reversed = bezier.reversed
-        #expect(reversed.startPoint?.x == 4)
-        #expect(reversed.endPoint?.x == 0)
+        #expect(reversed.startPoint?.x == X(4))
+        #expect(reversed.endPoint?.x == X(0))
     }
 }
 
@@ -343,11 +387,11 @@ struct `Geometry.Bezier - Ellipse Approximation` {
             #expect(b.degree == 3)
         }
 
-        #expect(abs(beziers[0].startPoint!.x.value - 1) < 1e-10)
-        #expect(abs(beziers[0].startPoint!.y.value) < 1e-10)
+        #expect(isApprox(beziers[0].startPoint!.x, X(1)))
+        #expect(isApprox(beziers[0].startPoint!.y, Y(0)))
 
-        #expect(abs(beziers[3].endPoint!.x.value - 1) < 1e-10)
-        #expect(abs(beziers[3].endPoint!.y.value) < 1e-10)
+        #expect(isApprox(beziers[3].endPoint!.x, X(1)))
+        #expect(isApprox(beziers[3].endPoint!.y, Y(0)))
     }
 
     @Test
@@ -356,11 +400,11 @@ struct `Geometry.Bezier - Ellipse Approximation` {
         let beziers = Geometry<Double, Void>.Bezier.approximating(ellipse)
         #expect(beziers.count == 4)
 
-        #expect(abs(beziers[0].startPoint!.x.value - 10) < 1e-10)
-        #expect(abs(beziers[0].startPoint!.y.value) < 1e-10)
+        #expect(isApprox(beziers[0].startPoint!.x, X(10)))
+        #expect(isApprox(beziers[0].startPoint!.y, Y(0)))
 
-        #expect(abs(beziers[1].startPoint!.x.value) < 1e-10)
-        #expect(abs(beziers[1].startPoint!.y.value - 5) < 1e-10)
+        #expect(isApprox(beziers[1].startPoint!.x, X(0)))
+        #expect(isApprox(beziers[1].startPoint!.y, Y(5)))
     }
 
     @Test
@@ -375,14 +419,14 @@ struct `Geometry.Bezier - Ellipse Approximation` {
         for i in 0..<3 {
             let end = beziers[i].endPoint!
             let start = beziers[i + 1].startPoint!
-            #expect(abs(end.x.value - start.x.value) < 1e-10)
-            #expect(abs(end.y.value - start.y.value) < 1e-10)
+            #expect(isApprox(end.x, start.x))
+            #expect(isApprox(end.y, start.y))
         }
 
         let lastEnd = beziers[3].endPoint!
         let firstStart = beziers[0].startPoint!
-        #expect(abs(lastEnd.x.value - firstStart.x.value) < 1e-10)
-        #expect(abs(lastEnd.y.value - firstStart.y.value) < 1e-10)
+        #expect(isApprox(lastEnd.x, firstStart.x))
+        #expect(isApprox(lastEnd.y, firstStart.y))
     }
 }
 
@@ -397,7 +441,9 @@ struct `Geometry.Bezier - Functorial Map` {
             to: .init(x: 10, y: 20)
         )
         let mapped: Geometry<Float, Void>.Bezier = bezier.map { Float($0) }
-        #expect(mapped.startPoint?.x.value == 0)
-        #expect(mapped.endPoint?.x.value == 10)
+        let expectedStartX: Geometry<Float, Void>.X = 0
+        let expectedEndX: Geometry<Float, Void>.X = 10
+        #expect(mapped.startPoint?.x == expectedStartX)
+        #expect(mapped.endPoint?.x == expectedEndX)
     }
 }

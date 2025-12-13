@@ -15,7 +15,7 @@ struct `Geometry.AffineTransform+Symmetry Tests` {
 
     @Test
     func `Initialize from rotation creates correct transform`() {
-        let rotation = Rotation<2, Double>(angle: .pi / 4)
+        let rotation = Rotation<2, Double>(angle: Radian<Double>.pi / 4)
         let transform = Affine<Double, Void>.Transform(rotation)
 
         // Check linear part matches rotation matrix

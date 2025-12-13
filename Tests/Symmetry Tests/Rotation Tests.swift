@@ -1,7 +1,9 @@
 // Rotation Tests.swift
 
+import Affine
 import Algebra_Linear
 import Angle
+@_spi(Internal) import Dimension
 import Foundation
 import Testing
 
@@ -167,8 +169,8 @@ struct `Rotation Tests` {
 
     @Test
     func `Rotated by angle works`() {
-        let rotation = Rotation<2, Double>(angle: .pi / 6)
-        let rotated = rotation.rotated(by: .pi / 3)
+        let rotation = Rotation<2, Double>(angle: Radian<Double>.pi / 6)
+        let rotated = rotation.rotated(by: Radian<Double>.pi / 3)
 
         #expect(abs(rotated.angle.value - Double.pi / 2) < 1e-10)
     }

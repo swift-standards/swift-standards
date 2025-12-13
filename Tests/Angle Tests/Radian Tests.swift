@@ -6,110 +6,114 @@ import Testing
 import RealModule
 @testable import Angle
 
+// Helper for approximate Radian comparisons
+private func isApprox(_ a: Radian<Double>, _ b: Radian<Double>, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    return diff > Radian(-tol) && diff < Radian(tol)
+}
+
+// Helper for approximate Degree comparisons
+private func isApprox(_ a: Degree<Double>, _ b: Degree<Double>, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    return diff > Degree(-tol) && diff < Degree(tol)
+}
+
 @Suite
 struct `Radian - Basic Structure & Arithmetic` {
     @Test
     func initialization() {
-        let angle = Radian(.pi / 2)
-        #expect(angle.value == .pi / 2)
+        let angle = Radian(Double.pi / 2)
+        #expect(isApprox(angle, Radian(Double.pi / 2)))
     }
 
     @Test
     func zero() {
-        let zero = Radian.zero
-        #expect(zero.value == 0)
+        let zero = Radian<Double>.zero
+        #expect(zero == Radian(0))
     }
 
     @Test
     func addition() {
-        let angle1 = Radian(.pi / 4)
-        let angle2 = Radian(.pi / 4)
+        let angle1: Radian<Double> = Radian(Double.pi / 4)
+        let angle2: Radian<Double> = Radian(Double.pi / 4)
         let result = angle1 + angle2
-        #expect(abs(result.value - .pi / 2) < 1e-10)
+        #expect(isApprox(result, Radian(Double.pi / 2)))
     }
 
     @Test
     func subtraction() {
-        let angle1 = Radian(.pi / 2)
-        let angle2 = Radian(.pi / 4)
+        let angle1: Radian<Double> = Radian(Double.pi / 2)
+        let angle2: Radian<Double> = Radian(Double.pi / 4)
         let result = angle1 - angle2
-        #expect(abs(result.value - .pi / 4) < 1e-10)
+        #expect(isApprox(result, Radian(Double.pi / 4)))
     }
 
     @Test
-    func multiplication() {
-        let angle1 = Radian(.pi / 4)
-        let angle2 = Radian(2)
-        let result = angle1 * angle2
-        #expect(abs(result.value - .pi / 2) < 1e-10)
+    func scalarMultiplication() {
+        let angle: Radian<Double> = Radian(Double.pi / 4)
+        let result = angle * 2.0
+        #expect(isApprox(result, Radian(Double.pi / 2)))
     }
 
     @Test
     func division() {
-        let angle = Radian(.pi)
+        let angle: Radian<Double> = Radian(Double.pi)
         let result = angle / 2
-        #expect(abs(result.value - .pi / 2) < 1e-10)
+        #expect(isApprox(result, Radian(Double.pi / 2)))
     }
 
     @Test
     func negation() {
-        let angle = Radian(.pi / 4)
+        let angle: Radian<Double> = Radian(Double.pi / 4)
         let result = -angle
-        #expect(abs(result.value - (-.pi / 4)) < 1e-10)
+        #expect(isApprox(result, Radian(-Double.pi / 4)))
     }
 
     @Test
     func comparison() {
-        let angle1 = Radian(.pi / 4)
-        let angle2 = Radian(.pi / 2)
+        let angle1: Radian<Double> = Radian(Double.pi / 4)
+        let angle2: Radian<Double> = Radian(Double.pi / 2)
         #expect(angle1 < angle2)
         #expect(angle2 > angle1)
     }
 
     @Test
-    func magnitude() {
-        let angle = Radian(-.pi / 4)
-        let result = angle.magnitude
-        #expect(abs(result.value - .pi / 4) < 1e-10)
-    }
-
-    @Test
     func expressibleByFloatLiteral() {
-        let angle: Radian = 1.5
-        #expect(angle.value == 1.5)
+        let angle: Radian<Double> = 1.5
+        #expect(angle == Radian(1.5))
     }
 
     @Test
     func expressibleByIntegerLiteral() {
-        let angle: Radian = 2
-        #expect(angle.value == 2.0)
+        let angle: Radian<Double> = 2
+        #expect(angle == Radian(2.0))
     }
 
     @Test
     func conversion() {
-        let radians = Radian(.pi)
+        let radians: Radian<Double> = Radian(Double.pi)
         let degrees = radians.degrees
-        #expect(abs(degrees.value - 180.0) < 1e-10)
+        #expect(isApprox(degrees, Degree(180.0)))
     }
 
     @Test
     func conversionFromDegrees() {
-        let degrees = Degree(90)
+        let degrees = Degree<Double>(90)
         let radians = Radian(degrees: degrees)
-        #expect(abs(radians.value - .pi / 2) < 1e-10)
+        #expect(isApprox(radians, Radian(Double.pi / 2)))
     }
 
     @Test
     func hashable() {
-        let angle1 = Radian(.pi / 4)
-        let angle2 = Radian(.pi / 4)
+        let angle1: Radian<Double> = Radian(Double.pi / 4)
+        let angle2: Radian<Double> = Radian(Double.pi / 4)
         #expect(angle1.hashValue == angle2.hashValue)
     }
 
     @Test
     func equatable() {
-        let angle1 = Radian(.pi / 4)
-        let angle2 = Radian(.pi / 4)
+        let angle1: Radian<Double> = Radian(Double.pi / 4)
+        let angle2: Radian<Double> = Radian(Double.pi / 4)
         #expect(angle1 == angle2)
     }
 }

@@ -9,6 +9,62 @@ import Testing
 @testable import Algebra_Linear
 @testable import Geometry
 
+// MARK: - Test Helpers
+
+private typealias Geo = Geometry<Double, Void>
+private typealias X = Geo.X
+private typealias Y = Geo.Y
+private typealias Dx = Linear<Double, Void>.Dx
+private typealias Dy = Linear<Double, Void>.Dy
+private typealias Distance = Linear<Double, Void>.Magnitude
+private typealias Width = Linear<Double, Void>.Width
+private typealias Height = Linear<Double, Void>.Height
+private typealias Area = Geo.Area
+
+private func isApprox(_ a: X, _ b: X, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Y, _ b: Y, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Dx, _ b: Dx, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Dy, _ b: Dy, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Distance, _ b: Distance, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Distance(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Width, _ b: Width, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Width(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Area, _ b: Area, tol: Double = 1e-10) -> Bool {
+    return abs(a.rawValue - b.rawValue) < tol
+}
+
+private func isApproxScalar(_ a: Double, _ b: Double, tol: Double = 1e-10) -> Bool {
+    return abs(a - b) < tol
+}
+
 // MARK: - Initialization Tests
 
 @Suite
@@ -19,25 +75,25 @@ struct `Geometry.Ball - Initialization` {
             center: .init(x: 10, y: 20),
             radius: 5
         )
-        #expect(ball.center.x == 10)
-        #expect(ball.center.y == 20)
-        #expect(ball.radius == 5)
+        #expect(ball.center.x == X(10))
+        #expect(ball.center.y == Y(20))
+        #expect(ball.radius == Distance(5))
     }
 
     @Test
     func `Ball at origin with radius`() {
         let ball: Geometry<Double, Void>.Ball<2> = .init(radius: 10)
-        #expect(ball.center.x == 0)
-        #expect(ball.center.y == 0)
-        #expect(ball.radius == 10)
+        #expect(ball.center.x == X(0))
+        #expect(ball.center.y == Y(0))
+        #expect(ball.radius == Distance(10))
     }
 
     @Test
     func `Unit ball`() {
         let ball: Geometry<Double, Void>.Ball<2> = .unit
-        #expect(ball.center.x == 0)
-        #expect(ball.center.y == 0)
-        #expect(ball.radius == 1)
+        #expect(ball.center.x == X(0))
+        #expect(ball.center.y == Y(0))
+        #expect(ball.radius == Distance(1))
     }
 
     @Test
@@ -46,8 +102,8 @@ struct `Geometry.Ball - Initialization` {
             center: .init(x: 5, y: 10),
             radius: 3
         )
-        #expect(circle.center.x == 5)
-        #expect(circle.radius == 3)
+        #expect(circle.center.x == X(5))
+        #expect(circle.radius == Distance(3))
     }
 
     @Test
@@ -58,9 +114,9 @@ struct `Geometry.Ball - Initialization` {
         )
         let circle = Geometry<Double, Void>.Circle(ellipse)
         #expect(circle != nil)
-        #expect(circle?.center.x == 5)
-        #expect(circle?.center.y == 10)
-        #expect(circle?.radius == 7)
+        #expect(circle?.center.x == X(5))
+        #expect(circle?.center.y == Y(10))
+        #expect(circle?.radius == Distance(7))
     }
 
     @Test
@@ -78,33 +134,33 @@ struct `Geometry.Ball - Properties` {
     @Test
     func `Circle diameter`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
-        #expect(circle.diameter.width.value == 10)
+        #expect(circle.diameter.width == Width(10))
     }
 
     @Test
     func `Circle circumference`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 1)
-        #expect(abs(circle.circumference.value - 2 * .pi) < 1e-10)
+        #expect(isApprox(circle.circumference, Distance(2 * .pi)))
     }
 
     @Test
     func `Circle area using property`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 2)
-        #expect(abs(circle.area.value - 4 * .pi) < 1e-10)
+        #expect(isApprox(circle.area, Area(4 * .pi)))
     }
 
     @Test
     func `Sphere surface area`() {
         let sphere: Geometry<Double, Void>.Sphere = .init(center: .zero, radius: 2)
         // Surface area = 4πr² = 4π(4) = 16π
-        #expect(abs(sphere.surfaceArea - 16 * .pi) < 1e-10)
+        #expect(isApproxScalar(sphere.surfaceArea, 16 * .pi))
     }
 
     @Test
     func `Sphere volume`() {
         let sphere: Geometry<Double, Void>.Sphere = .init(center: .zero, radius: 3)
         // Volume = (4/3)πr³ = (4/3)π(27) = 36π
-        #expect(abs(sphere.volume - 36 * .pi) < 1e-10)
+        #expect(isApproxScalar(sphere.volume, 36 * .pi))
     }
 }
 
@@ -116,7 +172,7 @@ struct `Geometry.Ball - Static Functions` {
     func `Geometry.area(of:) for circle`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 3)
         let area = Geometry.area(of: circle)
-        #expect(abs(area.value - 9 * .pi) < 1e-10)
+        #expect(isApprox(area, Area(9 * .pi)))
     }
 
     @Test
@@ -126,10 +182,10 @@ struct `Geometry.Ball - Static Functions` {
             radius: 5
         )
         let bbox = Geometry.boundingBox(of: circle)
-        #expect(bbox.llx == 5)
-        #expect(bbox.lly == 15)
-        #expect(bbox.urx == 15)
-        #expect(bbox.ury == 25)
+        #expect(bbox.llx == X(5))
+        #expect(bbox.lly == Y(15))
+        #expect(bbox.urx == X(15))
+        #expect(bbox.ury == Y(25))
     }
 
     @Test
@@ -232,24 +288,24 @@ struct `Geometry.Ball - Parametric Points` {
     func `Point at angle 0 (rightmost)`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let point = circle.point(at: .zero)
-        #expect(abs(point.x.value - 5) < 1e-10)
-        #expect(abs(point.y.value) < 1e-10)
+        #expect(isApprox(point.x, X(5)))
+        #expect(isApprox(point.y, Y(0)))
     }
 
     @Test
     func `Point at angle π/2 (top)`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let point = circle.point(at: .halfPi)
-        #expect(abs(point.x.value) < 1e-10)
-        #expect(abs(point.y.value - 5) < 1e-10)
+        #expect(isApprox(point.x, X(0)))
+        #expect(isApprox(point.y, Y(5)))
     }
 
     @Test
     func `Point at angle π (leftmost)`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let point = circle.point(at: .pi)
-        #expect(abs(point.x.value - (-5)) < 1e-10)
-        #expect(abs(point.y.value) < 1e-10)
+        #expect(isApprox(point.x, X(-5)))
+        #expect(isApprox(point.y, Y(0)))
     }
 
     @Test
@@ -259,8 +315,8 @@ struct `Geometry.Ball - Parametric Points` {
             radius: 5
         )
         let point = circle.point(at: .zero)
-        #expect(abs(point.x.value - 15) < 1e-10)
-        #expect(abs(point.y.value - 20) < 1e-10)
+        #expect(isApprox(point.x, X(15)))
+        #expect(isApprox(point.y, Y(20)))
     }
 
     @Test
@@ -268,8 +324,8 @@ struct `Geometry.Ball - Parametric Points` {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let exterior: Geometry<Double, Void>.Point<2> = .init(x: 10, y: 0)
         let closest = circle.closestPoint(to: exterior)
-        #expect(abs(closest.x.value - 5) < 1e-10)
-        #expect(abs(closest.y.value) < 1e-10)
+        #expect(isApprox(closest.x, X(5)))
+        #expect(isApprox(closest.y, Y(0)))
     }
 
     @Test
@@ -277,8 +333,8 @@ struct `Geometry.Ball - Parametric Points` {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let closest = circle.closestPoint(to: circle.center)
         // Should return rightmost point when at center
-        #expect(abs(closest.x.value - 5) < 1e-10)
-        #expect(abs(closest.y.value) < 1e-10)
+        #expect(isApprox(closest.x, X(5)))
+        #expect(isApprox(closest.y, Y(0)))
     }
 }
 
@@ -290,16 +346,16 @@ struct `Geometry.Ball - Tangent Vectors` {
     func `Tangent at angle 0 points up`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let tangent = circle.tangent(at: .zero)
-        #expect(abs(tangent.dx.value) < 1e-10)
-        #expect(abs(tangent.dy.value - 1) < 1e-10)
+        #expect(isApprox(tangent.dx, Dx(0)))
+        #expect(isApprox(tangent.dy, Dy(1)))
     }
 
     @Test
     func `Tangent at angle π/2 points left`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let tangent = circle.tangent(at: .halfPi)
-        #expect(abs(tangent.dx.value - (-1)) < 1e-10)
-        #expect(abs(tangent.dy.value) < 1e-10)
+        #expect(isApprox(tangent.dx, Dx(-1)))
+        #expect(isApprox(tangent.dy, Dy(0)))
     }
 
     @Test
@@ -308,12 +364,13 @@ struct `Geometry.Ball - Tangent Vectors` {
         let angle: Radian = .init(Double.pi / 3)
         let point = circle.point(at: angle)
         let tangent = circle.tangent(at: angle)
-        let radius: Geometry<Double, Void>.Vector<2> = .init(
-            dx: Geometry<Double, Void>.Width(point.x.value),
-            dy: Geometry<Double, Void>.Height(point.y.value)
+        // Create a vector from center to point (which is the radius vector)
+        let radiusVector: Geometry<Double, Void>.Vector<2> = .init(
+            dx: point.x - circle.center.x,
+            dy: point.y - circle.center.y
         )
-        let dot = radius.dot(tangent)
-        #expect(abs(dot) < 1e-10)
+        let dot = radiusVector.dot(tangent)
+        #expect(isApproxScalar(dot, 0))
     }
 }
 
@@ -325,10 +382,10 @@ struct `Geometry.Ball - Bounding Box` {
     func `Bounding box at origin`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let bbox = circle.boundingBox
-        #expect(bbox.llx == -5)
-        #expect(bbox.lly == -5)
-        #expect(bbox.urx == 5)
-        #expect(bbox.ury == 5)
+        #expect(bbox.llx == X(-5))
+        #expect(bbox.lly == Y(-5))
+        #expect(bbox.urx == X(5))
+        #expect(bbox.ury == Y(5))
     }
 
     @Test
@@ -338,10 +395,10 @@ struct `Geometry.Ball - Bounding Box` {
             radius: 5
         )
         let bbox = circle.boundingBox
-        #expect(bbox.llx == 5)
-        #expect(bbox.lly == 15)
-        #expect(bbox.urx == 15)
-        #expect(bbox.ury == 25)
+        #expect(bbox.llx == X(5))
+        #expect(bbox.lly == Y(15))
+        #expect(bbox.urx == X(15))
+        #expect(bbox.ury == Y(25))
     }
 }
 
@@ -353,18 +410,18 @@ struct `Geometry.Ball - Transformations` {
     func `Translation preserves radius`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let translated = circle.translated(by: .init(dx: 10, dy: 20))
-        #expect(translated.center.x == 10)
-        #expect(translated.center.y == 20)
-        #expect(translated.radius == 5)
+        #expect(translated.center.x == X(10))
+        #expect(translated.center.y == Y(20))
+        #expect(translated.radius == Distance(5))
     }
 
     @Test
     func `Uniform scaling about center`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let scaled = circle.scaled(by: 2)
-        #expect(scaled.center.x == 0)
-        #expect(scaled.center.y == 0)
-        #expect(scaled.radius == 10)
+        #expect(scaled.center.x == X(0))
+        #expect(scaled.center.y == Y(0))
+        #expect(scaled.radius == Distance(10))
     }
 
     @Test
@@ -374,9 +431,9 @@ struct `Geometry.Ball - Transformations` {
             radius: 5
         )
         let scaled = circle.scaled(by: 2, about: .zero)
-        #expect(scaled.center.x == 20)
-        #expect(scaled.center.y == 0)
-        #expect(scaled.radius == 10)
+        #expect(scaled.center.x == X(20))
+        #expect(scaled.center.y == Y(0))
+        #expect(scaled.radius == Distance(10))
     }
 }
 
@@ -393,9 +450,9 @@ struct `Geometry.Ball - Line Intersection` {
         )
         let intersections = Geometry.intersection(circle, line)
         #expect(intersections.count == 2)
-        let sorted = intersections.sorted { $0.x.value < $1.x.value }
-        #expect(abs(sorted[0].x.value - (-5)) < 1e-10)
-        #expect(abs(sorted[1].x.value - 5) < 1e-10)
+        let sorted = intersections.sorted { $0.x < $1.x }
+        #expect(isApprox(sorted[0].x, X(-5)))
+        #expect(isApprox(sorted[1].x, X(5)))
     }
 
     @Test
@@ -407,8 +464,8 @@ struct `Geometry.Ball - Line Intersection` {
         )
         let intersections = circle.intersection(with: line)
         #expect(intersections.count == 1)
-        #expect(abs(intersections[0].x.value - 5) < 1e-10)
-        #expect(abs(intersections[0].y.value) < 1e-10)
+        #expect(isApprox(intersections[0].x, X(5)))
+        #expect(isApprox(intersections[0].y, Y(0)))
     }
 
     @Test
@@ -441,8 +498,8 @@ struct `Geometry.Ball - Circle Intersection` {
         let c2: Geometry<Double, Void>.Circle = .init(center: .init(x: 10, y: 0), radius: 5)
         let intersections = c1.intersection(with: c2)
         #expect(intersections.count == 1)
-        #expect(abs(intersections[0].x.value - 5) < 1e-10)
-        #expect(abs(intersections[0].y.value) < 1e-10)
+        #expect(isApprox(intersections[0].x, X(5)))
+        #expect(isApprox(intersections[0].y, Y(0)))
     }
 
     @Test
@@ -484,8 +541,8 @@ struct `Geometry.Ball - Bezier Curves` {
     func `Bezier start point`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let startPoint = circle.bezierStartPoint
-        #expect(abs(startPoint.x.value - 5) < 1e-10)
-        #expect(abs(startPoint.y.value) < 1e-10)
+        #expect(isApprox(startPoint.x, X(5)))
+        #expect(isApprox(startPoint.y, Y(0)))
     }
 
     @Test
@@ -493,8 +550,8 @@ struct `Geometry.Ball - Bezier Curves` {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let curves = circle.bezierCurves
         let first = curves[0]
-        #expect(abs(first.start.x.value - 5) < 1e-10)
-        #expect(abs(first.start.y.value) < 1e-10)
+        #expect(isApprox(first.start.x, X(5)))
+        #expect(isApprox(first.start.y, Y(0)))
     }
 }
 
@@ -506,8 +563,11 @@ struct `Geometry.Ball - Functorial Map` {
     func `Map to different scalar type`() {
         let circle: Geometry<Double, Void>.Circle = .init(center: .zero, radius: 5)
         let mapped: Geometry<Float, Void>.Circle = circle.map { Float($0) }
-        #expect(mapped.center.x.value == 0)
-        #expect(mapped.center.y.value == 0)
-        #expect(mapped.radius.value == 5)
+        let expectedX: Geometry<Float, Void>.X = 0
+        let expectedY: Geometry<Float, Void>.Y = 0
+        let expectedRadius: Linear<Float, Void>.Magnitude = 5
+        #expect(mapped.center.x == expectedX)
+        #expect(mapped.center.y == expectedY)
+        #expect(mapped.radius == expectedRadius)
     }
 }

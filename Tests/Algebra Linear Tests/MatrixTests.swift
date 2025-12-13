@@ -93,7 +93,7 @@ struct `Linear.Matrix Tests` {
     @Test
     func `Scalar multiplication`() {
         let m = Mat2x2(a: 1, b: 2, c: 3, d: 4)
-        let scaled = m * 2.0
+        let scaled = m.map { $0 * 2 }
         #expect(scaled.a == 2)
         #expect(scaled.b == 4)
         #expect(scaled.c == 6)

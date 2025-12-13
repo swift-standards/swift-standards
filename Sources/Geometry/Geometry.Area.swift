@@ -105,40 +105,88 @@ extension Geometry.Area where Scalar: FloatingPoint {
 }
 
 // MARK: - Arithmetic
-//
-//extension Geometry.Area where Scalar: AdditiveArithmetic {
-//    /// Zero area.
-//    @inlinable
-//    public static var zero: Self {
-//        Self(.zero)
-//    }
-//
-//    /// Adds two areas.
-//    @inlinable
-//    public static func + (lhs: Self, rhs: Self) -> Self {
-//        Self(lhs.rawValue + rhs.rawValue)
-//    }
-//
-//    /// Subtracts two areas.
-//    @inlinable
-//    public static func - (lhs: Self, rhs: Self) -> Self {
-//        Self(lhs.rawValue - rhs.rawValue)
-//    }
-//}
-//
-//extension Geometry.Area where Scalar: FloatingPoint {
-//    /// Ratio of two areas (dimensionless).
-//    @inlinable
-//    public static func / (lhs: Self, rhs: Self) -> Scalar {
-//        lhs.rawValue / rhs.rawValue
-//    }
-//}
-//
-//// MARK: - Comparison
-//
-//extension Geometry.Area: Comparable where Scalar: Comparable {
-//    @inlinable
-//    public static func < (lhs: Self, rhs: Self) -> Bool {
-//        lhs.rawValue < rhs.rawValue
-//    }
-//}
+
+extension Geometry.Area where Scalar: AdditiveArithmetic {
+    /// Zero area.
+    @inlinable
+    public static var zero: Self {
+        Self(Scalar.zero)
+    }
+
+    /// Adds two areas.
+    @inlinable
+    public static func + (lhs: Self, rhs: Self) -> Self {
+        Self(lhs.rawValue + rhs.rawValue)
+    }
+
+    /// Subtracts two areas.
+    @inlinable
+    public static func - (lhs: Self, rhs: Self) -> Self {
+        Self(lhs.rawValue - rhs.rawValue)
+    }
+}
+
+extension Geometry.Area where Scalar: FloatingPoint {
+    /// Multiplies area by a scalar.
+    @inlinable
+    public static func * (lhs: Self, rhs: Scalar) -> Self {
+        Self(lhs.rawValue * rhs)
+    }
+
+    /// Multiplies a scalar by area.
+    @inlinable
+    public static func * (lhs: Scalar, rhs: Self) -> Self {
+        Self(lhs * rhs.rawValue)
+    }
+
+    /// Divides area by a scalar.
+    @inlinable
+    public static func / (lhs: Self, rhs: Scalar) -> Self {
+        Self(lhs.rawValue / rhs)
+    }
+
+    /// Ratio of two areas (dimensionless).
+    @inlinable
+    public static func / (lhs: Self, rhs: Self) -> Scalar {
+        lhs.rawValue / rhs.rawValue
+    }
+}
+
+extension Geometry.Area where Scalar: BinaryFloatingPoint {
+    /// Multiplies area by an integer.
+    @inlinable
+    public static func * <I: BinaryInteger>(lhs: Self, rhs: I) -> Self {
+        Self(lhs.rawValue * Scalar(rhs))
+    }
+
+    /// Multiplies an integer by area.
+    @inlinable
+    public static func * <I: BinaryInteger>(lhs: I, rhs: Self) -> Self {
+        Self(Scalar(lhs) * rhs.rawValue)
+    }
+
+    /// Divides area by an integer.
+    @inlinable
+    public static func / <I: BinaryInteger>(lhs: Self, rhs: I) -> Self {
+        Self(lhs.rawValue / Scalar(rhs))
+    }
+}
+
+// MARK: - Comparison
+
+extension Geometry.Area: Comparable where Scalar: Comparable {
+    @inlinable
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        lhs.rawValue < rhs.rawValue
+    }
+}
+
+// MARK: - Absolute Value
+
+/// Returns the absolute value of an area.
+@inlinable
+public func abs<Scalar: SignedNumeric & Comparable, Space>(
+    _ area: Geometry<Scalar, Space>.Area
+) -> Geometry<Scalar, Space>.Area where Scalar.Magnitude == Scalar {
+    Geometry<Scalar, Space>.Area(Swift.abs(area.rawValue))
+}

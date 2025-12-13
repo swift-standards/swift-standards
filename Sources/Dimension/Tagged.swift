@@ -223,13 +223,7 @@ extension Tagged where RawValue: FloatingPoint {
     public var sign: FloatingPointSign { _rawValue.sign }
 }
 
-// MARK: - BinaryFloatingPoint Properties
 
-extension Tagged where RawValue: BinaryFloatingPoint {
-    /// The mathematical constant pi (π).
-    @inlinable
-    public static var pi: Self { Self(RawValue.pi) }
-}
 
 // MARK: - Square Root for Measures
 
@@ -281,4 +275,25 @@ extension Tagged where RawValue: BinaryFloatingPoint {
     public init<I: BinaryInteger>(_ value: I) {
         self.init(RawValue(value))
     }
+}
+
+// MARK: - Magnitude / Absolute Value
+
+extension Tagged where RawValue: SignedNumeric, RawValue.Magnitude == RawValue {
+    /// The magnitude (absolute value) of this tagged value.
+    ///
+    /// For signed numeric values, this returns the absolute value while preserving the tag type.
+    /// Mathematically: `|x|` where the result has the same unit/type as the input.
+    @inlinable
+    public var magnitude: Self {
+        Self(_rawValue.magnitude)
+    }
+}
+
+// MARK: - BinaryFloatingPoint Properties
+
+extension Tagged where RawValue: BinaryFloatingPoint {
+    /// The mathematical constant pi (π).
+    @inlinable
+    public static var pi: Self { Self(RawValue.pi) }
 }

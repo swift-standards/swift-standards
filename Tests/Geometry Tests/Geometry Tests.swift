@@ -11,6 +11,46 @@ import Testing
 @testable import Algebra
 @testable import Geometry
 
+// MARK: - Test Helpers
+
+private typealias Geo = Geometry<Double, Void>
+private typealias GeoFloat = Geometry<Float, Void>
+private typealias X = Geo.X
+private typealias Y = Geo.Y
+private typealias Dx = Linear<Double, Void>.Dx
+private typealias Dy = Linear<Double, Void>.Dy
+private typealias Length = Linear<Double, Void>.Magnitude
+
+private func isApprox(_ a: X, _ b: X, tol: Double = 1e-4) -> Bool {
+    let diff = a - b
+    let tolerance = Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Y, _ b: Y, tol: Double = 1e-4) -> Bool {
+    let diff = a - b
+    let tolerance = Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: GeoFloat.X, _ b: GeoFloat.X, tol: Float = 1e-4) -> Bool {
+    let diff = a - b
+    let tolerance = Linear<Float, Void>.Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: GeoFloat.Y, _ b: GeoFloat.Y, tol: Float = 1e-4) -> Bool {
+    let diff = a - b
+    let tolerance = Linear<Float, Void>.Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Length, _ b: Length, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Length(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
 // MARK: - Test Unit Type
 
 /// A custom unit type for testing
@@ -109,7 +149,7 @@ struct PointTests {
     @Test
     func `Point plus vector`() {
         let point: Geometry<Double, Void>.Point<2> = .init(x: 10, y: 20)
-        let vector: Geometry<Double, Void>.Vector<2> = .init(dx: 5, dy: 10)
+        let vector: Geo.Vector<2> = .init(dx: 5, dy: 10)
         let result = point + vector
         #expect(result.x == 15)
         #expect(result.y == 30)
@@ -122,48 +162,48 @@ struct PointTests {
 struct VectorTests {
     @Test
     func `Creates vector`() {
-        let v: Geometry<Double, Void>.Vector<2> = .init(dx: 3, dy: 4)
+        let v: Geo.Vector<2> = .init(dx: 3, dy: 4)
         #expect(v.dx == 3)
         #expect(v.dy == 4)
     }
 
     @Test
     func `Vector length`() {
-        let v: Geometry<Double, Void>.Vector<2> = .init(dx: 3, dy: 4)
+        let v: Geo.Vector<2> = .init(dx: 3, dy: 4)
         #expect(v.length == 5)
         #expect(v.lengthSquared == 25)
     }
 
     @Test
     func `Vector normalization`() {
-        let v: Geometry<Double, Void>.Vector<2> = .init(dx: 3, dy: 4)
+        let v: Geo.Vector<2> = .init(dx: 3, dy: 4)
         let n = v.normalized
         #expect(abs(n.length - 1.0) < 0.0001)
     }
 
     @Test
     func `Vector dot product`() {
-        let a: Geometry<Double, Void>.Vector<2> = .init(dx: 1, dy: 0)
-        let b: Geometry<Double, Void>.Vector<2> = .init(dx: 0, dy: 1)
+        let a: Geo.Vector<2> = .init(dx: 1, dy: 0)
+        let b: Geo.Vector<2> = .init(dx: 0, dy: 1)
         #expect(a.dot(b) == 0)  // perpendicular
     }
 
     @Test
     func `Vector cross product`() {
-        let a: Geometry<Double, Void>.Vector<2> = .init(dx: 1, dy: 0)
-        let b: Geometry<Double, Void>.Vector<2> = .init(dx: 0, dy: 1)
+        let a: Geo.Vector<2> = .init(dx: 1, dy: 0)
+        let b: Geo.Vector<2> = .init(dx: 0, dy: 1)
         #expect(a.cross(b) == 1)  // counter-clockwise
     }
 
     @Test
     func `Vector arithmetic`() {
-        let a: Geometry<Double, Void>.Vector<2> = .init(dx: 10, dy: 20)
-        let b: Geometry<Double, Void>.Vector<2> = .init(dx: 5, dy: 10)
+        let a: Geo.Vector<2> = .init(dx: 10, dy: 20)
+        let b: Geo.Vector<2> = .init(dx: 5, dy: 10)
 
         #expect((a + b).dx == 15)
         #expect((a - b).dx == 5)
-        #expect((a * 2).dx == 20)
-        #expect((a / 2).dx == 5)
+        #expect((a * Scale(2.0)).dx == 20)
+        #expect((a / Scale(2.0)).dx == 5)
     }
 }
 
@@ -284,22 +324,22 @@ struct RectangleTests {
 struct RadianTests {
     @Test
     func `Radian zero`() {
-        let zero: Radian = .zero
+        let zero: Radian<Double> = .zero
         #expect(zero == 0)
     }
 
     @Test
     func `Radian arithmetic`() {
-        let a: Radian = .init(1.0)
-        let b: Radian = .init(2.0)
+        let a: Radian<Double> = .init(1.0)
+        let b: Radian<Double> = .init(2.0)
         let sum = a + b
         #expect(sum == 3.0)
     }
 
     @Test
     func `Radian comparable`() {
-        let a: Radian = .init(1.0)
-        let b: Radian = .init(2.0)
+        let a: Radian<Double> = .init(1.0)
+        let b: Radian<Double> = .init(2.0)
         #expect(a < b)
     }
 }
@@ -310,28 +350,28 @@ struct RadianTests {
 struct DegreeTests {
     @Test
     func `Degree zero`() {
-        let zero: Degree = .zero
+        let zero: Degree<Double> = .zero
         #expect(zero == 0)
     }
 
     @Test
     func `Degree arithmetic`() {
-        let a: Degree = .init(45)
-        let b: Degree = .init(45)
+        let a: Degree<Double> = .init(45)
+        let b: Degree<Double> = .init(45)
         let sum = a + b
         #expect(sum == 90)
     }
 
     @Test
     func `Degree comparable`() {
-        let a: Degree = .init(45)
-        let b: Degree = .init(90)
+        let a: Degree<Double> = .init(45)
+        let b: Degree<Double> = .init(90)
         #expect(a < b)
     }
 
     @Test
     func `Degree literal`() {
-        let deg: Degree = 90.0
+        let deg: Degree<Double> = 90.0
         #expect(deg == 90)
     }
 }
@@ -377,8 +417,8 @@ struct AffineTransformTests {
         let point: Geometry<Double, Void>.Point<2> = .init(x: 1, y: 0)
         let result = transform.apply(to: point)
 
-        #expect(abs(result.x.value - 0) < 0.0001)
-        #expect(abs(result.y.value - 1) < 0.0001)
+        #expect(isApprox(result.x, X(0)))
+        #expect(isApprox(result.y, Y(1)))
     }
 
     @Test
@@ -405,8 +445,8 @@ struct AffineTransformTests {
         let point: Geometry<Double, Void>.Point<2> = .init(x: 110, y: 70)
         let result = inverse.apply(to: point)
 
-        #expect(abs(result.x.value - 10) < 0.0001)
-        #expect(abs(result.y.value - 20) < 0.0001)
+        #expect(isApprox(result.x, X(10)))
+        #expect(isApprox(result.y, Y(20)))
     }
 }
 
@@ -620,29 +660,29 @@ struct DimensionTests {
     func `Length multiplication and division`() {
         let len: Geometry<Double, Void>.Length = .init(10)
         let scaled: Geometry<Double, Void>.Length = len * 2.0  // Explicit type
-        #expect(scaled.value == 20)
+        #expect(isApprox(scaled, Length(20)))
         let scaled2: Geometry<Double, Void>.Length = 2.0 * len
-        #expect(scaled2.value == 20)
+        #expect(isApprox(scaled2, Length(20)))
         let divided: Geometry<Double, Void>.Length = len / 2.0
-        #expect(divided.value == 5)
+        #expect(isApprox(divided, Length(5)))
     }
 
     // Note: Geometry.Dimension was removed; use Width/Height (displacements) instead
 
     @Test
-    func `X negation and multiplication`() {
+    func `X negation`() {
         let x: Geometry<Double, Void>.X = .init(10)
         #expect((-x) == -10)
-        #expect((x * 2.0) == 20)
-        #expect((x / 2.0) == 5)
+        // Note: Coordinate types don't support scalar multiplication/division
+        // as this would change the geometric meaning of coordinates
     }
 
     @Test
-    func `Y negation and multiplication`() {
+    func `Y negation`() {
         let y: Geometry<Double, Void>.Y = .init(10)
         #expect((-y) == -10)
-        #expect((y * 2.0) == 20)
-        #expect((y / 2.0) == 5)
+        // Note: Coordinate types don't support scalar multiplication/division
+        // as this would change the geometric meaning of coordinates
     }
 }
 
@@ -655,8 +695,10 @@ struct AffineTransformGenericTests {
         let transform: Geometry<Float, Void>.AffineTransform = .identity
         let point: Geometry<Float, Void>.Point<2> = .init(x: 10, y: 20)
         let result = transform.apply(to: point)
-        #expect(result.x == 10)
-        #expect(result.y.value == 20)
+        let expectedX: GeoFloat.X = 10
+        let expectedY: GeoFloat.Y = 20
+        #expect(result.x == expectedX)
+        #expect(result.y == expectedY)
     }
 
     @Test
@@ -664,8 +706,8 @@ struct AffineTransformGenericTests {
         let transform: Geometry<Float, Void>.AffineTransform = .rotation(.halfPi)
         let point: Geometry<Float, Void>.Point<2> = .init(x: 1, y: 0)
         let result = transform.apply(to: point)
-        #expect(abs(result.x.value) < 0.0001)
-        #expect(abs(result.y.value - 1) < 0.0001)
+        #expect(isApprox(result.x, GeoFloat.X(0)))
+        #expect(isApprox(result.y, GeoFloat.Y(1)))
     }
 }
 
@@ -807,7 +849,8 @@ struct RotationTransformTests {
     func `Rotation inversion`() {
         let rotation = Rotation<2, Double>(angle: .pi(over: 3))
         let inverted = rotation.inverted
-        #expect(abs(inverted.angle + .pi / 3) < 1e-10)
+        let expected: Radian<Double> = .pi(over: 3)
+        #expect(abs(inverted.angle + expected) < 1e-10)
     }
 }
 

@@ -24,14 +24,10 @@ public typealias Radian<Scalar> = Angle.Radian.Value<Scalar>
 
 // MARK: - Common Angles
 
-extension Tagged where Tag == Angle.Radian, RawValue: Real {
+extension Tagged where Tag == Angle.Radian, RawValue: BinaryFloatingPoint {
     /// Zero radians
     @inlinable
     public static var zero: Self { Self(0) }
-
-    /// π radians (180°)
-    @inlinable
-    public static var pi: Self { Self(.pi) }
 
     /// π/2 radians (90°)
     @inlinable
@@ -48,7 +44,7 @@ extension Tagged where Tag == Angle.Radian, RawValue: Real {
 
 // MARK: - Conversion
 
-extension Tagged where Tag == Angle.Radian, RawValue: Real {
+extension Tagged where Tag == Angle.Radian, RawValue: BinaryFloatingPoint {
     /// Creates a radian angle from degrees.
     ///
     /// ## Example
@@ -61,7 +57,9 @@ extension Tagged where Tag == Angle.Radian, RawValue: Real {
     public init(degrees: Degree<RawValue>) {
         self.init(degrees._rawValue * .pi / 180)
     }
+}
 
+extension Tagged where Tag == Angle.Radian, RawValue: BinaryFloatingPoint {
     /// Converts to degrees.
     ///
     /// ## Example

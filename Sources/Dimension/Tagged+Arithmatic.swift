@@ -5,6 +5,29 @@
 //  Created by Coen ten Thije Boonkkamp on 13/12/2025.
 //
 
+// MARK: - Displacement to Extent Conversion
+
+// These functions convert displacement (signed vector component) to extent (size dimension).
+// Use when computing sizes from coordinate differences: width((urx - llx))
+
+/// Converts an X-displacement to an X-extent (width).
+@inlinable
+public func width<Space, Scalar>(_ dx: Displacement.X<Space>.Value<Scalar>) -> Extent.X<Space>.Value<Scalar> {
+    Tagged(dx._rawValue)
+}
+
+/// Converts a Y-displacement to a Y-extent (height).
+@inlinable
+public func height<Space, Scalar>(_ dy: Displacement.Y<Space>.Value<Scalar>) -> Extent.Y<Space>.Value<Scalar> {
+    Tagged(dy._rawValue)
+}
+
+/// Converts a Z-displacement to a Z-extent (depth).
+@inlinable
+public func depth<Space, Scalar>(_ dz: Displacement.Z<Space>.Value<Scalar>) -> Extent.Z<Space>.Value<Scalar> {
+    Tagged(dz._rawValue)
+}
+
 // MARK: - Zero
 
 // Note: We intentionally do NOT conform Tagged to AdditiveArithmetic.
@@ -249,6 +272,191 @@ public func -= <Space, Scalar: AdditiveArithmetic>(
     lhs = lhs - rhs
 }
 
+// MARK: - Extent Same-Type Arithmetic
+
+/// Adds two X-extents (widths).
+@inlinable
+public func + <Space, Scalar: AdditiveArithmetic>(
+    lhs: Extent.X<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Extent.X<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue + rhs._rawValue)
+}
+
+/// Subtracts two X-extents (widths).
+@inlinable
+public func - <Space, Scalar: AdditiveArithmetic>(
+    lhs: Extent.X<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Extent.X<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue - rhs._rawValue)
+}
+
+/// Adds two Y-extents (heights).
+@inlinable
+public func + <Space, Scalar: AdditiveArithmetic>(
+    lhs: Extent.Y<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) -> Extent.Y<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue + rhs._rawValue)
+}
+
+/// Subtracts two Y-extents (heights).
+@inlinable
+public func - <Space, Scalar: AdditiveArithmetic>(
+    lhs: Extent.Y<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) -> Extent.Y<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue - rhs._rawValue)
+}
+
+/// Adds two Z-extents (depths).
+@inlinable
+public func + <Space, Scalar: AdditiveArithmetic>(
+    lhs: Extent.Z<Space>.Value<Scalar>,
+    rhs: Extent.Z<Space>.Value<Scalar>
+) -> Extent.Z<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue + rhs._rawValue)
+}
+
+/// Subtracts two Z-extents (depths).
+@inlinable
+public func - <Space, Scalar: AdditiveArithmetic>(
+    lhs: Extent.Z<Space>.Value<Scalar>,
+    rhs: Extent.Z<Space>.Value<Scalar>
+) -> Extent.Z<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue - rhs._rawValue)
+}
+
+/// Add and assign X-extents.
+@inlinable
+public func += <Space, Scalar: AdditiveArithmetic>(
+    lhs: inout Extent.X<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) {
+    lhs = lhs + rhs
+}
+
+/// Subtract and assign X-extents.
+@inlinable
+public func -= <Space, Scalar: AdditiveArithmetic>(
+    lhs: inout Extent.X<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) {
+    lhs = lhs - rhs
+}
+
+/// Add and assign Y-extents.
+@inlinable
+public func += <Space, Scalar: AdditiveArithmetic>(
+    lhs: inout Extent.Y<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) {
+    lhs = lhs + rhs
+}
+
+/// Subtract and assign Y-extents.
+@inlinable
+public func -= <Space, Scalar: AdditiveArithmetic>(
+    lhs: inout Extent.Y<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) {
+    lhs = lhs - rhs
+}
+
+/// Add and assign Z-extents.
+@inlinable
+public func += <Space, Scalar: AdditiveArithmetic>(
+    lhs: inout Extent.Z<Space>.Value<Scalar>,
+    rhs: Extent.Z<Space>.Value<Scalar>
+) {
+    lhs = lhs + rhs
+}
+
+/// Subtract and assign Z-extents.
+@inlinable
+public func -= <Space, Scalar: AdditiveArithmetic>(
+    lhs: inout Extent.Z<Space>.Value<Scalar>,
+    rhs: Extent.Z<Space>.Value<Scalar>
+) {
+    lhs = lhs - rhs
+}
+
+// MARK: - Cross-Axis Extent Comparison
+
+// Comparing extents across axes is geometrically meaningful (e.g., "is width > height?").
+// Both represent lengths in the same space, just along different axes.
+
+/// Compares X-extent to Y-extent.
+@inlinable
+public func < <Space, Scalar: Comparable>(
+    lhs: Extent.X<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) -> Bool { lhs._rawValue < rhs._rawValue }
+
+/// Compares Y-extent to X-extent.
+@inlinable
+public func < <Space, Scalar: Comparable>(
+    lhs: Extent.Y<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Bool { lhs._rawValue < rhs._rawValue }
+
+/// Compares X-extent to Y-extent.
+@inlinable
+public func <= <Space, Scalar: Comparable>(
+    lhs: Extent.X<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) -> Bool { lhs._rawValue <= rhs._rawValue }
+
+/// Compares Y-extent to X-extent.
+@inlinable
+public func <= <Space, Scalar: Comparable>(
+    lhs: Extent.Y<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Bool { lhs._rawValue <= rhs._rawValue }
+
+/// Compares X-extent to Y-extent.
+@inlinable
+public func > <Space, Scalar: Comparable>(
+    lhs: Extent.X<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) -> Bool { lhs._rawValue > rhs._rawValue }
+
+/// Compares Y-extent to X-extent.
+@inlinable
+public func > <Space, Scalar: Comparable>(
+    lhs: Extent.Y<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Bool { lhs._rawValue > rhs._rawValue }
+
+/// Compares X-extent to Y-extent.
+@inlinable
+public func >= <Space, Scalar: Comparable>(
+    lhs: Extent.X<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) -> Bool { lhs._rawValue >= rhs._rawValue }
+
+/// Compares Y-extent to X-extent.
+@inlinable
+public func >= <Space, Scalar: Comparable>(
+    lhs: Extent.Y<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Bool { lhs._rawValue >= rhs._rawValue }
+
+/// Compares X-extent to Y-extent for equality.
+@inlinable
+public func == <Space, Scalar: Equatable>(
+    lhs: Extent.X<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) -> Bool { lhs._rawValue == rhs._rawValue }
+
+/// Compares Y-extent to X-extent for equality.
+@inlinable
+public func == <Space, Scalar: Equatable>(
+    lhs: Extent.Y<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Bool { lhs._rawValue == rhs._rawValue }
+
 // MARK: - Angle Same-Type Arithmetic
 
 /// Adds two radian angles.
@@ -370,6 +578,93 @@ public func * <Space, Scalar: Numeric>(
 public func * <Space, Scalar: Numeric>(
     lhs: Displacement.Z<Space>.Value<Scalar>,
     rhs: Displacement.Y<Space>.Value<Scalar>
+) -> Area<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue * rhs._rawValue)
+}
+
+// MARK: - Extent Multiplication → Area
+
+// Extent products return typed Area (Measure<2>).
+// Same-axis: Width × Width = Area (length squared)
+// Cross-axis: Width × Height = Area (length × length)
+
+/// Multiplies X-extent (width) by X-extent (width), returning area.
+@inlinable
+public func * <Space, Scalar: Numeric>(
+    lhs: Extent.X<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Area<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue * rhs._rawValue)
+}
+
+/// Multiplies Y-extent (height) by Y-extent (height), returning area.
+@inlinable
+public func * <Space, Scalar: Numeric>(
+    lhs: Extent.Y<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) -> Area<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue * rhs._rawValue)
+}
+
+/// Multiplies Z-extent (depth) by Z-extent (depth), returning area.
+@inlinable
+public func * <Space, Scalar: Numeric>(
+    lhs: Extent.Z<Space>.Value<Scalar>,
+    rhs: Extent.Z<Space>.Value<Scalar>
+) -> Area<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue * rhs._rawValue)
+}
+
+/// Multiplies X-extent (width) by Y-extent (height), returning area.
+@inlinable
+public func * <Space, Scalar: Numeric>(
+    lhs: Extent.X<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) -> Area<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue * rhs._rawValue)
+}
+
+/// Multiplies Y-extent (height) by X-extent (width), returning area.
+@inlinable
+public func * <Space, Scalar: Numeric>(
+    lhs: Extent.Y<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Area<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue * rhs._rawValue)
+}
+
+/// Multiplies X-extent (width) by Z-extent (depth), returning area.
+@inlinable
+public func * <Space, Scalar: Numeric>(
+    lhs: Extent.X<Space>.Value<Scalar>,
+    rhs: Extent.Z<Space>.Value<Scalar>
+) -> Area<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue * rhs._rawValue)
+}
+
+/// Multiplies Z-extent (depth) by X-extent (width), returning area.
+@inlinable
+public func * <Space, Scalar: Numeric>(
+    lhs: Extent.Z<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Area<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue * rhs._rawValue)
+}
+
+/// Multiplies Y-extent (height) by Z-extent (depth), returning area.
+@inlinable
+public func * <Space, Scalar: Numeric>(
+    lhs: Extent.Y<Space>.Value<Scalar>,
+    rhs: Extent.Z<Space>.Value<Scalar>
+) -> Area<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue * rhs._rawValue)
+}
+
+/// Multiplies Z-extent (depth) by Y-extent (height), returning area.
+@inlinable
+public func * <Space, Scalar: Numeric>(
+    lhs: Extent.Z<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
 ) -> Area<Space>.Value<Scalar> {
     Tagged(lhs._rawValue * rhs._rawValue)
 }
@@ -1118,7 +1413,182 @@ public func + <Space, Scalar: BinaryFloatingPoint>(
     ._quantize(lhs._rawValue + rhs._rawValue, in: Space.self)
 }
 
+// MARK: - Extent/Coordinate Arithmetic
 
+// Extent (width/height/depth) can be added/subtracted from coordinates.
+// This enables `center.x + width` patterns in geometry code.
+// The extent is interpreted as offset along the axis of the coordinate.
+
+/// Adds an X extent (width) to an X coordinate, returning a coordinate.
+@_disfavoredOverload
+@inlinable
+public func + <Space, Scalar: AdditiveArithmetic>(
+    lhs: Coordinate.X<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Coordinate.X<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue + rhs._rawValue)
+}
+
+/// Adds an X extent (width) to an X coordinate with quantization (for floating-point types).
+@inlinable
+public func + <Space, Scalar: BinaryFloatingPoint>(
+    lhs: Coordinate.X<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Coordinate.X<Space>.Value<Scalar> {
+    ._quantize(lhs._rawValue + rhs._rawValue, in: Space.self)
+}
+
+/// Subtracts an X extent (width) from an X coordinate, returning a coordinate.
+@_disfavoredOverload
+@inlinable
+public func - <Space, Scalar: AdditiveArithmetic>(
+    lhs: Coordinate.X<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Coordinate.X<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue - rhs._rawValue)
+}
+
+/// Subtracts an X extent (width) from an X coordinate with quantization (for floating-point types).
+@inlinable
+public func - <Space, Scalar: BinaryFloatingPoint>(
+    lhs: Coordinate.X<Space>.Value<Scalar>,
+    rhs: Extent.X<Space>.Value<Scalar>
+) -> Coordinate.X<Space>.Value<Scalar> {
+    ._quantize(lhs._rawValue - rhs._rawValue, in: Space.self)
+}
+
+/// Adds an X coordinate to an X extent, returning a coordinate (commutative).
+@_disfavoredOverload
+@inlinable
+public func + <Space, Scalar: AdditiveArithmetic>(
+    lhs: Extent.X<Space>.Value<Scalar>,
+    rhs: Coordinate.X<Space>.Value<Scalar>
+) -> Coordinate.X<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue + rhs._rawValue)
+}
+
+/// Adds an X coordinate to an X extent with quantization (commutative, for floating-point types).
+@inlinable
+public func + <Space, Scalar: BinaryFloatingPoint>(
+    lhs: Extent.X<Space>.Value<Scalar>,
+    rhs: Coordinate.X<Space>.Value<Scalar>
+) -> Coordinate.X<Space>.Value<Scalar> {
+    ._quantize(lhs._rawValue + rhs._rawValue, in: Space.self)
+}
+
+/// Adds a Y extent (height) to a Y coordinate, returning a coordinate.
+@_disfavoredOverload
+@inlinable
+public func + <Space, Scalar: AdditiveArithmetic>(
+    lhs: Coordinate.Y<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) -> Coordinate.Y<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue + rhs._rawValue)
+}
+
+/// Adds a Y extent (height) to a Y coordinate with quantization (for floating-point types).
+@inlinable
+public func + <Space, Scalar: BinaryFloatingPoint>(
+    lhs: Coordinate.Y<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) -> Coordinate.Y<Space>.Value<Scalar> {
+    ._quantize(lhs._rawValue + rhs._rawValue, in: Space.self)
+}
+
+/// Subtracts a Y extent (height) from a Y coordinate, returning a coordinate.
+@_disfavoredOverload
+@inlinable
+public func - <Space, Scalar: AdditiveArithmetic>(
+    lhs: Coordinate.Y<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) -> Coordinate.Y<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue - rhs._rawValue)
+}
+
+/// Subtracts a Y extent (height) from a Y coordinate with quantization (for floating-point types).
+@inlinable
+public func - <Space, Scalar: BinaryFloatingPoint>(
+    lhs: Coordinate.Y<Space>.Value<Scalar>,
+    rhs: Extent.Y<Space>.Value<Scalar>
+) -> Coordinate.Y<Space>.Value<Scalar> {
+    ._quantize(lhs._rawValue - rhs._rawValue, in: Space.self)
+}
+
+/// Adds a Y coordinate to a Y extent, returning a coordinate (commutative).
+@_disfavoredOverload
+@inlinable
+public func + <Space, Scalar: AdditiveArithmetic>(
+    lhs: Extent.Y<Space>.Value<Scalar>,
+    rhs: Coordinate.Y<Space>.Value<Scalar>
+) -> Coordinate.Y<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue + rhs._rawValue)
+}
+
+/// Adds a Y coordinate to a Y extent with quantization (commutative, for floating-point types).
+@inlinable
+public func + <Space, Scalar: BinaryFloatingPoint>(
+    lhs: Extent.Y<Space>.Value<Scalar>,
+    rhs: Coordinate.Y<Space>.Value<Scalar>
+) -> Coordinate.Y<Space>.Value<Scalar> {
+    ._quantize(lhs._rawValue + rhs._rawValue, in: Space.self)
+}
+
+/// Adds a Z extent (depth) to a Z coordinate, returning a coordinate.
+@_disfavoredOverload
+@inlinable
+public func + <Space, Scalar: AdditiveArithmetic>(
+    lhs: Coordinate.Z<Space>.Value<Scalar>,
+    rhs: Extent.Z<Space>.Value<Scalar>
+) -> Coordinate.Z<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue + rhs._rawValue)
+}
+
+/// Adds a Z extent (depth) to a Z coordinate with quantization (for floating-point types).
+@inlinable
+public func + <Space, Scalar: BinaryFloatingPoint>(
+    lhs: Coordinate.Z<Space>.Value<Scalar>,
+    rhs: Extent.Z<Space>.Value<Scalar>
+) -> Coordinate.Z<Space>.Value<Scalar> {
+    ._quantize(lhs._rawValue + rhs._rawValue, in: Space.self)
+}
+
+/// Subtracts a Z extent (depth) from a Z coordinate, returning a coordinate.
+@_disfavoredOverload
+@inlinable
+public func - <Space, Scalar: AdditiveArithmetic>(
+    lhs: Coordinate.Z<Space>.Value<Scalar>,
+    rhs: Extent.Z<Space>.Value<Scalar>
+) -> Coordinate.Z<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue - rhs._rawValue)
+}
+
+/// Subtracts a Z extent (depth) from a Z coordinate with quantization (for floating-point types).
+@inlinable
+public func - <Space, Scalar: BinaryFloatingPoint>(
+    lhs: Coordinate.Z<Space>.Value<Scalar>,
+    rhs: Extent.Z<Space>.Value<Scalar>
+) -> Coordinate.Z<Space>.Value<Scalar> {
+    ._quantize(lhs._rawValue - rhs._rawValue, in: Space.self)
+}
+
+/// Adds a Z coordinate to a Z extent, returning a coordinate (commutative).
+@_disfavoredOverload
+@inlinable
+public func + <Space, Scalar: AdditiveArithmetic>(
+    lhs: Extent.Z<Space>.Value<Scalar>,
+    rhs: Coordinate.Z<Space>.Value<Scalar>
+) -> Coordinate.Z<Space>.Value<Scalar> {
+    Tagged(lhs._rawValue + rhs._rawValue)
+}
+
+/// Adds a Z coordinate to a Z extent with quantization (commutative, for floating-point types).
+@inlinable
+public func + <Space, Scalar: BinaryFloatingPoint>(
+    lhs: Extent.Z<Space>.Value<Scalar>,
+    rhs: Coordinate.Z<Space>.Value<Scalar>
+) -> Coordinate.Z<Space>.Value<Scalar> {
+    ._quantize(lhs._rawValue + rhs._rawValue, in: Space.self)
+}
 
 // MARK: - Tagged × Scale<1> (Uniform Scaling)
 

@@ -10,6 +10,56 @@ import Testing
 @testable import Geometry
 @testable import RealModule
 
+// MARK: - Test Helpers
+
+private typealias Geo = Geometry<Double, Void>
+private typealias X = Geo.X
+private typealias Y = Geo.Y
+private typealias Dx = Linear<Double, Void>.Dx
+private typealias Dy = Linear<Double, Void>.Dy
+private typealias Distance = Linear<Double, Void>.Magnitude
+private typealias Width = Linear<Double, Void>.Width
+private typealias Height = Linear<Double, Void>.Height
+
+private func isApprox(_ a: X, _ b: X, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Y, _ b: Y, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Dx, _ b: Dx, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Dy, _ b: Dy, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Distance, _ b: Distance, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Distance(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Radian<Double>, _ b: Radian<Double>, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    return diff > Radian(-tol) && diff < Radian(tol)
+}
+
+private func isApproxScalar(_ a: Double, _ b: Double, tol: Double = 1e-10) -> Bool {
+    return abs(a - b) < tol
+}
+
 // MARK: - Initialization Tests
 
 @Suite
@@ -22,18 +72,18 @@ struct `Geometry.Arc - Initialization` {
             startAngle: .zero,
             endAngle: .pi
         )
-        #expect(arc.center.x == 10)
-        #expect(arc.center.y == 20)
-        #expect(arc.radius == 5)
+        #expect(arc.center.x == X(10))
+        #expect(arc.center.y == Y(20))
+        #expect(arc.radius == Distance(5))
         #expect(arc.startAngle == .zero)
-        #expect(arc.endAngle.value == Double.pi)
+        #expect(isApprox(arc.endAngle, .pi))
     }
 
     @Test
     func `Full circle arc`() {
         let arc: Geometry<Double, Void>.Arc = .fullCircle(center: .zero, radius: 5)
         #expect(arc.startAngle == .zero)
-        #expect(abs(arc.endAngle.value - 2 * Double.pi) < 1e-10)
+        #expect(isApprox(arc.endAngle, Radian<Double>(2 * Double.pi)))
         #expect(arc.isFullCircle)
     }
 
@@ -41,14 +91,14 @@ struct `Geometry.Arc - Initialization` {
     func `Semicircle arc`() {
         let arc: Geometry<Double, Void>.Arc = .semicircle(center: .zero, radius: 5)
         #expect(arc.startAngle == .zero)
-        #expect(abs(arc.endAngle.value - Double.pi) < 1e-10)
+        #expect(isApprox(arc.endAngle, .pi))
     }
 
     @Test
     func `Quarter circle arc`() {
         let arc: Geometry<Double, Void>.Arc = .quarterCircle(center: .zero, radius: 5)
         #expect(arc.startAngle == .zero)
-        #expect(abs(arc.endAngle.value - Double.pi / 2) < 1e-10)
+        #expect(isApprox(arc.endAngle, .halfPi))
     }
 
     @Test
@@ -58,8 +108,8 @@ struct `Geometry.Arc - Initialization` {
             radius: 5,
             startAngle: .halfPi
         )
-        #expect(abs(arc.startAngle.value - Double.pi / 2) < 1e-10)
-        #expect(abs(arc.endAngle.value - Double.pi) < 1e-10)
+        #expect(isApprox(arc.startAngle, .halfPi))
+        #expect(isApprox(arc.endAngle, .pi))
     }
 }
 
@@ -75,7 +125,7 @@ struct `Geometry.Arc - Properties` {
             startAngle: .zero,
             endAngle: .pi
         )
-        #expect(abs(arc.sweep.value - Double.pi) < 1e-10)
+        #expect(isApprox(arc.sweep, .pi))
     }
 
     @Test
@@ -122,8 +172,8 @@ struct `Geometry.Arc - Endpoints` {
             startAngle: .zero,
             endAngle: .pi
         )
-        #expect(abs(arc.startPoint.x.value - 5) < 1e-10)
-        #expect(abs(arc.startPoint.y.value) < 1e-10)
+        #expect(isApprox(arc.startPoint.x, X(5)))
+        #expect(isApprox(arc.startPoint.y, Y(0)))
     }
 
     @Test
@@ -134,8 +184,8 @@ struct `Geometry.Arc - Endpoints` {
             startAngle: .zero,
             endAngle: .pi
         )
-        #expect(abs(arc.endPoint.x.value - (-5)) < 1e-10)
-        #expect(abs(arc.endPoint.y.value) < 1e-10)
+        #expect(isApprox(arc.endPoint.x, X(-5)))
+        #expect(isApprox(arc.endPoint.y, Y(0)))
     }
 
     @Test
@@ -146,8 +196,8 @@ struct `Geometry.Arc - Endpoints` {
             startAngle: .zero,
             endAngle: .pi
         )
-        #expect(abs(arc.midPoint.x.value) < 1e-10)
-        #expect(abs(arc.midPoint.y.value - 5) < 1e-10)
+        #expect(isApprox(arc.midPoint.x, X(0)))
+        #expect(isApprox(arc.midPoint.y, Y(5)))
     }
 
     @Test
@@ -158,8 +208,8 @@ struct `Geometry.Arc - Endpoints` {
             startAngle: .zero,
             endAngle: .pi
         )
-        #expect(abs(arc.startPoint.x.value - 15) < 1e-10)
-        #expect(abs(arc.startPoint.y.value - 20) < 1e-10)
+        #expect(isApprox(arc.startPoint.x, X(15)))
+        #expect(isApprox(arc.startPoint.y, Y(20)))
     }
 }
 
@@ -176,8 +226,8 @@ struct `Geometry.Arc - Parametric Points` {
             endAngle: .pi
         )
         let point = arc.point(at: 0)
-        #expect(abs(point.x.value - arc.startPoint.x.value) < 1e-10)
-        #expect(abs(point.y.value - arc.startPoint.y.value) < 1e-10)
+        #expect(isApprox(point.x, arc.startPoint.x))
+        #expect(isApprox(point.y, arc.startPoint.y))
     }
 
     @Test
@@ -189,8 +239,8 @@ struct `Geometry.Arc - Parametric Points` {
             endAngle: .pi
         )
         let point = arc.point(at: 1)
-        #expect(abs(point.x.value - arc.endPoint.x.value) < 1e-10)
-        #expect(abs(point.y.value - arc.endPoint.y.value) < 1e-10)
+        #expect(isApprox(point.x, arc.endPoint.x))
+        #expect(isApprox(point.y, arc.endPoint.y))
     }
 
     @Test
@@ -202,8 +252,8 @@ struct `Geometry.Arc - Parametric Points` {
             endAngle: .pi
         )
         let point = arc.point(at: 0.5)
-        #expect(abs(point.x.value - arc.midPoint.x.value) < 1e-10)
-        #expect(abs(point.y.value - arc.midPoint.y.value) < 1e-10)
+        #expect(isApprox(point.x, arc.midPoint.x))
+        #expect(isApprox(point.y, arc.midPoint.y))
     }
 }
 
@@ -220,8 +270,8 @@ struct `Geometry.Arc - Tangent` {
             endAngle: .pi
         )
         let tangent = arc.tangent(at: 0)
-        #expect(abs(tangent.dx.value) < 1e-10)
-        #expect(abs(tangent.dy.value - 1) < 1e-10)
+        #expect(isApprox(tangent.dx, Dx(0)))
+        #expect(isApprox(tangent.dy, Dy(1)))
     }
 
     @Test
@@ -233,8 +283,8 @@ struct `Geometry.Arc - Tangent` {
             endAngle: .pi
         )
         let tangent = arc.tangent(at: 0.5)
-        #expect(abs(tangent.dx.value - (-1)) < 1e-10)
-        #expect(abs(tangent.dy.value) < 1e-10)
+        #expect(isApprox(tangent.dx, Dx(-1)))
+        #expect(isApprox(tangent.dy, Dy(0)))
     }
 }
 
@@ -245,19 +295,19 @@ struct `Geometry.Arc - Length` {
     @Test
     func `Length of semicircle`() {
         let arc: Geometry<Double, Void>.Arc = .semicircle(center: .zero, radius: 5)
-        #expect(abs(arc.length - 5 * Double.pi) < 1e-10)
+        #expect(isApprox(arc.length, Distance(5 * Double.pi)))
     }
 
     @Test
     func `Length of full circle`() {
         let arc: Geometry<Double, Void>.Arc = .fullCircle(center: .zero, radius: 5)
-        #expect(abs(arc.length - 10 * Double.pi) < 1e-10)
+        #expect(isApprox(arc.length, Distance(10 * Double.pi)))
     }
 
     @Test
     func `Length of quarter circle`() {
         let arc: Geometry<Double, Void>.Arc = .quarterCircle(center: .zero, radius: 4)
-        #expect(abs(arc.length - 2 * Double.pi) < 1e-10)
+        #expect(isApprox(arc.length, Distance(2 * Double.pi)))
     }
 }
 
@@ -269,30 +319,30 @@ struct `Geometry.Arc - Bounding Box` {
     func `Bounding box of quarter circle`() {
         let arc: Geometry<Double, Void>.Arc = .quarterCircle(center: .zero, radius: 5)
         let bbox = arc.boundingBox
-        #expect(abs(bbox.llx.value) < 1e-10)
-        #expect(abs(bbox.lly.value) < 1e-10)
-        #expect(abs(bbox.urx.value - 5) < 1e-10)
-        #expect(abs(bbox.ury.value - 5) < 1e-10)
+        #expect(isApprox(bbox.llx, X(0)))
+        #expect(isApprox(bbox.lly, Y(0)))
+        #expect(isApprox(bbox.urx, X(5)))
+        #expect(isApprox(bbox.ury, Y(5)))
     }
 
     @Test
     func `Bounding box of semicircle`() {
         let arc: Geometry<Double, Void>.Arc = .semicircle(center: .zero, radius: 5)
         let bbox = arc.boundingBox
-        #expect(abs(bbox.llx.value - (-5)) < 1e-10)
-        #expect(abs(bbox.lly.value) < 1e-10)
-        #expect(abs(bbox.urx.value - 5) < 1e-10)
-        #expect(abs(bbox.ury.value - 5) < 1e-10)
+        #expect(isApprox(bbox.llx, X(-5)))
+        #expect(isApprox(bbox.lly, Y(0)))
+        #expect(isApprox(bbox.urx, X(5)))
+        #expect(isApprox(bbox.ury, Y(5)))
     }
 
     @Test
     func `Bounding box of full circle`() {
         let arc: Geometry<Double, Void>.Arc = .fullCircle(center: .zero, radius: 5)
         let bbox = arc.boundingBox
-        #expect(abs(bbox.llx.value - (-5)) < 1e-10)
-        #expect(abs(bbox.lly.value - (-5)) < 1e-10)
-        #expect(abs(bbox.urx.value - 5) < 1e-10)
-        #expect(abs(bbox.ury.value - 5) < 1e-10)
+        #expect(isApprox(bbox.llx, X(-5)))
+        #expect(isApprox(bbox.lly, Y(-5)))
+        #expect(isApprox(bbox.urx, X(5)))
+        #expect(isApprox(bbox.ury, Y(5)))
     }
 }
 
@@ -335,16 +385,16 @@ struct `Geometry.Arc - Transformations` {
     func `Translation`() {
         let arc: Geometry<Double, Void>.Arc = .semicircle(center: .zero, radius: 5)
         let translated = arc.translated(by: .init(dx: 10, dy: 20))
-        #expect(translated.center.x == 10)
-        #expect(translated.center.y == 20)
-        #expect(translated.radius == 5)
+        #expect(translated.center.x == X(10))
+        #expect(translated.center.y == Y(20))
+        #expect(translated.radius == Distance(5))
     }
 
     @Test
     func `Scaling`() {
         let arc: Geometry<Double, Void>.Arc = .semicircle(center: .zero, radius: 5)
         let scaled = arc.scaled(by: 2)
-        #expect(scaled.radius == 10)
+        #expect(scaled.radius == Distance(10))
         #expect(scaled.startAngle == arc.startAngle)
         #expect(scaled.endAngle == arc.endAngle)
     }
@@ -395,12 +445,12 @@ struct `Geometry.Arc - Bezier Conversion` {
         let beziers = [Geometry<Double, Void>.Bezier](arc: arc)
 
         let firstBezier = beziers.first!
-        #expect(abs(firstBezier.startPoint!.x.value - arc.startPoint.x.value) < 1e-10)
-        #expect(abs(firstBezier.startPoint!.y.value - arc.startPoint.y.value) < 1e-10)
+        #expect(isApprox(firstBezier.startPoint!.x, arc.startPoint.x))
+        #expect(isApprox(firstBezier.startPoint!.y, arc.startPoint.y))
 
         let lastBezier = beziers.last!
-        #expect(abs(lastBezier.endPoint!.x.value - arc.endPoint.x.value) < 1e-10)
-        #expect(abs(lastBezier.endPoint!.y.value - arc.endPoint.y.value) < 1e-10)
+        #expect(isApprox(lastBezier.endPoint!.x, arc.endPoint.x))
+        #expect(isApprox(lastBezier.endPoint!.y, arc.endPoint.y))
     }
 }
 
@@ -412,7 +462,9 @@ struct `Geometry.Arc - Functorial Map` {
     func `Arc map to different scalar type`() {
         let arc: Geometry<Double, Void>.Arc = .semicircle(center: .zero, radius: 5)
         let mapped: Geometry<Float, Void>.Arc = arc.map { Float($0) }
-        #expect(mapped.center.x.value == 0)
-        #expect(mapped.radius.value == 5)
+        let expectedX: Geometry<Float, Void>.X = 0
+        let expectedRadius: Linear<Float, Void>.Magnitude = 5
+        #expect(mapped.center.x == expectedX)
+        #expect(mapped.radius == expectedRadius)
     }
 }

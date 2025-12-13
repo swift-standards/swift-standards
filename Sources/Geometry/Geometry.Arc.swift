@@ -64,18 +64,7 @@ extension Geometry.Arc: Hashable where Scalar: Hashable {}
 #endif
 // MARK: - Factory Methods
 
-extension Geometry.Arc where Scalar: Real {
-    /// Create a full circle arc
-    @inlinable
-    public static func fullCircle(center: Geometry.Point<2>, radius: Geometry.Radius) -> Self {
-        Self(
-            center: center,
-            radius: radius,
-            startAngle: .zero,
-            endAngle: .twoPi
-        )
-    }
-
+extension Geometry.Arc where Scalar: BinaryFloatingPoint {
     /// Create a semicircle arc
     @inlinable
     public static func semicircle(
@@ -88,6 +77,19 @@ extension Geometry.Arc where Scalar: Real {
             radius: radius,
             startAngle: startAngle,
             endAngle: startAngle + .pi
+        )
+    }
+}
+
+extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
+    /// Create a full circle arc
+    @inlinable
+    public static func fullCircle(center: Geometry.Point<2>, radius: Geometry.Radius) -> Self {
+        Self(
+            center: center,
+            radius: radius,
+            startAngle: .zero,
+            endAngle: .twoPi
         )
     }
 
@@ -123,7 +125,7 @@ extension Geometry.Arc where Scalar: AdditiveArithmetic & Comparable {
     }
 }
 
-extension Geometry.Arc where Scalar: Real {
+extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
     /// Whether this arc represents a full circle or more
     @inlinable
     public var isFullCircle: Bool {

@@ -89,7 +89,7 @@ extension Geometry.Orthotope where N == 2, Scalar: FloatingPoint {
         get { center.x - halfExtents.width }
         set {
             let oldUrx = center.x + halfExtents.width
-            let newWidth: Geometry.Width = (oldUrx - newValue) / 2
+            let newWidth: Geometry.Width = Dimension.width((oldUrx - newValue) / 2)
             center = Geometry.Point(
                 x: newValue + newWidth,
                 y: center.y
@@ -104,7 +104,7 @@ extension Geometry.Orthotope where N == 2, Scalar: FloatingPoint {
         get { center.y - halfExtents.height }
         set {
             let oldUry = center.y + halfExtents.height
-            let newHeight: Geometry.Height = (oldUry - newValue) / 2
+            let newHeight: Geometry.Height = Dimension.height((oldUry - newValue) / 2)
             center = Geometry.Point(
                 x: center.x,
                 y: newValue + newHeight
@@ -119,7 +119,7 @@ extension Geometry.Orthotope where N == 2, Scalar: FloatingPoint {
         get { center.x + halfExtents.width }
         set {
             let oldLlx = center.x - halfExtents.width
-            let newWidth: Geometry.Width = (newValue - oldLlx) / 2
+            let newWidth: Geometry.Width = Dimension.width((newValue - oldLlx) / 2)
             center = Geometry.Point(
                 x: oldLlx + newWidth,
                 y: center.y
@@ -134,7 +134,7 @@ extension Geometry.Orthotope where N == 2, Scalar: FloatingPoint {
         get { center.y + halfExtents.height }
         set {
             let oldLly = center.y - halfExtents.height
-            let newHeight: Geometry.Height = (newValue - oldLly) / 2
+            let newHeight: Geometry.Height = Dimension.height((newValue - oldLly) / 2)
             center = Geometry.Point(
                 x: center.x,
                 y: oldLly + newHeight
@@ -181,8 +181,8 @@ extension Geometry.Orthotope where N == 2, Scalar: FloatingPoint {
                 y: lly + (ury - lly) / 2
             ),
             halfExtents: Geometry.Size(
-                width: (urx - llx) / 2,
-                height: (ury - lly) / 2
+                width: Dimension.width((urx - llx) / 2),
+                height: Dimension.height((ury - lly) / 2)
             )
         )
     }

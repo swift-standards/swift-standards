@@ -9,6 +9,47 @@ import Testing
 @testable import Algebra_Linear
 @testable import Geometry
 
+// MARK: - Test Helpers
+
+private typealias Geo = Geometry<Double, Void>
+private typealias X = Geo.X
+private typealias Y = Geo.Y
+private typealias Dx = Linear<Double, Void>.Dx
+private typealias Dy = Linear<Double, Void>.Dy
+private typealias Distance = Linear<Double, Void>.Magnitude
+private typealias Area = Geo.Area
+
+private func isApprox(_ a: X, _ b: X, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Y, _ b: Y, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Distance, _ b: Distance, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Distance(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApproxScalar(_ a: Double, _ b: Double, tol: Double = 1e-10) -> Bool {
+    return abs(a - b) < tol
+}
+
+private func isApprox(_ a: Area, _ b: Area, tol: Double = 1e-10) -> Bool {
+    return abs(a.rawValue - b.rawValue) < tol
+}
+
+private func isApprox(_ a: Radian<Double>, _ b: Radian<Double>, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    return diff > Radian(-tol) && diff < Radian(tol)
+}
+
 // MARK: - Triangle (Ngon<3>) Initialization Tests
 
 @Suite
@@ -66,7 +107,8 @@ struct `Geometry.Ngon<3> - Factory Methods` {
         #expect(triangle.b.y == 0)
         #expect(triangle.c.x == 0)
         #expect(triangle.c.y == 4)
-        #expect(abs(triangle.area - 6) < 1e-10)
+        let expectedArea: Area = 6
+        #expect(isApprox(triangle.area, expectedArea))
     }
 
     @Test
@@ -173,7 +215,8 @@ struct `Geometry.Ngon<3> - Static Functions` {
             c: .init(x: 0, y: 3)
         )
         let area = Geometry.area(of: triangle)
-        #expect(abs(area - 6) < 1e-10)
+        let expectedArea: Area = 6
+        #expect(isApprox(area, expectedArea))
     }
 
     @Test
@@ -206,7 +249,7 @@ struct `Geometry.Ngon<3> - Static Functions` {
             c: .init(x: 0, y: 4)
         )
         let perimeter = Geometry.perimeter(of: triangle)
-        #expect(abs(perimeter.value - 12) < 1e-10)
+        #expect(isApprox(perimeter, Distance(12)))
     }
 
     @Test
@@ -218,8 +261,8 @@ struct `Geometry.Ngon<3> - Static Functions` {
         )
         let centroid = Geometry.centroid(of: triangle)
         #expect(centroid != nil)
-        #expect(abs(centroid!.x.value - 2) < 1e-10)
-        #expect(abs(centroid!.y.value - 2) < 1e-10)
+        #expect(isApprox(centroid!.x, X(2)))
+        #expect(isApprox(centroid!.y, Y(2)))
     }
 }
 
@@ -234,7 +277,8 @@ struct `Geometry.Ngon<3> - Area and Perimeter` {
             b: .init(x: 4, y: 0),
             c: .init(x: 0, y: 3)
         )
-        #expect(abs(triangle.area - 6) < 1e-10)
+        let expectedArea: Area = 6
+        #expect(isApprox(triangle.area, expectedArea))
     }
 
     @Test
@@ -264,7 +308,7 @@ struct `Geometry.Ngon<3> - Area and Perimeter` {
             b: .init(x: 3, y: 0),
             c: .init(x: 0, y: 4)
         )
-        #expect(abs(triangle.perimeter.value - 12) < 1e-10)
+        #expect(isApprox(triangle.perimeter, Distance(12)))
     }
 }
 
@@ -280,8 +324,8 @@ struct `Geometry.Ngon<3> - Centroid` {
             c: .init(x: 0, y: 6)
         )
         let centroid: Geometry<Double, Void>.Point<2> = triangle.centroid
-        #expect(abs(centroid.x.value - 2) < 1e-10)
-        #expect(abs(centroid.y.value - 2) < 1e-10)
+        #expect(isApprox(centroid.x, X(2)))
+        #expect(isApprox(centroid.y, Y(2)))
     }
 }
 
@@ -298,9 +342,9 @@ struct `Geometry.Ngon<3> - Circles` {
         )
         let circumcircle = triangle.circumcircle
         #expect(circumcircle != nil)
-        #expect(abs(circumcircle!.center.x.value - 2) < 1e-10)
-        #expect(abs(circumcircle!.center.y.value - 1.5) < 1e-10)
-        #expect(abs(circumcircle!.radius.value - 2.5) < 1e-10)
+        #expect(isApprox(circumcircle!.center.x, X(2)))
+        #expect(isApprox(circumcircle!.center.y, Y(1.5)))
+        #expect(isApprox(circumcircle!.radius, Distance(2.5)))
     }
 
     @Test
@@ -311,15 +355,15 @@ struct `Geometry.Ngon<3> - Circles` {
             c: .init(x: 2, y: 4)
         )
         let circumcircle = triangle.circumcircle!
-        let r = circumcircle.radius.value
+        let r = circumcircle.radius
 
         let da = circumcircle.center.distance(to: triangle.a)
         let db = circumcircle.center.distance(to: triangle.b)
         let dc = circumcircle.center.distance(to: triangle.c)
 
-        #expect(abs(da - r) < 1e-10)
-        #expect(abs(db - r) < 1e-10)
-        #expect(abs(dc - r) < 1e-10)
+        #expect(isApprox(da, r))
+        #expect(isApprox(db, r))
+        #expect(isApprox(dc, r))
     }
 
     @Test
@@ -331,7 +375,7 @@ struct `Geometry.Ngon<3> - Circles` {
         )
         let incircle = triangle.incircle
         #expect(incircle != nil)
-        #expect(abs(incircle!.radius.value - 1) < 1e-10)
+        #expect(isApprox(incircle!.radius, Distance(1)))
     }
 
     @Test
@@ -358,8 +402,8 @@ struct `Geometry.Ngon<3> - Angles` {
             c: .init(x: 2, y: 4)
         )
         let angles = triangle.angles
-        let sum = angles.atA.value + angles.atB.value + angles.atC.value
-        #expect(abs(sum - Double.pi) < 1e-10)
+        let sum = angles.atA + angles.atB + angles.atC
+        #expect(isApprox(sum, .pi))
     }
 }
 
@@ -461,8 +505,8 @@ struct `Geometry.Ngon<3> - Barycentric Coordinates` {
             c: .init(x: 0, y: 3)
         )
         let point = triangle.point(u: 1, v: 0, w: 0)
-        #expect(abs(point.x.value - triangle.a.x.value) < 1e-10)
-        #expect(abs(point.y.value - triangle.a.y.value) < 1e-10)
+        #expect(isApprox(point.x, triangle.a.x))
+        #expect(isApprox(point.y, triangle.a.y))
     }
 
     @Test
@@ -473,8 +517,8 @@ struct `Geometry.Ngon<3> - Barycentric Coordinates` {
             c: .init(x: 0, y: 6)
         )
         let point = triangle.point(u: 1.0 / 3.0, v: 1.0 / 3.0, w: 1.0 / 3.0)
-        #expect(abs(point.x.value - 2) < 1e-10)
-        #expect(abs(point.y.value - 2) < 1e-10)
+        #expect(isApprox(point.x, X(2)))
+        #expect(isApprox(point.y, Y(2)))
     }
 }
 
@@ -599,7 +643,7 @@ struct `Geometry.Ngon<4> - Quadrilateral` {
             c: .init(x: 4, y: 3),
             d: .init(x: 0, y: 3)
         )
-        #expect(abs(quad.area - 12) < 1e-10)
+        #expect(abs(quad.area.rawValue - 12) < 1e-10)
     }
 }
 
@@ -611,7 +655,7 @@ struct `Geometry.Ngon - Regular Polygons` {
     func `Regular hexagon from side length`() {
         let hexagon = Geometry<Double, Void>.Hexagon.regular(sideLength: 10)
         let perimeter = Geometry.perimeter(of: hexagon)
-        #expect(abs(perimeter.value - 60) < 1e-10)
+        #expect(isApprox(perimeter, Distance(60)))
     }
 
     @Test
@@ -710,8 +754,11 @@ struct `Geometry.Ngon - Functorial Map` {
             c: .init(x: 0, y: 1)
         )
         let mapped: Geometry<Float, Void>.Triangle = try! triangle.map { Float($0) }
-        #expect(mapped.a.x.value == 0)
-        #expect(mapped.b.x.value == 1)
-        #expect(mapped.c.y.value == 1)
+        let expectedAX: Geometry<Float, Void>.X = 0
+        let expectedBX: Geometry<Float, Void>.X = 1
+        let expectedCY: Geometry<Float, Void>.Y = 1
+        #expect(mapped.a.x == expectedAX)
+        #expect(mapped.b.x == expectedBX)
+        #expect(mapped.c.y == expectedCY)
     }
 }

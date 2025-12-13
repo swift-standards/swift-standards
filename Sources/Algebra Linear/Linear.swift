@@ -26,7 +26,7 @@
 // let m: Mat4 = .identity
 // ```
 
-public import Algebra
+import Algebra
 public import Dimension
 
 /// A namespace for type-safe vector spaces and linear transformations.
@@ -83,6 +83,21 @@ extension Linear {
     /// Use for lengths, distances, radii, or any scalar size measurement without direction.
     /// Unlike displacements which have axis identity, magnitudes represent pure scalar quantities.
     public typealias Magnitude = Dimension.Magnitude<Space>.Value<Scalar>
+
+    /// Width (unsigned horizontal extent), parameterized by coordinate space.
+    ///
+    /// Use for non-negative horizontal size measurements. Distinct from Dx which is signed.
+    public typealias Width = Extent.X<Space>.Value<Scalar>
+
+    /// Height (unsigned vertical extent), parameterized by coordinate space.
+    ///
+    /// Use for non-negative vertical size measurements. Distinct from Dy which is signed.
+    public typealias Height = Extent.Y<Space>.Value<Scalar>
+
+    /// Depth (unsigned Z extent), parameterized by coordinate space.
+    ///
+    /// Use for non-negative depth measurements. Distinct from Dz which is signed.
+    public typealias Depth = Extent.Z<Space>.Value<Scalar>
 }
 
 extension Linear {

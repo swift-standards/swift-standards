@@ -8,6 +8,33 @@ import Testing
 @testable import Algebra_Linear
 @testable import Geometry
 
+// MARK: - Test Helpers
+
+private typealias Geo = Geometry<Double, Void>
+private typealias X = Geo.X
+private typealias Y = Geo.Y
+private typealias Dx = Linear<Double, Void>.Dx
+private typealias Dy = Linear<Double, Void>.Dy
+private typealias Distance = Linear<Double, Void>.Magnitude
+
+private func isApprox(_ a: X, _ b: X, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Y, _ b: Y, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Distance, _ b: Distance, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Distance(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
 // MARK: - Initialization Tests
 
 @Suite
@@ -58,7 +85,7 @@ struct `Geometry.Ray - Properties` {
         )
         let unit = ray.unitDirection
         #expect(unit != nil)
-        #expect(abs(unit!.length - 1) < 1e-10)
+        #expect(abs(unit!.length - 1.0) < 1e-10)
     }
 
     @Test
@@ -183,8 +210,8 @@ struct `Geometry.Ray - Line Intersection` {
 
         let intersection = ray.intersection(with: line)
         #expect(intersection != nil)
-        #expect(abs(intersection!.x.value - 5) < 1e-10)
-        #expect(abs(intersection!.y.value - 5) < 1e-10)
+        #expect(isApprox(intersection!.x, X(5)))
+        #expect(isApprox(intersection!.y, Y(5)))
     }
 
     @Test
@@ -235,8 +262,8 @@ struct `Geometry.Ray - Segment Intersection` {
 
         let intersection = ray.intersection(with: segment)
         #expect(intersection != nil)
-        #expect(abs(intersection!.x.value - 5) < 1e-10)
-        #expect(abs(intersection!.y.value - 5) < 1e-10)
+        #expect(isApprox(intersection!.x, X(5)))
+        #expect(isApprox(intersection!.y, Y(5)))
     }
 
     @Test
@@ -273,9 +300,9 @@ struct `Geometry.Ray - Circle Intersection` {
         let intersections = ray.intersection(with: circle)
         #expect(intersections.count == 2)
 
-        let sorted = intersections.sorted { $0.x.value < $1.x.value }
-        #expect(abs(sorted[0].x.value - 5) < 1e-10)
-        #expect(abs(sorted[1].x.value - 15) < 1e-10)
+        let sorted = intersections.sorted { $0.x < $1.x }
+        #expect(isApprox(sorted[0].x, X(5)))
+        #expect(isApprox(sorted[1].x, X(15)))
     }
 
     @Test
@@ -288,8 +315,8 @@ struct `Geometry.Ray - Circle Intersection` {
 
         let intersections = ray.intersection(with: circle)
         #expect(intersections.count == 1)
-        #expect(abs(intersections[0].x.value) < 1e-10)
-        #expect(abs(intersections[0].y.value - 5) < 1e-10)
+        #expect(isApprox(intersections[0].x, X(0)))
+        #expect(isApprox(intersections[0].y, Y(5)))
     }
 
     @Test
@@ -314,7 +341,7 @@ struct `Geometry.Ray - Circle Intersection` {
 
         let intersections = ray.intersection(with: circle)
         #expect(intersections.count == 1)
-        #expect(abs(intersections[0].x.value - 5) < 1e-10)
+        #expect(isApprox(intersections[0].x, X(5)))
     }
 }
 
@@ -329,9 +356,13 @@ struct `Geometry.Ray - Functorial Map` {
             direction: .init(dx: 3, dy: 4)
         )
         let mapped: Geometry<Float, Void>.Ray = ray.map { Float($0) }
-        #expect(mapped.origin.x.value == 1)
-        #expect(mapped.origin.y.value == 2)
-        #expect(mapped.direction.dx.value == 3)
-        #expect(mapped.direction.dy.value == 4)
+        let expectedX: Geometry<Float, Void>.X = 1
+        let expectedY: Geometry<Float, Void>.Y = 2
+        let expectedDx: Linear<Float, Void>.Dx = 3
+        let expectedDy: Linear<Float, Void>.Dy = 4
+        #expect(mapped.origin.x == expectedX)
+        #expect(mapped.origin.y == expectedY)
+        #expect(mapped.direction.dx == expectedDx)
+        #expect(mapped.direction.dy == expectedDy)
     }
 }

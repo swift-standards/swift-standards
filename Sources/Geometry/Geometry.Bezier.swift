@@ -144,8 +144,8 @@ extension Geometry.Bezier where Scalar: FloatingPoint {
         guard let tang = tangent(at: t) else { return nil }
         // Rotate 90° counter-clockwise
         return Geometry.Vector(
-            dx: Geometry.Width(-tang.dy._rawValue),
-            dy: Geometry.Height(tang.dx._rawValue)
+            dx: Linear<Scalar, Space>.Dx(-tang.dy._rawValue),
+            dy: Linear<Scalar, Space>.Dy(tang.dx._rawValue)
         )
     }
 }
@@ -431,8 +431,8 @@ extension Geometry where Scalar: FloatingPoint {
 
         guard let p = points.first else { return nil }
         return Vector(
-            dx: Width(n * p.x._rawValue),
-            dy: Height(n * p.y._rawValue)
+            dx: Linear<Scalar, Space>.Dx(n * p.x._rawValue),
+            dy: Linear<Scalar, Space>.Dy(n * p.y._rawValue)
         )
     }
 }

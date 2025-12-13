@@ -9,6 +9,56 @@ import Testing
 @testable import Algebra_Linear
 @testable import Geometry
 
+// MARK: - Test Helpers
+
+private typealias Geo = Geometry<Double, Void>
+private typealias X = Geo.X
+private typealias Y = Geo.Y
+private typealias Dx = Linear<Double, Void>.Dx
+private typealias Dy = Linear<Double, Void>.Dy
+private typealias Distance = Linear<Double, Void>.Magnitude
+private typealias Width = Linear<Double, Void>.Width
+private typealias Height = Linear<Double, Void>.Height
+
+private func isApprox(_ a: X, _ b: X, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Y, _ b: Y, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Dx, _ b: Dx, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dx(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Dy, _ b: Dy, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Dy(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApprox(_ a: Distance, _ b: Distance, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    let tolerance = Distance(tol)
+    return diff > -tolerance && diff < tolerance
+}
+
+private func isApproxScalar(_ a: Double, _ b: Double, tol: Double = 1e-10) -> Bool {
+    return abs(a - b) < tol
+}
+
+private func isApprox(_ a: Radian<Double>, _ b: Radian<Double>, tol: Double = 1e-10) -> Bool {
+    let diff = a - b
+    return diff > Radian(-tol) && diff < Radian(tol)
+}
+
 // MARK: - Initialization Tests
 
 @Suite
@@ -90,7 +140,7 @@ struct `Geometry.Ellipse - Properties` {
     func `Focal distance`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 5, semiMinor: 3)
         // c = sqrt(a^2 - b^2) = sqrt(25 - 9) = 4
-        #expect(abs(ellipse.focalDistance.value - 4) < 1e-10)
+        #expect(isApprox(ellipse.focalDistance, Distance(4)))
     }
 
     @Test
@@ -115,20 +165,20 @@ struct `Geometry.Ellipse - Foci` {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 5, semiMinor: 3)
         let foci = ellipse.foci
         // c = sqrt(a^2 - b^2) = sqrt(25 - 9) = 4
-        #expect(abs(foci.f1.x.value - (-4)) < 1e-10)
-        #expect(abs(foci.f1.y.value) < 1e-10)
-        #expect(abs(foci.f2.x.value - 4) < 1e-10)
-        #expect(abs(foci.f2.y.value) < 1e-10)
+        #expect(isApprox(foci.f1.x, X(-4)))
+        #expect(isApprox(foci.f1.y, Y(0)))
+        #expect(isApprox(foci.f2.x, X(4)))
+        #expect(isApprox(foci.f2.y, Y(0)))
     }
 
     @Test
     func `Foci of circle are coincident`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .circle(center: .zero, radius: 5)
         let foci = ellipse.foci
-        #expect(abs(foci.f1.x.value) < 1e-10)
-        #expect(abs(foci.f1.y.value) < 1e-10)
-        #expect(abs(foci.f2.x.value) < 1e-10)
-        #expect(abs(foci.f2.y.value) < 1e-10)
+        #expect(isApprox(foci.f1.x, X(0)))
+        #expect(isApprox(foci.f1.y, Y(0)))
+        #expect(isApprox(foci.f2.x, X(0)))
+        #expect(isApprox(foci.f2.y, Y(0)))
     }
 }
 
@@ -141,7 +191,7 @@ struct `Geometry.Ellipse - Static Functions` {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 5, semiMinor: 3)
         let area = Geometry.area(of: ellipse)
         // Area = π * a * b = π * 5 * 3 = 15π
-        #expect(abs(area - 15 * .pi) < 1e-10)
+        #expect(isApproxScalar(area, 15 * .pi))
     }
 
     @Test
@@ -172,24 +222,24 @@ struct `Geometry.Ellipse - Static Functions` {
     func `Geometry.point(of:at:) at angle 0`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point = Geometry.point(of: ellipse, at: .zero)
-        #expect(abs(point.x.value - 10) < 1e-10)
-        #expect(abs(point.y.value) < 1e-10)
+        #expect(isApprox(point.x, X(10)))
+        #expect(isApprox(point.y, Y(0)))
     }
 
     @Test
     func `Geometry.point(of:at:) at angle π/2`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point = Geometry.point(of: ellipse, at: .halfPi)
-        #expect(abs(point.x.value) < 1e-10)
-        #expect(abs(point.y.value - 5) < 1e-10)
+        #expect(isApprox(point.x, X(0)))
+        #expect(isApprox(point.y, Y(5)))
     }
 
     @Test
     func `Geometry.point(of:at:) at angle π`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point = Geometry.point(of: ellipse, at: .pi)
-        #expect(abs(point.x.value - (-10)) < 1e-10)
-        #expect(abs(point.y.value) < 1e-10)
+        #expect(isApprox(point.x, X(-10)))
+        #expect(isApprox(point.y, Y(0)))
     }
 }
 
@@ -200,13 +250,13 @@ struct `Geometry.Ellipse - Area and Perimeter` {
     @Test
     func `Area property matches static function`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 5, semiMinor: 3)
-        #expect(abs(ellipse.area - 15 * .pi) < 1e-10)
+        #expect(isApproxScalar(ellipse.area, 15 * .pi))
     }
 
     @Test
     func `Perimeter approximation for circle`() {
         let circle: Geometry<Double, Void>.Ellipse = .circle(center: .zero, radius: 5)
-        #expect(abs(circle.perimeter.value - 10 * .pi) < 0.01)
+        #expect(isApprox(circle.perimeter, Distance(10 * .pi), tol: 0.01))
     }
 }
 
@@ -218,24 +268,24 @@ struct `Geometry.Ellipse - Parametric Points` {
     func `Point at parameter 0`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point = ellipse.point(at: .zero)
-        #expect(abs(point.x.value - 10) < 1e-10)
-        #expect(abs(point.y.value) < 1e-10)
+        #expect(isApprox(point.x, X(10)))
+        #expect(isApprox(point.y, Y(0)))
     }
 
     @Test
     func `Point at parameter π/2`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point = ellipse.point(at: .halfPi)
-        #expect(abs(point.x.value) < 1e-10)
-        #expect(abs(point.y.value - 5) < 1e-10)
+        #expect(isApprox(point.x, X(0)))
+        #expect(isApprox(point.y, Y(5)))
     }
 
     @Test
     func `Point at parameter π`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let point = ellipse.point(at: .pi)
-        #expect(abs(point.x.value - (-10)) < 1e-10)
-        #expect(abs(point.y.value) < 1e-10)
+        #expect(isApprox(point.x, X(-10)))
+        #expect(isApprox(point.y, Y(0)))
     }
 
     @Test
@@ -243,7 +293,7 @@ struct `Geometry.Ellipse - Parametric Points` {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let tangent = ellipse.tangent(at: .zero)
         // Tangent at rightmost point should point upward
-        #expect(abs(tangent.dy.value) > 0)
+        #expect(tangent.dy > Dy(0))
     }
 }
 
@@ -291,10 +341,10 @@ struct `Geometry.Ellipse - Bounding Box` {
     func `Bounding box axis-aligned`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let bbox = ellipse.boundingBox
-        #expect(abs(bbox.llx.value - (-10)) < 1e-10)
-        #expect(abs(bbox.lly.value - (-5)) < 1e-10)
-        #expect(abs(bbox.urx.value - 10) < 1e-10)
-        #expect(abs(bbox.ury.value - 5) < 1e-10)
+        #expect(isApprox(bbox.llx, X(-10)))
+        #expect(isApprox(bbox.lly, Y(-5)))
+        #expect(isApprox(bbox.urx, X(10)))
+        #expect(isApprox(bbox.ury, Y(5)))
     }
 
     @Test
@@ -305,10 +355,10 @@ struct `Geometry.Ellipse - Bounding Box` {
             semiMinor: 3
         )
         let bbox = ellipse.boundingBox
-        #expect(abs(bbox.llx.value - 5) < 1e-10)
-        #expect(abs(bbox.lly.value - 17) < 1e-10)
-        #expect(abs(bbox.urx.value - 15) < 1e-10)
-        #expect(abs(bbox.ury.value - 23) < 1e-10)
+        #expect(isApprox(bbox.llx, X(5)))
+        #expect(isApprox(bbox.lly, Y(17)))
+        #expect(isApprox(bbox.urx, X(15)))
+        #expect(isApprox(bbox.ury, Y(23)))
     }
 }
 
@@ -340,25 +390,25 @@ struct `Geometry.Ellipse - Transformations` {
     func `Translation`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let translated = ellipse.translated(by: .init(dx: 5, dy: 10))
-        #expect(translated.center.x == 5)
-        #expect(translated.center.y == 10)
-        #expect(translated.semiMajor == 10)
-        #expect(translated.semiMinor == 5)
+        #expect(translated.center.x == X(5))
+        #expect(translated.center.y == Y(10))
+        #expect(translated.semiMajor == Distance(10))
+        #expect(translated.semiMinor == Distance(5))
     }
 
     @Test
     func `Scaling`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let scaled = ellipse.scaled(by: 2)
-        #expect(scaled.semiMajor == 20)
-        #expect(scaled.semiMinor == 10)
+        #expect(scaled.semiMajor == Distance(20))
+        #expect(scaled.semiMinor == Distance(10))
     }
 
     @Test
     func `Rotation`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let rotated = ellipse.rotated(by: .halfPi)
-        #expect(abs(rotated.rotation.value - Double.pi / 2) < 1e-10)
+        #expect(isApprox(rotated.rotation, .halfPi))
     }
 }
 
@@ -370,7 +420,9 @@ struct `Geometry.Ellipse - Functorial Map` {
     func `Ellipse map to different scalar type`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 10, semiMinor: 5)
         let mapped: Geometry<Float, Void>.Ellipse = ellipse.map { Float($0) }
-        #expect(mapped.semiMajor.value == 10)
-        #expect(mapped.semiMinor.value == 5)
+        let expectedMajor: Linear<Float, Void>.Magnitude = 10
+        let expectedMinor: Linear<Float, Void>.Magnitude = 5
+        #expect(mapped.semiMajor == expectedMajor)
+        #expect(mapped.semiMinor == expectedMinor)
     }
 }
