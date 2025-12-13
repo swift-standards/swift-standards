@@ -86,38 +86,29 @@ extension Linear {
 }
 
 extension Linear {
-    
     /// See ``Linear/Magnitude``
-    public typealias Length = Linear<Scalar, Space>.Magnitude
+    public typealias Length = Dimension.Length<Space, Scalar>
 
-    /// Radius of a circle or arc (non-directional magnitude).
-    ///
-    /// Semantically identical to `Length` but provides clearer intent for circular geometry.
-    public typealias Radius = Linear<Scalar, Space>.Magnitude
+    /// See ``Linear/Magnitude``
+    public typealias Radius = Dimension.Radius<Space, Scalar>
 
-    /// Diameter of a circle (non-directional magnitude).
-    ///
-    /// Semantically identical to `Length` but provides clearer intent for circular geometry.
-    public typealias Diameter = Linear<Scalar, Space>.Magnitude
+    /// See ``Linear/Magnitude``
+    public typealias Diameter = Dimension.Diameter<Space, Scalar>
 
-    /// Distance between two points (non-directional magnitude).
-    ///
-    /// Semantically identical to `Length` but provides clearer intent for point-to-point measurements.
-    public typealias Distance = Linear<Scalar, Space>.Magnitude
+    /// See ``Linear/Magnitude``
+    public typealias Distance = Dimension.Distance<Space, Scalar>
 
-    /// Circumference of a circle (non-directional magnitude).
-    ///
-    /// Semantically identical to `Length` but provides clearer intent for circular perimeter.
-    public typealias Circumference = Linear<Scalar, Space>.Magnitude
+    /// See ``Linear/Magnitude``
+    public typealias Circumference = Dimension.Circumference<Space, Scalar>
 
-    /// Perimeter of a closed shape (non-directional magnitude).
-    ///
-    /// Semantically identical to `Length` but provides clearer intent for boundary length.
-    public typealias Perimeter = Linear<Scalar, Space>.Magnitude
+    /// See ``Linear/Magnitude``
+    public typealias Perimeter = Dimension.Perimeter<Space, Scalar>
 
-    /// Arc length along a curve (non-directional magnitude).
+    /// See ``Linear/Magnitude``
+    public typealias ArcLength = Dimension.ArcLength<Space, Scalar>
+
+    /// Area (2D measure) in this coordinate space.
     ///
-    /// Semantically identical to `Length` but provides clearer intent for curved paths.
-    public typealias ArcLength = Linear<Scalar, Space>.Magnitude
-    
+    /// See ``Dimension/Area``
+    public typealias Area = Dimension.Area<Space>.Value<Scalar>
 }

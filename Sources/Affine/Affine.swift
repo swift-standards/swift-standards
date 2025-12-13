@@ -65,25 +65,25 @@ extension Affine {
     /// parameterized by coordinate space.
     ///
     /// Distinguishes position coordinates from displacement vectors for type safety.
-    public typealias X = Tagged<Coordinate.X<Space>, Scalar>
+    public typealias X = Coordinate.X<Space>.Value<Scalar>
 
     /// Type-safe vertical coordinate representing absolute position on the y-axis,
     /// parameterized by coordinate space.
     ///
     /// Distinguishes position coordinates from displacement vectors for type safety.
-    public typealias Y = Tagged<Coordinate.Y<Space>, Scalar>
+    public typealias Y = Coordinate.Y<Space>.Value<Scalar>
 
     /// Type-safe depth coordinate representing absolute position on the z-axis,
     /// parameterized by coordinate space.
     ///
     /// Distinguishes position coordinates from displacement vectors for type safety.
-    public typealias Z = Tagged<Coordinate.Z<Space>, Scalar>
+    public typealias Z = Coordinate.Z<Space>.Value<Scalar>
 
     /// Type-safe homogeneous coordinate for projective transformations,
     /// parameterized by coordinate space.
     ///
     /// Used in 4D homogeneous coordinates where `w=1` represents standard 3D points.
-    public typealias W = Tagged<Coordinate.W<Space>, Scalar>
+    public typealias W = Coordinate.W<Space>.Value<Scalar>
 }
 
 // MARK: - Displacement Type Aliases
@@ -110,6 +110,11 @@ extension Affine {
 extension Affine {
     /// Distance between two points (non-directional magnitude).
     ///
-    /// See ``Linear/Magnitude``
-    public typealias Distance = Linear<Scalar, Space>.Magnitude
+    /// See ``Dimension/Distance``
+    public typealias Distance = Dimension.Distance<Space, Scalar>
+
+    /// Squared distance / area measure in this coordinate space.
+    ///
+    /// See ``Dimension/Area``
+    public typealias Area = Dimension.Area<Space>.Value<Scalar>
 }

@@ -113,8 +113,8 @@ struct `Affine.Translation Tests` {
         func subtraction(
             t1: Translation,
             t2: Translation,
-            expectedDx: Double,
-            expectedDy: Double
+            expectedDx: Displacement.X.Value<Double>,
+            expectedDy: Displacement.Y.Value<Double>
         ) {
             let result = t1 - t2
             #expect(result.dx == expectedDx)

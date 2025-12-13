@@ -274,12 +274,12 @@ extension Geometry.Ngon where Scalar: SignedNumeric {
     ///
     /// Positive if vertices are counter-clockwise, negative if clockwise.
     @inlinable
-    public var signedDoubleArea: Tagged<Measure<2, Space>, Scalar> {
+    public var signedDoubleArea: Linear<Scalar, Space>.Area {
         // Shoelace formula: Σ(xᵢyⱼ - xⱼyᵢ)
         // Treating coordinates as displacements from origin
         let zeroX = Geometry.X.zero
         let zeroY = Geometry.Y.zero
-        var sum: Tagged<Measure<2, Space>, Scalar> = Tagged(.zero)
+        var sum: Linear<Scalar, Space>.Area = Tagged(.zero)
         for i in 0..<N {
             let j = (i + 1) % N
             // Coordinate - Coordinate.zero = Displacement
@@ -297,7 +297,7 @@ extension Geometry.Ngon where Scalar: SignedNumeric {
 extension Geometry.Ngon where Scalar: FloatingPoint {
     /// The signed area of the polygon
     @inlinable
-    public var signedArea: Tagged<Measure<2, Space>, Scalar> {
+    public var signedArea: Linear<Scalar, Space>.Area {
         signedDoubleArea / Scalar(2)
     }
 
@@ -358,8 +358,8 @@ extension Geometry.Ngon where Scalar: SignedNumeric & Comparable {
     @inlinable
     public var isConvex: Bool {
         // Cross product of edge vectors: Dx × Dy - Dy × Dx = Area
-        var sign: Tagged<Measure<2, Space>, Scalar>?
-        let zero: Tagged<Measure<2, Space>, Scalar> = Tagged(.zero)
+        var sign: Linear<Scalar, Space>.Area?
+        let zero: Linear<Scalar, Space>.Area = Tagged(.zero)
 
         for i in 0..<N {
             let j = (i + 1) % N
@@ -582,7 +582,7 @@ extension Geometry where Scalar: FloatingPoint {
 
     /// Calculate the signed double area of an N-gon using the shoelace formula.
     @inlinable
-    public static func signedDoubleArea<let N: Int>(of ngon: Ngon<N>) -> Tagged<Measure<2, Space>, Scalar> where Scalar: SignedNumeric {
+    public static func signedDoubleArea<let N: Int>(of ngon: Ngon<N>) -> Linear<Scalar, Space>.Area where Scalar: SignedNumeric {
         ngon.signedDoubleArea
     }
 

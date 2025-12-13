@@ -24,7 +24,7 @@ extension Geometry {
     /// ```
     public struct Area {
         /// Typed area value using dimensional type system.
-        public var _value: Tagged<Measure<2, Space>, Scalar>
+        public var _value: Linear<Scalar, Space>.Area
 
         /// Raw area value in square units.
         @inlinable
@@ -38,7 +38,7 @@ extension Geometry {
 
         /// Creates an area from a typed area value.
         @inlinable
-        public init(_ value: Tagged<Measure<2, Space>, Scalar>) {
+        public init(_ value: Linear<Scalar, Space>.Area) {
             self._value = value
         }
     }

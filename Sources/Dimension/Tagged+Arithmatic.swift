@@ -785,25 +785,6 @@ public func + <Space, Scalar: BinaryFloatingPoint>(
     ._quantize(lhs._rawValue + rhs._rawValue, in: Space.self)
 }
 
-/// Subtracts an X coordinate from a displacement, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Displacement.X<Space>.Value<Scalar>,
-    rhs: Coordinate.X<Space>.Value<Scalar>
-) -> Coordinate.X<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue - rhs._rawValue)
-}
-
-/// Subtracts an X coordinate from a displacement with quantization (for floating-point types).
-@inlinable
-public func - <Space, Scalar: BinaryFloatingPoint>(
-    lhs: Displacement.X<Space>.Value<Scalar>,
-    rhs: Coordinate.X<Space>.Value<Scalar>
-) -> Coordinate.X<Space>.Value<Scalar> {
-    ._quantize(lhs._rawValue - rhs._rawValue, in: Space.self)
-}
-
 // MARK: Y Axis
 
 /// Adds a displacement to a Y coordinate, returning a coordinate.
@@ -882,25 +863,6 @@ public func + <Space, Scalar: BinaryFloatingPoint>(
     ._quantize(lhs._rawValue + rhs._rawValue, in: Space.self)
 }
 
-/// Subtracts a Y coordinate from a displacement, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Displacement.Y<Space>.Value<Scalar>,
-    rhs: Coordinate.Y<Space>.Value<Scalar>
-) -> Coordinate.Y<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue - rhs._rawValue)
-}
-
-/// Subtracts a Y coordinate from a displacement with quantization (for floating-point types).
-@inlinable
-public func - <Space, Scalar: BinaryFloatingPoint>(
-    lhs: Displacement.Y<Space>.Value<Scalar>,
-    rhs: Coordinate.Y<Space>.Value<Scalar>
-) -> Coordinate.Y<Space>.Value<Scalar> {
-    ._quantize(lhs._rawValue - rhs._rawValue, in: Space.self)
-}
-
 // MARK: Z Axis
 
 /// Adds a displacement to a Z coordinate, returning a coordinate.
@@ -977,25 +939,6 @@ public func + <Space, Scalar: BinaryFloatingPoint>(
     rhs: Coordinate.Z<Space>.Value<Scalar>
 ) -> Coordinate.Z<Space>.Value<Scalar> {
     ._quantize(lhs._rawValue + rhs._rawValue, in: Space.self)
-}
-
-/// Subtracts a Z coordinate from a displacement, returning a coordinate.
-@_disfavoredOverload
-@inlinable
-public func - <Space, Scalar: AdditiveArithmetic>(
-    lhs: Displacement.Z<Space>.Value<Scalar>,
-    rhs: Coordinate.Z<Space>.Value<Scalar>
-) -> Coordinate.Z<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue - rhs._rawValue)
-}
-
-/// Subtracts a Z coordinate from a displacement with quantization (for floating-point types).
-@inlinable
-public func - <Space, Scalar: BinaryFloatingPoint>(
-    lhs: Displacement.Z<Space>.Value<Scalar>,
-    rhs: Coordinate.Z<Space>.Value<Scalar>
-) -> Coordinate.Z<Space>.Value<Scalar> {
-    ._quantize(lhs._rawValue - rhs._rawValue, in: Space.self)
 }
 
 // MARK: - Magnitude/Coordinate Arithmetic

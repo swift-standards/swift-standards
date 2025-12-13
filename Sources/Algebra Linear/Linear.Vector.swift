@@ -364,7 +364,7 @@ extension Linear.Vector where N == 2, Scalar: SignedNumeric {
     /// Returns the signed area of the parallelogram formed by the vectors.
     /// Positive if `other` is counter-clockwise from `self`.
     @inlinable
-    public static func cross(_ lhs: Self, _ rhs: Self) -> Area<Space>.Value<Scalar> {
+    public static func cross(_ lhs: Self, _ rhs: Self) -> Linear.Area {
         lhs.dx * rhs.dy - lhs.dy * rhs.dx
     }
 
@@ -373,7 +373,7 @@ extension Linear.Vector where N == 2, Scalar: SignedNumeric {
     /// Returns the signed area of the parallelogram formed by the vectors.
     /// Positive if `other` is counter-clockwise from `self`.
     @inlinable
-    public func cross(_ other: borrowing Self) -> Area<Space>.Value<Scalar> {
+    public func cross(_ other: borrowing Self) -> Linear.Area {
         Self.cross(self, other)
     }
 }

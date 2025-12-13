@@ -252,3 +252,29 @@ extension Measure {
     /// A tagged measure value of dimension N in the given space.
     public typealias Value<Scalar> = Tagged<Measure<N, Space>, Scalar>
 }
+
+// MARK: - Semantic Typealiases
+
+// These provide semantic names for common uses of Magnitude.
+// All are structurally identical but convey different intent.
+
+/// A non-directional length measurement.
+public typealias Length<Space, Scalar> = Magnitude<Space>.Value<Scalar>
+
+/// Radius of a circle or sphere.
+public typealias Radius<Space, Scalar> = Magnitude<Space>.Value<Scalar>
+
+/// Diameter of a circle or sphere.
+public typealias Diameter<Space, Scalar> = Magnitude<Space>.Value<Scalar>
+
+/// Distance between two points.
+public typealias Distance<Space, Scalar> = Magnitude<Space>.Value<Scalar>
+
+/// Circumference of a circle.
+public typealias Circumference<Space, Scalar> = Magnitude<Space>.Value<Scalar>
+
+/// Perimeter of a closed shape.
+public typealias Perimeter<Space, Scalar> = Magnitude<Space>.Value<Scalar>
+
+/// Arc length along a curve.
+public typealias ArcLength<Space, Scalar> = Magnitude<Space>.Value<Scalar>
