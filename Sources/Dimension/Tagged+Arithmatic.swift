@@ -78,104 +78,60 @@ public func max<Tag, T: Comparable>(_ x: Tagged<Tag, T>, _ y: Tagged<Tag, T>) ->
 // In affine geometry, only Displacements and Magnitudes can be scaled - not Coordinates.
 // See below for mathematically correct per-type scaling operators.
 
-// MARK: - Angle Scaling by Integer
+// MARK: - Angle × Scale
 
-/// Multiplies a radian angle by an integer.
-@inlinable
-public func * <Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Angle.Radian.Value<Scalar>, rhs: I
-) -> Angle.Radian.Value<Scalar> {
-    Tagged(lhs._rawValue * Scalar(rhs))
-}
-
-/// Multiplies an integer by a radian angle.
-@inlinable
-public func * <Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: I, rhs: Angle.Radian.Value<Scalar>
-) -> Angle.Radian.Value<Scalar> {
-    Tagged(Scalar(lhs) * rhs._rawValue)
-}
-
-/// Divides a radian angle by an integer.
-@inlinable
-public func / <Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Angle.Radian.Value<Scalar>, rhs: I
-) -> Angle.Radian.Value<Scalar> {
-    Tagged(lhs._rawValue / Scalar(rhs))
-}
-
-/// Multiplies a degree angle by an integer.
-@inlinable
-public func * <Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Angle.Degree.Value<Scalar>, rhs: I
-) -> Angle.Degree.Value<Scalar> {
-    Tagged(lhs._rawValue * Scalar(rhs))
-}
-
-/// Multiplies an integer by a degree angle.
-@inlinable
-public func * <Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: I, rhs: Angle.Degree.Value<Scalar>
-) -> Angle.Degree.Value<Scalar> {
-    Tagged(Scalar(lhs) * rhs._rawValue)
-}
-
-/// Divides a degree angle by an integer.
-@inlinable
-public func / <Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Angle.Degree.Value<Scalar>, rhs: I
-) -> Angle.Degree.Value<Scalar> {
-    Tagged(lhs._rawValue / Scalar(rhs))
-}
-
-// MARK: - Angle Scaling by Scalar
-
-/// Multiplies a radian angle by a scalar.
+/// Scales a radian angle by a scale factor.
 @inlinable
 public func * <Scalar: FloatingPoint>(
-    lhs: Angle.Radian.Value<Scalar>, rhs: Scalar
+    lhs: Angle.Radian.Value<Scalar>,
+    rhs: Scale<1, Scalar>
 ) -> Angle.Radian.Value<Scalar> {
-    Tagged(lhs._rawValue * rhs)
+    Tagged(lhs._rawValue * rhs.value)
 }
 
-/// Multiplies a scalar by a radian angle.
+/// Scales a radian angle by a scale factor (commutative).
 @inlinable
 public func * <Scalar: FloatingPoint>(
-    lhs: Scalar, rhs: Angle.Radian.Value<Scalar>
+    lhs: Scale<1, Scalar>,
+    rhs: Angle.Radian.Value<Scalar>
 ) -> Angle.Radian.Value<Scalar> {
-    Tagged(lhs * rhs._rawValue)
+    Tagged(lhs.value * rhs._rawValue)
 }
 
-/// Divides a radian angle by a scalar.
+/// Divides a radian angle by a scale factor.
 @inlinable
 public func / <Scalar: FloatingPoint>(
-    lhs: Angle.Radian.Value<Scalar>, rhs: Scalar
+    lhs: Angle.Radian.Value<Scalar>,
+    rhs: Scale<1, Scalar>
 ) -> Angle.Radian.Value<Scalar> {
-    Tagged(lhs._rawValue / rhs)
+    Tagged(lhs._rawValue / rhs.value)
 }
 
-/// Multiplies a degree angle by a scalar.
+/// Scales a degree angle by a scale factor.
 @inlinable
 public func * <Scalar: FloatingPoint>(
-    lhs: Angle.Degree.Value<Scalar>, rhs: Scalar
+    lhs: Angle.Degree.Value<Scalar>,
+    rhs: Scale<1, Scalar>
 ) -> Angle.Degree.Value<Scalar> {
-    Tagged(lhs._rawValue * rhs)
+    Tagged(lhs._rawValue * rhs.value)
 }
 
-/// Multiplies a scalar by a degree angle.
+/// Scales a degree angle by a scale factor (commutative).
 @inlinable
 public func * <Scalar: FloatingPoint>(
-    lhs: Scalar, rhs: Angle.Degree.Value<Scalar>
+    lhs: Scale<1, Scalar>,
+    rhs: Angle.Degree.Value<Scalar>
 ) -> Angle.Degree.Value<Scalar> {
-    Tagged(lhs * rhs._rawValue)
+    Tagged(lhs.value * rhs._rawValue)
 }
 
-/// Divides a degree angle by a scalar.
+/// Divides a degree angle by a scale factor.
 @inlinable
 public func / <Scalar: FloatingPoint>(
-    lhs: Angle.Degree.Value<Scalar>, rhs: Scalar
+    lhs: Angle.Degree.Value<Scalar>,
+    rhs: Scale<1, Scalar>
 ) -> Angle.Degree.Value<Scalar> {
-    Tagged(lhs._rawValue / rhs)
+    Tagged(lhs._rawValue / rhs.value)
 }
 
 // MARK: - Displacement Same-Type Arithmetic
@@ -718,69 +674,33 @@ public func - <Space, Scalar: AdditiveArithmetic>(
     Tagged(lhs._rawValue - rhs._rawValue)
 }
 
-/// Divides two areas, returning a dimensionless ratio.
-@inlinable
-public func / <Space, Scalar: FloatingPoint>(
-    lhs: Area<Space>.Value<Scalar>,
-    rhs: Area<Space>.Value<Scalar>
-) -> Scalar {
-    lhs._rawValue / rhs._rawValue
-}
+// MARK: - Measure × Scale (Magnitude, Area, Volume)
 
-// MARK: - Measure Scaling (Magnitude, Area, Volume)
-
-/// Multiplies a measure by a scalar.
+/// Scales a measure by a scale factor.
 @inlinable
 public func * <let N: Int, Space, Scalar: FloatingPoint>(
     lhs: Measure<N, Space>.Value<Scalar>,
-    rhs: Scalar
+    rhs: Scale<1, Scalar>
 ) -> Measure<N, Space>.Value<Scalar> {
-    Tagged(lhs._rawValue * rhs)
+    Tagged(lhs._rawValue * rhs.value)
 }
 
-/// Multiplies a scalar by a measure.
+/// Scales a measure by a scale factor (commutative).
 @inlinable
 public func * <let N: Int, Space, Scalar: FloatingPoint>(
-    lhs: Scalar,
+    lhs: Scale<1, Scalar>,
     rhs: Measure<N, Space>.Value<Scalar>
 ) -> Measure<N, Space>.Value<Scalar> {
-    Tagged(lhs * rhs._rawValue)
+    Tagged(lhs.value * rhs._rawValue)
 }
 
-/// Divides a measure by a scalar.
+/// Divides a measure by a scale factor.
 @inlinable
 public func / <let N: Int, Space, Scalar: FloatingPoint>(
     lhs: Measure<N, Space>.Value<Scalar>,
-    rhs: Scalar
+    rhs: Scale<1, Scalar>
 ) -> Measure<N, Space>.Value<Scalar> {
-    Tagged(lhs._rawValue / rhs)
-}
-
-/// Multiplies a measure by an integer.
-@inlinable
-public func * <let N: Int, Space, Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Measure<N, Space>.Value<Scalar>,
-    rhs: I
-) -> Measure<N, Space>.Value<Scalar> {
-    Tagged(lhs._rawValue * Scalar(rhs))
-}
-
-/// Multiplies an integer by a measure.
-@inlinable
-public func * <let N: Int, Space, Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: I,
-    rhs: Measure<N, Space>.Value<Scalar>
-) -> Measure<N, Space>.Value<Scalar> {
-    Tagged(Scalar(lhs) * rhs._rawValue)
-}
-
-/// Divides a measure by an integer.
-@inlinable
-public func / <let N: Int, Space, Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Measure<N, Space>.Value<Scalar>,
-    rhs: I
-) -> Measure<N, Space>.Value<Scalar> {
-    Tagged(lhs._rawValue / Scalar(rhs))
+    Tagged(lhs._rawValue / rhs.value)
 }
 
 // MARK: - Area / Magnitude = Magnitude (L² / L = L)
@@ -804,197 +724,33 @@ public func / <Space, Scalar: FloatingPoint>(
     Scale(lhs._rawValue / rhs._rawValue)
 }
 
-// MARK: - Displacement Scaling
+// MARK: - Displacement Division (ratio)
 
-/// Multiplies X-displacement by a scalar.
-@inlinable
-public func * <Space, Scalar: FloatingPoint>(
-    lhs: Displacement.X<Space>.Value<Scalar>,
-    rhs: Scalar
-) -> Displacement.X<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue * rhs)
-}
-
-/// Multiplies a scalar by X-displacement.
-@inlinable
-public func * <Space, Scalar: FloatingPoint>(
-    lhs: Scalar,
-    rhs: Displacement.X<Space>.Value<Scalar>
-) -> Displacement.X<Space>.Value<Scalar> {
-    Tagged(lhs * rhs._rawValue)
-}
-
-/// Divides X-displacement by a scalar.
-@inlinable
-public func / <Space, Scalar: FloatingPoint>(
-    lhs: Displacement.X<Space>.Value<Scalar>,
-    rhs: Scalar
-) -> Displacement.X<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue / rhs)
-}
-
-/// Divides two X-displacements, returning a dimensionless ratio.
+/// Divides two X-displacements, returning a dimensionless scale factor.
 @inlinable
 public func / <Space, Scalar: FloatingPoint>(
     lhs: Displacement.X<Space>.Value<Scalar>,
     rhs: Displacement.X<Space>.Value<Scalar>
-) -> Scalar {
-    lhs._rawValue / rhs._rawValue
+) -> Scale<1, Scalar> {
+    Scale(lhs._rawValue / rhs._rawValue)
 }
 
-/// Multiplies Y-displacement by a scalar.
-@inlinable
-public func * <Space, Scalar: FloatingPoint>(
-    lhs: Displacement.Y<Space>.Value<Scalar>,
-    rhs: Scalar
-) -> Displacement.Y<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue * rhs)
-}
-
-/// Multiplies a scalar by Y-displacement.
-@inlinable
-public func * <Space, Scalar: FloatingPoint>(
-    lhs: Scalar,
-    rhs: Displacement.Y<Space>.Value<Scalar>
-) -> Displacement.Y<Space>.Value<Scalar> {
-    Tagged(lhs * rhs._rawValue)
-}
-
-/// Divides Y-displacement by a scalar.
-@inlinable
-public func / <Space, Scalar: FloatingPoint>(
-    lhs: Displacement.Y<Space>.Value<Scalar>,
-    rhs: Scalar
-) -> Displacement.Y<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue / rhs)
-}
-
-/// Divides two Y-displacements, returning a dimensionless ratio.
+/// Divides two Y-displacements, returning a dimensionless scale factor.
 @inlinable
 public func / <Space, Scalar: FloatingPoint>(
     lhs: Displacement.Y<Space>.Value<Scalar>,
     rhs: Displacement.Y<Space>.Value<Scalar>
-) -> Scalar {
-    lhs._rawValue / rhs._rawValue
+) -> Scale<1, Scalar> {
+    Scale(lhs._rawValue / rhs._rawValue)
 }
 
-/// Multiplies Z-displacement by a scalar.
-@inlinable
-public func * <Space, Scalar: FloatingPoint>(
-    lhs: Displacement.Z<Space>.Value<Scalar>,
-    rhs: Scalar
-) -> Displacement.Z<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue * rhs)
-}
-
-/// Multiplies a scalar by Z-displacement.
-@inlinable
-public func * <Space, Scalar: FloatingPoint>(
-    lhs: Scalar,
-    rhs: Displacement.Z<Space>.Value<Scalar>
-) -> Displacement.Z<Space>.Value<Scalar> {
-    Tagged(lhs * rhs._rawValue)
-}
-
-/// Divides Z-displacement by a scalar.
-@inlinable
-public func / <Space, Scalar: FloatingPoint>(
-    lhs: Displacement.Z<Space>.Value<Scalar>,
-    rhs: Scalar
-) -> Displacement.Z<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue / rhs)
-}
-
-/// Divides two Z-displacements, returning a dimensionless ratio.
+/// Divides two Z-displacements, returning a dimensionless scale factor.
 @inlinable
 public func / <Space, Scalar: FloatingPoint>(
     lhs: Displacement.Z<Space>.Value<Scalar>,
     rhs: Displacement.Z<Space>.Value<Scalar>
-) -> Scalar {
-    lhs._rawValue / rhs._rawValue
-}
-
-// MARK: - Displacement Scaling by Integer
-
-/// Multiplies X-displacement by an integer.
-@inlinable
-public func * <Space, Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Displacement.X<Space>.Value<Scalar>,
-    rhs: I
-) -> Displacement.X<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue * Scalar(rhs))
-}
-
-/// Multiplies an integer by X-displacement.
-@inlinable
-public func * <Space, Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: I,
-    rhs: Displacement.X<Space>.Value<Scalar>
-) -> Displacement.X<Space>.Value<Scalar> {
-    Tagged(Scalar(lhs) * rhs._rawValue)
-}
-
-/// Divides X-displacement by an integer.
-@inlinable
-public func / <Space, Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Displacement.X<Space>.Value<Scalar>,
-    rhs: I
-) -> Displacement.X<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue / Scalar(rhs))
-}
-
-/// Multiplies Y-displacement by an integer.
-@inlinable
-public func * <Space, Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Displacement.Y<Space>.Value<Scalar>,
-    rhs: I
-) -> Displacement.Y<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue * Scalar(rhs))
-}
-
-/// Multiplies an integer by Y-displacement.
-@inlinable
-public func * <Space, Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: I,
-    rhs: Displacement.Y<Space>.Value<Scalar>
-) -> Displacement.Y<Space>.Value<Scalar> {
-    Tagged(Scalar(lhs) * rhs._rawValue)
-}
-
-/// Divides Y-displacement by an integer.
-@inlinable
-public func / <Space, Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Displacement.Y<Space>.Value<Scalar>,
-    rhs: I
-) -> Displacement.Y<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue / Scalar(rhs))
-}
-
-/// Multiplies Z-displacement by an integer.
-@inlinable
-public func * <Space, Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Displacement.Z<Space>.Value<Scalar>,
-    rhs: I
-) -> Displacement.Z<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue * Scalar(rhs))
-}
-
-/// Multiplies an integer by Z-displacement.
-@inlinable
-public func * <Space, Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: I,
-    rhs: Displacement.Z<Space>.Value<Scalar>
-) -> Displacement.Z<Space>.Value<Scalar> {
-    Tagged(Scalar(lhs) * rhs._rawValue)
-}
-
-/// Divides Z-displacement by an integer.
-@inlinable
-public func / <Space, Scalar: FloatingPoint, I: BinaryInteger>(
-    lhs: Displacement.Z<Space>.Value<Scalar>,
-    rhs: I
-) -> Displacement.Z<Space>.Value<Scalar> {
-    Tagged(lhs._rawValue / Scalar(rhs))
+) -> Scale<1, Scalar> {
+    Scale(lhs._rawValue / rhs._rawValue)
 }
 
 // MARK: - Mixed Coordinate/Displacement Arithmetic

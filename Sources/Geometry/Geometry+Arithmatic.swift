@@ -126,8 +126,8 @@ extension Geometry.Area where Scalar: FloatingPoint {
 
     /// Ratio of two areas (dimensionless).
     @inlinable
-    public static func / (lhs: Self, rhs: Self) -> Scalar {
-        lhs.rawValue / rhs.rawValue
+    public static func / (lhs: Self, rhs: Self) -> Scale<1, Scalar> {
+        .init(lhs.rawValue / rhs.rawValue)
     }
 }
 

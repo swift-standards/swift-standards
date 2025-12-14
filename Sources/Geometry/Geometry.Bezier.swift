@@ -110,7 +110,7 @@ extension Geometry.Bezier where Scalar: FloatingPoint {
     /// - Parameter t: Parameter in [0, 1] (0 = start, 1 = end)
     /// - Returns: The point on the curve at parameter t
     @inlinable
-    public func point(at t: Scalar) -> Geometry.Point<2>? {
+    public func point(at t: Scale<1, Scalar>) -> Geometry.Point<2>? {
         Geometry.point(of: self, at: t)
     }
 
@@ -119,7 +119,7 @@ extension Geometry.Bezier where Scalar: FloatingPoint {
     /// - Parameter t: Parameter in [0, 1]
     /// - Returns: The tangent vector at parameter t, or nil if curve is invalid
     @inlinable
-    public func derivative(at t: Scalar) -> Geometry.Vector<2>? {
+    public func derivative(at t: Scale<1, Scalar>) -> Geometry.Vector<2>? {
         Geometry.derivative(of: self, at: t)
     }
 
@@ -128,7 +128,7 @@ extension Geometry.Bezier where Scalar: FloatingPoint {
     /// - Parameter t: Parameter in [0, 1]
     /// - Returns: The unit tangent vector, or nil if tangent is zero
     @inlinable
-    public func tangent(at t: Scalar) -> Geometry.Vector<2>? {
+    public func tangent(at t: Scale<1, Scalar>) -> Geometry.Vector<2>? {
         guard let d = derivative(at: t) else { return nil }
         let normalized = Linear<Scalar, Space>.Vector.normalized(d)
         guard normalized.length > 0 else { return nil }
@@ -140,7 +140,7 @@ extension Geometry.Bezier where Scalar: FloatingPoint {
     /// - Parameter t: Parameter in [0, 1]
     /// - Returns: The unit normal vector (rotated 90° CCW from tangent)
     @inlinable
-    public func normal(at t: Scalar) -> Geometry.Vector<2>? {
+    public func normal(at t: Scale<1, Scalar>) -> Geometry.Vector<2>? {
         guard let tang = tangent(at: t) else { return nil }
         // Rotate 90° counter-clockwise
         return Geometry.Vector(
@@ -160,7 +160,7 @@ extension Geometry.Bezier where Scalar: FloatingPoint {
     /// - Parameter t: Parameter in [0, 1] where to split
     /// - Returns: Tuple of (left curve, right curve), or nil if invalid
     @inlinable
-    public func split(at t: Scalar) -> (left: Self, right: Self)? {
+    public func split(at t: Scale<1, Scalar>) -> (left: Self, right: Self)? {
         guard isValid else { return nil }
 
         var leftPoints: [Geometry.Point<2>] = []
@@ -200,7 +200,7 @@ extension Geometry.Bezier where Scalar: FloatingPoint {
         points.reserveCapacity(segments + 1)
 
         for i in 0...segments {
-            let t = Scalar(i) / Scalar(segments)
+            let t:Scale<1, Scalar> = .init(Scalar(i) / Scalar(segments))
             if let p = point(at: t) {
                 points.append(p)
             }
@@ -383,7 +383,7 @@ extension Geometry.Bezier where Scalar: Real & BinaryFloatingPoint {
 extension Geometry where Scalar: FloatingPoint {
     /// Evaluate a Bezier curve at parameter t using de Casteljau's algorithm.
     @inlinable
-    public static func point(of bezier: Bezier, at t: Scalar) -> Point<2>? {
+    public static func point(of bezier: Bezier, at t: Scale<1, Scalar>) -> Point<2>? {
         guard bezier.isValid else { return nil }
 
         // de Casteljau's algorithm
@@ -402,7 +402,7 @@ extension Geometry where Scalar: FloatingPoint {
 
     /// Evaluate the derivative (tangent vector) of a Bezier curve at parameter t.
     @inlinable
-    public static func derivative(of bezier: Bezier, at t: Scalar) -> Vector<2>? {
+    public static func derivative(of bezier: Bezier, at t: Scale<1, Scalar>) -> Vector<2>? {
         guard bezier.controlPoints.count >= 2 else { return nil }
 
         // Derivative of Bezier curve is n * Bezier(P[i+1] - P[i])

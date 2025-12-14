@@ -315,7 +315,7 @@ extension Affine.Point where N == 2, Scalar: FloatingPoint {
     ///   - to: Target point
     ///   - t: Interpolation parameter where `0` returns `from` and `1` returns `to`
     @inlinable
-    public static func lerp(from point: Self, to other: Self, t: Scalar) -> Self {
+    public static func lerp(from point: Self, to other: Self, t: Scale<1, Scalar>) -> Self {
         Self(
             x: point.x + t * (other.x - point.x),
             y: point.y + t * (other.y - point.y)
@@ -328,7 +328,7 @@ extension Affine.Point where N == 2, Scalar: FloatingPoint {
     ///   - other: Target point
     ///   - t: Interpolation parameter where `0` returns `self` and `1` returns `other`
     @inlinable
-    public func lerp(to other: Self, t: Scalar) -> Self {
+    public func lerp(to other: Self, t: Scale<1, Scalar>) -> Self {
         Self.lerp(from: self, to: other, t: t)
     }
 

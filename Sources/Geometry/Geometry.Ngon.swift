@@ -298,7 +298,7 @@ extension Geometry.Ngon where Scalar: FloatingPoint {
     /// The signed area of the polygon
     @inlinable
     public var signedArea: Linear<Scalar, Space>.Area {
-        signedDoubleArea / Scalar(2)
+        signedDoubleArea / Scale(2)
     }
 
     /// The area of the polygon (always positive)

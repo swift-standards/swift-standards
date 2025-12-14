@@ -174,7 +174,7 @@ extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
     /// - Parameter t: Parameter in [0, 1] (0 = start, 1 = end)
     /// - Returns: The point on the arc at that parameter
     @inlinable
-    public func point(at t: Scalar) -> Geometry.Point<2> {
+    public func point(at t: Scale<1, Scalar>) -> Geometry.Point<2> {
         let angle = startAngle + t * sweep
         return Geometry.Point(
             x: center.x + radius * angle.cos,
@@ -187,7 +187,7 @@ extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
     /// - Parameter t: Parameter in [0, 1]
     /// - Returns: The unit tangent vector
     @inlinable
-    public func tangent(at t: Scalar) -> Geometry.Vector<2> {
+    public func tangent(at t: Scale<1, Scalar>) -> Geometry.Vector<2> {
         let angle = startAngle + t * sweep
         // Tangent is perpendicular to radius, in direction of sweep
         let sign: Scalar = sweep._rawValue >= 0 ? 1 : -1
@@ -206,8 +206,8 @@ extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
     /// Formula: s = r × θ where θ is the angle in radians (dimensionless).
     @inlinable
     public var length: Geometry.ArcLength {
-        // Radians are dimensionless, so we use the raw value for the multiplication
-        radius * abs(sweep._rawValue)
+        // Radians are dimensionless, so we use the raw value as a scale factor
+        radius * Scale(abs(sweep._rawValue))
     }
 }
 
@@ -475,7 +475,7 @@ extension Geometry.Arc where Scalar: Real & BinaryFloatingPoint {
     public func scaled(by factor: Scale<1, Scalar>) -> Self {
         Self(
             center: center,
-            radius: radius * factor.value,
+            radius: radius * factor,
             startAngle: startAngle,
             endAngle: endAngle
         )
