@@ -193,19 +193,39 @@ extension Geometry.Bezier where Scalar: FloatingPoint {
     /// - Returns: Array of points along the curve
     @inlinable
     public func subdivide(into segments: Int) -> [Geometry.Point<2>] {
-        guard segments > 0 else { return [] }
+        .init(subdividing: self, into: segments)
+    }
+}
 
-        var points: [Geometry.Point<2>] = []
+// MARK: - Array from Bezier Subdivision
+
+extension Array {
+    /// Create an array of points by subdividing a Bezier curve.
+    ///
+    /// - Parameters:
+    ///   - bezier: The Bezier curve to subdivide
+    ///   - segments: Number of segments to create
+    @inlinable
+    public init<Scalar: FloatingPoint, Space>(
+        subdividing bezier: Geometry<Scalar, Space>.Bezier,
+        into segments: Int
+    ) where Element == Geometry<Scalar, Space>.Point<2> {
+        guard segments > 0 else {
+            self = []
+            return
+        }
+
+        var points: [Geometry<Scalar, Space>.Point<2>] = []
         points.reserveCapacity(segments + 1)
 
         for i in 0...segments {
             let t: Scale<1, Scalar> = .init(Scalar(i) / Scalar(segments))
-            if let p = point(at: t) {
+            if let p = bezier.point(at: t) {
                 points.append(p)
             }
         }
 
-        return points
+        self = points
     }
 }
 

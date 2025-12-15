@@ -143,21 +143,31 @@ extension Geometry.Path.Segment where Scalar: Real & BinaryFloatingPoint {
     }
 }
 
+// MARK: - Array from Segment
+
+extension Array {
+    /// Create an array of Bezier curves from a path segment
+    @inlinable
+    public init<Scalar: Real & BinaryFloatingPoint, Space>(
+        segment: Geometry<Scalar, Space>.Path.Segment
+    ) where Element == Geometry<Scalar, Space>.Bezier {
+        switch segment {
+        case .line(let seg):
+            self = [.linear(from: seg.start, to: seg.end)]
+        case .bezier(let bez):
+            self = [bez]
+        case .arc(let arc):
+            self.init(arc: arc)
+        case .ellipticalArc(let arc):
+            self.init(ellipticalArc: arc)
+        }
+    }
+}
+
 extension Geometry.Path.Segment where Scalar: Real & BinaryFloatingPoint {
     /// Convert segment to Bezier curves
     @inlinable
-    public func toBeziers() -> [Geometry.Bezier] {
-        switch self {
-        case .line(let seg):
-            return [.linear(from: seg.start, to: seg.end)]
-        case .bezier(let bez):
-            return [bez]
-        case .arc(let arc):
-            return [Geometry.Bezier](arc: arc)
-        case .ellipticalArc(let arc):
-            return [Geometry.Bezier](ellipticalArc: arc)
-        }
-    }
+    public func toBeziers() -> [Geometry.Bezier] { .init(segment: self) }
 }
 
 // MARK: - Path Properties
@@ -174,14 +184,16 @@ extension Geometry.Path {
     }
 }
 
-extension Geometry.Path where Scalar: Real & BinaryFloatingPoint {
-    /// Convert entire path to Bezier curves.
-    ///
-    /// Useful for rendering or geometric operations that work on Beziers.
+// MARK: - Array from Path
+
+extension Array where Element: RangeReplaceableCollection {
+    /// Create a nested array of Bezier curves from a path
     @inlinable
-    public func toBeziers() -> [[Geometry.Bezier]] {
-        subpaths.map { subpath in
-            var beziers = subpath.segments.flatMap { $0.toBeziers() }
+    public init<Scalar: Real & BinaryFloatingPoint, Space>(
+        path: Geometry<Scalar, Space>.Path
+    ) where Element == [Geometry<Scalar, Space>.Bezier] {
+        self = path.subpaths.map { subpath in
+            var beziers = subpath.segments.flatMap { [Geometry<Scalar, Space>.Bezier](segment: $0) }
             if subpath.isClosed, let last = beziers.last?.endPoint {
                 if last != subpath.startPoint {
                     beziers.append(.linear(from: last, to: subpath.startPoint))
@@ -190,6 +202,14 @@ extension Geometry.Path where Scalar: Real & BinaryFloatingPoint {
             return beziers
         }
     }
+}
+
+extension Geometry.Path where Scalar: Real & BinaryFloatingPoint {
+    /// Convert entire path to Bezier curves.
+    ///
+    /// Useful for rendering or geometric operations that work on Beziers.
+    @inlinable
+    public func toBeziers() -> [[Geometry.Bezier]] { .init(path: self) }
 
     /// Bounding box of the entire path
     @inlinable

@@ -217,19 +217,48 @@ extension Geometry.Line.Segment {
     }
 }
 
+// MARK: - Vector from Line.Segment
+
+extension Linear.Vector where N == 2, Scalar: AdditiveArithmetic {
+    /// Create a vector from a line segment (direction from start to end)
+    @inlinable
+    public init(from segment: Geometry<Scalar, Space>.Line.Segment) {
+        self.init(dx: segment.end.x - segment.start.x, dy: segment.end.y - segment.start.y)
+    }
+}
+
+// MARK: - Line from Segment
+
+extension Geometry.Line where Scalar: AdditiveArithmetic {
+    /// Create a line by extending a segment to infinity
+    @inlinable
+    public init(extending segment: Segment) {
+        self.init(point: segment.start, direction: .init(from: segment))
+    }
+}
+
 // MARK: - Segment Vector (AdditiveArithmetic)
 
 extension Geometry.Line.Segment where Scalar: AdditiveArithmetic {
     /// The vector from start to end
     @inlinable
-    public var vector: Geometry.Vector<2> {
-        Geometry.Vector(dx: end.x - start.x, dy: end.y - start.y)
-    }
+    public var vector: Geometry.Vector<2> { .init(from: self) }
 
     /// The infinite line containing this segment
     @inlinable
-    public var line: Geometry.Line {
-        Geometry.Line(point: start, direction: vector)
+    public var line: Geometry.Line { .init(extending: self) }
+}
+
+// MARK: - Point Midpoint Initializer
+
+extension Affine.Point where N == 2, Scalar: FloatingPoint {
+    /// Create a point at the midpoint of a line segment
+    @inlinable
+    public init(midpointOf segment: Geometry<Scalar, Space>.Line.Segment) {
+        self.init(
+            x: segment.start.x + (segment.end.x - segment.start.x) / 2,
+            y: segment.start.y + (segment.end.y - segment.start.y) / 2
+        )
     }
 }
 
@@ -252,13 +281,7 @@ extension Geometry.Line.Segment where Scalar: FloatingPoint {
 
     /// The midpoint of the segment
     @inlinable
-    public var midpoint: Geometry.Point<2> {
-        // Mathematically: start + (end - start) / 2
-        Geometry.Point(
-            x: start.x + (end.x - start.x) / 2,
-            y: start.y + (end.y - start.y) / 2
-        )
-    }
+    public var midpoint: Geometry.Point<2> { .init(midpointOf: self) }
 
     /// Get a point along the segment at parameter t
     ///

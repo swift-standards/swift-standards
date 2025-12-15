@@ -76,6 +76,38 @@ extension Geometry.Area {
     public var value: Scalar { rawValue }
 }
 
+// MARK: - Square from Area
+
+extension Geometry.Hypercube where N == 2, Scalar: FloatingPoint {
+    /// Create a square with the given area (centered at origin).
+    ///
+    /// The square's side length is √A where A is the area.
+    @inlinable
+    public init(area: Geometry.Area) {
+        let side = area.rawValue.squareRoot()
+        self.init(
+            center: .zero,
+            halfSide: Linear<Scalar, Space>.Magnitude(side / 2)
+        )
+    }
+}
+
+// MARK: - Circle from Area
+
+extension Geometry.Ball where N == 2, Scalar: FloatingPoint {
+    /// Create a circle with the given area (centered at origin).
+    ///
+    /// The circle's radius is √(A/π) where A is the area.
+    @inlinable
+    public init(area: Geometry.Area) {
+        let radius = (area.rawValue / Scalar.pi).squareRoot()
+        self.init(
+            center: .zero,
+            radius: Geometry.Radius(radius)
+        )
+    }
+}
+
 // MARK: - Shape Projections
 
 extension Geometry.Area where Scalar: FloatingPoint {
@@ -83,25 +115,13 @@ extension Geometry.Area where Scalar: FloatingPoint {
     ///
     /// The square's side length is √A where A is the area.
     @inlinable
-    public var square: Geometry.Square {
-        let side = rawValue.squareRoot()
-        return Geometry.Square(
-            center: .zero,
-            halfSide: Linear<Scalar, Space>.Magnitude(side / 2)
-        )
-    }
+    public var square: Geometry.Square { .init(area: self) }
 
     /// Circle with this area (centered at origin).
     ///
     /// The circle's radius is √(A/π) where A is the area.
     @inlinable
-    public var circle: Geometry.Circle {
-        let radius = (rawValue / Scalar.pi).squareRoot()
-        return Geometry.Circle(
-            center: .zero,
-            radius: Geometry.Radius(radius)
-        )
-    }
+    public var circle: Geometry.Circle { .init(area: self) }
 }
 
 // MARK: - Absolute Value
