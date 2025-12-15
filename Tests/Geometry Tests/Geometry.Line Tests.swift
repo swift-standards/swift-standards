@@ -596,12 +596,12 @@ struct `Geometry.Line.Segment - Instance Methods` {
 @Suite
 struct `Geometry.Line - Functorial Map` {
     @Test
-    func `Line map to different scalar type`() {
+    func `Line map to different scalar type`() throws {
         let line: Geometry<Double, Void>.Line = .init(
             point: .init(x: 1, y: 2),
             direction: .init(dx: 3, dy: 4)
         )
-        let mapped: Geometry<Float, Void>.Line = try! line.map { Float($0) }
+        let mapped: Geometry<Float, Void>.Line = try line.map { Float($0) }
         let expectedX: Geometry<Float, Void>.X = 1
         let expectedY: Geometry<Float, Void>.Y = 2
         let expectedDx: Linear<Float, Void>.Dx = 3
@@ -613,12 +613,12 @@ struct `Geometry.Line - Functorial Map` {
     }
 
     @Test
-    func `Segment map to different scalar type`() {
+    func `Segment map to different scalar type`() throws {
         let segment: Geometry<Double, Void>.Line.Segment = .init(
             start: .init(x: 0, y: 0),
             end: .init(x: 5, y: 10)
         )
-        let mapped: Geometry<Float, Void>.Line.Segment = try! segment.map { Float($0) }
+        let mapped: Geometry<Float, Void>.Line.Segment = try segment.map { Float($0) }
         let expectedStartX: Geometry<Float, Void>.X = 0
         let expectedEndY: Geometry<Float, Void>.Y = 10
         #expect(mapped.start.x == expectedStartX)

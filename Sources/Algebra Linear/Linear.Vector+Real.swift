@@ -2,7 +2,6 @@
 // Angle and rotation operations for 2D vectors with Real scalar types.
 
 public import Dimension
-public import Dimension
 public import RealModule
 
 // MARK: - Angle from Vector

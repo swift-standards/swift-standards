@@ -3,7 +3,6 @@
 import Affine
 import Algebra_Linear
 import Dimension
-import Dimension
 import Region
 import Symmetry
 import Testing

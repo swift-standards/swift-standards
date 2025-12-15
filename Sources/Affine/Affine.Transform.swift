@@ -4,7 +4,6 @@
 public import Algebra
 public import Algebra_Linear
 public import Dimension
-public import Dimension
 public import RealModule
 
 extension Affine {

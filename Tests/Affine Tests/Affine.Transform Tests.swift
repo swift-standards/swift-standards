@@ -1,15 +1,15 @@
 //// Affine.Transform Tests.swift
 //// Tests for Affine.Transform.swift
 //
-//import Dimension
-//import Testing
+// import Dimension
+// import Testing
 //
-//@testable import Affine
-//@testable import Algebra
-//@testable import Algebra_Linear
+// @testable import Affine
+// @testable import Algebra
+// @testable import Algebra_Linear
 //
-//@Suite
-//struct `Affine.Transform Tests` {
+// @Suite
+// struct `Affine.Transform Tests` {
 //    typealias Transform = Affine<Double, Void>.Transform
 //    typealias Point2 = Affine<Double, Void>.Point<2>
 //    typealias Vec2 = Linear<Double, Void>.Vector<2>
@@ -633,4 +633,4 @@
 //            #expect(scale != rotate)
 //        }
 //    }
-//}
+// }

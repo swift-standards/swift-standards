@@ -42,28 +42,6 @@ public import Affine
 public import Algebra
 public import Algebra_Linear
 import Dimension
-public import Dimension
-
-/// Namespace for affine geometry primitives.
-///
-/// All geometry types are parameterized by scalar type and coordinate space.
-/// The `Space` parameter is a phantom type that ensures type safety across coordinate systems.
-/// Use `Void` for applications that don't need space separation.
-///
-/// ## Example
-///
-/// ```swift
-/// // Simple usage with Void space
-/// let rect = Geometry<Double, Void>.Rectangle(x: 0, y: 0, width: 100, height: 200)
-/// let circle = Geometry<Double, Void>.Circle(center: .init(x: 50, y: 50), radius: 25)
-///
-/// // Type-safe coordinate spaces
-/// enum UserSpace {}
-/// enum DeviceSpace {}
-/// let userPoint: Geometry<Double, UserSpace>.Point<2> = .init(x: 10, y: 20)
-/// let devicePoint: Geometry<Double, DeviceSpace>.Point<2> = .init(x: 100, y: 200)
-/// // userPoint + devicePoint  // Compile error: different spaces
-/// ```
 public enum Geometry<Scalar: ~Copyable, Space>: ~Copyable {}
 
 extension Geometry: Copyable where Scalar: Copyable {}

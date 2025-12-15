@@ -747,13 +747,13 @@ struct `Geometry.Ngon - Winding` {
 @Suite
 struct `Geometry.Ngon - Functorial Map` {
     @Test
-    func `Triangle map to different scalar type`() {
+    func `Triangle map to different scalar type`() throws {
         let triangle: Geometry<Double, Void>.Triangle = .init(
             a: .init(x: 0, y: 0),
             b: .init(x: 1, y: 0),
             c: .init(x: 0, y: 1)
         )
-        let mapped: Geometry<Float, Void>.Triangle = try! triangle.map { Float($0) }
+        let mapped: Geometry<Float, Void>.Triangle = try triangle.map { Float($0) }
         let expectedAX: Geometry<Float, Void>.X = 0
         let expectedBX: Geometry<Float, Void>.X = 1
         let expectedCY: Geometry<Float, Void>.Y = 1

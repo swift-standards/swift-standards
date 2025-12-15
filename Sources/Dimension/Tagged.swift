@@ -29,7 +29,6 @@ public struct Tagged<Tag, RawValue> {
     ///   This is `package` visible to allow `@inlinable` operators within the package.
     public var _rawValue: RawValue
 
-
     /// Creates a tagged value from a raw value.
     @inlinable
     public init(_ rawValue: RawValue) {
@@ -196,8 +195,6 @@ extension Tagged where RawValue: FloatingPoint {
     @inlinable
     public var sign: FloatingPointSign { _rawValue.sign }
 }
-
-
 
 // MARK: - Square Root for Measures
 

@@ -1,12 +1,12 @@
 //// Affine+Formatting Tests.swift
 //// Tests for Affine+Formatting.swift
 //
-//import Testing
+// import Testing
 //
-//@testable import Affine
+// @testable import Affine
 //
-//@Suite
-//struct `Affine+Formatting Tests` {
+// @Suite
+// struct `Affine+Formatting Tests` {
 //    typealias X = Affine<Double, Void>.X
 //    typealias Y = Affine<Double, Void>.Y
 //    typealias Z = Affine<Double, Void>.Z
@@ -51,4 +51,4 @@
 //            #expect(x == -5.5)
 //        }
 //    }
-//}
+// }

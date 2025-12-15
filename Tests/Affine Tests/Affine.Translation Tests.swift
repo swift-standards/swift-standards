@@ -1,14 +1,14 @@
 //// Affine.Translation Tests.swift
 //// Tests for Affine.Translation.swift
 //
-//import Testing
+// import Testing
 //
-//@testable import Affine
-//@testable import Algebra
-//@testable import Algebra_Linear
+// @testable import Affine
+// @testable import Algebra
+// @testable import Algebra_Linear
 //
-//@Suite
-//struct `Affine.Translation Tests` {
+// @Suite
+// struct `Affine.Translation Tests` {
 //    typealias Translation = Affine<Double, Void>.Translation
 //    typealias Dx = Linear<Double, Void>.Dx
 //    typealias Dy = Linear<Double, Void>.Dy
@@ -271,4 +271,4 @@
 //            #expect(z.dy == 0)
 //        }
 //    }
-//}
+// }

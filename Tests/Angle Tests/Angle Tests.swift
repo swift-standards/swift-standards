@@ -1,12 +1,12 @@
 //// Angle Tests.swift
 //// Tests for Angle namespace
 //
-//import StandardsTestSupport
-//import Testing
-//@testable import Dimension
+// import StandardsTestSupport
+// import Testing
+// @testable import Dimension
 //
-//@Suite
-//struct `Angle - Namespace` {
+// @Suite
+// struct `Angle - Namespace` {
 //    @Test
 //    func angleNamespaceExists() {
 //        // Verify the Angle enum is available
@@ -43,4 +43,4 @@
 //        let converted = Degree(radians: rad)
 //        #expect(abs(converted.value - deg.value) < 1e-10)
 //    }
-//}
+// }

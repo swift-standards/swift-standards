@@ -6,8 +6,6 @@ import StandardsTestSupport
 import Testing
 import RealModule
 @testable import Dimension
-@_spi(Internal) @testable import Dimension
-
 @Suite
 struct `Radian - Static Trigonometric Functions` {
     @Test(arguments: [

@@ -1,13 +1,13 @@
 //// Affine Tests.swift
 //// Tests for Affine.swift coordinate type aliases
 //
-//import Testing
+// import Testing
 //
-//@testable import Affine
-//@testable import Algebra
+// @testable import Affine
+// @testable import Algebra
 //
-//@Suite
-//struct `Affine Coordinate Tests` {
+// @Suite
+// struct `Affine Coordinate Tests` {
 //    typealias X = Affine<Double, Void>.X
 //    typealias Y = Affine<Double, Void>.Y
 //    typealias Z = Affine<Double, Void>.Z
@@ -236,4 +236,4 @@
 //            #expect(a != c)
 //        }
 //    }
-//}
+// }

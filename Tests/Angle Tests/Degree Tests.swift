@@ -5,8 +5,6 @@ import StandardsTestSupport
 import Testing
 import RealModule
 @testable import Dimension
-@testable import Dimension
-
 @Suite
 struct `Degree - Basic Structure & Arithmetic` {
     @Test

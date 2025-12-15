@@ -3,7 +3,6 @@
 import Affine
 import Algebra_Linear
 import Dimension
-@_spi(Internal) import Dimension
 import Foundation
 import Testing
 

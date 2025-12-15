@@ -140,10 +140,6 @@ extension Linear.Vector where Scalar: AdditiveArithmetic {
     }
 }
 
-
-
-
-
 // MARK: - Properties (FloatingPoint)
 
 extension Linear.Vector where Scalar: FloatingPoint {
@@ -437,4 +433,3 @@ extension Linear.Vector {
         return Self(result)
     }
 }
-

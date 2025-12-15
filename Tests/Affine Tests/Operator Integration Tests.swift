@@ -1,26 +1,26 @@
 //// Operator Integration Tests.swift
 //// Tests verifying type-safe operator interactions across coordinate systems.
 //
-//import Algebra_Linear
-//import Dimension
-//import Dimension
-//import Testing
+// import Algebra_Linear
+// import Dimension
+// import Dimension
+// import Testing
 //
-//@testable import Affine
+// @testable import Affine
 //
 //// MARK: - Type Aliases for Brevity
 //
-//private typealias A = Affine<Double, Void>
-//private typealias L = Linear<Double, Void>
-//private typealias Point2 = A.Point<2>
-//private typealias Vector2 = L.Vector<2>
-//private typealias Matrix2x2 = L.Matrix<2, 2>
-//private typealias Transform = A.Transform
+// private typealias A = Affine<Double, Void>
+// private typealias L = Linear<Double, Void>
+// private typealias Point2 = A.Point<2>
+// private typealias Vector2 = L.Vector<2>
+// private typealias Matrix2x2 = L.Matrix<2, 2>
+// private typealias Transform = A.Transform
 //
 //// MARK: - Affine Geometry Operators
 //
-//@Suite
-//struct `Affine Geometry - Point/Vector Arithmetic` {
+// @Suite
+// struct `Affine Geometry - Point/Vector Arithmetic` {
 //
 //    @Test
 //    func `Point - Point yields Vector displacement`() {
@@ -66,12 +66,12 @@
 //        #expect(recovered.x.value == p1.x.value)
 //        #expect(recovered.y.value == p1.y.value)
 //    }
-//}
+// }
 //
 //// MARK: - Tagged Coordinate/Displacement Operators
 //
-//@Suite
-//struct `Tagged - Coordinate/Displacement Arithmetic` {
+// @Suite
+// struct `Tagged - Coordinate/Displacement Arithmetic` {
 //
 //    // X-axis tests
 //    @Test
@@ -155,12 +155,12 @@
 //
 //        #expect(result.value == 17)
 //    }
-//}
+// }
 //
 //// MARK: - Tagged Scalar Operations
 //
-//@Suite
-//struct `Tagged - Scalar Multiplication/Division` {
+// @Suite
+// struct `Tagged - Scalar Multiplication/Division` {
 //
 //    @Test
 //    func `Dx * Scalar yields Dx`() {
@@ -207,12 +207,12 @@
 //
 //        #expect(squared == 16)
 //    }
-//}
+// }
 //
 //// MARK: - Cross-Axis Multiplication
 //
-//@Suite
-//struct `Tagged - Cross-Axis Multiplication` {
+// @Suite
+// struct `Tagged - Cross-Axis Multiplication` {
 //
 //    @Test
 //    func `Dx * Dy yields Scalar (area)`() {
@@ -233,12 +233,12 @@
 //
 //        #expect(area == 50)
 //    }
-//}
+// }
 //
 //// MARK: - Magnitude/Coordinate Arithmetic
 //
-//@Suite
-//struct `Tagged - Magnitude/Coordinate Arithmetic` {
+// @Suite
+// struct `Tagged - Magnitude/Coordinate Arithmetic` {
 //
 //    @Test
 //    func `X + Magnitude yields X (center + radius pattern)`() {
@@ -269,12 +269,12 @@
 //
 //        #expect(right.value == 125)
 //    }
-//}
+// }
 //
 //// MARK: - Linear Vector Operators
 //
-//@Suite
-//struct `Linear Vector - Arithmetic Operations` {
+// @Suite
+// struct `Linear Vector - Arithmetic Operations` {
 //
 //    @Test
 //    func `Vector + Vector yields Vector`() {
@@ -337,12 +337,12 @@
 //        #expect(result.dx.value == -3)
 //        #expect(result.dy.value == 4)
 //    }
-//}
+// }
 //
 //// MARK: - Linear Matrix Operators
 //
-//@Suite
-//struct `Linear Matrix - Arithmetic Operations` {
+// @Suite
+// struct `Linear Matrix - Arithmetic Operations` {
 //
 //    @Test
 //    func `Matrix + Matrix yields Matrix`() {
@@ -424,12 +424,12 @@
 //        #expect(abs(result.dx.value - 0) < 1e-10)
 //        #expect(abs(result.dy.value - 2) < 1e-10)
 //    }
-//}
+// }
 //
 //// MARK: - Translation Operators
 //
-//@Suite
-//struct `Affine Translation - Arithmetic Operations` {
+// @Suite
+// struct `Affine Translation - Arithmetic Operations` {
 //
 //    @Test
 //    func `Translation + Translation yields Translation`() {
@@ -462,12 +462,12 @@
 //        #expect(v.dx.value == 10)
 //        #expect(v.dy.value == 20)
 //    }
-//}
+// }
 //
 //// MARK: - Transform Composition
 //
-//@Suite
-//struct `Affine Transform - Composition Operators` {
+// @Suite
+// struct `Affine Transform - Composition Operators` {
 //
 //    @Test
 //    func `Transform composition follows right-to-left execution order`() {
@@ -512,12 +512,12 @@
 //        #expect(abs(result.dx.value - 6) < 1e-10)
 //        #expect(abs(result.dy.value - 8) < 1e-10)
 //    }
-//}
+// }
 //
 //// MARK: - Compound Assignment Operators
 //
-//@Suite
-//struct `Compound Assignment Operators` {
+// @Suite
+// struct `Compound Assignment Operators` {
 //
 //    @Test
 //    func `Dx += Dx modifies in place`() {
@@ -550,12 +550,12 @@
 //
 //        #expect(dx.value == 5)
 //    }
-//}
+// }
 //
 //// MARK: - Algebraic Properties
 //
-//@Suite
-//struct `Algebraic Properties` {
+// @Suite
+// struct `Algebraic Properties` {
 //
 //    @Test
 //    func `Vector addition is commutative`() {
@@ -628,12 +628,12 @@
 //        #expect(abs(p1.x.value - p2.x.value) < 1e-10)
 //        #expect(abs(p1.y.value - p2.y.value) < 1e-10)
 //    }
-//}
+// }
 //
 //// MARK: - Type Safety Verification
 //
-//@Suite
-//struct `Type Safety - Operator Return Types` {
+// @Suite
+// struct `Type Safety - Operator Return Types` {
 //
 //    @Test
 //    func `All coordinate/displacement operators preserve types correctly`() {
@@ -684,4 +684,4 @@
 //        // (this test is primarily about compile-time type checking)
 //        #expect(Bool(true), "All type assignments compiled correctly")
 //    }
-//}
+// }

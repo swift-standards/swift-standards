@@ -1,15 +1,15 @@
 //// Affine.Point+Real Tests.swift
 //// Tests for Affine.Point+Real.swift polar coordinates and rotation
 //
-//import Dimension
-//import Foundation
-//import Testing
+// import Dimension
+// import Foundation
+// import Testing
 //
-//@testable import Affine
-//@testable import Algebra
+// @testable import Affine
+// @testable import Algebra
 //
-//@Suite
-//struct `Affine.Point+Real Tests` {
+// @Suite
+// struct `Affine.Point+Real Tests` {
 //    typealias Point2 = Affine<Double, Void>.Point<2>
 //
 //    // MARK: - Polar Coordinate Tests
@@ -252,4 +252,4 @@
 //            #expect(abs(rotated2.y.value - rotatedDirect.y.value) < 1e-10)
 //        }
 //    }
-//}
+// }

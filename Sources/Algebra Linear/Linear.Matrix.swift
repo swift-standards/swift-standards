@@ -117,9 +117,6 @@ where Rows == Columns, Scalar: AdditiveArithmetic & ExpressibleByIntegerLiteral 
     }
 }
 
-
-
-
 // MARK: - Transpose
 
 extension Linear.Matrix {
@@ -143,8 +140,6 @@ extension Linear.Matrix {
         Self.transpose(self)
     }
 }
-
-
 
 // MARK: - Square Matrix Operations
 
@@ -226,13 +221,13 @@ extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint {
     public static func isInvertible(_ matrix: Self) -> Bool {
         determinant(matrix) != 0
     }
-    
+
     /// Whether the matrix is invertible (determinant is non-zero).
     @inlinable
     public var isInvertible: Bool {
         Self.isInvertible(self)
     }
-    
+
     /// The inverse of the matrix, or `nil` if singular.
     @inlinable
     public static func inverse(_ matrix: Self) -> Self? {
@@ -246,15 +241,13 @@ extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint {
             d: matrix.a * invDet
         )
     }
-    
+
     /// The inverse of the matrix, or `nil` if singular.
     @inlinable
     public var inverse: Self? {
         Self.inverse(self)
     }
 }
-
-
 
 // MARK: - 2×2 Codable
 
@@ -318,7 +311,6 @@ where Rows == 2, Columns == 2, Scalar: SignedNumeric & ExpressibleByIntegerLiter
 }
 
 // MARK: - 2×2 Rotation Factory (Angle)
-@_spi(Internal) public import Dimension
 extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: Real & BinaryFloatingPoint {
     /// Creates a rotation matrix from an angle in radians.
     @inlinable

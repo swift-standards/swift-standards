@@ -64,7 +64,7 @@ extension Rotation: Codable where N == 2, Scalar: Codable, Scalar: BinaryFloatin
     private enum CodingKeys: String, CodingKey {
         case a, b, c, d
     }
-    
+
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let a = try container.decode(Scalar.self, forKey: .a)
@@ -80,7 +80,7 @@ extension Rotation: Codable where N == 2, Scalar: Codable, Scalar: BinaryFloatin
         m[1][1] = d
         self.init(matrix: m)
     }
-    
+
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(matrix[0][0], forKey: .a)

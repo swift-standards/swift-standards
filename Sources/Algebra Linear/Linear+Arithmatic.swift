@@ -48,7 +48,6 @@ public func / <Scalar: FloatingPoint, Space, let N: Int>(
     return Linear<Scalar, Space>.Vector<N>(result)
 }
 
-
 // MARK: - Matrix-Vector Multiplication
 
 extension Linear.Matrix where Scalar: AdditiveArithmetic & Numeric {
@@ -118,7 +117,6 @@ extension Linear.Matrix where Scalar: AdditiveArithmetic & Numeric {
 // If you need element-wise scalar multiplication for numerical computation,
 // use the map(_:) method: matrix.map { $0 * scalar }
 
-
 extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint {
     /// Multiplies the 2×2 matrix by a typed 2D vector, preserving coordinate types.
     ///
@@ -134,7 +132,6 @@ extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint {
         return Linear<Scalar, Space>.Vector(dx: .init(x), dy: .init(y))
     }
 }
-
 
 // MARK: - Scalar Multiplication (internal for mathematical operations)
 
@@ -204,7 +201,6 @@ extension Linear.Matrix where Scalar: AdditiveArithmetic {
     }
 }
 
-
 // MARK: - Negation (SignedNumeric)
 
 extension Linear.Vector where Scalar: SignedNumeric {
@@ -219,7 +215,6 @@ extension Linear.Vector where Scalar: SignedNumeric {
         return Self(result)
     }
 }
-
 
 // MARK: - AdditiveArithmetic
 

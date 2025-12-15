@@ -104,7 +104,6 @@ extension Geometry.Area where Scalar: FloatingPoint {
     }
 }
 
-
 // MARK: - Absolute Value
 
 /// Returns the absolute value of an area.

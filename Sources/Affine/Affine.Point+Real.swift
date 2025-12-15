@@ -3,7 +3,6 @@
 
 import Algebra_Linear
 public import Dimension
-public import Dimension
 public import RealModule
 
 // MARK: - Polar Coordinates
@@ -110,5 +109,3 @@ extension Affine.Point where N == 2, Scalar: Real & BinaryFloatingPoint {
         Self.rotated(self, by: angle, around: center)
     }
 }
-
-

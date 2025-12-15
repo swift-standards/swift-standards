@@ -43,8 +43,6 @@ extension Geometry.Depth where Scalar: AdditiveArithmetic {
     }
 }
 
-
-
 // MARK: - ExpressibleByIntegerLiteral
 
 extension Geometry.Depth: ExpressibleByIntegerLiteral where Scalar: ExpressibleByIntegerLiteral {
@@ -62,8 +60,6 @@ extension Geometry.Depth: ExpressibleByFloatLiteral where Scalar: ExpressibleByF
         self.value = Scalar(floatLiteral: value)
     }
 }
-
-
 
 // MARK: - Strideable
 

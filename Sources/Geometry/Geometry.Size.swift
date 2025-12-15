@@ -131,9 +131,6 @@ extension Geometry.Size where Scalar: AdditiveArithmetic {
     }
 }
 
-
-
-
 extension Geometry.Size where N == 1 {
     /// The single dimension as a Length (magnitude)
     @inlinable
@@ -271,4 +268,3 @@ extension Geometry.Size: ExpressibleByFloatLiteral where N == 1, Scalar: Express
         self.init([Scalar(floatLiteral: value)])
     }
 }
-

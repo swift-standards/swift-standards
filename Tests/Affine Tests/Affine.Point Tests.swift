@@ -1,14 +1,14 @@
 //// Affine.Point Tests.swift
 //// Tests for Affine.Point.swift
 //
-//import Testing
+// import Testing
 //
-//@testable import Affine
-//@testable import Algebra
-//@testable import Algebra_Linear
+// @testable import Affine
+// @testable import Algebra
+// @testable import Algebra_Linear
 //
-//@Suite
-//struct `Affine.Point Tests` {
+// @Suite
+// struct `Affine.Point Tests` {
 //    typealias A = Affine<Double, Void>
 //    typealias L = Linear<Double, Void>
 //    typealias Point2 = A.Point<2>
@@ -417,4 +417,4 @@
 //            #expect(result.y == 22)
 //        }
 //    }
-//}
+// }

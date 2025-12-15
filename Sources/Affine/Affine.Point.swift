@@ -142,8 +142,6 @@ extension Affine.Point where Scalar: AdditiveArithmetic {
     }
 }
 
-
-
 // MARK: - 2D Convenience
 
 extension Affine.Point where N == 2 {
@@ -306,7 +304,6 @@ extension Affine.Point where N == 2, Scalar: AdditiveArithmetic {
 // MARK: - 2D Point Distance (FloatingPoint)
 
 extension Affine.Point where N == 2, Scalar: FloatingPoint {
-    
 
     /// Linearly interpolates between two points.
     ///
@@ -359,10 +356,10 @@ extension Affine.Point where N == 2, Scalar: FloatingPoint {
     public var distance: Affine.Point<2>.Distance2 {
         .init(point: self)
     }
-    
+
     public struct Distance2 {
         var point: Affine.Point<2>
-        
+
         public static func squared(from point: Affine.Point<2>, to other: Affine.Point<2>) -> Affine<Scalar, Space>.Area {
             let dx = other.x - point.x
             let dy = other.y - point.y
@@ -372,7 +369,7 @@ extension Affine.Point where N == 2, Scalar: FloatingPoint {
         public func squared(to other: Affine.Point<2>) -> Affine<Scalar, Space>.Area {
             Self.squared(from: point, to: other)
         }
-        
+
         public static func from(_ point: Affine.Point<2>, to other: Affine.Point<2>) -> Affine.Distance {
             // sqrt(Area) = Magnitude = Distance
             sqrt(squared(from: point, to: other))
@@ -436,7 +433,7 @@ extension Affine.Point where N == 3, Scalar: AdditiveArithmetic {
 // MARK: - 3D Point Distance (FloatingPoint)
 
 extension Affine.Point where N == 3, Scalar: FloatingPoint {
-    
+
     public static var distance: Affine.Point<3>.Distance3.Type {
         Affine.Point<3>.Distance3.self
     }
@@ -444,10 +441,10 @@ extension Affine.Point where N == 3, Scalar: FloatingPoint {
     public var distance: Affine.Point<3>.Distance3 {
         .init(point: self)
     }
-    
+
     public struct Distance3 {
         var point: Affine.Point<3>
-        
+
         public static func squared(from point: Affine.Point<3>, to other: Affine.Point<3>) -> Affine<Scalar, Space>.Area {
             let dx = other.x - point.x
             let dy = other.y - point.y
@@ -458,7 +455,7 @@ extension Affine.Point where N == 3, Scalar: FloatingPoint {
         public func squared(to other: Affine.Point<3>) -> Affine<Scalar, Space>.Area {
             Self.squared(from: point, to: other)
         }
-        
+
         public static func from(_ point: Affine.Point<3>, to other: Affine.Point<3>) -> Affine.Distance {
             // sqrt(Area) = Magnitude = Distance
             sqrt(squared(from: point, to: other))
@@ -469,5 +466,3 @@ extension Affine.Point where N == 3, Scalar: FloatingPoint {
         }
     }
 }
-
-
