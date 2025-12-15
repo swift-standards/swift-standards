@@ -4,6 +4,8 @@
 // Inspired by swift-tagged by Point-Free (https://github.com/pointfreeco/swift-tagged)
 // This implementation extends the concept with coordinate/displacement arithmetic.
 
+public import Formatting
+
 /// A value wrapped with a compile-time phantom type tag.
 ///
 /// `Tagged` provides zero-cost type safety by wrapping a raw value with a phantom `Tag` parameter that exists only at compile time. Use it to prevent mixing incompatible values (user IDs vs order IDs), distinguish units (meters vs feet), or enforce domain boundaries (validated vs raw strings).
@@ -267,4 +269,28 @@ extension Tagged where RawValue: BinaryFloatingPoint {
     /// The mathematical constant pi (π).
     @inlinable
     public static var pi: Self { Self(RawValue.pi) }
+}
+
+// MARK: - Formatted Output
+
+extension Tagged where RawValue: FloatingPoint {
+    /// Converts this tagged value to a string using the specified format.
+    ///
+    /// This allows formatting the underlying raw value while keeping the Tagged API clean.
+    /// The format is applied to the raw value directly.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// let x: SVGSpace.X = 100.5
+    /// x.formatted(.number)               // "100.5"
+    /// x.formatted(.number.precision(2))  // "100.50"
+    /// ```
+    ///
+    /// - Parameter format: Format style to apply
+    /// - Returns: Formatted string representation
+    @inlinable
+    public func formatted(_ format: Format.FloatingPoint) -> String {
+        format.format(_rawValue)
+    }
 }
