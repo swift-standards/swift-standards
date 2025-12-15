@@ -9,7 +9,7 @@ extension Tagged where RawValue: BinaryFloatingPoint {
     /// This overload is selected when Space does not conform to Quantized.
     /// Zero runtime cost: compiles to a direct initialization.
     @inlinable
-    internal static func _quantize<S>(_ value: RawValue, in space: S.Type) -> Self {
+    package static func _quantize<S>(_ value: RawValue, in space: S.Type) -> Self {
         Self(value)
     }
 
@@ -18,7 +18,7 @@ extension Tagged where RawValue: BinaryFloatingPoint {
     /// This overload is selected when Space conforms to Quantized.
     /// Produces canonical representation: same tick always yields identical bits.
     @inlinable
-    internal static func _quantize<S: Quantized>(_ value: RawValue, in space: S.Type) -> Self {
+    package static func _quantize<S: Quantized>(_ value: RawValue, in space: S.Type) -> Self {
         let q = S.quantum(as: RawValue.self)
         let ticks = Int64((value / q).rounded())
         return Self(RawValue(ticks) * q)
