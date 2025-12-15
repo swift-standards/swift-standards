@@ -106,13 +106,15 @@ extension Geometry.Ellipse where Scalar: FloatingPoint {
     }
 
     /// The eccentricity of the ellipse (0 = circle, approaching 1 = more elongated)
+    ///
+    /// Returns a dimensionless `Scale<1>` since eccentricity is a ratio.
     @inlinable
-    public var eccentricity: Scalar {
-        let a: Scalar = semiMajor._rawValue
-        let b: Scalar = semiMinor._rawValue
-        let aSq: Scalar = a * a
-        let bSq: Scalar = b * b
-        return ((aSq - bSq) / aSq).squareRoot()
+    public var eccentricity: Scale<1, Scalar> {
+        // Typed: Length × Length → Area
+        let aSq = semiMajor * semiMajor
+        let bSq = semiMinor * semiMinor
+        // Area - Area → Area, Area / Area → Scale<1>, sqrt(Scale<1>) → Scale<1>
+        return sqrt((aSq - bSq) / aSq)
     }
 
     /// The linear eccentricity (distance from center to focus)
@@ -160,6 +162,9 @@ extension Geometry.Ellipse where Scalar: FloatingPoint {
     public var area: Scalar { Geometry.area(of: self) }
 
     /// The approximate perimeter using Ramanujan's approximation
+    ///
+    /// Uses raw scalar math for the Ramanujan h-term calculation since it involves
+    /// dimensionless ratios and transcendental operations that don't benefit from type tracking.
     @inlinable
     public var perimeter: Geometry.Perimeter {
         let a: Scalar = semiMajor._rawValue
@@ -174,11 +179,10 @@ extension Geometry.Ellipse where Scalar: FloatingPoint {
         return Geometry.Length(perimeter)
     }
 
-    /// Whether this ellipse is actually a circle
+    /// Whether this ellipse is actually a circle (semi-major equals semi-minor)
     @inlinable
     public var isCircle: Bool {
-        let diff: Scalar = semiMajor._rawValue - semiMinor._rawValue
-        return abs(diff) < Scalar.ulpOfOne
+        semiMajor == semiMinor
     }
 }
 
@@ -239,28 +243,25 @@ extension Geometry.Ellipse where Scalar: Real & BinaryFloatingPoint {
     /// The axis-aligned bounding box of the ellipse
     @inlinable
     public var boundingBox: Geometry.Rectangle {
-        let a: Scalar = semiMajor._rawValue
-        let b: Scalar = semiMinor._rawValue
-        let cosR: Scalar = rotation.cos.value
-        let sinR: Scalar = rotation.sin.value
+        // Typed area calculations: Length × Length → Area
+        let aSq = semiMajor * semiMajor
+        let bSq = semiMinor * semiMinor
 
-        let aSq: Scalar = a * a
-        let bSq: Scalar = b * b
-        let cosSq: Scalar = cosR * cosR
-        let sinSq: Scalar = sinR * sinR
+        // Typed scale calculations: Scale × Scale → Scale
+        let cosSq = rotation.cos * rotation.cos
+        let sinSq = rotation.sin * rotation.sin
 
-        // Half-widths of the bounding box
-        let halfWidth: Scalar = (aSq * cosSq + bSq * sinSq).squareRoot()
-        let halfHeight: Scalar = (aSq * sinSq + bSq * cosSq).squareRoot()
+        // Half-extents: sqrt(Area × Scale + Area × Scale) → Magnitude
+        // Area × Scale → Area, Area + Area → Area, sqrt(Area) → Magnitude
+        let halfWidth: Geometry.Length = sqrt(aSq * cosSq + bSq * sinSq)
+        let halfHeight: Geometry.Length = sqrt(aSq * sinSq + bSq * cosSq)
 
-        let cx: Scalar = center.x._rawValue
-        let cy: Scalar = center.y._rawValue
-
+        // Coordinate ± Magnitude → Coordinate
         return Geometry.Rectangle(
-            llx: Geometry.X(cx - halfWidth),
-            lly: Geometry.Y(cy - halfHeight),
-            urx: Geometry.X(cx + halfWidth),
-            ury: Geometry.Y(cy + halfHeight)
+            llx: center.x - halfWidth,
+            lly: center.y - halfHeight,
+            urx: center.x + halfWidth,
+            ury: center.y + halfHeight
         )
     }
 }

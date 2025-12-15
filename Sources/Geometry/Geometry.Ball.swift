@@ -174,12 +174,10 @@ extension Geometry.Ball where N == 2, Scalar: Real & BinaryFloatingPoint {
     /// Returns point on circle at given angle from positive x-axis.
     @inlinable
     public func point(at angle: Radian<Scalar>) -> Geometry.Point<2> {
-        let c = angle.cos.value
-        let s = angle.sin.value
-        let r = radius._rawValue
-        return Geometry.Point(
-            x: Affine<Scalar, Space>.X(center.x._rawValue + r * c),
-            y: Affine<Scalar, Space>.Y(center.y._rawValue + r * s)
+        // Coordinate + Magnitude × Scale = Coordinate (typed)
+        Geometry.Point(
+            x: center.x + radius * angle.cos,
+            y: center.y + radius * angle.sin
         )
     }
 
@@ -443,39 +441,38 @@ extension Geometry.Ball where N == 2, Scalar: BinaryFloatingPoint {
     /// Curves start at 3 o'clock and proceed counter-clockwise through quadrants.
     @inlinable
     public var bezierCurves: [BezierSegment] {
-        let k = Scalar(0.5522847498) * radius._rawValue
-        let cx = center.x._rawValue
-        let cy = center.y._rawValue
-        let r = radius._rawValue
+        // k is scaled radius for Bézier control point distance
+        let k: Geometry.Radius = radius * Scale(0.5522847498)
 
-        let right = Geometry.Point<2>(x: .init(cx + r), y: .init(cy))
-        let bottom = Geometry.Point<2>(x: .init(cx), y: .init(cy - r))
-        let left = Geometry.Point<2>(x: .init(cx - r), y: .init(cy))
-        let top = Geometry.Point<2>(x: .init(cx), y: .init(cy + r))
+        // Cardinal points using typed Coordinate ± Magnitude
+        let right = Geometry.Point<2>(x: center.x + radius, y: center.y)
+        let bottom = Geometry.Point<2>(x: center.x, y: center.y - radius)
+        let left = Geometry.Point<2>(x: center.x - radius, y: center.y)
+        let top = Geometry.Point<2>(x: center.x, y: center.y + radius)
 
         return [
             BezierSegment(
                 start: right,
-                control1: Geometry.Point<2>(x: .init(cx + r), y: .init(cy - k)),
-                control2: Geometry.Point<2>(x: .init(cx + k), y: .init(cy - r)),
+                control1: Geometry.Point<2>(x: center.x + radius, y: center.y - k),
+                control2: Geometry.Point<2>(x: center.x + k, y: center.y - radius),
                 end: bottom
             ),
             BezierSegment(
                 start: bottom,
-                control1: Geometry.Point<2>(x: .init(cx - k), y: .init(cy - r)),
-                control2: Geometry.Point<2>(x: .init(cx - r), y: .init(cy - k)),
+                control1: Geometry.Point<2>(x: center.x - k, y: center.y - radius),
+                control2: Geometry.Point<2>(x: center.x - radius, y: center.y - k),
                 end: left
             ),
             BezierSegment(
                 start: left,
-                control1: Geometry.Point<2>(x: .init(cx - r), y: .init(cy + k)),
-                control2: Geometry.Point<2>(x: .init(cx - k), y: .init(cy + r)),
+                control1: Geometry.Point<2>(x: center.x - radius, y: center.y + k),
+                control2: Geometry.Point<2>(x: center.x - k, y: center.y + radius),
                 end: top
             ),
             BezierSegment(
                 start: top,
-                control1: Geometry.Point<2>(x: .init(cx + k), y: .init(cy + r)),
-                control2: Geometry.Point<2>(x: .init(cx + r), y: .init(cy + k)),
+                control1: Geometry.Point<2>(x: center.x + k, y: center.y + radius),
+                control2: Geometry.Point<2>(x: center.x + radius, y: center.y + k),
                 end: right
             ),
         ]
@@ -484,6 +481,7 @@ extension Geometry.Ball where N == 2, Scalar: BinaryFloatingPoint {
     /// Starting point for Bézier curve rendering (3 o'clock position).
     @inlinable
     public var bezierStartPoint: Geometry.Point<2> {
-        Geometry.Point<2>(x: .init(center.x._rawValue + radius._rawValue), y: center.y)
+        // Coordinate + Magnitude = Coordinate (typed)
+        Geometry.Point<2>(x: center.x + radius, y: center.y)
     }
 }

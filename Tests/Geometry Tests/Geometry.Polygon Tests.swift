@@ -507,7 +507,7 @@ struct `Geometry.Polygon - Triangulation` {
         let triangles = polygon.triangulate()
         #expect(triangles.count == 2)
 
-        let totalArea = triangles.reduce(0.0) { $0 + $1.area.rawValue }
+        let totalArea = triangles.reduce(0.0) { $0 + $1.area }
         #expect(abs(totalArea - polygon.area) < 1e-10)
     }
 
@@ -523,7 +523,7 @@ struct `Geometry.Polygon - Triangulation` {
         let triangles = polygon.triangulate()
         #expect(triangles.count == 3)
 
-        let totalArea = triangles.reduce(0.0) { $0 + $1.area.rawValue }
+        let totalArea = triangles.reduce(0.0) { $0 + $1.area }
         #expect(abs(totalArea - polygon.area) < 1e-10)
     }
 }

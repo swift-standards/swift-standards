@@ -1765,3 +1765,53 @@ public func / <Space, Scalar: BinaryFloatingPoint>(
     ._quantize(lhs._rawValue / rhs.value, in: Space.self)
 }
 
+// MARK: - Scale × Scale
+
+/// Multiplies two 1D scale factors.
+///
+/// Enables `cos * cos → cosSq` for use in dimensional formulas.
+@inlinable
+public func * <Scalar: FloatingPoint>(
+    lhs: Scale<1, Scalar>,
+    rhs: Scale<1, Scalar>
+) -> Scale<1, Scalar> {
+    Scale(lhs.value * rhs.value)
+}
+
+/// Divides two 1D scale factors.
+@inlinable
+public func / <Scalar: FloatingPoint>(
+    lhs: Scale<1, Scalar>,
+    rhs: Scale<1, Scalar>
+) -> Scale<1, Scalar> {
+    Scale(lhs.value / rhs.value)
+}
+
+/// Adds two 1D scale factors.
+@inlinable
+public func + <Scalar: FloatingPoint>(
+    lhs: Scale<1, Scalar>,
+    rhs: Scale<1, Scalar>
+) -> Scale<1, Scalar> {
+    Scale(lhs.value + rhs.value)
+}
+
+/// Subtracts two 1D scale factors.
+@inlinable
+public func - <Scalar: FloatingPoint>(
+    lhs: Scale<1, Scalar>,
+    rhs: Scale<1, Scalar>
+) -> Scale<1, Scalar> {
+    Scale(lhs.value - rhs.value)
+}
+
+/// Square root of a 1D scale factor.
+///
+/// Enables `sqrt(Area / Area)` for eccentricity calculations.
+@inlinable
+public func sqrt<Scalar: FloatingPoint>(
+    _ value: Scale<1, Scalar>
+) -> Scale<1, Scalar> {
+    Scale(value.value.squareRoot())
+}
+

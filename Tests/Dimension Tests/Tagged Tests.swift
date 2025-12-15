@@ -198,27 +198,27 @@ struct `Tagged - Displacement Arithmetic` {
     }
 
     @Test
-    func `displacement scaling by scalar`() {
+    func `displacement scaling by scale`() {
         let dx: Displacement.X<TestSpace>.Value<Double> = Tagged(10.0)
-        let result1 = dx * 2.0
-        let result2 = 2.0 * dx
+        let result1 = dx * Scale(2.0)
+        let result2 = Scale(2.0) * dx
         #expect(result1 == 20.0)
         #expect(result2 == 20.0)
     }
 
     @Test
-    func `displacement division by scalar`() {
+    func `displacement division by scale`() {
         let dx: Displacement.X<TestSpace>.Value<Double> = Tagged(10.0)
-        let result = dx / 2.0
+        let result = dx / Scale(2.0)
         #expect(result == 5.0)
     }
 
     @Test
-    func `displacement ratio returns scalar`() {
+    func `displacement ratio returns scale`() {
         let dx1: Displacement.X<TestSpace>.Value<Double> = Tagged(10.0)
         let dx2: Displacement.X<TestSpace>.Value<Double> = Tagged(2.0)
-        let ratio: Double = dx1 / dx2
-        #expect(ratio == 5.0)
+        let ratio: Scale<1, Double> = dx1 / dx2
+        #expect(ratio.value == 5.0)
     }
 }
 
@@ -268,18 +268,20 @@ struct `Tagged - Angle Arithmetic` {
 
     @Test
     func `radian + radian`() {
-        let r1: Radian<Double> = Tagged(.pi)
-        let r2: Radian<Double> = Tagged(.pi / 2)
+        let r1: Radian<Double> = .pi
+        let r2: Radian<Double> = .pi / 2
         let result = r1 + r2
-        #expect(result == .pi * 1.5)
+        let test = result == .pi * 1.5
+        #expect(test == true)
     }
 
     @Test
     func `radian - radian`() {
-        let r1: Radian<Double> = Tagged(.pi)
-        let r2: Radian<Double> = Tagged(.pi / 2)
+        let r1: Radian<Double> = .pi
+        let r2: Radian<Double> = .pi / 2
         let result = r1 - r2
-        #expect(result == .pi / 2)
+        let expected: Radian<Double> = .pi / 2
+        #expect(result == expected)
     }
 
     @Test
@@ -340,7 +342,7 @@ struct `Tagged - Magnitude Arithmetic` {
     @Test
     func `magnitude scaling`() {
         let m: Magnitude<TestSpace>.Value<Double> = Tagged(10.0)
-        let result = m * 2.0
+        let result = m * Scale(2.0)
         #expect(result == 20.0)
     }
 

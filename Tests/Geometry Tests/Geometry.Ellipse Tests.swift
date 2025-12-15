@@ -126,14 +126,14 @@ struct `Geometry.Ellipse - Properties` {
     @Test
     func `Eccentricity of circle is zero`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .circle(center: .zero, radius: 10)
-        #expect(abs(ellipse.eccentricity) < 1e-10)
+        #expect(abs(ellipse.eccentricity.value) < 1e-10)
     }
 
     @Test
     func `Eccentricity of elongated ellipse`() {
         let ellipse: Geometry<Double, Void>.Ellipse = .init(semiMajor: 5, semiMinor: 3)
         // e = sqrt(1 - (b/a)^2) = sqrt(1 - 9/25) = sqrt(16/25) = 4/5 = 0.8
-        #expect(abs(ellipse.eccentricity - 0.8) < 1e-10)
+        #expect(abs(ellipse.eccentricity.value - 0.8) < 1e-10)
     }
 
     @Test
