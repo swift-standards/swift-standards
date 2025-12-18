@@ -185,7 +185,9 @@ extension Time {
     /// Creates time from seconds since Unix epoch.
     ///
     /// Converts Unix timestamp to calendar components. Sub-second precision is set to zero.
-    public init(secondsSinceEpoch: Int) {
+    public init(
+        secondsSinceEpoch: Int
+    ) {
         let (year, month, day, hour, minute, second) = Time.Epoch.Conversion
             .componentsRaw(fromSecondsSinceEpoch: secondsSinceEpoch)
 
@@ -212,7 +214,10 @@ extension Time {
     ///   - secondsSinceEpoch: Seconds since Unix epoch
     ///   - nanoseconds: Nanosecond fraction (0-999,999,999)
     /// - Throws: `Time.Error.nanosecondOutOfRange` if nanoseconds is invalid
-    public init(secondsSinceEpoch: Int, nanoseconds: Int) throws(Error) {
+    public init(
+        secondsSinceEpoch: Int,
+        nanoseconds: Int
+    ) throws(Error) {
         guard nanoseconds >= 0 && nanoseconds < 1_000_000_000 else {
             throw Error.nanosecondOutOfRange(nanoseconds)
         }
@@ -244,7 +249,12 @@ extension Time {
     /// Creates time from seconds and nanoseconds without validation (internal use only).
     ///
     /// - Warning: Only use when nanoseconds is known to be valid (0-999,999,999)
-    internal static func unchecked(secondsSinceEpoch: Int, nanoseconds: Int) -> Time {
+    @_spi(Internal)
+    public init (
+        __unchecked: (),
+        secondsSinceEpoch: Int,
+        nanoseconds: Int
+    ) {
         let (year, month, day, hour, minute, second) = Time.Epoch.Conversion
             .componentsRaw(fromSecondsSinceEpoch: secondsSinceEpoch)
 
@@ -255,7 +265,7 @@ extension Time {
 
         // SAFE: componentsRaw guarantees valid values by construction
         // SAFE: millisecond, microsecond, nanosecond are computed to be in range
-        return .init(
+        self = .init(
             __unchecked: (),
             year: year,
             month: month,
@@ -392,7 +402,8 @@ extension Time {
     /// Converts timeline representation to calendar representation with full nanosecond precision.
     public init(_ instant: Instant) {
         // SAFE: Instant guarantees nanosecondFraction is in valid range [0, 1_000_000_000)
-        self = .unchecked(
+        self = .init(
+            __unchecked: (),
             secondsSinceEpoch: Int(instant.secondsSinceUnixEpoch),
             nanoseconds: Int(instant.nanosecondFraction)
         )

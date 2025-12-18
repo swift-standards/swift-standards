@@ -59,22 +59,6 @@ extension Instant {
 
 @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
 extension Instant {
-    /// Creates an instant without validation (internal use only).
-    ///
-    /// Bypasses nanosecond validation. Only use when values are guaranteed valid by construction.
-    ///
-    /// - Warning: Caller must ensure nanosecondFraction is in [0, 1_000_000_000)
-    internal static func unchecked(
-        secondsSinceUnixEpoch: Int64,
-        nanosecondFraction: Int32
-    ) -> Self {
-        Self(
-            __unchecked: (),
-            secondsSinceUnixEpoch: secondsSinceUnixEpoch,
-            nanosecondFraction: nanosecondFraction
-        )
-    }
-
     /// Private initializer that bypasses validation
     public init(
         __unchecked: Void,
