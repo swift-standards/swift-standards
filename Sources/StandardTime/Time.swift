@@ -85,7 +85,9 @@ extension Time {
     /// (e.g., computed from epoch seconds).
     ///
     /// - Warning: Invalid values will create an invalid `Time` instance
-    internal static func unchecked(
+    @_spi(Internal)
+    public init(
+        __unchecked: Void,
         year: Int,
         month: Int,
         day: Int,
@@ -95,8 +97,8 @@ extension Time {
         millisecond: Int = 0,
         microsecond: Int = 0,
         nanosecond: Int = 0
-    ) -> Self {
-        Self(
+    ) {
+        self = Self(
             year: Time.Year(year),
             month: Time.Month(unchecked: month),
             day: Time.Month.Day(unchecked: day),
@@ -188,7 +190,8 @@ extension Time {
             .componentsRaw(fromSecondsSinceEpoch: secondsSinceEpoch)
 
         // SAFE: componentsRaw guarantees valid values by construction
-        self = .unchecked(
+        self = .init(
+            __unchecked: (),
             year: year,
             month: month,
             day: day,
@@ -224,7 +227,8 @@ extension Time {
 
         // SAFE: componentsRaw guarantees valid values by construction
         // SAFE: millisecond, microsecond, nanosecond are computed to be in range
-        self = .unchecked(
+        self = .init(
+            __unchecked: (),
             year: year,
             month: month,
             day: day,
@@ -251,7 +255,8 @@ extension Time {
 
         // SAFE: componentsRaw guarantees valid values by construction
         // SAFE: millisecond, microsecond, nanosecond are computed to be in range
-        return .unchecked(
+        return .init(
+            __unchecked: (),
             year: year,
             month: month,
             day: day,

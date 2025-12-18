@@ -36,7 +36,8 @@ extension Time.Epoch {
     ///
     /// Reference point for POSIX time, used by most modern computing platforms.
     public static let unix = Time.Epoch(
-        referenceDate: .unchecked(
+        referenceDate: .init(
+            __unchecked: (),
             year: 1970,
             month: 1,
             day: 1,
@@ -50,7 +51,8 @@ extension Time.Epoch {
     ///
     /// Reference point for Network Time Protocol, predating Unix by 70 years.
     public static let ntp = Time.Epoch(
-        referenceDate: .unchecked(
+        referenceDate: .init(
+            __unchecked: (),
             year: 1900,
             month: 1,
             day: 1,
@@ -65,7 +67,8 @@ extension Time.Epoch {
     /// Reference point for Global Positioning System time. GPS time does not observe leap seconds,
     /// so it gradually diverges from UTC (18 seconds ahead as of 2024).
     public static let gps = Time.Epoch(
-        referenceDate: .unchecked(
+        referenceDate: .init(
+            __unchecked: (),
             year: 1980,
             month: 1,
             day: 6,
@@ -79,7 +82,8 @@ extension Time.Epoch {
     ///
     /// Reference point for International Atomic Time, a continuous timescale without leap seconds.
     public static let tai = Time.Epoch(
-        referenceDate: .unchecked(
+        referenceDate: .init(
+            __unchecked: (),
             year: 1958,
             month: 1,
             day: 1,
@@ -96,7 +100,8 @@ extension Time.Epoch {
     ///
     /// Reference point for Win32 `FILETIME`, NTFS, and Active Directory timestamps.
     public static let windowsFileTime = Time.Epoch(
-        referenceDate: .unchecked(
+        referenceDate: .init(
+            __unchecked: (),
             year: 1601,
             month: 1,
             day: 1,
@@ -113,7 +118,8 @@ extension Time.Epoch {
     ///
     /// Reference point for `CFAbsoluteTime` and `CFDate` on Apple platforms.
     public static let appleAbsolute = Time.Epoch(
-        referenceDate: .unchecked(
+        referenceDate: .init(
+            __unchecked: (),
             year: 2001,
             month: 1,
             day: 1,
