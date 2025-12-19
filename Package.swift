@@ -119,7 +119,7 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/coenttb/swift-testing-performance", from: "0.2.0"),
+        .package(url: "https://github.com/coenttb/swift-testing-performance", from: "0.2.1"),
         .package(url: "https://github.com/apple/swift-numerics", from: "1.0.0"),
         .package(url: "https://github.com/swiftlang/swift-syntax", "600.0.0"..<"603.0.0"),
     ],
