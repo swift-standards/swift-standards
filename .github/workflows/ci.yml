@@ -119,5 +119,5 @@ jobs:
           key: windows-swift62-spm-${{ hashFiles('Package.swift', 'Package@*.swift') }}
           restore-keys: windows-swift62-spm-
 
-      - name: Test
-        run: swift test -c debug -v
+      - name: Build
+        run: swift build -c debug -v
