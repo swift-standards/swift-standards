@@ -1,5 +1,6 @@
 // swift-tools-version: 6.2
 
+import CompilerPluginSupport
 import PackageDescription
 
 // Swift Embedded compatible:
@@ -120,6 +121,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/coenttb/swift-testing-performance", from: "0.1.1"),
         .package(url: "https://github.com/apple/swift-numerics", from: "1.0.0"),
+        .package(url: "https://github.com/swiftlang/swift-syntax", "600.0.0"..<"603.0.0"),
     ],
     targets: [
         .target(
@@ -167,7 +169,7 @@ let package = Package(
         .target(
             name: "Algebra",
             dependencies: [
-                "Dimension",
+                "Dimension"
             ]
         ),
         .target(
@@ -190,7 +192,7 @@ let package = Package(
         .target(
             name: "Binary",
             dependencies: [
-                "Algebra",
+                "Algebra"
             ]
         ),
         .target(
@@ -241,19 +243,31 @@ let package = Package(
         .target(
             name: "TernaryLogic",
             dependencies: [
-                "StandardLibraryExtensions",
+                "StandardLibraryExtensions"
             ]
         ),
         .target(
             name: "Predicate",
             dependencies: [
-                "TernaryLogic",
+                "TernaryLogic"
+            ]
+        ),
+        .macro(
+            name: "StandardsTestSupportMacros",
+            dependencies: [
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ]
         ),
         .target(
             name: "StandardsTestSupport",
             dependencies: [
+                "StandardsTestSupportMacros",
                 .product(name: "TestingPerformance", package: "swift-testing-performance"),
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacroExpansion", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacrosGenericTestSupport", package: "swift-syntax"),
             ]
         ),
         .testTarget(
@@ -370,6 +384,14 @@ let package = Package(
             dependencies: [
                 "Predicate",
                 "StandardsTestSupport",
+            ]
+        ),
+        .testTarget(
+            name: "StandardsTestSupport".tests,
+            dependencies: [
+                "StandardsTestSupport",
+                "StandardsTestSupportMacros",
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
             ]
         ),
     ],
