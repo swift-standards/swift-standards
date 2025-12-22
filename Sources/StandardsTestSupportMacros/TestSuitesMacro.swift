@@ -25,7 +25,6 @@ public struct TestSuitesMacro: DeclarationMacro {
                 @Suite(.exclusive(group: \(literal: typeGroup))) struct Unit {}
                 @Suite(.exclusive(group: \(literal: typeGroup))) struct EdgeCase {}
                 @Suite(.exclusive, .serialized) struct Performance {}
-                @MainActor @Suite(.serialized) struct Snapshot {}
             }
             """
         ]

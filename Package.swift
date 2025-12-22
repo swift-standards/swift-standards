@@ -157,7 +157,8 @@ let package = Package(
         .target(
             name: "StandardTime",
             dependencies: [
-                "StandardLibraryExtensions"
+                "StandardLibraryExtensions",
+                "Dimension"
             ]
         ),
         .target(
