@@ -18,19 +18,51 @@ extension Parsing.OneOf {
     /// This enables clean backtracking when an alternative fails partway through.
     public struct `Any`<Input, Output>: Sendable {
         @usableFromInline
-        let parsers: [@Sendable (inout Input) throws(Parsing.Error) -> Output]
+        let parsers: [@Sendable (inout Input) throws(Error) -> Output]
 
         @inlinable
-        public init(_ parsers: [@Sendable (inout Input) throws(Parsing.Error) -> Output]) {
+        public init(_ parsers: [@Sendable (inout Input) throws(Error) -> Output]) {
             self.parsers = parsers
         }
     }
 }
 
+// MARK: - Error Type
+
+extension Parsing.OneOf.`Any` {
+    /// Type-erased error for `OneOf.Any`.
+    ///
+    /// Since `Any` uses type-erased closures, it needs a common error type
+    /// to aggregate failures from heterogeneous parsers.
+    public struct Error: Swift.Error, Sendable, Equatable {
+        /// Description of the failure.
+        public let message: String
+
+        /// Errors from each attempted alternative.
+        public let underlying: [Error]
+
+        @inlinable
+        public init(_ message: String, underlying: [Error] = []) {
+            self.message = message
+            self.underlying = underlying
+        }
+
+        /// Creates an error for no matching alternative.
+        @inlinable
+        public static func noMatch(tried errors: [Error]) -> Self {
+            Self("No matching alternative", underlying: errors)
+        }
+    }
+}
+
+// MARK: - Parser Conformance
+
 extension Parsing.OneOf.`Any`: Parsing.Parser {
+    public typealias Failure = Error
+
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
-        var errors: [Parsing.Error] = []
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
+        var errors: [Error] = []
         let saved = input
 
         for parser in parsers {
@@ -42,6 +74,6 @@ extension Parsing.OneOf.`Any`: Parsing.Parser {
             }
         }
 
-        throw Parsing.Error.noMatch(tried: errors)
+        throw .noMatch(tried: errors)
     }
 }

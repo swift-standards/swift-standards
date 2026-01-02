@@ -26,8 +26,12 @@ extension Parsing {
     ///
     /// ## Error Handling
     ///
-    /// Parsers use typed throws (`throws(Error)`) for precise error propagation.
-    /// The `Error` associated type allows domain-specific error information.
+    /// Parsers use typed throws with a `Failure` associated type for precise,
+    /// domain-specific error propagation. Combinators compose error types:
+    /// - `Map` preserves the upstream `Failure`
+    /// - `FlatMap` produces `Either<Upstream.Failure, Downstream.Failure>`
+    /// - `OneOf` produces `Either<P0.Failure, P1.Failure>`
+    /// - Infallible parsers use `Failure == Never`
     ///
     /// ## Example
     ///
@@ -35,8 +39,9 @@ extension Parsing {
     /// struct IntParser: Parsing.Parser {
     ///     typealias Input = Span<UInt8>
     ///     typealias Output = Int
+    ///     typealias Failure = Parsing.Match.Error
     ///
-    ///     func parse(_ input: inout Input) throws(Parsing.Error) -> Int {
+    ///     func parse(_ input: inout Input) throws(Failure) -> Int {
     ///         var value = 0
     ///         var consumed = false
     ///
@@ -47,18 +52,23 @@ extension Parsing {
     ///         }
     ///
     ///         guard consumed else {
-    ///             throw Parsing.Error("Expected digit")
+    ///             throw .predicateFailed(description: "digit")
     ///         }
     ///         return value
     ///     }
     /// }
     /// ```
-    public protocol Parser<Input, Output> {
+    public protocol Parser<Input, Output, Failure> {
         /// The input type this parser consumes.
         associatedtype Input
 
         /// The output type this parser produces.
         associatedtype Output
+
+        /// The error type this parser can throw.
+        ///
+        /// Use `Never` for infallible parsers.
+        associatedtype Failure: Swift.Error & Sendable
 
         /// Parses a value from the input.
         ///
@@ -67,8 +77,8 @@ extension Parsing {
         ///
         /// - Parameter input: The input to parse from. Modified to reflect consumption.
         /// - Returns: The parsed value.
-        /// - Throws: `Parsing.Error` if parsing fails.
-        func parse(_ input: inout Input) throws(Parsing.Error) -> Output
+        /// - Throws: `Failure` if parsing fails.
+        func parse(_ input: inout Input) throws(Failure) -> Output
     }
 }
 
@@ -79,19 +89,44 @@ extension Parsing.Parser {
     ///
     /// Use this for top-level parsing where trailing input is an error.
     ///
+    /// The return type is `Either<Failure, Match.Error>` because parsing can fail
+    /// either from the parser itself (`Failure`) or from trailing input (`Match.Error`).
+    ///
     /// - Parameter input: The complete input to parse.
     /// - Returns: The parsed value.
-    /// - Throws: If parsing fails or input remains.
+    /// - Throws: `Either<Failure, Match.Error>` if parsing fails or input remains.
     @inlinable
-    public func parse(_ input: Input) throws(Parsing.Error) -> Output
+    public func parse(_ input: Input) throws(Parsing.Either<Failure, Parsing.Match.Error>) -> Output
+    where Input: Collection {
+        var input = input
+        let output: Output
+        do {
+            output = try parse(&input)
+        } catch {
+            throw .left(error)
+        }
+        guard input.isEmpty else {
+            throw .right(.expectedEnd(remaining: input.count))
+        }
+        return output
+    }
+}
+
+extension Parsing.Parser where Failure == Parsing.Match.Error {
+    /// Parses a complete input, requiring all bytes to be consumed.
+    ///
+    /// Specialized for parsers with `Match.Error` failure - returns unified error type.
+    ///
+    /// - Parameter input: The complete input to parse.
+    /// - Returns: The parsed value.
+    /// - Throws: `Match.Error` if parsing fails or input remains.
+    @inlinable
+    public func parse(_ input: Input) throws(Parsing.Match.Error) -> Output
     where Input: Collection {
         var input = input
         let output = try parse(&input)
         guard input.isEmpty else {
-            throw Parsing.Error(
-                "Unexpected trailing input",
-                at: input
-            )
+            throw .expectedEnd(remaining: input.count)
         }
         return output
     }
@@ -115,14 +150,15 @@ extension Parsing.Parser {
 
     /// Transforms the parser's output using a throwing function.
     ///
-    /// If the transform throws, parsing fails with that error.
+    /// If the transform throws, parsing fails with that error. The resulting
+    /// parser's failure type composes both upstream and transform errors.
     ///
     /// - Parameter transform: A throwing function to apply to successful output.
     /// - Returns: A parser that transforms its output, potentially failing.
     @inlinable
-    public func tryMap<NewOutput>(
-        _ transform: @escaping @Sendable (Output) throws(Parsing.Error) -> NewOutput
-    ) -> Parsing.Map.Throwing<Self, NewOutput> {
+    public func tryMap<NewOutput, E: Swift.Error & Sendable>(
+        _ transform: @escaping @Sendable (Output) throws(E) -> NewOutput
+    ) -> Parsing.Map.Throwing<Self, NewOutput, E> {
         .init(upstream: self, transform: transform)
     }
 

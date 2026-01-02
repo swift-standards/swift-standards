@@ -28,9 +28,10 @@ extension Parsing.OneOf {
 extension Parsing.OneOf.Two: Parsing.Parser {
     public typealias Input = P0.Input
     public typealias Output = P0.Output
+    public typealias Failure = Parsing.OneOf.Errors<P0.Failure, P1.Failure>
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         let saved = input
 
         do {
@@ -40,7 +41,7 @@ extension Parsing.OneOf.Two: Parsing.Parser {
             do {
                 return try p1.parse(&input)
             } catch let error1 {
-                throw Parsing.Error.noMatch(tried: [error0, error1])
+                throw Failure(error0, error1)
             }
         }
     }
@@ -51,15 +52,19 @@ extension Parsing.OneOf.Two: Parsing.Parser {
 extension Parsing.OneOf.Two: Parsing.Printer
 where P0: Parsing.Printer, P1: Parsing.Printer {
     @inlinable
-    public func print(_ output: Output, into input: inout Input) throws(Parsing.Error) {
+    public func print(_ output: Output, into input: inout Input) throws(Failure) {
         // Try first printer, fall back to second
         let saved = input
         do {
             try p0.print(output, into: &input)
             return
-        } catch {
+        } catch let error0 {
             input = saved
+            do {
+                try p1.print(output, into: &input)
+            } catch let error1 {
+                throw Failure(error0, error1)
+            }
         }
-        try p1.print(output, into: &input)
     }
 }

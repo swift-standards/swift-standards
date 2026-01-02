@@ -26,7 +26,7 @@ struct ParsingTests {
         func failsOnEmpty() {
             var input: ArraySlice<UInt8> = [][...]
             let parser = Parsing.First.Element<ArraySlice<UInt8>>()
-            #expect(throws: Parsing.Error.self) {
+            #expect(throws: Parsing.EndOfInput.Error.self) {
                 try parser.parse(&input)
             }
         }
@@ -56,7 +56,7 @@ struct ParsingTests {
         func respectsMinLength() {
             var input: Substring = "ab123"
             let parser = Parsing.Prefix.While<Substring>(minLength: 5) { $0.isLetter }
-            #expect(throws: Parsing.Error.self) {
+            #expect(throws: Parsing.Constraint.Error.self) {
                 try parser.parse(&input)
             }
         }
@@ -89,7 +89,7 @@ struct ParsingTests {
         func failsIfNotEnough() {
             var input: Substring = "ab"
             let parser = Parsing.Consume.Exactly<Substring>(5)
-            #expect(throws: Parsing.Error.self) {
+            #expect(throws: Parsing.Constraint.Error.self) {
                 try parser.parse(&input)
             }
         }
@@ -139,16 +139,21 @@ struct ParsingTests {
 
     @Suite("Error handling")
     struct ErrorTests {
-        @Test("error includes message")
-        func errorIncludesMessage() {
-            let error = Parsing.Error("Test error message")
-            #expect(error.message == "Test error message")
+        @Test("EndOfInput.Error contains expected description")
+        func endOfInputError() {
+            let error = Parsing.EndOfInput.Error.unexpected(expected: "digit")
+            if case .unexpected(let expected) = error {
+                #expect(expected == "digit")
+            }
         }
 
-        @Test("unexpectedEnd factory creates proper error")
-        func unexpectedEndFactory() {
-            let error = Parsing.Error.unexpectedEnd(expected: "digit")
-            #expect(error.message.contains("digit"))
+        @Test("Match.Error contains mismatch info")
+        func matchError() {
+            let error = Parsing.Match.Error.literalMismatch(expected: "foo", found: "bar")
+            if case .literalMismatch(let expected, let found) = error {
+                #expect(expected == "foo")
+                #expect(found == "bar")
+            }
         }
     }
 
@@ -156,40 +161,43 @@ struct ParsingTests {
     struct PrinterTests {
         /// A simple printer that prepends bytes to an array.
         struct BytesPrinter: Parsing.Printer {
+            typealias Failure = Never
             let bytes: [UInt8]
 
-            func print(_ output: Void, into input: inout [UInt8]) throws(Parsing.Error) {
+            func print(_ output: Void, into input: inout [UInt8]) {
                 input.insert(contentsOf: bytes, at: input.startIndex)
             }
         }
 
         @Test("prints into existing buffer")
-        func printsIntoBuffer() throws {
+        func printsIntoBuffer() {
             var buffer: [UInt8] = [0x04, 0x05]
             let printer = BytesPrinter(bytes: [0x01, 0x02, 0x03])
-            try printer.print((), into: &buffer)
+            printer.print((), into: &buffer)
             #expect(buffer == [0x01, 0x02, 0x03, 0x04, 0x05])
         }
 
         @Test("convenience method returns new input")
-        func convenienceReturnsInput() throws {
+        func convenienceReturnsInput() {
             let printer = BytesPrinter(bytes: [0x41, 0x42, 0x43])
-            let result = try printer.print(())
+            let result = printer.print(())
             #expect(result == [0x41, 0x42, 0x43])
         }
 
         /// A printer that prints an integer as ASCII digits.
         struct IntPrinter: Parsing.Printer {
-            func print(_ output: Int, into input: inout [UInt8]) throws(Parsing.Error) {
+            typealias Failure = Never
+
+            func print(_ output: Int, into input: inout [UInt8]) {
                 let digits = Array(String(output).utf8)
                 input.insert(contentsOf: digits, at: input.startIndex)
             }
         }
 
         @Test("prints integer value")
-        func printsInteger() throws {
+        func printsInteger() {
             let printer = IntPrinter()
-            let result = try printer.print(42)
+            let result = printer.print(42)
             #expect(result == Array("42".utf8))
         }
     }
@@ -200,16 +208,17 @@ struct ParsingTests {
         struct SingleByte: Parsing.ParserPrinter {
             typealias Input = ArraySlice<UInt8>
             typealias Output = UInt8
+            typealias Failure = Parsing.EndOfInput.Error
 
-            func parse(_ input: inout ArraySlice<UInt8>) throws(Parsing.Error) -> UInt8 {
+            func parse(_ input: inout ArraySlice<UInt8>) throws(Failure) -> UInt8 {
                 guard let first = input.first else {
-                    throw Parsing.Error.unexpectedEnd(expected: "byte")
+                    throw .unexpected(expected: "byte")
                 }
                 input = input.dropFirst()
                 return first
             }
 
-            func print(_ output: UInt8, into input: inout ArraySlice<UInt8>) throws(Parsing.Error) {
+            func print(_ output: UInt8, into input: inout ArraySlice<UInt8>) {
                 input.insert(output, at: input.startIndex)
             }
         }
@@ -438,7 +447,7 @@ struct ParsingTests {
             }
 
             var buffer: ArraySlice<UInt8> = [][...]
-            #expect(throws: Parsing.Error.self) {
+            #expect(throws: Parsing.Many.Error.self) {
                 try many.print([0x01, 0x02], into: &buffer)
             }
         }

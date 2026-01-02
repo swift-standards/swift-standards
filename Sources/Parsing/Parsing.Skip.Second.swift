@@ -28,11 +28,21 @@ extension Parsing.Skip {
 extension Parsing.Skip.Second: Parsing.Parser {
     public typealias Input = P0.Input
     public typealias Output = P0.Output
+    public typealias Failure = Parsing.Either<P0.Failure, P1.Failure>
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
-        let o0 = try p0.parse(&input)
-        _ = try p1.parse(&input)
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
+        let o0: P0.Output
+        do {
+            o0 = try p0.parse(&input)
+        } catch {
+            throw .left(error)
+        }
+        do {
+            _ = try p1.parse(&input)
+        } catch {
+            throw .right(error)
+        }
         return o0
     }
 }
@@ -42,9 +52,17 @@ extension Parsing.Skip.Second: Parsing.Parser {
 extension Parsing.Skip.Second: Parsing.Printer
 where P0: Parsing.Printer, P1: Parsing.Printer {
     @inlinable
-    public func print(_ output: P0.Output, into input: inout Input) throws(Parsing.Error) {
+    public func print(_ output: P0.Output, into input: inout Input) throws(Failure) {
         // Print in reverse order
-        try p1.print((), into: &input)
-        try p0.print(output, into: &input)
+        do {
+            try p1.print((), into: &input)
+        } catch {
+            throw .right(error)
+        }
+        do {
+            try p0.print(output, into: &input)
+        } catch {
+            throw .left(error)
+        }
     }
 }

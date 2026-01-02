@@ -23,14 +23,15 @@ extension Parsing {
 
 extension Parsing.Byte: Parsing.Parser {
     public typealias Output = Void
+    public typealias Failure = Parsing.Either<Parsing.EndOfInput.Error, Parsing.Match.Error>
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Void {
+    public func parse(_ input: inout Input) throws(Failure) -> Void {
         guard let actual = input.first else {
-            throw Parsing.Error.unexpectedEnd(expected: "byte \(expected)")
+            throw .left(.unexpected(expected: "byte \(expected)"))
         }
         guard actual == expected else {
-            throw Parsing.Error.unexpected(actual, expected: "byte \(expected)")
+            throw .right(.byteMismatch(expected: [expected], found: [actual]))
         }
         _ = input.removeFirst()
     }
@@ -41,7 +42,7 @@ extension Parsing.Byte: Parsing.Parser {
 extension Parsing.Byte: Parsing.Printer
 where Input: RangeReplaceableCollection {
     @inlinable
-    public func print(_ output: Void, into input: inout Input) throws(Parsing.Error) {
+    public func print(_ output: Void, into input: inout Input) {
         input.insert(expected, at: input.startIndex)
     }
 }

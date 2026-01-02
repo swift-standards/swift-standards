@@ -20,8 +20,10 @@ extension Parsing {
 }
 
 extension Parsing.Always: Parsing.Parser {
+    public typealias Failure = Never
+
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) -> Output {
         output
     }
 }
@@ -30,7 +32,7 @@ extension Parsing.Always: Parsing.Parser {
 
 extension Parsing.Always: Parsing.Printer where Output == Void {
     @inlinable
-    public func print(_ output: Void, into input: inout Input) throws(Parsing.Error) {
+    public func print(_ output: Void, into input: inout Input) {
         // Always produces value without consuming/producing input
     }
 }

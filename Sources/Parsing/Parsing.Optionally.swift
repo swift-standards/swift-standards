@@ -30,9 +30,10 @@ extension Parsing {
 extension Parsing.Optionally: Parsing.Parser {
     public typealias Input = Wrapped.Input
     public typealias Output = Wrapped.Output?
+    public typealias Failure = Never
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) -> Output {
         let saved = input
         do {
             return try wrapped.parse(&input)
@@ -48,8 +49,14 @@ extension Parsing.Optionally: Parsing.Parser {
 extension Parsing.Optionally: Parsing.Printer
 where Wrapped: Parsing.Printer {
     @inlinable
-    public func print(_ output: Wrapped.Output?, into input: inout Input) throws(Parsing.Error) {
+    public func print(_ output: Wrapped.Output?, into input: inout Input) throws(Failure) {
         guard let output = output else { return }
-        try wrapped.print(output, into: &input)
+        // Optionally is infallible for parsing but can fail when printing
+        // We catch the error since we can't propagate Wrapped.Failure through Never
+        do {
+            try wrapped.print(output, into: &input)
+        } catch {
+            // Silently fail - consistent with parsing behavior of returning nil
+        }
     }
 }

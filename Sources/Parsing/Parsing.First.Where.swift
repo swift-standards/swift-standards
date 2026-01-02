@@ -28,14 +28,15 @@ extension Parsing.First {
 
 extension Parsing.First.Where: Parsing.Parser {
     public typealias Output = Input.Element
+    public typealias Failure = Parsing.Either<Parsing.EndOfInput.Error, Parsing.Match.Error>
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         guard let element = input.first else {
-            throw Parsing.Error.unexpectedEnd(expected: expected)
+            throw .left(.unexpected(expected: expected))
         }
         guard predicate(element) else {
-            throw Parsing.Error.unexpected(element, expected: expected)
+            throw .right(.predicateFailed(description: expected))
         }
         return input.removeFirst()
     }

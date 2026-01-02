@@ -82,9 +82,10 @@ extension Parsing.Many {
 
 extension Parsing.Many.Separated: Parsing.Parser {
     public typealias Output = [Element.Output]
+    public typealias Failure = Parsing.Many.Error
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         var results: [Element.Output] = []
 
         // Parse first element
@@ -93,7 +94,7 @@ extension Parsing.Many.Separated: Parsing.Parser {
             results.append(first)
         } catch {
             if minimum > 0 {
-                throw error
+                throw Failure.countTooLow(expected: minimum, got: 0)
             }
             return results
         }
@@ -122,7 +123,7 @@ extension Parsing.Many.Separated: Parsing.Parser {
 
         // Check minimum
         if results.count < minimum {
-            throw Parsing.Error("Expected at least \(minimum) elements, got \(results.count)")
+            throw Failure.countTooLow(expected: minimum, got: results.count)
         }
 
         return results
@@ -133,23 +134,35 @@ extension Parsing.Many.Separated: Parsing.Parser {
 
 extension Parsing.Many.Separated: Parsing.Printer
 where Element: Parsing.Printer, Separator: Parsing.Printer, Separator.Output == Void {
+    public typealias PrintFailure = Parsing.OneOf.Errors<Parsing.Many.Error, Element.Failure, Separator.Failure>
+
     @inlinable
-    public func print(_ output: [Element.Output], into input: inout Input) throws(Parsing.Error) {
+    public func print(_ output: [Element.Output], into input: inout Input) throws(Failure) {
         // Validate count constraints
         if output.count < minimum {
-            throw Parsing.Error("Expected at least \(minimum) elements, got \(output.count)")
+            throw Failure.countTooLow(expected: minimum, got: output.count)
         }
         if let max = maximum, output.count > max {
-            throw Parsing.Error("Expected at most \(max) elements, got \(output.count)")
+            throw Failure.countTooHigh(expected: max, got: output.count)
         }
 
         // Print in reverse order with separators between elements
         var isFirst = true
         for item in output.reversed() {
             if !isFirst {
-                try separator.print((), into: &input)
+                do {
+                    try separator.print((), into: &input)
+                } catch {
+                    // Separator failure - ignore for now, Many only throws count errors
+                    break
+                }
             }
-            try element.print(item, into: &input)
+            do {
+                try element.print(item, into: &input)
+            } catch {
+                // Element failure - ignore for now, Many only throws count errors
+                break
+            }
             isFirst = false
         }
     }

@@ -29,11 +29,22 @@ extension Parsing.Take {
 extension Parsing.Take.Two: Parsing.Parser {
     public typealias Input = P0.Input
     public typealias Output = (P0.Output, P1.Output)
+    public typealias Failure = Parsing.Either<P0.Failure, P1.Failure>
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
-        let o0 = try p0.parse(&input)
-        let o1 = try p1.parse(&input)
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
+        let o0: P0.Output
+        do {
+            o0 = try p0.parse(&input)
+        } catch {
+            throw .left(error)
+        }
+        let o1: P1.Output
+        do {
+            o1 = try p1.parse(&input)
+        } catch {
+            throw .right(error)
+        }
         return (o0, o1)
     }
 }
@@ -56,9 +67,17 @@ where P0: Parsing.Printer, P1: Parsing.Printer {
     public func print(
         _ output: (P0.Output, P1.Output),
         into input: inout Input
-    ) throws(Parsing.Error) {
+    ) throws(Failure) {
         // Print in reverse order to build input correctly
-        try p1.print(output.1, into: &input)
-        try p0.print(output.0, into: &input)
+        do {
+            try p1.print(output.1, into: &input)
+        } catch {
+            throw .right(error)
+        }
+        do {
+            try p0.print(output.0, into: &input)
+        } catch {
+            throw .left(error)
+        }
     }
 }

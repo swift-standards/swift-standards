@@ -46,9 +46,10 @@ extension Parsing.Prefix {
 
 extension Parsing.Prefix.While: Parsing.Parser {
     public typealias Output = Input
+    public typealias Failure = Parsing.Constraint.Error
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         var count = 0
         var endIndex = input.startIndex
 
@@ -64,7 +65,7 @@ extension Parsing.Prefix.While: Parsing.Parser {
         }
 
         guard count >= minLength else {
-            throw Parsing.Error("Expected at least \(minLength) elements, got \(count)")
+            throw .countTooLow(expected: minLength, got: count)
         }
 
         let result = input[input.startIndex..<endIndex]

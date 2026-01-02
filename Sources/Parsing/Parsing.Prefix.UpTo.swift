@@ -24,9 +24,10 @@ extension Parsing.Prefix {
 
 extension Parsing.Prefix.UpTo: Parsing.Parser {
     public typealias Output = Input
+    public typealias Failure = Never
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         var endIndex = input.startIndex
 
         outer: while endIndex < input.endIndex {

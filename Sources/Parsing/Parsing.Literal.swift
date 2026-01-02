@@ -31,15 +31,16 @@ extension Parsing {
 
 extension Parsing.Literal: Parsing.Parser {
     public typealias Output = Void
+    public typealias Failure = Parsing.Either<Parsing.EndOfInput.Error, Parsing.Match.Error>
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Void {
+    public func parse(_ input: inout Input) throws(Failure) -> Void {
         for expected in bytes {
             guard let actual = input.first else {
-                throw Parsing.Error.unexpectedEnd(expected: "byte \(expected)")
+                throw .left(.unexpected(expected: "byte \(expected)"))
             }
             guard actual == expected else {
-                throw Parsing.Error.unexpected(actual, expected: "byte \(expected)")
+                throw .right(.byteMismatch(expected: [expected], found: [actual]))
             }
             _ = input.removeFirst()
         }
@@ -72,7 +73,7 @@ extension Parsing.Literal: ExpressibleByExtendedGraphemeClusterLiteral {
 extension Parsing.Literal: Parsing.Printer
 where Input: RangeReplaceableCollection {
     @inlinable
-    public func print(_ output: Void, into input: inout Input) throws(Parsing.Error) {
+    public func print(_ output: Void, into input: inout Input) {
         input.insert(contentsOf: bytes, at: input.startIndex)
     }
 }

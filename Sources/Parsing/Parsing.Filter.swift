@@ -34,12 +34,18 @@ extension Parsing {
 extension Parsing.Filter: Parsing.Parser {
     public typealias Input = Upstream.Input
     public typealias Output = Upstream.Output
+    public typealias Failure = Parsing.Either<Upstream.Failure, Parsing.Constraint.Error>
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
-        let output = try upstream.parse(&input)
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
+        let output: Upstream.Output
+        do {
+            output = try upstream.parse(&input)
+        } catch {
+            throw .left(error)
+        }
         guard predicate(output) else {
-            throw Parsing.Error("Filter predicate failed for: \(output)")
+            throw .right(.validationFailed(value: "\(output)", reason: "filter predicate"))
         }
         return output
     }

@@ -6,28 +6,26 @@
 //
 
 extension Parsing {
-    /// A parser that always fails.
+    /// A parser that always fails with a specified error.
     ///
     /// `Fail` is useful as a fallback in error handling scenarios.
-    public struct Fail<Input, Output>: Sendable {
+    /// The error type is specified as a generic parameter.
+    public struct Fail<Input, Output, F: Swift.Error & Sendable>: Sendable {
         @usableFromInline
-        let error: Parsing.Error
+        let error: F
 
         @inlinable
-        public init(_ message: String) {
-            self.error = Parsing.Error(message)
-        }
-
-        @inlinable
-        public init(error: Parsing.Error) {
+        public init(_ error: F) {
             self.error = error
         }
     }
 }
 
 extension Parsing.Fail: Parsing.Parser {
+    public typealias Failure = F
+
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         throw error
     }
 }

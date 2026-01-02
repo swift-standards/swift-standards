@@ -21,15 +21,16 @@ extension Parsing.Discard {
 
 extension Parsing.Discard.Exactly: Parsing.Parser {
     public typealias Output = Void
+    public typealias Failure = Parsing.Constraint.Error
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Void {
+    public func parse(_ input: inout Input) throws(Failure) -> Void {
         let endIndex = input.index(input.startIndex, offsetBy: count, limitedBy: input.endIndex)
             ?? input.endIndex
 
         let actualCount = input.distance(from: input.startIndex, to: endIndex)
         guard actualCount == count else {
-            throw Parsing.Error("Expected to skip \(count) elements, only \(actualCount) available")
+            throw .countTooLow(expected: count, got: actualCount)
         }
 
         input = input[endIndex...]

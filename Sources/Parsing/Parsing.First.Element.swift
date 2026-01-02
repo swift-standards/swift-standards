@@ -18,11 +18,12 @@ extension Parsing.First {
 
 extension Parsing.First.Element: Parsing.Parser {
     public typealias Output = Input.Element
+    public typealias Failure = Parsing.EndOfInput.Error
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         guard !input.isEmpty else {
-            throw Parsing.Error.unexpectedEnd(expected: "any element")
+            throw .unexpected(expected: "any element")
         }
         return input.removeFirst()
     }
@@ -33,7 +34,7 @@ extension Parsing.First.Element: Parsing.Parser {
 extension Parsing.First.Element: Parsing.Printer
 where Input: RangeReplaceableCollection {
     @inlinable
-    public func print(_ output: Input.Element, into input: inout Input) throws(Parsing.Error) {
+    public func print(_ output: Input.Element, into input: inout Input) {
         input.insert(output, at: input.startIndex)
     }
 }

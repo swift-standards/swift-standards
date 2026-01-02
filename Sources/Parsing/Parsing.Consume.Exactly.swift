@@ -21,15 +21,16 @@ extension Parsing.Consume {
 
 extension Parsing.Consume.Exactly: Parsing.Parser {
     public typealias Output = Input
+    public typealias Failure = Parsing.Constraint.Error
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         let endIndex = input.index(input.startIndex, offsetBy: count, limitedBy: input.endIndex)
             ?? input.endIndex
 
         let actualCount = input.distance(from: input.startIndex, to: endIndex)
         guard actualCount == count else {
-            throw Parsing.Error("Expected \(count) elements, got \(actualCount)")
+            throw .countTooLow(expected: count, got: actualCount)
         }
 
         let result = input[input.startIndex..<endIndex]
@@ -43,10 +44,14 @@ extension Parsing.Consume.Exactly: Parsing.Parser {
 extension Parsing.Consume.Exactly: Parsing.Printer
 where Input: RangeReplaceableCollection {
     @inlinable
-    public func print(_ output: Input, into input: inout Input) throws(Parsing.Error) {
+    public func print(_ output: Input, into input: inout Input) throws(Failure) {
         let outputCount = output.count
         guard outputCount == count else {
-            throw Parsing.Error("Expected \(count) elements, got \(outputCount)")
+            if outputCount < count {
+                throw .countTooLow(expected: count, got: outputCount)
+            } else {
+                throw .countTooHigh(expected: count, got: outputCount)
+            }
         }
         input.insert(contentsOf: output, at: input.startIndex)
     }

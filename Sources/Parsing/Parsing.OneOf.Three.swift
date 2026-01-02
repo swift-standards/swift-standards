@@ -32,22 +32,24 @@ extension Parsing.OneOf {
 extension Parsing.OneOf.Three: Parsing.Parser {
     public typealias Input = P0.Input
     public typealias Output = P0.Output
+    public typealias Failure = Parsing.OneOf.Errors<P0.Failure, P1.Failure, P2.Failure>
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         let saved = input
-        var errors: [Parsing.Error] = []
 
         do { return try p0.parse(&input) }
-        catch { errors.append(error); input = saved }
-
-        do { return try p1.parse(&input) }
-        catch { errors.append(error); input = saved }
-
-        do { return try p2.parse(&input) }
-        catch { errors.append(error) }
-
-        throw Parsing.Error.noMatch(tried: errors)
+        catch let error0 {
+            input = saved
+            do { return try p1.parse(&input) }
+            catch let error1 {
+                input = saved
+                do { return try p2.parse(&input) }
+                catch let error2 {
+                    throw Failure(error0, error1, error2)
+                }
+            }
+        }
     }
 }
 
@@ -56,24 +58,26 @@ extension Parsing.OneOf.Three: Parsing.Parser {
 extension Parsing.OneOf.Three: Parsing.Printer
 where P0: Parsing.Printer, P1: Parsing.Printer, P2: Parsing.Printer {
     @inlinable
-    public func print(_ output: Output, into input: inout Input) throws(Parsing.Error) {
+    public func print(_ output: Output, into input: inout Input) throws(Failure) {
         // Try each printer in order, use first that succeeds
         let saved = input
 
         do {
             try p0.print(output, into: &input)
             return
-        } catch {
+        } catch let error0 {
             input = saved
+            do {
+                try p1.print(output, into: &input)
+                return
+            } catch let error1 {
+                input = saved
+                do {
+                    try p2.print(output, into: &input)
+                } catch let error2 {
+                    throw Failure(error0, error1, error2)
+                }
+            }
         }
-
-        do {
-            try p1.print(output, into: &input)
-            return
-        } catch {
-            input = saved
-        }
-
-        try p2.print(output, into: &input)
     }
 }

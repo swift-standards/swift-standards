@@ -33,11 +33,21 @@ extension Parsing {
 extension Parsing.FlatMap: Parsing.Parser {
     public typealias Input = Upstream.Input
     public typealias Output = Downstream.Output
+    public typealias Failure = Parsing.Either<Upstream.Failure, Downstream.Failure>
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
-        let upstreamOutput = try upstream.parse(&input)
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
+        let upstreamOutput: Upstream.Output
+        do {
+            upstreamOutput = try upstream.parse(&input)
+        } catch {
+            throw .left(error)
+        }
         let downstream = transform(upstreamOutput)
-        return try downstream.parse(&input)
+        do {
+            return try downstream.parse(&input)
+        } catch {
+            throw .right(error)
+        }
     }
 }

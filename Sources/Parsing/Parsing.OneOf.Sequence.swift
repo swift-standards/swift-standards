@@ -33,8 +33,10 @@ extension Parsing.OneOf {
 }
 
 extension Parsing.OneOf.Sequence: Parsing.Parser {
+    public typealias Failure = Body.Failure
+
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         try body.parse(&input)
     }
 }

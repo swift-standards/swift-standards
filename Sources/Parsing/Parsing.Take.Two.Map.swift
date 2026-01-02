@@ -31,9 +31,10 @@ extension Parsing.Take.Two {
 extension Parsing.Take.Two.Map: Parsing.Parser {
     public typealias Input = P0.Input
     public typealias Output = NewOutput
+    public typealias Failure = Parsing.Take.Two<P0, P1>.Failure
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         let (o0, o1) = try upstream.parse(&input)
         return transform(o0, o1)
     }

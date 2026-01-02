@@ -37,8 +37,10 @@ extension Parsing.Take {
 }
 
 extension Parsing.Take.Transform: Parsing.Parser {
+    public typealias Failure = Body.Failure
+
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         transform(try body.parse(&input))
     }
 }

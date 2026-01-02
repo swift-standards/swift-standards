@@ -18,11 +18,12 @@ extension Parsing {
 
 extension Parsing.End: Parsing.Parser {
     public typealias Output = Void
+    public typealias Failure = Parsing.Match.Error
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Void {
+    public func parse(_ input: inout Input) throws(Failure) -> Void {
         guard input.isEmpty else {
-            throw Parsing.Error("Expected end of input", at: input)
+            throw .expectedEnd(remaining: input.count)
         }
     }
 }
@@ -31,7 +32,7 @@ extension Parsing.End: Parsing.Parser {
 
 extension Parsing.End: Parsing.Printer {
     @inlinable
-    public func print(_ output: Void, into input: inout Input) throws(Parsing.Error) {
+    public func print(_ output: Void, into input: inout Input) {
         // End produces nothing - it's a marker
     }
 }

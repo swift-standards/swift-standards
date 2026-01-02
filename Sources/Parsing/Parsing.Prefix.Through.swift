@@ -23,9 +23,10 @@ extension Parsing.Prefix {
 
 extension Parsing.Prefix.Through: Parsing.Parser {
     public typealias Output = Input
+    public typealias Failure = Parsing.Match.Error
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         var endIndex = input.startIndex
 
         outer: while endIndex < input.endIndex {
@@ -46,6 +47,6 @@ extension Parsing.Prefix.Through: Parsing.Parser {
             return result
         }
 
-        throw Parsing.Error("Delimiter not found")
+        throw .predicateFailed(description: "delimiter not found")
     }
 }

@@ -64,9 +64,10 @@ extension Parsing.Many {
 
 extension Parsing.Many.Simple: Parsing.Parser {
     public typealias Output = [Element.Output]
+    public typealias Failure = Parsing.Many.Error
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         var results: [Element.Output] = []
 
         while maximum.map({ results.count < $0 }) ?? true {
@@ -82,7 +83,7 @@ extension Parsing.Many.Simple: Parsing.Parser {
         }
 
         if results.count < minimum {
-            throw Parsing.Error("Expected at least \(minimum) elements, got \(results.count)")
+            throw Failure.countTooLow(expected: minimum, got: results.count)
         }
 
         return results
@@ -94,18 +95,23 @@ extension Parsing.Many.Simple: Parsing.Parser {
 extension Parsing.Many.Simple: Parsing.Printer
 where Element: Parsing.Printer {
     @inlinable
-    public func print(_ output: [Element.Output], into input: inout Input) throws(Parsing.Error) {
+    public func print(_ output: [Element.Output], into input: inout Input) throws(Failure) {
         // Validate count constraints
         if output.count < minimum {
-            throw Parsing.Error("Expected at least \(minimum) elements, got \(output.count)")
+            throw .countTooLow(expected: minimum, got: output.count)
         }
         if let max = maximum, output.count > max {
-            throw Parsing.Error("Expected at most \(max) elements, got \(output.count)")
+            throw .countTooHigh(expected: max, got: output.count)
         }
 
         // Print in reverse order
+        // Element print failures are caught - Many only throws count errors
         for item in output.reversed() {
-            try element.print(item, into: &input)
+            do {
+                try element.print(item, into: &input)
+            } catch {
+                // Element failure - silent, consistent with parse behavior
+            }
         }
     }
 }

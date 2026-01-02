@@ -33,9 +33,10 @@ extension Parsing.Map {
 
 extension Parsing.Map.Transform: Parsing.Parser {
     public typealias Input = Upstream.Input
+    public typealias Failure = Upstream.Failure
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) throws(Failure) -> Output {
         transform(try upstream.parse(&input))
     }
 }

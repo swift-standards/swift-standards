@@ -18,9 +18,10 @@ extension Parsing {
 
 extension Parsing.Rest: Parsing.Parser {
     public typealias Output = Input
+    public typealias Failure = Never
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
+    public func parse(_ input: inout Input) -> Output {
         let result = input
         input = input[input.endIndex...]
         return result
@@ -32,7 +33,7 @@ extension Parsing.Rest: Parsing.Parser {
 extension Parsing.Rest: Parsing.Printer
 where Input: RangeReplaceableCollection {
     @inlinable
-    public func print(_ output: Input, into input: inout Input) throws(Parsing.Error) {
+    public func print(_ output: Input, into input: inout Input) {
         input.insert(contentsOf: output, at: input.startIndex)
     }
 }
