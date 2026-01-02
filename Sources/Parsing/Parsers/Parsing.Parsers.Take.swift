@@ -108,19 +108,6 @@ extension Parsing.Parsers.Take {
             Parsing.Parsers.Skip.Second(p0, p1)
         }
 
-        // MARK: - Three Parsers
-
-        /// Combines three parsers sequentially.
-        @inlinable
-        public static func buildBlock<P0: Parsing.Parser, P1: Parsing.Parser, P2: Parsing.Parser>(
-            _ p0: P0,
-            _ p1: P1,
-            _ p2: P2
-        ) -> Parsing.Parsers.Take.Three<P0, P1, P2>
-        where P0.Input == Input, P1.Input == Input, P2.Input == Input {
-            Parsing.Parsers.Take.Three(p0, p1, p2)
-        }
-
         // MARK: - Partial Block Building (For Longer Chains)
 
         /// Starts building a partial block.
@@ -131,7 +118,7 @@ extension Parsing.Parsers.Take {
             first
         }
 
-        /// Accumulates into partial block (general case).
+        /// Accumulates into partial block (general case - two elements).
         @inlinable
         public static func buildPartialBlock<Accumulated: Parsing.Parser, Next: Parsing.Parser>(
             accumulated: Accumulated,
@@ -139,6 +126,32 @@ extension Parsing.Parsers.Take {
         ) -> Parsing.Parsers.Take.Two<Accumulated, Next>
         where Accumulated.Input == Input, Next.Input == Input {
             Parsing.Parsers.Take.Two(accumulated, next)
+        }
+
+        /// Accumulates with tuple flattening using parameter packs.
+        ///
+        /// This enables unlimited parser composition by flattening nested tuples:
+        /// `((A, B), C)` becomes `(A, B, C)`.
+        @inlinable
+        public static func buildPartialBlock<
+            Accumulated: Parsing.Parser,
+            Next: Parsing.Parser,
+            each O1,
+            O2
+        >(
+            accumulated: Accumulated,
+            next: Next
+        ) -> Parsing.Parsers.Take.Two<Accumulated, Next>.Map<(repeat each O1, O2)>
+        where
+            Accumulated.Input == Input,
+            Next.Input == Input,
+            Accumulated.Output == (repeat each O1),
+            Next.Output == O2
+        {
+            Parsing.Parsers.Take.Two(accumulated, next)
+                .map { tuple, next in
+                    (repeat each tuple, next)
+                }
         }
 
         /// Accumulates with Void skipping (accumulated is Void).
@@ -231,77 +244,47 @@ extension Parsing.Parsers.Take {
             let o1 = try p1.parse(&input)
             return (o0, o1)
         }
-    }
-}
 
-// MARK: - Take.Three
-
-extension Parsing.Parsers.Take {
-    /// A parser that runs three parsers in sequence and collects all outputs.
-    public struct Three<P0: Parsing.Parser, P1: Parsing.Parser, P2: Parsing.Parser>: Parsing.Parser, Sendable
-    where P0: Sendable, P1: Sendable, P2: Sendable,
-          P0.Input == P1.Input, P1.Input == P2.Input {
-        public typealias Input = P0.Input
-        public typealias Output = (P0.Output, P1.Output, P2.Output)
-
-        @usableFromInline
-        let p0: P0
-
-        @usableFromInline
-        let p1: P1
-
-        @usableFromInline
-        let p2: P2
-
+        /// Maps the output of this parser using the given transform.
         @inlinable
-        public init(_ p0: P0, _ p1: P1, _ p2: P2) {
-            self.p0 = p0
-            self.p1 = p1
-            self.p2 = p2
-        }
-
-        @inlinable
-        public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
-            let o0 = try p0.parse(&input)
-            let o1 = try p1.parse(&input)
-            let o2 = try p2.parse(&input)
-            return (o0, o1, o2)
+        public func map<NewOutput>(
+            _ transform: @escaping @Sendable (P0.Output, P1.Output) -> NewOutput
+        ) -> Map<NewOutput> {
+            Map(upstream: self, transform: transform)
         }
     }
 }
 
-// MARK: - Take.Four
+// MARK: - Take.Two.Map
 
-extension Parsing.Parsers.Take {
-    /// A parser that runs four parsers in sequence and collects all outputs.
-    public struct Four<
-        P0: Parsing.Parser, P1: Parsing.Parser, P2: Parsing.Parser, P3: Parsing.Parser
-    >: Parsing.Parser, Sendable
-    where P0: Sendable, P1: Sendable, P2: Sendable, P3: Sendable,
-          P0.Input == P1.Input, P1.Input == P2.Input, P2.Input == P3.Input {
+extension Parsing.Parsers.Take.Two {
+    /// A parser that transforms the output of a `Take.Two` parser.
+    ///
+    /// Used internally for tuple flattening with parameter packs.
+    public struct Map<NewOutput>: Parsing.Parser, Sendable
+    where P0: Sendable, P1: Sendable {
         public typealias Input = P0.Input
-        public typealias Output = (P0.Output, P1.Output, P2.Output, P3.Output)
+        public typealias Output = NewOutput
 
-        @usableFromInline let p0: P0
-        @usableFromInline let p1: P1
-        @usableFromInline let p2: P2
-        @usableFromInline let p3: P3
+        @usableFromInline
+        let upstream: Parsing.Parsers.Take.Two<P0, P1>
+
+        @usableFromInline
+        let transform: @Sendable (P0.Output, P1.Output) -> NewOutput
 
         @inlinable
-        public init(_ p0: P0, _ p1: P1, _ p2: P2, _ p3: P3) {
-            self.p0 = p0
-            self.p1 = p1
-            self.p2 = p2
-            self.p3 = p3
+        init(
+            upstream: Parsing.Parsers.Take.Two<P0, P1>,
+            transform: @escaping @Sendable (P0.Output, P1.Output) -> NewOutput
+        ) {
+            self.upstream = upstream
+            self.transform = transform
         }
 
         @inlinable
         public func parse(_ input: inout Input) throws(Parsing.Error) -> Output {
-            let o0 = try p0.parse(&input)
-            let o1 = try p1.parse(&input)
-            let o2 = try p2.parse(&input)
-            let o3 = try p3.parse(&input)
-            return (o0, o1, o2, o3)
+            let (o0, o1) = try upstream.parse(&input)
+            return transform(o0, o1)
         }
     }
 }
