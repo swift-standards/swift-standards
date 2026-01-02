@@ -34,7 +34,7 @@ extension Parsing.Literal: Parsing.Parser {
     public typealias Failure = Parsing.Either<Parsing.EndOfInput.Error, Parsing.Match.Error>
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Failure) -> Void {
+    public func parse(_ input: inout Input) throws(Failure) {
         for expected in bytes {
             guard let actual = input.first else {
                 throw .left(.unexpected(expected: "byte \(expected)"))

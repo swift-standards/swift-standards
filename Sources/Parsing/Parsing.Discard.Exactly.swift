@@ -24,7 +24,7 @@ extension Parsing.Discard.Exactly: Parsing.Parser {
     public typealias Failure = Parsing.Constraint.Error
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Failure) -> Void {
+    public func parse(_ input: inout Input) throws(Failure) {
         let endIndex = input.index(input.startIndex, offsetBy: count, limitedBy: input.endIndex)
             ?? input.endIndex
 

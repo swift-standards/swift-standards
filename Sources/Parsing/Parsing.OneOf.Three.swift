@@ -38,14 +38,11 @@ extension Parsing.OneOf.Three: Parsing.Parser {
     public func parse(_ input: inout Input) throws(Failure) -> Output {
         let saved = input
 
-        do { return try p0.parse(&input) }
-        catch let error0 {
+        do { return try p0.parse(&input) } catch let error0 {
             input = saved
-            do { return try p1.parse(&input) }
-            catch let error1 {
+            do { return try p1.parse(&input) } catch let error1 {
                 input = saved
-                do { return try p2.parse(&input) }
-                catch let error2 {
+                do { return try p2.parse(&input) } catch let error2 {
                     throw Failure(error0, error1, error2)
                 }
             }

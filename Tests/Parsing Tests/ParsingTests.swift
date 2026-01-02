@@ -48,7 +48,7 @@ struct ParsingTests {
             var input: Substring = "123abc"
             let parser = Parsing.Prefix.While<Substring> { $0.isLetter }
             let result = try parser.parse(&input)
-            #expect(result == "")
+            #expect(result.isEmpty)
             #expect(input == "123abc")
         }
 

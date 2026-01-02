@@ -21,7 +21,7 @@ extension Parsing.End: Parsing.Parser {
     public typealias Failure = Parsing.Match.Error
 
     @inlinable
-    public func parse(_ input: inout Input) throws(Failure) -> Void {
+    public func parse(_ input: inout Input) throws(Failure) {
         guard input.isEmpty else {
             throw .expectedEnd(remaining: input.count)
         }
