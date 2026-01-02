@@ -1,13 +1,12 @@
 // Time.Clock.Instant.Error.swift
 // StandardTime
 //
-// Error type for clock instant conversions.
+// Error type for clock instant operations.
 
-public import Dimension
-
-extension Tagged where RawValue == Int64 {
-    public enum Error: Swift.Error, Sendable {
-        case rangeOverflow
-        case resolutionLossBeyondPolicy
+extension Time.Clock {
+    /// Errors that can occur during clock instant operations.
+    public enum InstantError: Swift.Error, Sendable, Equatable {
+        /// The operation resulted in an overflow.
+        case overflow
     }
 }

@@ -16,124 +16,48 @@ extension Time.Clock {
     public typealias Instant<Clock> = Tagged<Clock, Int64>
 }
 
-// MARK: - Instant Arithmetic
+// MARK: - InstantProtocol Conformance
 
-extension Tagged where RawValue == Int64 {
-    /// Returns the duration between two instants.
+extension Tagged: InstantProtocol where RawValue == Int64 {
+    /// Returns the duration from this instant to another.
     ///
-    /// Positive if `self` is after `other`, negative otherwise.
-    /// This operation is lossless.
+    /// Positive if `other` is after `self`, negative otherwise.
     @inlinable
     public func duration(to other: Self) -> Duration {
         .nanoseconds(other._rawValue - self._rawValue)
     }
 
-    /// Advances this instant by a duration (strict).
+    /// Returns a new instant advanced by the specified duration.
     ///
-    /// Throws if the duration has sub-nanosecond precision or would overflow.
-    ///
-    /// - Parameter duration: The duration to advance by.
-    /// - Returns: The advanced instant.
-    /// - Throws: `Error.resolutionLossBeyondPolicy` if sub-nanosecond precision exists,
-    ///           `Error.rangeOverflow` if the result would overflow Int64.
+    /// Sub-nanosecond precision is truncated toward zero.
+    /// Saturates to min/max on overflow.
     @inlinable
-    public func advancing(by duration: Duration) throws(Error) -> Self {
+    public func advanced(by duration: Duration) -> Self {
+        (try? advancedThrowing(by: duration))
+            ?? (duration.components.seconds > 0 ? Self(Int64.max) : Self(Int64.min))
+    }
+
+    /// Returns a new instant advanced by the specified duration.
+    ///
+    /// Sub-nanosecond precision is truncated toward zero.
+    ///
+    /// - Throws: `Time.Clock.InstantError.overflow` if the operation overflows.
+    /// - Note: Named `advancedThrowing` because Swift doesn't allow overloading on throws alone.
+    ///   Rename to `advanced(by:)` when the language supports this.
+    @inlinable
+    public func advancedThrowing(by duration: Duration) throws(Time.Clock.InstantError) -> Self {
         let c = duration.components
 
         let (secToNs, ov1) = c.seconds.multipliedReportingOverflow(by: 1_000_000_000)
-        if ov1 { throw .rangeOverflow }
-
-        let remainder = c.attoseconds % 1_000_000_000
-        if remainder != 0 { throw .resolutionLossBeyondPolicy }
+        if ov1 { throw .overflow }
 
         let subNs = Int64(c.attoseconds / 1_000_000_000)
 
         let (deltaNs, ov2) = secToNs.addingReportingOverflow(subNs)
-        if ov2 { throw .rangeOverflow }
+        if ov2 { throw .overflow }
 
         let (result, ov3) = self._rawValue.addingReportingOverflow(deltaNs)
-        if ov3 { throw .rangeOverflow }
-
-        return Self(result)
-    }
-
-    /// Retreats this instant by a duration (strict).
-    ///
-    /// Throws if the duration has sub-nanosecond precision or would overflow.
-    ///
-    /// - Parameter duration: The duration to retreat by.
-    /// - Returns: The retreated instant.
-    /// - Throws: `Error.resolutionLossBeyondPolicy` if sub-nanosecond precision exists,
-    ///           `Error.rangeOverflow` if the result would overflow Int64.
-    @inlinable
-    public func retreating(by duration: Duration) throws(Error) -> Self {
-        let c = duration.components
-
-        let (secToNs, ov1) = c.seconds.multipliedReportingOverflow(by: 1_000_000_000)
-        if ov1 { throw .rangeOverflow }
-
-        let remainder = c.attoseconds % 1_000_000_000
-        if remainder != 0 { throw .resolutionLossBeyondPolicy }
-
-        let subNs = Int64(c.attoseconds / 1_000_000_000)
-
-        let (deltaNs, ov2) = secToNs.addingReportingOverflow(subNs)
-        if ov2 { throw .rangeOverflow }
-
-        let (result, ov3) = self._rawValue.subtractingReportingOverflow(deltaNs)
-        if ov3 { throw .rangeOverflow }
-
-        return Self(result)
-    }
-
-    /// Advances this instant by a duration, truncating sub-nanosecond precision.
-    ///
-    /// Sub-nanosecond precision is discarded (truncated toward zero).
-    /// Still throws on overflow.
-    ///
-    /// - Parameter duration: The duration to advance by.
-    /// - Returns: The advanced instant.
-    /// - Throws: `Error.rangeOverflow` if the result would overflow Int64.
-    @inlinable
-    public func advancing(truncating duration: Duration) throws(Error) -> Self {
-        let c = duration.components
-
-        let (secToNs, ov1) = c.seconds.multipliedReportingOverflow(by: 1_000_000_000)
-        if ov1 { throw .rangeOverflow }
-
-        let subNs = Int64(c.attoseconds / 1_000_000_000)  // truncates
-
-        let (deltaNs, ov2) = secToNs.addingReportingOverflow(subNs)
-        if ov2 { throw .rangeOverflow }
-
-        let (result, ov3) = self._rawValue.addingReportingOverflow(deltaNs)
-        if ov3 { throw .rangeOverflow }
-
-        return Self(result)
-    }
-
-    /// Retreats this instant by a duration, truncating sub-nanosecond precision.
-    ///
-    /// Sub-nanosecond precision is discarded (truncated toward zero).
-    /// Still throws on overflow.
-    ///
-    /// - Parameter duration: The duration to retreat by.
-    /// - Returns: The retreated instant.
-    /// - Throws: `Error.rangeOverflow` if the result would overflow Int64.
-    @inlinable
-    public func retreating(truncating duration: Duration) throws(Error) -> Self {
-        let c = duration.components
-
-        let (secToNs, ov1) = c.seconds.multipliedReportingOverflow(by: 1_000_000_000)
-        if ov1 { throw .rangeOverflow }
-
-        let subNs = Int64(c.attoseconds / 1_000_000_000)  // truncates
-
-        let (deltaNs, ov2) = secToNs.addingReportingOverflow(subNs)
-        if ov2 { throw .rangeOverflow }
-
-        let (result, ov3) = self._rawValue.subtractingReportingOverflow(deltaNs)
-        if ov3 { throw .rangeOverflow }
+        if ov3 { throw .overflow }
 
         return Self(result)
     }
@@ -142,53 +66,40 @@ extension Tagged where RawValue == Int64 {
 // MARK: - Duration Initializers
 
 extension Tagged where RawValue == Int64 {
-    /// Creates a tagged value from a duration (strict).
+    /// Creates a tagged value from a duration.
     ///
-    /// Throws if the duration has sub-nanosecond precision or would overflow Int64.
+    /// Sub-nanosecond precision is truncated toward zero.
+    /// Traps on overflow.
     ///
     /// - Parameter duration: The duration to convert.
-    /// - Throws: `Error.resolutionLossBeyondPolicy` if sub-nanosecond precision exists,
-    ///           `Error.rangeOverflow` if the result would overflow Int64.
     @inlinable
-    public init(
-        _ duration: Duration
-    ) throws(Self.Error) {
+    public init(_ duration: Duration) {
+        do {
+            try self.init(throwing: duration)
+        } catch {
+            preconditionFailure("Duration overflow when converting to nanoseconds")
+        }
+    }
+
+    /// Creates a tagged value from a duration.
+    ///
+    /// Sub-nanosecond precision is truncated toward zero.
+    ///
+    /// - Parameter duration: The duration to convert.
+    /// - Throws: `Time.Clock.InstantError.overflow` if the operation overflows.
+    /// - Note: Named `init(throwing:)` because Swift doesn't allow overloading on throws alone.
+    ///   Rename to `init(_:)` when the language supports this.
+    @inlinable
+    public init(throwing duration: Duration) throws(Time.Clock.InstantError) {
         let c = duration.components
 
         let (secToNs, ov1) = c.seconds.multipliedReportingOverflow(by: 1_000_000_000)
-        if ov1 { throw .rangeOverflow }
-
-        let remainder = c.attoseconds % 1_000_000_000
-        if remainder != 0 { throw .resolutionLossBeyondPolicy }
+        if ov1 { throw .overflow }
 
         let subNs = Int64(c.attoseconds / 1_000_000_000)
 
         let (total, ov2) = secToNs.addingReportingOverflow(subNs)
-        if ov2 { throw .rangeOverflow }
-
-        self = .init(total)
-    }
-
-    /// Creates a tagged value from a duration, truncating sub-nanosecond precision.
-    ///
-    /// Sub-nanosecond precision is discarded (truncated toward zero).
-    /// Still throws on overflow.
-    ///
-    /// - Parameter duration: The duration to convert.
-    /// - Throws: `Error.rangeOverflow` if the result would overflow Int64.
-    @inlinable
-    public init(
-        truncating duration: Duration
-    ) throws(Self.Error) {
-        let c = duration.components
-
-        let (secToNs, ov1) = c.seconds.multipliedReportingOverflow(by: 1_000_000_000)
-        if ov1 { throw .rangeOverflow }
-
-        let subNs = Int64(c.attoseconds / 1_000_000_000)  // truncates toward zero
-
-        let (total, ov2) = secToNs.addingReportingOverflow(subNs)
-        if ov2 { throw .rangeOverflow }
+        if ov2 { throw .overflow }
 
         self = .init(total)
     }
