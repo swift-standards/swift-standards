@@ -752,4 +752,102 @@ struct ParsingTests {
             #expect(Array(result.value) == [0x41, 0x42])
         }
     }
+
+    // MARK: - Error Transformation
+
+    @Suite("Error transformation")
+    struct ErrorTransformTests {
+        enum CustomError: Error, Equatable {
+            case failed
+            case wrapped(String)
+        }
+
+        @Test("error.map transforms error type")
+        func errorMapTransforms() {
+            var input: ArraySlice<UInt8> = [][...]
+            let parser = Parsing.First.Element<ArraySlice<UInt8>>()
+                .error.map { _ in CustomError.failed }
+
+            do {
+                _ = try parser.parse(&input)
+                Issue.record("Expected to throw")
+            } catch {
+                #expect(error == CustomError.failed)
+            }
+        }
+
+        @Test("error.map preserves output on success")
+        func errorMapPreservesOutput() throws {
+            var input: ArraySlice<UInt8> = [0x42][...]
+            let parser = Parsing.First.Element<ArraySlice<UInt8>>()
+                .error.map { _ in CustomError.failed }
+            let result = try parser.parse(&input)
+            #expect(result == 0x42)
+        }
+
+        @Test("error.map can use original error")
+        func errorMapUsesOriginal() {
+            var input: ArraySlice<UInt8> = [][...]
+            let parser = Parsing.First.Element<ArraySlice<UInt8>>()
+                .error.map { error in
+                    CustomError.wrapped("\(error)")
+                }
+
+            do {
+                _ = try parser.parse(&input)
+                Issue.record("Expected to throw")
+            } catch {
+                if case .wrapped(let msg) = error {
+                    #expect(msg.contains("unexpected"))
+                } else {
+                    Issue.record("Expected wrapped error")
+                }
+            }
+        }
+
+        @Test("error.replace returns default on failure")
+        func errorReplaceReturnsDefault() {
+            var input: ArraySlice<UInt8> = [][...]
+            let parser = Parsing.First.Element<ArraySlice<UInt8>>()
+                .error.replace(with: 0xFF)
+            let result = parser.parse(&input)  // No try - infallible
+            #expect(result == 0xFF)
+        }
+
+        @Test("error.replace returns parsed value on success")
+        func errorReplaceReturnsValue() {
+            var input: ArraySlice<UInt8> = [0x42][...]
+            let parser = Parsing.First.Element<ArraySlice<UInt8>>()
+                .error.replace(with: 0xFF)
+            let result = parser.parse(&input)
+            #expect(result == 0x42)
+        }
+
+        @Test("error.replace is infallible")
+        func errorReplaceIsInfallible() {
+            let parser = Parsing.First.Element<ArraySlice<UInt8>>()
+                .error.replace(with: 0x00)
+
+            // Verify Failure == Never by checking the type
+            func assertInfallible<P: Parsing.Parser>(_ p: P) where P.Failure == Never {
+                // Compiles only if Failure == Never
+            }
+            assertInfallible(parser)
+        }
+
+        @Test("error.map chains correctly")
+        func errorMapChains() {
+            var input: ArraySlice<UInt8> = [][...]
+            let parser = Parsing.First.Element<ArraySlice<UInt8>>()
+                .error.map { _ in CustomError.failed }
+                .error.map { _ in CustomError.wrapped("chained") }
+
+            do {
+                _ = try parser.parse(&input)
+                Issue.record("Expected to throw")
+            } catch {
+                #expect(error == CustomError.wrapped("chained"))
+            }
+        }
+    }
 }
