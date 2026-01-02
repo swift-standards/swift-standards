@@ -153,4 +153,112 @@ struct ParsingTests {
             #expect(error.message.contains("digit"))
         }
     }
+
+    @Suite("Printer protocol")
+    struct PrinterTests {
+        /// A simple printer that prepends bytes to an array.
+        struct BytesPrinter: Parsing.Printer {
+            let bytes: [UInt8]
+
+            func print(_ output: Void, into input: inout [UInt8]) throws(Parsing.Error) {
+                input.insert(contentsOf: bytes, at: input.startIndex)
+            }
+        }
+
+        @Test("prints into existing buffer")
+        func printsIntoBuffer() throws {
+            var buffer: [UInt8] = [0x04, 0x05]
+            let printer = BytesPrinter(bytes: [0x01, 0x02, 0x03])
+            try printer.print((), into: &buffer)
+            #expect(buffer == [0x01, 0x02, 0x03, 0x04, 0x05])
+        }
+
+        @Test("convenience method returns new input")
+        func convenienceReturnsInput() throws {
+            let printer = BytesPrinter(bytes: [0x41, 0x42, 0x43])
+            let result = try printer.print(())
+            #expect(result == [0x41, 0x42, 0x43])
+        }
+
+        /// A printer that prints an integer as ASCII digits.
+        struct IntPrinter: Parsing.Printer {
+            func print(_ output: Int, into input: inout [UInt8]) throws(Parsing.Error) {
+                let digits = Array(String(output).utf8)
+                input.insert(contentsOf: digits, at: input.startIndex)
+            }
+        }
+
+        @Test("prints integer value")
+        func printsInteger() throws {
+            let printer = IntPrinter()
+            let result = try printer.print(42)
+            #expect(result == Array("42".utf8))
+        }
+    }
+
+    @Suite("ParserPrinter round-trip")
+    struct ParserPrinterTests {
+        /// A simple parser-printer for a single byte.
+        struct SingleByte: Parsing.ParserPrinter {
+            typealias Input = ArraySlice<UInt8>
+            typealias Output = UInt8
+
+            func parse(_ input: inout ArraySlice<UInt8>) throws(Parsing.Error) -> UInt8 {
+                guard let first = input.first else {
+                    throw Parsing.Error.unexpectedEnd(expected: "byte")
+                }
+                input = input.dropFirst()
+                return first
+            }
+
+            func print(_ output: UInt8, into input: inout ArraySlice<UInt8>) throws(Parsing.Error) {
+                input.insert(output, at: input.startIndex)
+            }
+        }
+
+        @Test("parse then print recovers input")
+        func parseThenPrint() throws {
+            let parserPrinter = SingleByte()
+            var input: ArraySlice<UInt8> = [0x42][...]
+
+            // Parse
+            let parsed = try parserPrinter.parse(&input)
+            #expect(parsed == 0x42)
+            #expect(input.isEmpty)
+
+            // Print back
+            try parserPrinter.print(parsed, into: &input)
+            #expect(Array(input) == [0x42])
+        }
+
+        @Test("print then parse recovers value")
+        func printThenParse() throws {
+            let parserPrinter = SingleByte()
+            var input: ArraySlice<UInt8> = [][...]
+
+            // Print
+            try parserPrinter.print(0x42, into: &input)
+            #expect(Array(input) == [0x42])
+
+            // Parse back
+            let parsed = try parserPrinter.parse(&input)
+            #expect(parsed == 0x42)
+        }
+
+        @Test("conforms to ParserPrinter protocol")
+        func conformsToProtocol() throws {
+            // Verify SingleByte can be used where ParserPrinter is expected
+            func roundTrip<PP: Parsing.ParserPrinter>(
+                _ pp: PP,
+                value: PP.Output
+            ) throws -> PP.Output where PP.Input == ArraySlice<UInt8> {
+                var buffer: ArraySlice<UInt8> = [][...]
+                try pp.print(value, into: &buffer)
+                return try pp.parse(&buffer)
+            }
+
+            let result = try roundTrip(SingleByte(), value: 0x99)
+            #expect(result == 0x99)
+        }
+    }
 }

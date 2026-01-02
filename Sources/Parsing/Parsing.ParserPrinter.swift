@@ -2,7 +2,7 @@
 //  Parsing.ParserPrinter.swift
 //  swift-standards
 //
-//  ParserPrinter typealias combining Parser and Printer.
+//  ParserPrinter protocol combining Parser and Printer.
 //
 
 extension Parsing {
@@ -35,5 +35,5 @@ extension Parsing {
     ///     }
     /// }
     /// ```
-    public typealias ParserPrinter<Input, Output> = Parser<Input, Output> & Printer<Input, Output>
+    public protocol ParserPrinter<Input, Output>: Parser, Printer {}
 }
