@@ -16,7 +16,7 @@ struct ParsingTests {
         @Test("parses single element")
         func parsesSingleElement() throws {
             var input: ArraySlice<UInt8> = [0x41, 0x42, 0x43][...]
-            let parser = Parsing.Parsers.First.Element<ArraySlice<UInt8>>()
+            let parser = Parsing.First.Element<ArraySlice<UInt8>>()
             let result = try parser.parse(&input)
             #expect(result == 0x41)
             #expect(Array(input) == [0x42, 0x43])
@@ -25,7 +25,7 @@ struct ParsingTests {
         @Test("fails on empty input")
         func failsOnEmpty() {
             var input: ArraySlice<UInt8> = [][...]
-            let parser = Parsing.Parsers.First.Element<ArraySlice<UInt8>>()
+            let parser = Parsing.First.Element<ArraySlice<UInt8>>()
             #expect(throws: Parsing.Error.self) {
                 try parser.parse(&input)
             }
@@ -37,7 +37,7 @@ struct ParsingTests {
         @Test("parses while predicate holds")
         func parsesWhilePredicate() throws {
             var input: Substring = "abc123def"
-            let parser = Parsing.Parsers.Prefix.While<Substring> { $0.isLetter }
+            let parser = Parsing.Prefix.While<Substring> { $0.isLetter }
             let result = try parser.parse(&input)
             #expect(result == "abc")
             #expect(input == "123def")
@@ -46,7 +46,7 @@ struct ParsingTests {
         @Test("returns empty when predicate immediately fails")
         func returnsEmptyOnImmediateFail() throws {
             var input: Substring = "123abc"
-            let parser = Parsing.Parsers.Prefix.While<Substring> { $0.isLetter }
+            let parser = Parsing.Prefix.While<Substring> { $0.isLetter }
             let result = try parser.parse(&input)
             #expect(result == "")
             #expect(input == "123abc")
@@ -55,7 +55,7 @@ struct ParsingTests {
         @Test("respects minimum length")
         func respectsMinLength() {
             var input: Substring = "ab123"
-            let parser = Parsing.Parsers.Prefix.While<Substring>(minLength: 5) { $0.isLetter }
+            let parser = Parsing.Prefix.While<Substring>(minLength: 5) { $0.isLetter }
             #expect(throws: Parsing.Error.self) {
                 try parser.parse(&input)
             }
@@ -67,7 +67,7 @@ struct ParsingTests {
         @Test("transforms output")
         func transformsOutput() throws {
             var input: Substring = "abc123"
-            let parser = Parsing.Parsers.Prefix.While<Substring> { $0.isLetter }
+            let parser = Parsing.Prefix.While<Substring> { $0.isLetter }
                 .map { $0.uppercased() }
             let result = try parser.parse(&input)
             #expect(result == "ABC")
@@ -79,7 +79,7 @@ struct ParsingTests {
         @Test("takes exact count")
         func takesExactCount() throws {
             var input: Substring = "abcdef"
-            let parser = Parsing.Parsers.Consume.Exactly<Substring>(3)
+            let parser = Parsing.Consume.Exactly<Substring>(3)
             let result = try parser.parse(&input)
             #expect(result == "abc")
             #expect(input == "def")
@@ -88,7 +88,7 @@ struct ParsingTests {
         @Test("fails if not enough elements")
         func failsIfNotEnough() {
             var input: Substring = "ab"
-            let parser = Parsing.Parsers.Consume.Exactly<Substring>(5)
+            let parser = Parsing.Consume.Exactly<Substring>(5)
             #expect(throws: Parsing.Error.self) {
                 try parser.parse(&input)
             }
@@ -100,7 +100,7 @@ struct ParsingTests {
         @Test("consumes all remaining input")
         func consumesAll() throws {
             var input: Substring = "hello world"
-            let parser = Parsing.Parsers.Rest<Substring>()
+            let parser = Parsing.Rest<Substring>()
             let result = try parser.parse(&input)
             #expect(result == "hello world")
             #expect(input.isEmpty)
@@ -112,10 +112,10 @@ struct ParsingTests {
         @Test("parses zero or more")
         func parsesZeroOrMore() throws {
             var input: Substring = "aaa"
-            let parser = Parsing.Parsers.Many.Simple<Parsing.Parsers.Prefix.While<Substring>>(
+            let parser = Parsing.Many.Simple<Parsing.Prefix.While<Substring>>(
                 atLeast: 0
             ) {
-                Parsing.Parsers.Prefix.While<Substring>(minLength: 1) { $0 == "a" }
+                Parsing.Prefix.While<Substring>(minLength: 1) { $0 == "a" }
             }
             let result = try parser.parse(&input)
             // Each 'a' is parsed as a separate prefix of length 1
@@ -128,9 +128,9 @@ struct ParsingTests {
         @Test("combines two parsers")
         func combinesTwoParsers() throws {
             var input: Substring = "abc123"
-            let letters = Parsing.Parsers.Prefix.While<Substring> { $0.isLetter }
-            let digits = Parsing.Parsers.Prefix.While<Substring> { $0.isNumber }
-            let combined = Parsing.Parsers.Take.Two(letters, digits)
+            let letters = Parsing.Prefix.While<Substring> { $0.isLetter }
+            let digits = Parsing.Prefix.While<Substring> { $0.isNumber }
+            let combined = Parsing.Take.Two(letters, digits)
 
             let (a, b) = try combined.parse(&input)
             #expect(a == "abc")

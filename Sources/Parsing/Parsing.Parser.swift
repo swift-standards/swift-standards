@@ -109,7 +109,7 @@ extension Parsing.Parser {
     @inlinable
     public func map<NewOutput>(
         _ transform: @escaping @Sendable (Output) -> NewOutput
-    ) -> Parsing.Parsers.Map.Transform<Self, NewOutput> {
+    ) -> Parsing.Map.Transform<Self, NewOutput> {
         .init(upstream: self, transform: transform)
     }
 
@@ -122,7 +122,7 @@ extension Parsing.Parser {
     @inlinable
     public func tryMap<NewOutput>(
         _ transform: @escaping @Sendable (Output) throws(Parsing.Error) -> NewOutput
-    ) -> Parsing.Parsers.Map.Throwing<Self, NewOutput> {
+    ) -> Parsing.Map.Throwing<Self, NewOutput> {
         .init(upstream: self, transform: transform)
     }
 
@@ -135,7 +135,7 @@ extension Parsing.Parser {
     @inlinable
     public func flatMap<P: Parsing.Parser>(
         _ transform: @escaping @Sendable (Output) -> P
-    ) -> Parsing.Parsers.FlatMap<Self, P>
+    ) -> Parsing.FlatMap<Self, P>
     where P.Input == Input {
         .init(upstream: self, transform: transform)
     }
@@ -149,7 +149,7 @@ extension Parsing.Parser {
     @inlinable
     public func filter(
         _ predicate: @escaping @Sendable (Output) -> Bool
-    ) -> Parsing.Parsers.Filter<Self> where Self: Sendable {
+    ) -> Parsing.Filter<Self> where Self: Sendable {
         .init(upstream: self, predicate: predicate)
     }
 }
