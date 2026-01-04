@@ -1,7 +1,7 @@
-// Format.Bytes.Units.swift
+// Binary.Format.Bytes.Units.swift
 // Unit system selection for byte formatting.
 
-extension Format.Bytes {
+extension Binary.Format.Bytes {
     /// The unit system for byte formatting.
     ///
     /// Choose between decimal (SI) units using base 1000, or binary (IEC)
@@ -10,8 +10,8 @@ extension Format.Bytes {
     /// ## Example
     ///
     /// ```swift
-    /// 1000.formatted(.bytes(.decimal))  // "1 KB"
-    /// 1024.formatted(.bytes(.binary))   // "1 KiB"
+    /// 1000.formatted(Binary.Format.bytes(.decimal))  // "1 KB"
+    /// 1024.formatted(Binary.Format.bytes(.binary))   // "1 KiB"
     /// ```
     public enum Units: Sendable, Equatable {
         /// Decimal (SI) units: KB, MB, GB, TB, PB (base 1000).

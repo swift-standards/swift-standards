@@ -1,7 +1,7 @@
-// Format.Bytes.swift
+// Binary.Format.Bytes.swift
 // Formatting for byte counts.
 
-extension Format {
+extension Binary.Format {
     /// Format style for converting byte counts to human-readable strings.
     ///
     /// Automatically selects appropriate units (B, KB, MB, GB, etc.) based on
@@ -10,11 +10,11 @@ extension Format {
     /// ## Example
     ///
     /// ```swift
-    /// 512.formatted(.bytes)                           // "512 B"
-    /// 1500.formatted(.bytes)                          // "1.5 KB"
-    /// 1500.formatted(.bytes(.binary))                 // "1.46 KiB"
-    /// 1024.formatted(.bytes.precision(0))             // "1 KB"
-    /// 1024.formatted(.bytes.notation(.compactName))   // "1.02KB"
+    /// 512.formatted(Binary.Format.bytes)                           // "512 B"
+    /// 1500.formatted(Binary.Format.bytes)                          // "1.5 KB"
+    /// 1500.formatted(Binary.Format.bytes(.binary))                 // "1.46 KiB"
+    /// 1024.formatted(Binary.Format.bytes.precision(0))             // "1 KB"
+    /// 1024.formatted(Binary.Format.bytes.notation(.compactName))   // "1.02KB"
     /// ```
     public struct Bytes: Sendable {
         /// The unit system (decimal or binary).
@@ -56,7 +56,7 @@ extension Format {
 
 // MARK: - Static Constructors
 
-extension Format.Bytes {
+extension Binary.Format.Bytes {
     /// Default byte format (decimal units, spaced notation).
     @inlinable
     public static var bytes: Self { .init() }
@@ -66,8 +66,8 @@ extension Format.Bytes {
     /// ## Example
     ///
     /// ```swift
-    /// 1024.formatted(.bytes(.decimal))  // "1.02 KB"
-    /// 1024.formatted(.bytes(.binary))   // "1 KiB"
+    /// 1024.formatted(Binary.Format.bytes(.decimal))  // "1.02 KB"
+    /// 1024.formatted(Binary.Format.bytes(.binary))   // "1 KiB"
     /// ```
     ///
     /// - Parameter units: The unit system to use.
@@ -80,7 +80,7 @@ extension Format.Bytes {
 
 // MARK: - Chaining Methods
 
-extension Format.Bytes {
+extension Binary.Format.Bytes {
     /// Returns a format with the specified unit system.
     @inlinable
     public func units(_ units: Units) -> Self {
@@ -130,7 +130,7 @@ extension Format.Bytes {
 
 // MARK: - Format Method
 
-extension Format.Bytes {
+extension Binary.Format.Bytes {
     /// Formats a byte count to a human-readable string.
     ///
     /// - Parameter bytes: The byte count to format.
@@ -258,6 +258,27 @@ extension Format.Bytes {
     }
 }
 
+// MARK: - Binary.Format Static Properties
+
+extension Binary.Format {
+    /// Default byte format (decimal units, spaced notation).
+    @inlinable
+    public static var bytes: Bytes { .bytes }
+
+    /// Creates a byte format with the specified unit system.
+    ///
+    /// ## Example
+    ///
+    /// ```swift
+    /// 1024.formatted(Binary.Format.bytes(.decimal))  // "1.02 KB"
+    /// 1024.formatted(Binary.Format.bytes(.binary))   // "1 KiB"
+    /// ```
+    @inlinable
+    public static func bytes(_ units: Bytes.Units) -> Bytes {
+        .bytes(units)
+    }
+}
+
 // MARK: - BinaryInteger Extension
 
 extension BinaryInteger {
@@ -266,11 +287,11 @@ extension BinaryInteger {
     /// ## Example
     ///
     /// ```swift
-    /// 1024.formatted(.bytes)             // "1.02 KB"
-    /// 1024.formatted(.bytes(.binary))    // "1 KiB"
+    /// 1024.formatted(Binary.Format.bytes)             // "1.02 KB"
+    /// 1024.formatted(Binary.Format.bytes(.binary))    // "1 KiB"
     /// ```
     @inlinable
-    public func formatted(_ format: Format.Bytes) -> String {
+    public func formatted(_ format: Binary.Format.Bytes) -> String {
         format.format(self)
     }
 }

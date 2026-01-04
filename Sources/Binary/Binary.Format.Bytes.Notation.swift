@@ -1,7 +1,7 @@
-// Format.Bytes.Notation.swift
+// Binary.Format.Bytes.Notation.swift
 // Notation styles for byte formatting.
 
-extension Format.Bytes {
+extension Binary.Format.Bytes {
     /// Notation style for byte formatting.
     ///
     /// Controls spacing between the numeric value and unit symbol.
@@ -9,8 +9,8 @@ extension Format.Bytes {
     /// ## Example
     ///
     /// ```swift
-    /// 1024.formatted(.bytes.notation(.spaced))       // "1.02 KB"
-    /// 1024.formatted(.bytes.notation(.compactName))  // "1.02KB"
+    /// 1024.formatted(Binary.Format.bytes.notation(.spaced))       // "1.02 KB"
+    /// 1024.formatted(Binary.Format.bytes.notation(.compactName))  // "1.02KB"
     /// ```
     public enum Notation: Sendable, Equatable {
         /// Standard notation with space between value and unit.

@@ -1,7 +1,7 @@
-// Format.Bytes.Unit.swift
+// Binary.Format.Bytes.Unit.swift
 // Individual byte unit definitions.
 
-extension Format.Bytes {
+extension Binary.Format.Bytes {
     /// A single unit of byte measurement.
     ///
     /// Represents units from bytes to petabytes in both decimal (SI) and
@@ -28,7 +28,7 @@ extension Format.Bytes {
 
 // MARK: - Standard Units
 
-extension Format.Bytes.Unit {
+extension Binary.Format.Bytes.Unit {
     /// Bytes (B) - base unit.
     public static let bytes = Self(
         multiplier: 1,
@@ -74,7 +74,7 @@ extension Format.Bytes.Unit {
 
 // MARK: - Binary-Specific Units
 
-extension Format.Bytes.Unit {
+extension Binary.Format.Bytes.Unit {
     /// Kibibytes (1,024 bytes).
     public static let kibibytes = Self(
         multiplier: 1_024,
