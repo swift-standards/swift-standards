@@ -90,9 +90,13 @@ extension Binary.Alignment {
     public static let sector512 = Binary.Alignment(__unchecked: (), 512)
     public static let `512` = Binary.Alignment(__unchecked: (), 512)
     
+    public static let `1024` = Binary.Alignment(__unchecked: (), 1024)
+    
     /// 4096-byte alignment (modern SSD sector, x86 page).
     public static let page4096 = Binary.Alignment(__unchecked: (), 4096)
     public static let `4096` = Binary.Alignment(__unchecked: (), 4096)
+    
+    public static let `8192` = Binary.Alignment(__unchecked: (), 8192)
     
     /// 16384-byte alignment (Apple Silicon page).
     public static let page16384 = Binary.Alignment(__unchecked: (), 16384)
