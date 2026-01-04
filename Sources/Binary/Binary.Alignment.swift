@@ -102,7 +102,16 @@ extension Binary.Alignment {
     public func isAligned<S: BinaryInteger>(_ value: S) -> Bool {
         Int(value) & (rawValue - 1) == 0
     }
-    
+
+    /// Checks if a pointer is aligned.
+    ///
+    /// - Parameter pointer: The pointer to check.
+    /// - Returns: `true` if the pointer address is a multiple of this alignment.
+    @inlinable
+    public func isAligned(_ pointer: UnsafeRawPointer) -> Bool {
+        Int(bitPattern: pointer) & (rawValue - 1) == 0
+    }
+
     /// Rounds a value down to the nearest alignment boundary.
     ///
     /// - Parameter value: The value to align.
