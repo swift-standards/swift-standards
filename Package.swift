@@ -200,6 +200,7 @@ let package = Package(
             name: "Binary",
             dependencies: [
                 "Algebra",
+                "Dimension",
                 "Formatting",
                 "Parsing"
             ]
