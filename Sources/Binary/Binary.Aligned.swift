@@ -34,7 +34,9 @@
 /// Binary.Space.Sector512.alignment.alignUp(1000)    // 1024
 /// Binary.Space.Sector512.alignment.alignDown(1000)  // 512
 /// ```
-public protocol Aligned: Spatial {
-    /// The alignment requirement.
-    static var alignment: Binary.Alignment { get }
+extension Binary {
+    public protocol Aligned: Spatial {
+        /// The alignment requirement.
+        static var alignment: Binary.Alignment { get }
+    }
 }

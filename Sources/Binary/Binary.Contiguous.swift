@@ -4,6 +4,11 @@ extension Binary {
     /// Conforming types guarantee that bytes are laid out contiguously in memory
     /// and provide safe, scoped access.
     ///
+    /// ## Type Parameters
+    ///
+    /// - `Space`: A phantom type distinguishing different address spaces.
+    /// - `Scalar`: The integer type for index arithmetic (default: `Int`).
+    ///
     /// ## Normative vs Derived APIs
     ///
     /// - **Normative:** `withUnsafeBytes` is the normative access primitive.
@@ -38,6 +43,23 @@ extension Binary {
     /// }
     /// ```
     public protocol Contiguous: ~Copyable {
+        /// The address space for typed positions and offsets.
+        ///
+        /// Downstream packages can define custom spaces to distinguish
+        /// file offsets from buffer positions at compile time.
+        associatedtype Space
+
+        /// The scalar type for index arithmetic.
+        ///
+        /// Must be `FixedWidthInteger & Sendable` to support bitwise alignment
+        /// operations and type-safe counts.
+        /// Default is `Int` for ergonomics with Swift standard library.
+        /// Use `UInt64` for file offsets or `Int64` for signed file positions.
+        ///
+        /// - Note: Negative values are programmer error; enforce non-negativity
+        ///   at the boundaries (e.g., via `Binary.Count`).
+        associatedtype Scalar: FixedWidthInteger & Sendable = Int
+
         /// The number of bytes in the buffer.
         ///
         /// This value is always non-negative and matches the count of the
@@ -67,5 +89,15 @@ extension Binary {
         /// - The span is valid ONLY for the duration of the borrow of `self`.
         /// - The span MUST NOT be stored, returned, or allowed to escape.
         var bytes: Span<UInt8> { get }
+    }
+}
+
+// MARK: - Typed Count
+
+extension Binary.Contiguous {
+    /// The byte count as a typed value in this storage's space.
+    @inlinable
+    public var typedCount: Binary.Count<Scalar, Space> {
+        Binary.Count(unchecked: Scalar(count))
     }
 }

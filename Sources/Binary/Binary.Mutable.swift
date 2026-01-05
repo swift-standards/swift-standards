@@ -5,6 +5,12 @@ extension Binary {
     /// Conforming types guarantee that bytes are laid out contiguously in memory
     /// and provide safe, scoped mutable access.
     ///
+    /// ## Type Parameters
+    ///
+    /// Inherits `Space` and `Scalar` from `Binary.Contiguous`:
+    /// - `Space`: A phantom type distinguishing different address spaces (default: `Buffer`).
+    /// - `Scalar`: The integer type for index arithmetic (default: `Int`).
+    ///
     /// ## Normative vs Derived APIs
     ///
     /// - **Normative:** `withUnsafeMutableBytes` is the normative access primitive.

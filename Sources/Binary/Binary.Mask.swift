@@ -2,26 +2,24 @@
 // Type-safe bitmask for alignment operations.
 
 extension Binary {
-    /// A bitmask for alignment operations.
+    /// A bitmask for alignment operations (Int-based).
     ///
-    /// Masks are used to extract the offset within an aligned block
-    /// or to round values to alignment boundaries.
+    /// For type-safe operations on typed positions, prefer using
+    /// `Binary.Alignment.mask<Carrier>()` or `Binary.Shift.mask<Carrier>()`
+    /// which compute masks in the carrier's ring.
+    ///
+    /// This type is retained for simple Int-based use cases.
     ///
     /// ## Relationship with Alignment
     ///
-    /// For alignment `a`, the mask is `a - 1`:
+    /// For alignment `2^shift`, the mask is `(2^shift) - 1`:
     /// - Alignment 4096 → Mask 0xFFF (4095)
     /// - Alignment 512 → Mask 0x1FF (511)
-    ///
-    /// ## Operations
-    ///
-    /// - `value & mask` → offset within aligned block
-    /// - `value & ~mask` → round down to alignment boundary
     ///
     /// ## Example
     ///
     /// ```swift
-    /// let mask = Binary.Alignment.page4096.mask
+    /// let mask = Binary.Mask.page4096
     /// let offset = 5000 & mask.rawValue      // 904 (offset within page)
     /// let aligned = 5000 & ~mask.rawValue    // 4096 (page start)
     /// ```
@@ -30,8 +28,6 @@ extension Binary {
         public let rawValue: Int
 
         /// Creates a mask from a raw value.
-        ///
-        /// - Parameter rawValue: The mask value.
         @inlinable
         public init(_ rawValue: Int) {
             self.rawValue = rawValue
@@ -39,33 +35,35 @@ extension Binary {
     }
 }
 
-extension Binary.Mask {
+// MARK: - Initializers from Alignment/Shift
 
+extension Binary.Mask {
     /// Creates a mask from an alignment.
     ///
-    /// The mask is `alignment - 1`.
+    /// The mask is `(2^shift) - 1` computed in Int.
     ///
-    /// - Parameter alignment: The alignment value.
+    /// - Precondition: `alignment.shift < Int.bitWidth`
     @inlinable
     public init(_ alignment: Binary.Alignment) {
-        self.rawValue = alignment.rawValue - 1
+        precondition(Int(alignment.shift.rawValue) < Int.bitWidth, "Shift exceeds Int bit width")
+        self.rawValue = alignment.mask(as: Int.self)
     }
 
     /// Creates a mask from a shift count.
     ///
-    /// The mask is `(1 << shift) - 1`.
+    /// The mask is `(1 << shift) - 1` computed in Int.
     ///
-    /// - Parameter shift: The shift count.
+    /// - Precondition: `shift < Int.bitWidth`
     @inlinable
     public init(_ shift: Binary.Shift) {
-        self.rawValue = (1 << shift.rawValue) - 1
+        precondition(Int(shift.rawValue) < Int.bitWidth, "Shift exceeds Int bit width")
+        self.rawValue = shift.mask(as: Int.self)
     }
 }
 
+// MARK: - Common Values
+
 extension Binary.Mask {
-
-    // MARK: - Common Values
-
     /// No mask (alignment 1).
     public static let zero = Binary.Mask(0)
 
@@ -88,53 +86,34 @@ extension Binary.Mask {
     public static let page16384 = Binary.Mask(0x3FFF)
 }
 
+// MARK: - Derived Values
+
 extension Binary.Mask {
-
-    // MARK: - Derived Values
-
     /// The alignment corresponding to this mask.
     ///
-    /// Computes `mask + 1`.
+    /// Computes `mask + 1`, which must be a power of 2.
+    ///
+    /// - Returns: The alignment, or `nil` if `mask + 1` is not a power of 2.
     @inlinable
-    public var alignment: Binary.Alignment {
-        Binary.Alignment(__unchecked: (), rawValue + 1)
+    public var alignment: Binary.Alignment? {
+        Binary.Alignment(validating: rawValue + 1)
     }
 
     /// The shift count corresponding to this mask.
     ///
-    /// Computes `popcount(mask)` (number of 1 bits).
+    /// Uses `popcount(mask)` (number of 1 bits) as the shift.
+    /// This is only correct if the mask is of the form `(2^n) - 1`.
     @inlinable
-    public var shift: Binary.Shift {
-        Binary.Shift(rawValue.nonzeroBitCount)
+    public var shift: Binary.Shift? {
+        let count = rawValue.nonzeroBitCount
+        guard count <= Int(Binary.Shift.maxValue) else { return nil }
+        return Binary.Shift(unchecked: UInt8(count))
     }
 
     /// The inverted mask for rounding down.
     @inlinable
     public var inverted: Int {
         ~rawValue
-    }
-}
-
-extension Binary.Mask {
-
-    // MARK: - Mask Operations
-
-    /// Extracts the offset within an aligned block.
-    ///
-    /// - Parameter value: The value to mask.
-    /// - Returns: `value & mask`
-    @inlinable
-    public func offset<S: BinaryInteger>(_ value: S) -> S {
-        S(Int(value) & rawValue)
-    }
-
-    /// Checks if a value is aligned (offset is zero).
-    ///
-    /// - Parameter value: The value to check.
-    /// - Returns: `true` if `value & mask == 0`
-    @inlinable
-    public func isAligned<S: BinaryInteger>(_ value: S) -> Bool {
-        Int(value) & rawValue == 0
     }
 }
 

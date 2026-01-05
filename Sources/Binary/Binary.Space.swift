@@ -1,15 +1,16 @@
 // Binary.Space.swift
-// Binary address space namespace.
+// Binary address space phantom type.
 
 @_exported import Dimension
 
 extension Binary {
-    /// Namespace for binary address spaces.
+    /// Default binary address space for in-memory operations.
     ///
-    /// Binary spaces parameterize Dimension types for byte-level operations.
-    /// Downstream packages define their own spaces as nested types here.
+    /// `Binary.Space` is a phantom type that parameterizes `Binary.Position`,
+    /// `Binary.Offset`, and `Binary.Count` to distinguish different address spaces
+    /// at compile time.
     ///
-    /// ## Example
+    /// Downstream packages can define their own spaces for type safety:
     ///
     /// ```swift
     /// // In swift-kernel:
@@ -17,7 +18,15 @@ extension Binary {
     ///     public enum Space {}
     /// }
     ///
-    /// typealias Offset = Coordinate.X<Kernel.File.Space>.Value<Int64>
+    /// typealias FileOffset = Binary.Offset<Int64, Kernel.File.Space>
+    /// ```
+    ///
+    /// ## Usage
+    ///
+    /// ```swift
+    /// typealias BufferPos = Binary.Position<Int, Binary.Space>
+    /// // or use the convenience alias:
+    /// typealias BufferPos = Binary.Space.Position
     /// ```
     public enum Space {}
 }

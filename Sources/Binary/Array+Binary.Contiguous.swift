@@ -1,6 +1,12 @@
 // MARK: - Array Conformances
 
 extension Array: Binary.Contiguous where Element == UInt8 {
+    /// The address space for this storage type.
+    public typealias Space = Binary.Space
+
+    /// The scalar type for index arithmetic.
+    public typealias Scalar = Int
+
     @inlinable
     public func withUnsafeBytes<R, E: Swift.Error>(
         _ body: (UnsafeRawBufferPointer) throws(E) -> R
@@ -42,6 +48,12 @@ extension Array: Binary.Mutable where Element == UInt8 {
 // MARK: - ContiguousArray Conformances
 
 extension ContiguousArray: Binary.Contiguous where Element == UInt8 {
+    /// The address space for this storage type.
+    public typealias Space = Binary.Space
+
+    /// The scalar type for index arithmetic.
+    public typealias Scalar = Int
+
     @inlinable
     public func withUnsafeBytes<R, E: Swift.Error>(
         _ body: (UnsafeRawBufferPointer) throws(E) -> R
