@@ -96,7 +96,7 @@ extension Binary.Mask {
     /// - Returns: The alignment, or `nil` if `mask + 1` is not a power of 2.
     @inlinable
     public var alignment: Binary.Alignment? {
-        Binary.Alignment(validating: rawValue + 1)
+        try? Binary.Alignment(rawValue + 1)
     }
 
     /// The shift count corresponding to this mask.

@@ -360,6 +360,8 @@ extension Binary.Cursor.Set {
     }
 }
 
+//extension Binary.Cursor.Set.Reader {}
+
 // MARK: - Set.Writer
 
 extension Binary.Cursor.Set {

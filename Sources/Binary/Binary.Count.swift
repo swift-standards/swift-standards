@@ -162,3 +162,4 @@ extension Binary.Count: CustomStringConvertible {
 //    /// Count in this space.
 //    public typealias Count<Scalar: FixedWidthInteger & Sendable> = Binary.Count<Scalar, Binary.Space>
 //}
+

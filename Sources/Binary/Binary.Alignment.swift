@@ -67,23 +67,13 @@ extension Binary.Alignment {
     /// - Parameter magnitude: The alignment value. Must be a positive power of 2.
     /// - Throws: `Binary.Alignment.Error.notPowerOfTwo` if invalid.
     @inlinable
-    public init(magnitude: Int) throws(Binary.Alignment.Error) {
+    public init(
+        _ magnitude: Int
+    ) throws(Binary.Alignment.Error) {
         guard magnitude > 0, magnitude & (magnitude - 1) == 0 else {
             throw .notPowerOfTwo(magnitude)
         }
         // Safe: magnitude is power of 2 > 0, so trailingZeroBitCount is in valid range
-        self.shift = Binary.Shift(unchecked: UInt8(magnitude.trailingZeroBitCount))
-    }
-
-    /// Creates an alignment from a magnitude (power of 2), returning nil if invalid.
-    ///
-    /// - Parameter magnitude: The alignment value. Must be a positive power of 2.
-    /// - Returns: `nil` if the value is not a positive power of 2.
-    @inlinable
-    public init?(validating magnitude: Int) {
-        guard magnitude > 0, magnitude & (magnitude - 1) == 0 else {
-            return nil
-        }
         self.shift = Binary.Shift(unchecked: UInt8(magnitude.trailingZeroBitCount))
     }
 }
