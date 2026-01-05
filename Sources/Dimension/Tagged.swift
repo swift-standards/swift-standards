@@ -27,9 +27,17 @@ public import Formatting
 public struct Tagged<Tag, RawValue> {
     /// Internal storage for the raw value.
     ///
-    /// - Note: Use typed operators and methods instead of accessing raw values directly.
-    ///   This is `package` visible to allow `@inlinable` operators within the package.
-    public var _rawValue: RawValue
+    /// - Note: Use `rawValue` for read access. This is `package` visible
+    ///   to allow `@inlinable` operators within the package.
+    @usableFromInline
+    package var _rawValue: RawValue
+
+    /// The underlying raw value (read-only).
+    ///
+    /// Use this to access the wrapped value when needed for interop
+    /// with non-Tagged APIs.
+    @inlinable
+    public var rawValue: RawValue { _rawValue }
 
     /// Creates a tagged value from a raw value.
     @inlinable
@@ -41,6 +49,15 @@ public struct Tagged<Tag, RawValue> {
     @inlinable
     public init(rawValue: RawValue) {
         self._rawValue = rawValue
+    }
+
+    /// Mutates the raw value in place (package-internal).
+    ///
+    /// Use this for performance-critical paths within the package
+    /// where domain operations would be too costly.
+    @inlinable
+    package mutating func modifyRawValue<T>(_ body: (inout RawValue) -> T) -> T {
+        body(&_rawValue)
     }
 }
 
