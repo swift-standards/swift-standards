@@ -6,22 +6,23 @@ extension Binary {
     ///
     /// Uses typed throws for all validation.
     ///
-    /// ## API Pattern
+    /// ## Initializer Pattern
     ///
-    /// - **Primary**: `init(storage:) throws(Binary.Error)` — validates at runtime
-    /// - **Performance**: `init(unchecked:)` — debug assertion only
+    /// - **Default**: `init(storage:)` — indices at zero, non-throwing
+    /// - **Validated**: `init(storage:readerIndex:writerIndex:) throws` — validates at runtime
+    /// - **Unchecked**: `init(__unchecked:storage:readerIndex:writerIndex:)` — precondition only
     ///
-    /// ## Nested Accessor Pattern
+    /// ## Example
     ///
     /// ```swift
-    /// // Move operations
-    /// try cursor.move.reader(by: offset)
-    /// try cursor.move.writer(by: offset)
-    /// cursor.move.reader.unchecked(by: offset)
+    /// // Default (reader = 0, writer = 0)
+    /// var cursor = Binary.Cursor(storage: buffer)
     ///
-    /// // Set operations
-    /// try cursor.set.reader(to: position)
-    /// try cursor.set.writer(to: position)
+    /// // Validated (throws on invalid indices)
+    /// var cursor = try Binary.Cursor(storage: buffer, readerIndex: 0, writerIndex: 10)
+    ///
+    /// // Unchecked (trusted caller)
+    /// var cursor = Binary.Cursor(__unchecked: (), storage: buffer, readerIndex: 0, writerIndex: 10)
     /// ```
     ///
     /// ## Invariants
@@ -53,16 +54,36 @@ extension Binary {
     }
 }
 
-// MARK: - Throwing Initializer
+// MARK: - Default Initializer
 
 extension Binary.Cursor {
-    /// Creates a cursor over the given storage.
+    /// Creates a cursor over the given storage with indices at zero.
     ///
-    /// - Throws: `Binary.Error` if indices are invalid.
+    /// This is the simplest way to create a cursor. Both reader and writer
+    /// start at position zero.
+    @inlinable
+    public init(storage: consuming Storage) {
+        self.storage = storage
+        self._readerIndex = 0
+        self._writerIndex = 0
+    }
+}
+
+// MARK: - Validated Initializer
+
+extension Binary.Cursor {
+    /// Creates a cursor over the given storage with validated indices.
+    ///
+    /// - Parameters:
+    ///   - storage: The underlying storage.
+    ///   - readerIndex: The initial reader position.
+    ///   - writerIndex: The initial writer position.
+    /// - Throws: `Binary.Error` if indices violate invariants.
+    @inlinable
     public init(
         storage: consuming Storage,
-        readerIndex: Binary.Position<Storage.Scalar, Storage.Space> = 0,
-        writerIndex: Binary.Position<Storage.Scalar, Storage.Space> = 0
+        readerIndex: Binary.Position<Storage.Scalar, Storage.Space>,
+        writerIndex: Binary.Position<Storage.Scalar, Storage.Space>
     ) throws(Binary.Error) {
         guard readerIndex._rawValue >= 0 else {
             throw .negative(.init(field: .reader, value: readerIndex._rawValue))
@@ -97,11 +118,21 @@ extension Binary.Cursor {
 extension Binary.Cursor {
     /// Creates a cursor without validation.
     ///
+    /// Use this in performance-critical paths where invariants are
+    /// guaranteed by construction or prior validation.
+    ///
+    /// - Parameters:
+    ///   - __unchecked: Marker parameter (pass `()` or omit).
+    ///   - storage: The underlying storage.
+    ///   - readerIndex: The initial reader position.
+    ///   - writerIndex: The initial writer position.
     /// - Precondition: `0 <= readerIndex <= writerIndex <= storage.count`
+    @inlinable
     public init(
-        unchecked storage: consuming Storage,
-        readerIndex: Binary.Position<Storage.Scalar, Storage.Space> = 0,
-        writerIndex: Binary.Position<Storage.Scalar, Storage.Space> = 0
+        __unchecked: Void = (),
+        storage: consuming Storage,
+        readerIndex: Binary.Position<Storage.Scalar, Storage.Space>,
+        writerIndex: Binary.Position<Storage.Scalar, Storage.Space>
     ) {
         assert(readerIndex._rawValue >= 0)
         assert(writerIndex._rawValue >= readerIndex._rawValue)
@@ -117,147 +148,97 @@ extension Binary.Cursor {
 extension Binary.Cursor {
     /// Bytes available for reading.
     @inlinable
-    public var readable: Binary.Count<Storage.Scalar, Storage.Space> {
+    public var readableCount: Binary.Count<Storage.Scalar, Storage.Space> {
         Binary.Count(unchecked: _writerIndex._rawValue - _readerIndex._rawValue)
     }
 
     /// Bytes available for writing.
     @inlinable
-    public var writable: Binary.Count<Storage.Scalar, Storage.Space> {
+    public var writableCount: Binary.Count<Storage.Scalar, Storage.Space> {
         Binary.Count(unchecked: Storage.Scalar(storage.count) - _writerIndex._rawValue)
     }
 
     /// Whether there are bytes available to read.
     @inlinable
     public var isReadable: Bool {
-        readable._rawValue > 0
+        readableCount._rawValue > 0
     }
 
     /// Whether there is space available to write.
     @inlinable
     public var isWritable: Bool {
-        writable._rawValue > 0
+        writableCount._rawValue > 0
     }
 }
 
-// MARK: - Move Namespace
+// MARK: - Move Reader Index
 
 extension Binary.Cursor {
-    /// Accessor for move operations.
-    public struct Move: ~Copyable {
-        @usableFromInline
-        var cursor: UnsafeMutablePointer<Binary.Cursor<Storage>>
-
-        @usableFromInline
-        init(_ cursor: UnsafeMutablePointer<Binary.Cursor<Storage>>) {
-            self.cursor = cursor
-        }
-    }
-
-    /// Move operations on this cursor.
-    public var move: Move {
-        mutating get {
-            Move(&self)
-        }
-    }
-}
-
-// MARK: - Move.Reader
-
-extension Binary.Cursor.Move {
-    /// Accessor for reader index movement.
-    public struct Reader: ~Copyable {
-        @usableFromInline
-        var cursor: UnsafeMutablePointer<Binary.Cursor<Storage>>
-
-        @usableFromInline
-        init(_ cursor: UnsafeMutablePointer<Binary.Cursor<Storage>>) {
-            self.cursor = cursor
-        }
-    }
-
-    /// Reader index movement.
-    public var reader: Reader {
-        Reader(cursor)
-    }
-}
-
-extension Binary.Cursor.Move.Reader {
     /// Move reader index by offset.
     ///
+    /// - Parameter offset: The displacement to apply.
     /// - Throws: `Binary.Error` if resulting index would be invalid.
     @inlinable
-    public func callAsFunction(
+    public mutating func moveReaderIndex(
         by offset: Binary.Offset<Storage.Scalar, Storage.Space>
     ) throws(Binary.Error) {
-        let newIndex = cursor.pointee._readerIndex._rawValue + offset._rawValue
+        let newIndex = _readerIndex._rawValue + offset._rawValue
 
         guard newIndex >= 0 else {
             throw .bounds(.init(
                 field: .reader,
                 value: newIndex,
                 lower: Storage.Scalar(0),
-                upper: cursor.pointee._writerIndex._rawValue
+                upper: _writerIndex._rawValue
             ))
         }
 
-        guard newIndex <= cursor.pointee._writerIndex._rawValue else {
+        guard newIndex <= _writerIndex._rawValue else {
             throw .invariant(.init(
                 kind: .reader,
                 left: newIndex,
-                right: cursor.pointee._writerIndex._rawValue
+                right: _writerIndex._rawValue
             ))
         }
 
-        cursor.pointee._readerIndex = Binary.Position(newIndex)
+        _readerIndex = Binary.Position(newIndex)
     }
 
     /// Move reader index by offset (unchecked).
+    ///
+    /// - Parameters:
+    ///   - __unchecked: Marker parameter (pass `()` or omit).
+    ///   - offset: The displacement to apply.
+    /// - Precondition: Result must satisfy `0 <= readerIndex <= writerIndex`.
     @inlinable
-    public func unchecked(
+    public mutating func moveReaderIndex(
+        __unchecked: Void = (),
         by offset: Binary.Offset<Storage.Scalar, Storage.Space>
     ) {
-        let newIndex = cursor.pointee._readerIndex._rawValue + offset._rawValue
-        assert(newIndex >= 0 && newIndex <= cursor.pointee._writerIndex._rawValue)
-        cursor.pointee._readerIndex = Binary.Position(newIndex)
+        let newIndex = _readerIndex._rawValue + offset._rawValue
+        assert(newIndex >= 0 && newIndex <= _writerIndex._rawValue)
+        _readerIndex = Binary.Position(newIndex)
     }
 }
 
-// MARK: - Move.Writer
+// MARK: - Move Writer Index
 
-extension Binary.Cursor.Move {
-    /// Accessor for writer index movement.
-    public struct Writer: ~Copyable {
-        @usableFromInline
-        var cursor: UnsafeMutablePointer<Binary.Cursor<Storage>>
-
-        @usableFromInline
-        init(_ cursor: UnsafeMutablePointer<Binary.Cursor<Storage>>) {
-            self.cursor = cursor
-        }
-    }
-
-    /// Writer index movement.
-    public var writer: Writer {
-        Writer(cursor)
-    }
-}
-
-extension Binary.Cursor.Move.Writer {
+extension Binary.Cursor {
     /// Move writer index by offset.
     ///
+    /// - Parameter offset: The displacement to apply.
     /// - Throws: `Binary.Error` if resulting index would be invalid.
     @inlinable
-    public func callAsFunction(
+    public mutating func moveWriterIndex(
         by offset: Binary.Offset<Storage.Scalar, Storage.Space>
     ) throws(Binary.Error) {
-        let newIndex = cursor.pointee._writerIndex._rawValue + offset._rawValue
-        let count = Storage.Scalar(cursor.pointee.storage.count)
+        let newIndex = _writerIndex._rawValue + offset._rawValue
+        let count = Storage.Scalar(storage.count)
 
-        guard newIndex >= cursor.pointee._readerIndex._rawValue else {
+        guard newIndex >= _readerIndex._rawValue else {
             throw .invariant(.init(
                 kind: .reader,
-                left: cursor.pointee._readerIndex._rawValue,
+                left: _readerIndex._rawValue,
                 right: newIndex
             ))
         }
@@ -266,166 +247,130 @@ extension Binary.Cursor.Move.Writer {
             throw .bounds(.init(
                 field: .writer,
                 value: newIndex,
-                lower: cursor.pointee._readerIndex._rawValue,
+                lower: _readerIndex._rawValue,
                 upper: count
             ))
         }
 
-        cursor.pointee._writerIndex = Binary.Position(newIndex)
+        _writerIndex = Binary.Position(newIndex)
     }
 
     /// Move writer index by offset (unchecked).
+    ///
+    /// - Parameters:
+    ///   - __unchecked: Marker parameter (pass `()` or omit).
+    ///   - offset: The displacement to apply.
+    /// - Precondition: Result must satisfy `readerIndex <= writerIndex <= storage.count`.
     @inlinable
-    public func unchecked(
+    public mutating func moveWriterIndex(
+        __unchecked: Void = (),
         by offset: Binary.Offset<Storage.Scalar, Storage.Space>
     ) {
-        let newIndex = cursor.pointee._writerIndex._rawValue + offset._rawValue
-        assert(newIndex >= cursor.pointee._readerIndex._rawValue)
-        assert(newIndex <= Storage.Scalar(cursor.pointee.storage.count))
-        cursor.pointee._writerIndex = Binary.Position(newIndex)
+        let newIndex = _writerIndex._rawValue + offset._rawValue
+        assert(newIndex >= _readerIndex._rawValue)
+        assert(newIndex <= Storage.Scalar(storage.count))
+        _writerIndex = Binary.Position(newIndex)
     }
 }
 
-// MARK: - Set Namespace
+// MARK: - Set Reader Index
 
 extension Binary.Cursor {
-    /// Accessor for set operations.
-    public struct Set: ~Copyable {
-        @usableFromInline
-        var cursor: UnsafeMutablePointer<Binary.Cursor<Storage>>
-
-        @usableFromInline
-        init(_ cursor: UnsafeMutablePointer<Binary.Cursor<Storage>>) {
-            self.cursor = cursor
+    /// Set reader index to position.
+    ///
+    /// - Parameter position: The new reader position.
+    /// - Throws: `Binary.Error` if position is invalid.
+    @inlinable
+    public mutating func setReaderIndex(
+        to position: Binary.Position<Storage.Scalar, Storage.Space>
+    ) throws(Binary.Error) {
+        guard position._rawValue >= 0 else {
+            throw .negative(.init(field: .reader, value: position._rawValue))
         }
+
+        guard position._rawValue <= _writerIndex._rawValue else {
+            throw .invariant(.init(
+                kind: .reader,
+                left: position._rawValue,
+                right: _writerIndex._rawValue
+            ))
+        }
+
+        _readerIndex = position
     }
 
-    /// Set operations on this cursor.
-    public var set: Set {
-        mutating get {
-            Set(&self)
-        }
-    }
-}
-
-// MARK: - Set.Reader
-
-extension Binary.Cursor.Set {
-    /// Accessor for reader index setting.
-    public struct Reader: ~Copyable {
-        @usableFromInline
-        var cursor: UnsafeMutablePointer<Binary.Cursor<Storage>>
-
-        @usableFromInline
-        init(_ cursor: UnsafeMutablePointer<Binary.Cursor<Storage>>) {
-            self.cursor = cursor
-        }
-        
-        /// Set reader index to position.
-        ///
-        /// - Throws: `Binary.Error` if position is invalid.
-        @inlinable
-        public func callAsFunction(
-            to position: Binary.Position<Storage.Scalar, Storage.Space>
-        ) throws(Binary.Error) {
-            guard position._rawValue >= 0 else {
-                throw .negative(.init(field: .reader, value: position._rawValue))
-            }
-
-            guard position._rawValue <= cursor.pointee._writerIndex._rawValue else {
-                throw .invariant(.init(
-                    kind: .reader,
-                    left: position._rawValue,
-                    right: cursor.pointee._writerIndex._rawValue
-                ))
-            }
-
-            cursor.pointee._readerIndex = position
-        }
-
-        /// Set reader index to position (unchecked).
-        @inlinable
-        public func unchecked(
-            to position: Binary.Position<Storage.Scalar, Storage.Space>
-        ) {
-            assert(position._rawValue >= 0)
-            assert(position._rawValue <= cursor.pointee._writerIndex._rawValue)
-            cursor.pointee._readerIndex = position
-        }
-    }
-
-    /// Reader index setting.
-    public var reader: Reader {
-        Reader(cursor)
+    /// Set reader index to position (unchecked).
+    ///
+    /// - Parameters:
+    ///   - __unchecked: Marker parameter (pass `()` or omit).
+    ///   - position: The new reader position.
+    /// - Precondition: `0 <= position <= writerIndex`.
+    @inlinable
+    public mutating func setReaderIndex(
+        __unchecked: Void = (),
+        to position: Binary.Position<Storage.Scalar, Storage.Space>
+    ) {
+        assert(position._rawValue >= 0)
+        assert(position._rawValue <= _writerIndex._rawValue)
+        _readerIndex = position
     }
 }
 
-//extension Binary.Cursor.Set.Reader {}
+// MARK: - Set Writer Index
 
-// MARK: - Set.Writer
+extension Binary.Cursor {
+    /// Set writer index to position.
+    ///
+    /// - Parameter position: The new writer position.
+    /// - Throws: `Binary.Error` if position is invalid.
+    @inlinable
+    public mutating func setWriterIndex(
+        to position: Binary.Position<Storage.Scalar, Storage.Space>
+    ) throws(Binary.Error) {
+        let count = Storage.Scalar(storage.count)
 
-extension Binary.Cursor.Set {
-    /// Accessor for writer index setting.
-    public struct Writer: ~Copyable {
-        @usableFromInline
-        var cursor: UnsafeMutablePointer<Binary.Cursor<Storage>>
-
-        @usableFromInline
-        init(_ cursor: UnsafeMutablePointer<Binary.Cursor<Storage>>) {
-            self.cursor = cursor
-        }
-        
-        /// Set writer index to position.
-        ///
-        /// - Throws: `Binary.Error` if position is invalid.
-        @inlinable
-        public func callAsFunction(
-            to position: Binary.Position<Storage.Scalar, Storage.Space>
-        ) throws(Binary.Error) {
-            let count = Storage.Scalar(cursor.pointee.storage.count)
-
-            guard position._rawValue >= cursor.pointee._readerIndex._rawValue else {
-                throw .invariant(.init(
-                    kind: .reader,
-                    left: cursor.pointee._readerIndex._rawValue,
-                    right: position._rawValue
-                ))
-            }
-
-            guard position._rawValue <= count else {
-                throw .bounds(.init(
-                    field: .writer,
-                    value: position._rawValue,
-                    lower: cursor.pointee._readerIndex._rawValue,
-                    upper: count
-                ))
-            }
-
-            cursor.pointee._writerIndex = position
+        guard position._rawValue >= _readerIndex._rawValue else {
+            throw .invariant(.init(
+                kind: .reader,
+                left: _readerIndex._rawValue,
+                right: position._rawValue
+            ))
         }
 
-        /// Set writer index to position (unchecked).
-        @inlinable
-        public func unchecked(
-            to position: Binary.Position<Storage.Scalar, Storage.Space>
-        ) {
-            assert(position._rawValue >= cursor.pointee._readerIndex._rawValue)
-            assert(position._rawValue <= Storage.Scalar(cursor.pointee.storage.count))
-            cursor.pointee._writerIndex = position
+        guard position._rawValue <= count else {
+            throw .bounds(.init(
+                field: .writer,
+                value: position._rawValue,
+                lower: _readerIndex._rawValue,
+                upper: count
+            ))
         }
+
+        _writerIndex = position
     }
 
-    /// Writer index setting.
-    public var writer: Writer {
-        Writer(cursor)
+    /// Set writer index to position (unchecked).
+    ///
+    /// - Parameters:
+    ///   - __unchecked: Marker parameter (pass `()` or omit).
+    ///   - position: The new writer position.
+    /// - Precondition: `readerIndex <= position <= storage.count`.
+    @inlinable
+    public mutating func setWriterIndex(
+        __unchecked: Void = (),
+        to position: Binary.Position<Storage.Scalar, Storage.Space>
+    ) {
+        assert(position._rawValue >= _readerIndex._rawValue)
+        assert(position._rawValue <= Storage.Scalar(storage.count))
+        _writerIndex = position
     }
 }
-
 
 // MARK: - Reset
 
 extension Binary.Cursor {
     /// Reset both indices to zero.
+    @inlinable
     public mutating func reset() {
         _readerIndex = 0
         _writerIndex = 0
