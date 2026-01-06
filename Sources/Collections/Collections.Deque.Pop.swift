@@ -19,12 +19,21 @@ extension Collections.Deque {
     /// let back = try deque.pop.back()
     /// let front = try deque.pop.front()
     /// ```
+    ///
+    /// - Note: `_modify` only - no `get` accessor to prevent silent discard of mutations.
     @inlinable
     public var pop: Pop {
-        get { Pop(deque: self) }
+        _read {
+            yield Pop(storage: storage)
+        }
         _modify {
-            var proxy = Pop(deque: self)
-            defer { self = proxy.deque }
+            // Force uniqueness only (no growth needed for removal)
+            storage.ensureUnique()
+
+            // Transfer storage ownership to proxy to maintain unique reference
+            var proxy = Pop(storage: storage)
+            storage = Storage()  // Clear self.storage to release our reference
+            defer { storage = proxy.storage }
             yield &proxy
         }
     }
@@ -36,11 +45,11 @@ extension Collections.Deque {
     /// Namespace for pop operations.
     public struct Pop {
         @usableFromInline
-        var deque: Collections.Deque<Element>
+        var storage: Storage
 
         @usableFromInline
-        init(deque: Collections.Deque<Element>) {
-            self.deque = deque
+        init(storage: Storage) {
+            self.storage = storage
         }
     }
 }
@@ -55,7 +64,10 @@ extension Collections.Deque.Pop {
     /// - Complexity: O(1).
     @inlinable
     public mutating func back() throws(Collections.Deque<Element>.Error) -> Element {
-        try deque._pop(from: Collections.Deque<Element>.End.back)
+        guard !storage.isEmpty else {
+            throw .empty(.init())
+        }
+        return storage.removeLast()
     }
 
     /// Pops an element from the front of the deque.
@@ -65,6 +77,9 @@ extension Collections.Deque.Pop {
     /// - Complexity: O(1).
     @inlinable
     public mutating func front() throws(Collections.Deque<Element>.Error) -> Element {
-        try deque._pop(from: Collections.Deque<Element>.End.front)
+        guard !storage.isEmpty else {
+            throw .empty(.init())
+        }
+        return storage.removeFirst()
     }
 }

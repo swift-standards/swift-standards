@@ -306,4 +306,29 @@ struct DequeTests {
             _ = try deque.element(at: -1)
         }
     }
+
+    // MARK: - CoW Behavior Regression Test
+
+    @Test("Push 1000 elements with O(log n) buffer copies")
+    func pushManyElementsNoCopyExplosion() {
+        #if DEBUG
+        // Reset copy counter
+        _DequeBufferDebug._copyCount = 0
+
+        var deque = Collections.Deque<Int>()
+        for i in 0..<1000 {
+            deque.push.back(i)
+        }
+
+        let copyCount = _DequeBufferDebug._copyCount
+
+        #expect(deque.count == 1000)
+        #expect(deque.capacity >= 1000)
+        #expect(deque.capacity <= 2048)  // Reasonable growth (doubling)
+
+        // O(log n) copies: ~10 for 1000 elements (4→8→16→...→1024→2048)
+        #expect(copyCount <= 15,
+                "Expected O(log n) copies, got \(copyCount)")
+        #endif
+    }
 }

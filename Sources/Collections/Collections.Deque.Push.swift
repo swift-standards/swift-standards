@@ -19,12 +19,24 @@ extension Collections.Deque {
     /// deque.push.back(1)
     /// deque.push.front(0)
     /// ```
+    ///
+    /// - Note: `_modify` only - no `get` accessor to prevent silent discard of mutations.
     @inlinable
     public var push: Push {
-        get { Push(deque: self) }
+        // _read provides a snapshot for read-only access (rarely used)
+        _read {
+            yield Push(storage: storage)
+        }
         _modify {
-            var proxy = Push(deque: self)
-            defer { self = proxy.deque }
+            // CRITICAL: Force uniqueness + growth BEFORE transferring storage
+            // At this point, self.storage is the only reference
+            storage.ensureUnique(minimumCapacity: storage.count + 1)
+
+            // Transfer storage ownership to proxy to maintain unique reference
+            // After this, proxy.storage.buffer is the only reference
+            var proxy = Push(storage: storage)
+            storage = Storage()  // Clear self.storage to release our reference
+            defer { storage = proxy.storage }
             yield &proxy
         }
     }
@@ -36,11 +48,11 @@ extension Collections.Deque {
     /// Namespace for push operations.
     public struct Push {
         @usableFromInline
-        var deque: Collections.Deque<Element>
+        var storage: Storage
 
         @usableFromInline
-        init(deque: Collections.Deque<Element>) {
-            self.deque = deque
+        init(storage: Storage) {
+            self.storage = storage
         }
     }
 }
@@ -54,7 +66,8 @@ extension Collections.Deque.Push {
     /// - Complexity: O(1) amortized.
     @inlinable
     public mutating func back(_ element: Element) {
-        deque._push(element, to: Collections.Deque<Element>.End.back)
+        // ensureUnique already called in _modify, just append
+        storage.append(element)
     }
 
     /// Pushes an element to the front of the deque.
@@ -63,6 +76,7 @@ extension Collections.Deque.Push {
     /// - Complexity: O(1) amortized.
     @inlinable
     public mutating func front(_ element: Element) {
-        deque._push(element, to: Collections.Deque<Element>.End.front)
+        // ensureUnique already called in _modify, just prepend
+        storage.prepend(element)
     }
 }

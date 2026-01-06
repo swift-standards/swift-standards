@@ -58,7 +58,7 @@ struct DequeModelTests {
         var deque = Collections.Deque<Int>()
         var model = ArrayModel<Int>()
 
-        for i in 0..<20 {
+        for i in 0..<500 {
             deque.push.back(i)
             model.pushBack(i)
         }
@@ -72,7 +72,7 @@ struct DequeModelTests {
         var deque = Collections.Deque<Int>()
         var model = ArrayModel<Int>()
 
-        for i in 0..<20 {
+        for i in 0..<500 {
             deque.push.front(i)
             model.pushFront(i)
         }
@@ -83,11 +83,11 @@ struct DequeModelTests {
 
     @Test("Pop back matches model")
     func popBackMatchesModel() throws {
-        var deque = Collections.Deque(0..<20)
+        var deque = Collections.Deque(0..<500)
         var model = ArrayModel<Int>()
-        for i in 0..<20 { model.pushBack(i) }
+        for i in 0..<500 { model.pushBack(i) }
 
-        for _ in 0..<10 {
+        for _ in 0..<250 {
             let d = try deque.pop.back()
             let m = model.popBack()
             #expect(d == m)
@@ -99,11 +99,11 @@ struct DequeModelTests {
 
     @Test("Pop front matches model")
     func popFrontMatchesModel() throws {
-        var deque = Collections.Deque(0..<20)
+        var deque = Collections.Deque(0..<500)
         var model = ArrayModel<Int>()
-        for i in 0..<20 { model.pushBack(i) }
+        for i in 0..<500 { model.pushBack(i) }
 
-        for _ in 0..<10 {
+        for _ in 0..<250 {
             let d = try deque.pop.front()
             let m = model.popFront()
             #expect(d == m)
@@ -121,7 +121,7 @@ struct DequeModelTests {
         var model = ArrayModel<Int>()
 
         // Alternating pattern
-        for i in 0..<20 {
+        for i in 0..<500 {
             if i % 2 == 0 {
                 deque.push.back(i)
                 model.pushBack(i)
@@ -136,12 +136,12 @@ struct DequeModelTests {
 
     @Test("Mixed pop operations")
     func mixedPopOperations() throws {
-        var deque = Collections.Deque(0..<20)
+        var deque = Collections.Deque(0..<500)
         var model = ArrayModel<Int>()
-        for i in 0..<20 { model.pushBack(i) }
+        for i in 0..<500 { model.pushBack(i) }
 
         // Alternating pop pattern
-        for i in 0..<10 {
+        for i in 0..<250 {
             if i % 2 == 0 {
                 let d = try deque.pop.front()
                 let m = model.popFront()
@@ -160,11 +160,11 @@ struct DequeModelTests {
 
     @Test("Index access matches model")
     func indexAccessMatchesModel() {
-        let deque = Collections.Deque(0..<30)
+        let deque = Collections.Deque(0..<500)
         var model = ArrayModel<Int>()
-        for i in 0..<30 { model.pushBack(i) }
+        for i in 0..<500 { model.pushBack(i) }
 
-        for i in 0..<30 {
+        for i in 0..<500 {
             #expect(deque[i] == model[i])
         }
     }
@@ -173,9 +173,9 @@ struct DequeModelTests {
 
     @Test("Forward iteration matches model")
     func forwardIterationMatchesModel() {
-        let deque = Collections.Deque(0..<30)
+        let deque = Collections.Deque(0..<500)
         var model = ArrayModel<Int>()
-        for i in 0..<30 { model.pushBack(i) }
+        for i in 0..<500 { model.pushBack(i) }
 
         var dequeElements: [Int] = []
         for element in deque {
@@ -187,9 +187,9 @@ struct DequeModelTests {
 
     @Test("Reverse iteration matches model")
     func reverseIterationMatchesModel() {
-        let deque = Collections.Deque(0..<30)
+        let deque = Collections.Deque(0..<500)
         var model = ArrayModel<Int>()
-        for i in 0..<30 { model.pushBack(i) }
+        for i in 0..<500 { model.pushBack(i) }
 
         let reversedDeque = Array(deque.reversed())
         let reversedModel = Array(model.elements.reversed())
@@ -230,13 +230,13 @@ struct DequeModelTests {
 
     @Test("Ring buffer wraparound via init and pop/push cycle")
     func ringBufferWraparound() throws {
-        // Start with 10 elements
-        var deque = Collections.Deque(0..<10)
+        // Start with 100 elements
+        var deque = Collections.Deque(0..<100)
         var model = ArrayModel<Int>()
-        for i in 0..<10 { model.pushBack(i) }
+        for i in 0..<100 { model.pushBack(i) }
 
-        // Pop from front and push to back 10 times (limited to avoid crash)
-        for i in 10..<20 {
+        // Pop from front and push to back 500 times - tests ring buffer wraparound
+        for i in 100..<600 {
             _ = try deque.pop.front()
             _ = model.popFront()
             deque.push.back(i)

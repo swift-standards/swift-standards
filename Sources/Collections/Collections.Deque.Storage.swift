@@ -59,6 +59,19 @@ extension Collections.Deque.Storage {
 
 // MARK: - Buffer
 
+// MARK: - Debug Copy Counter
+
+#if DEBUG
+/// Debug-only copy counter for testing CoW behavior.
+/// Must be outside generic Buffer class since static stored properties
+/// are not supported in generic types.
+@usableFromInline
+enum _DequeBufferDebug {
+    @usableFromInline
+    nonisolated(unsafe) static var _copyCount: Int = 0
+}
+#endif
+
 extension Collections.Deque.Storage {
     /// ManagedBuffer-based storage for the ring buffer.
     @usableFromInline
@@ -75,6 +88,9 @@ extension Collections.Deque.Storage {
 
         @usableFromInline
         func copy(minimumCapacity: Int) -> Buffer {
+            #if DEBUG
+            _DequeBufferDebug._copyCount += 1
+            #endif
             let requestedCapacity = Swift.max(minimumCapacity, header.count, 4)
             let newBuffer = Buffer.create(minimumCapacity: requestedCapacity)
             // Note: newBuffer.header.capacity is already set to actual capacity by create()
