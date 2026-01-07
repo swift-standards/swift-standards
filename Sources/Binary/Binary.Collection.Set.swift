@@ -246,7 +246,7 @@ extension Binary.Collection.Set {
     /// that the underlying array buffer is shared/copied as expected.
     @usableFromInline
     var _identity: ObjectIdentifier? {
-        withUnsafePointer(to: words) { ptr in
+        withUnsafePointer(to: words) { _ in
             // Arrays in Swift use CoW internally
             nil  // BitSet doesn't use class-based storage
         }

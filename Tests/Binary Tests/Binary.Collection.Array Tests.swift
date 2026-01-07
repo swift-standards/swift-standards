@@ -56,7 +56,7 @@ struct BinaryCollectionArrayTests {
 
         let first = bits.popLast()
         #expect(first == true)
-        #expect(bits.count == 0)
+        #expect(bits.isEmpty)
 
         let empty = bits.popLast()
         #expect(empty == nil)
@@ -77,7 +77,6 @@ struct BinaryCollectionArrayTests {
 
         bits.removeAll()
         #expect(bits.isEmpty)
-        #expect(bits.count == 0)
     }
 
     // MARK: - Properties
@@ -85,7 +84,6 @@ struct BinaryCollectionArrayTests {
     @Test("count and isEmpty")
     func countAndIsEmpty() {
         var bits = Binary.Collection.Array()
-        #expect(bits.count == 0)
         #expect(bits.isEmpty)
 
         bits.append(true)

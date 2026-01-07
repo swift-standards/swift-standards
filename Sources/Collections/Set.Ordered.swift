@@ -102,7 +102,7 @@ extension Set.Ordered {
     /// Whether the set is empty.
     @inlinable
     public var isEmpty: Bool {
-        storage.count == 0
+        storage.isEmpty
     }
 
     /// The current capacity of the set.

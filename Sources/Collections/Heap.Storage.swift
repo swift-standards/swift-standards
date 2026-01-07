@@ -124,10 +124,10 @@ extension Heap.Storage {
     /// Removes and returns the minimum element.
     @inlinable
     mutating func removeMin() -> Element? {
-        guard count > 0 else { return nil }
+        guard !isEmpty else { return nil }
 
         var removed = elements.removeLast()
-        guard count > 0 else { return removed }
+        guard !isEmpty else { return removed }
 
         swap(&elements[0], &removed)
         trickleDownMin(Heap.Node.root)
@@ -137,7 +137,7 @@ extension Heap.Storage {
     /// Removes and returns the maximum element.
     @inlinable
     mutating func removeMax() -> Element? {
-        guard count > 0 else { return nil }
+        guard !isEmpty else { return nil }
         guard count > 2 else { return elements.popLast() }
 
         var removed = elements.removeLast()

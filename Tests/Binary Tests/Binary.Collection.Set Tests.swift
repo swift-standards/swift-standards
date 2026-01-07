@@ -113,7 +113,7 @@ struct BinaryCollectionSetTests {
     @Test("Count")
     func count() {
         var set = Binary.Collection.Set()
-        #expect(set.count == 0)
+        #expect(set.isEmpty)
 
         set.insert(0)
         #expect(set.count == 1)
@@ -170,7 +170,6 @@ struct BinaryCollectionSetTests {
 
         set.clear()
         #expect(set.isEmpty)
-        #expect(set.count == 0)
     }
 
     // MARK: - Initialization

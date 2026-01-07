@@ -349,8 +349,10 @@ struct OrderedSetModelTests {
         #expect(Array(empty.algebra.union(nonEmpty)) == [1, 2, 3])
         #expect(Array(nonEmpty.algebra.union(empty)) == [1, 2, 3])
 
-        // Intersection with empty
+        // Intersection with empty (testing intersection method returns empty set)
+        // swiftlint:disable:next is_disjoint
         #expect(empty.algebra.intersection(nonEmpty).isEmpty)
+        // swiftlint:disable:next is_disjoint
         #expect(nonEmpty.algebra.intersection(empty).isEmpty)
 
         // Subtract empty

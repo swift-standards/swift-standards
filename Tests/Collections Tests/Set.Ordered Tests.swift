@@ -215,7 +215,6 @@ struct OrderedSetTests {
         let set = Set<Int>.Ordered()
 
         #expect(set.isEmpty)
-        #expect(set.count == 0)
     }
 
     @Test("Init from sequence")
@@ -232,7 +231,6 @@ struct OrderedSetTests {
         set.clear()
 
         #expect(set.isEmpty)
-        #expect(set.count == 0)
     }
 
     // MARK: - Equatable & Hashable

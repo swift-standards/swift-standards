@@ -90,7 +90,7 @@ struct OrderedDictionaryModelTests {
     @Test("Random operations match model - 1000 iterations")
     func randomOperationsMatchModel() {
         var rng = LCG(seed: 11111)
-        var orderedDict = Dictionary<String, Int>.Ordered()
+        var orderedDict = [String: Int].Ordered()
         var model = ArrayDictModel<String, Int>()
 
         for _ in 0..<1000 {
@@ -139,7 +139,7 @@ struct OrderedDictionaryModelTests {
     @Test("Insertion order preserved")
     func insertionOrderPreserved() {
         var rng = LCG(seed: 22222)
-        var orderedDict = Dictionary<Int, String>.Ordered()
+        var orderedDict = [Int: String].Ordered()
         var model = ArrayDictModel<Int, String>()
 
         var insertedKeys: [Int] = []
@@ -159,7 +159,7 @@ struct OrderedDictionaryModelTests {
 
     @Test("Update does not change order")
     func updateDoesNotChangeOrder() {
-        var orderedDict = Dictionary<String, Int>.Ordered()
+        var orderedDict = [String: Int].Ordered()
         var model = ArrayDictModel<String, Int>()
 
         // Insert in order
@@ -189,7 +189,7 @@ struct OrderedDictionaryModelTests {
 
     @Test("Removal shifts indices correctly")
     func removalShiftsIndices() {
-        var orderedDict = Dictionary<String, Int>.Ordered()
+        var orderedDict = [String: Int].Ordered()
         var model = ArrayDictModel<String, Int>()
 
         for i in 0..<10 {
@@ -213,7 +213,7 @@ struct OrderedDictionaryModelTests {
 
     @Test("Reinsertion after removal goes to end")
     func reinsertionGoesToEnd() {
-        var orderedDict = Dictionary<String, Int>.Ordered()
+        var orderedDict = [String: Int].Ordered()
         var model = ArrayDictModel<String, Int>()
 
         orderedDict["a"] = 1
@@ -241,7 +241,7 @@ struct OrderedDictionaryModelTests {
     @Test("Keys index lookup matches model")
     func keysIndexLookupMatchesModel() {
         var rng = LCG(seed: 33333)
-        var orderedDict = Dictionary<Int, String>.Ordered()
+        var orderedDict = [Int: String].Ordered()
         var model = ArrayDictModel<Int, String>()
 
         for _ in 0..<200 {
@@ -258,7 +258,7 @@ struct OrderedDictionaryModelTests {
 
     @Test("Values modify matches model")
     func valuesModifyMatchesModel() {
-        var orderedDict = Dictionary<String, Int>.Ordered()
+        var orderedDict = [String: Int].Ordered()
         var model = ArrayDictModel<String, Int>()
 
         orderedDict["counter"] = 0
@@ -275,7 +275,7 @@ struct OrderedDictionaryModelTests {
 
     @Test("Values modify on non-existent key")
     func valuesModifyNonExistent() {
-        var orderedDict = Dictionary<String, Int>.Ordered()
+        var orderedDict = [String: Int].Ordered()
 
         let result = orderedDict.values.modify("missing") { $0 += 1 }
         #expect(result == nil)
@@ -286,7 +286,7 @@ struct OrderedDictionaryModelTests {
 
     @Test("Merge keep first matches model")
     func mergeKeepFirstMatchesModel() {
-        var orderedDict = Dictionary<String, Int>.Ordered()
+        var orderedDict = [String: Int].Ordered()
         var model = ArrayDictModel<String, Int>()
 
         orderedDict["a"] = 1
@@ -314,7 +314,7 @@ struct OrderedDictionaryModelTests {
 
     @Test("Merge keep last matches model")
     func mergeKeepLastMatchesModel() {
-        var orderedDict = Dictionary<String, Int>.Ordered()
+        var orderedDict = [String: Int].Ordered()
         var model = ArrayDictModel<String, Int>()
 
         orderedDict["a"] = 1
@@ -345,7 +345,7 @@ struct OrderedDictionaryModelTests {
     @Test("Iteration matches model")
     func iterationMatchesModel() {
         var rng = LCG(seed: 44444)
-        var orderedDict = Dictionary<Int, Int>.Ordered()
+        var orderedDict = [Int: Int].Ordered()
         var model = ArrayDictModel<Int, Int>()
 
         for _ in 0..<200 {
@@ -371,7 +371,7 @@ struct OrderedDictionaryModelTests {
 
     @Test("Reverse iteration")
     func reverseIteration() {
-        var orderedDict = Dictionary<String, Int>.Ordered()
+        var orderedDict = [String: Int].Ordered()
 
         for i in 0..<10 {
             orderedDict["key\(i)"] = i
@@ -388,7 +388,7 @@ struct OrderedDictionaryModelTests {
     @Test("Index access matches model")
     func indexAccessMatchesModel() {
         var rng = LCG(seed: 55555)
-        var orderedDict = Dictionary<String, Int>.Ordered()
+        var orderedDict = [String: Int].Ordered()
         var model = ArrayDictModel<String, Int>()
 
         for _ in 0..<100 {
@@ -411,7 +411,7 @@ struct OrderedDictionaryModelTests {
     @Test("Heavy insert/update/remove cycles")
     func heavyInsertUpdateRemoveCycles() {
         var rng = LCG(seed: 66666)
-        var orderedDict = Dictionary<Int, Int>.Ordered()
+        var orderedDict = [Int: Int].Ordered()
         var model = ArrayDictModel<Int, Int>()
 
         for cycle in 0..<5 {
@@ -451,10 +451,9 @@ struct OrderedDictionaryModelTests {
 
     @Test("Empty dictionary operations")
     func emptyDictionaryOperations() {
-        let empty = Dictionary<String, Int>.Ordered()
+        let empty = [String: Int].Ordered()
 
         #expect(empty.isEmpty)
-        #expect(empty.count == 0)
         #expect(empty["missing"] == nil)
         #expect(!empty.contains("missing"))
         #expect(empty.keys.index("missing") == nil)
@@ -462,7 +461,7 @@ struct OrderedDictionaryModelTests {
 
     @Test("Single element dictionary")
     func singleElementDictionary() {
-        var dict = Dictionary<String, Int>.Ordered()
+        var dict = [String: Int].Ordered()
         dict["only"] = 42
 
         #expect(dict.count == 1)
@@ -476,7 +475,7 @@ struct OrderedDictionaryModelTests {
 
     @Test("Nil assignment removes key")
     func nilAssignmentRemovesKey() {
-        var orderedDict = Dictionary<String, Int>.Ordered()
+        var orderedDict = [String: Int].Ordered()
         var model = ArrayDictModel<String, Int>()
 
         orderedDict["a"] = 1

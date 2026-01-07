@@ -193,7 +193,6 @@ struct DequeTests {
         let deque = Deque<Int>()
 
         #expect(deque.isEmpty)
-        #expect(deque.count == 0)
     }
 
     @Test("Initialization from sequence")
@@ -306,7 +305,6 @@ struct DequeTests {
         deque.removeAll()
 
         #expect(deque.isEmpty)
-        #expect(deque.count == 0)
     }
 
     @Test("Remove all keeping capacity")

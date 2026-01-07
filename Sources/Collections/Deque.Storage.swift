@@ -145,7 +145,8 @@ extension Deque.Storage {
 
     @usableFromInline
     var isEmpty: Bool {
-        buffer.header.count == 0
+        // swiftlint:disable:next empty_count
+        count == 0  // Defining isEmpty in terms of count is correct here
     }
 }
 

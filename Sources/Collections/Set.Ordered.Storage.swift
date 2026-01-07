@@ -46,6 +46,11 @@ extension Set.Ordered.Storage {
     }
 
     @usableFromInline
+    var isEmpty: Bool {
+        elements.isEmpty
+    }
+
+    @usableFromInline
     var capacity: Int {
         elements.capacity
     }

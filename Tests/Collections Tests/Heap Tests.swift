@@ -64,7 +64,6 @@ struct HeapTests {
     func emptyHeap() {
         var heap = Heap<Int>()
         #expect(heap.isEmpty)
-        #expect(heap.count == 0)
         #expect(heap.peek.min == nil)
         #expect(heap.peek.max == nil)
         #expect(heap.take.min == nil)
@@ -89,7 +88,6 @@ struct HeapTests {
 
         heap.removeAll()
         #expect(heap.isEmpty)
-        #expect(heap.count == 0)
     }
 
     @Test("Duplicate elements")
