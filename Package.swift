@@ -31,7 +31,6 @@ let package = Package(
                 "Algebra",
                 "Algebra Linear",
                 "Affine",
-                "Binary",
                 "Dimension",
                 "Positioning",
                 "Symmetry",
@@ -40,7 +39,6 @@ let package = Package(
                 "Layout",
                 "TernaryLogic",
                 "Predicate",
-                "Parsing",
                 "StandardsCollections",
             ]
         ),
@@ -78,10 +76,6 @@ let package = Package(
             targets: ["Affine"]
         ),
         .library(
-            name: "Binary",
-            targets: ["Binary"]
-        ),
-        .library(
             name: "Dimension",
             targets: ["Dimension"]
         ),
@@ -117,10 +111,6 @@ let package = Package(
             name: "Predicate",
             targets: ["Predicate"]
         ),
-        .library(
-            name: "Parsing",
-            targets: ["Parsing"]
-        ),
     ],
     dependencies: [
         .package(url: "https://github.com/coenttb/swift-testing-performance", from: "0.3.1"),
@@ -138,7 +128,6 @@ let package = Package(
                 "Algebra",
                 "Algebra Linear",
                 "Affine",
-                "Binary",
                 "Dimension",
                 "Positioning",
                 "Symmetry",
@@ -147,7 +136,6 @@ let package = Package(
                 "Layout",
                 "TernaryLogic",
                 "Predicate",
-                "Parsing",
                 "StandardsCollections",
             ]
         ),
@@ -198,15 +186,6 @@ let package = Package(
                 "Algebra Linear",
                 "Formatting",
                 .product(name: "RealModule", package: "swift-numerics"),
-            ]
-        ),
-        .target(
-            name: "Binary",
-            dependencies: [
-                "Algebra",
-                "Dimension",
-                "Formatting",
-                "Parsing"
             ]
         ),
         .target(
@@ -265,10 +244,6 @@ let package = Package(
             dependencies: [
                 "TernaryLogic"
             ]
-        ),
-        .target(
-            name: "Parsing",
-            dependencies: []
         ),
         .macro(
             name: "StandardsTestSupportMacros",
@@ -338,13 +313,6 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "Binary".tests,
-            dependencies: [
-                "Binary",
-                "StandardsTestSupport",
-            ]
-        ),
-        .testTarget(
             name: "Dimension".tests,
             dependencies: [
                 "Dimension",
@@ -410,13 +378,6 @@ let package = Package(
                 "StandardsTestSupport",
                 "StandardsTestSupportMacros",
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-            ]
-        ),
-        .testTarget(
-            name: "Parsing".tests,
-            dependencies: [
-                "Parsing",
-                "StandardsTestSupport",
             ]
         ),
         .testTarget(
