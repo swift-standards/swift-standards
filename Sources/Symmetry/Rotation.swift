@@ -3,7 +3,6 @@
 
 public import Algebra_Linear
 public import Dimension
-import Foundation
 public import RealModule
 
 /// An N-dimensional rotation in Euclidean space.
