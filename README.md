@@ -1,6 +1,6 @@
 # swift-standards
 
-![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
+![CI](https://github.com/swift-standards/swift-standards/actions/workflows/ci.yml/badge.svg) ![Development Status](https://img.shields.io/badge/status-active--development-blue.svg)
 
 The foundational library for the [Swift Standards](https://github.com/swift-standards) organization. Type-safe primitives for geometry, algebra, time, binary operations, and more. Swift 6 strict concurrency. Swift Embedded compatible.
 
@@ -59,7 +59,7 @@ Add swift-standards to your Package.swift:
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/swift-standards/swift-standards.git", from: "0.1.0")
+    .package(url: "https://github.com/swift-standards/swift-standards.git", from: "0.30.1")
 ]
 ```
 
@@ -404,6 +404,12 @@ Areas for contribution:
 - Additional geometric primitives
 - Performance optimizations
 - Documentation and examples
+
+## Status & maintainer
+
+This package is public alpha (pre-1.0): interfaces are stabilizing and APIs may change between minor versions.
+
+Maintained by [Coen ten Thije Boonkkamp](https://github.com/coenttb) — available for Swift infrastructure and document-systems consulting: coen@coenttb.com.
 
 ## License
 
