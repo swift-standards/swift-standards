@@ -1,0 +1,9 @@
+# .github/metadata.yaml
+description: "Type-safe geometry, algebra, time, and binary extensions to the Swift standard library, anchoring the specification packages of the standards layer."
+topics:
+  - standards
+  - stdlib-extensions
+  - type-safety
+homepage: "https://swift-institute.org"
+readme:
+  family: E
