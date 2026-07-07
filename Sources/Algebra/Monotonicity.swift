@@ -105,5 +105,5 @@ extension Monotonicity {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Monotonicity: Codable {}
+    extension Monotonicity: Codable {}
 #endif

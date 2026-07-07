@@ -102,5 +102,5 @@ extension Parity {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Parity: Codable {}
+    extension Parity: Codable {}
 #endif

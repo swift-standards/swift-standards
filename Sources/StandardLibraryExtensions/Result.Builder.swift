@@ -248,6 +248,10 @@ extension Result {
 
 // MARK: - Convenience Entry Points
 
+// swift-format-ignore: AmbiguousTrailingClosureOverload
+// Deliberate overload pair (Optional-returning builder alongside non-optional) —
+// renaming is a public API change outside lint-drain scope; swift-nio precedent
+// (Tests/NIOPosixTests/TestUtils.swift) shields the same rule for the same reason.
 extension Result {
     @inlinable
     public static func first(

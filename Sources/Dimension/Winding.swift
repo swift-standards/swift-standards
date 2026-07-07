@@ -69,5 +69,5 @@ extension Winding {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Winding: Codable {}
+    extension Winding: Codable {}
 #endif

@@ -92,5 +92,5 @@ extension Vertical: CustomStringConvertible {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Vertical: Codable {}
+    extension Vertical: Codable {}
 #endif

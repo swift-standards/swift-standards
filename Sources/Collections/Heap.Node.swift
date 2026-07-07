@@ -167,7 +167,7 @@ extension Heap.Node {
         if last.offset >= limit {
             last.offset = limit &- 1
         }
-        return first ... last
+        return first...last
     }
 }
 

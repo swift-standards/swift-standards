@@ -43,7 +43,12 @@ public struct Tagged<Tag, RawValue> {
     }
 
     /// Deprecated: Use `rawValue` instead.
-    @available(*, deprecated, renamed: "rawValue", message: "Use 'rawValue' instead. '_rawValue' will be removed in a future version.")
+    @available(
+        *,
+        deprecated,
+        renamed: "rawValue",
+        message: "Use 'rawValue' instead. '_rawValue' will be removed in a future version."
+    )
     @inlinable
     public var _rawValue: RawValue {
         get { _storage }

@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Testing
+
 @testable import StandardsCollections
 
 @Suite("Dictionary.Ordered - Model Tests")
@@ -24,7 +25,7 @@ struct OrderedDictionaryModelTests {
         }
 
         mutating func next() -> UInt64 {
-            state = state &* 6364136223846793005 &+ 1442695040888963407
+            state = state &* 6_364_136_223_846_793_005 &+ 1_442_695_040_888_963_407
             return state
         }
 
@@ -305,10 +306,10 @@ struct OrderedDictionaryModelTests {
             }
         }
 
-        #expect(orderedDict["a"] == 1)   // kept original
-        #expect(orderedDict["b"] == 2)   // kept original
-        #expect(orderedDict["c"] == 3)   // new
-        #expect(orderedDict["d"] == 4)   // new
+        #expect(orderedDict["a"] == 1)  // kept original
+        #expect(orderedDict["b"] == 2)  // kept original
+        #expect(orderedDict["c"] == 3)  // new
+        #expect(orderedDict["d"] == 4)  // new
         #expect(Array(orderedDict.keys) == model.keys)
     }
 
@@ -332,7 +333,7 @@ struct OrderedDictionaryModelTests {
         }
 
         #expect(orderedDict["a"] == model["a"])
-        #expect(orderedDict["b"] == 20)   // updated
+        #expect(orderedDict["b"] == 20)  // updated
         #expect(orderedDict["c"] == 3)
         #expect(orderedDict["d"] == 4)
 
@@ -442,7 +443,10 @@ struct OrderedDictionaryModelTests {
 
             #expect(Array(orderedDict.keys) == model.keys, "Keys mismatch after cycle \(cycle)")
             for key in model.keys {
-                #expect(orderedDict[key] == model[key], "Value mismatch for \(key) after cycle \(cycle)")
+                #expect(
+                    orderedDict[key] == model[key],
+                    "Value mismatch for \(key) after cycle \(cycle)"
+                )
             }
         }
     }

@@ -96,5 +96,5 @@ extension Ternary {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Ternary: Codable {}
+    extension Ternary: Codable {}
 #endif

@@ -72,5 +72,5 @@ extension Bound {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Bound: Codable {}
+    extension Bound: Codable {}
 #endif

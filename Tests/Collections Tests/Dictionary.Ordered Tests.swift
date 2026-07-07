@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Testing
+
 @testable import StandardsCollections
 
 @Suite("Dictionary.Ordered")
@@ -172,7 +173,7 @@ struct OrderedDictionaryTests {
         let dict = try [String: Int].Ordered([
             ("a", 1),
             ("b", 2),
-            ("c", 3)
+            ("c", 3),
         ])
 
         #expect(dict.count == 3)
@@ -187,7 +188,7 @@ struct OrderedDictionaryTests {
             _ = try [String: Int].Ordered([
                 ("a", 1),
                 ("b", 2),
-                ("a", 3)  // Duplicate
+                ("a", 3),  // Duplicate
             ])
         }
     }

@@ -92,5 +92,5 @@ extension Temporal: CustomStringConvertible {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Temporal: Codable {}
+    extension Temporal: Codable {}
 #endif

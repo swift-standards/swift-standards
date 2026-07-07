@@ -175,7 +175,10 @@ struct JulianTests {
     @available(macOS 13.0, iOS 16.0, tvOS 16.0, watchOS 9.0, *)
     @Test
     func instantRoundTrip() throws {
-        let original = try Instant(secondsSinceUnixEpoch: 1_000_000_000, nanosecondFraction: 500_000_000)
+        let original = try Instant(
+            secondsSinceUnixEpoch: 1_000_000_000,
+            nanosecondFraction: 500_000_000
+        )
         let jd = Time.Julian.Day(original)
         let restored = Instant(jd)
 

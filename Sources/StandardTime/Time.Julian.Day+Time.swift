@@ -34,7 +34,8 @@ extension Tagged where Tag == Coordinate.X<Time.Julian.Space>, RawValue == Doubl
         let jdn = day + (153 * m + 2) / 5 + 365 * y + y / 4 - y / 100 + y / 400 - 32045
 
         // Add fractional day (JD starts at noon, so subtract 0.5 then add time fraction)
-        let dayFraction = (Double(time.hour.value) - 12.0) / 24.0
+        let dayFraction =
+            (Double(time.hour.value) - 12.0) / 24.0
             + Double(time.minute.value) / 1440.0
             + Double(time.second.value) / 86400.0
             + Double(time.totalNanoseconds) / 86_400_000_000_000.0

@@ -73,5 +73,5 @@ extension Gradient {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Gradient: Codable {}
+    extension Gradient: Codable {}
 #endif

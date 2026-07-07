@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Testing
+
 @testable import StandardsCollections
 
 @Suite("Deque - Model Tests")

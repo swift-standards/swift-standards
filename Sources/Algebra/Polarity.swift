@@ -81,5 +81,5 @@ extension Polarity {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Polarity: Codable {}
+    extension Polarity: Codable {}
 #endif

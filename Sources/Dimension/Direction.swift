@@ -83,5 +83,5 @@ extension Direction {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Direction: Codable {}
+    extension Direction: Codable {}
 #endif

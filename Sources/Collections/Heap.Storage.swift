@@ -111,7 +111,7 @@ extension Heap.Storage {
         if useFloyd {
             heapify()
         } else {
-            for offset in origCount ..< newCount {
+            for offset in origCount..<newCount {
                 bubbleUp(Heap.Node(offset: offset))
             }
         }
@@ -202,20 +202,23 @@ extension Heap.Storage {
         var node = node
 
         if (node.isMinLevel && elements[node.offset] > elements[parent.offset])
-            || (!node.isMinLevel && elements[node.offset] < elements[parent.offset]) {
+            || (!node.isMinLevel && elements[node.offset] < elements[parent.offset])
+        {
             elements.swapAt(node.offset, parent.offset)
             node = parent
         }
 
         if node.isMinLevel {
             while let grandparent = node.grandParent(),
-                  elements[node.offset] < elements[grandparent.offset] {
+                elements[node.offset] < elements[grandparent.offset]
+            {
                 elements.swapAt(node.offset, grandparent.offset)
                 node = grandparent
             }
         } else {
             while let grandparent = node.grandParent(),
-                  elements[node.offset] > elements[grandparent.offset] {
+                elements[node.offset] > elements[grandparent.offset]
+            {
                 elements.swapAt(node.offset, grandparent.offset)
                 node = grandparent
             }
@@ -421,11 +424,11 @@ extension Heap.Storage {
         while level >= 0 {
             if let nodes = Heap.Node.allNodes(onLevel: level, limit: limit) {
                 if Heap.Node.isMinLevel(level) {
-                    for offset in nodes.lowerBound.offset ... nodes.upperBound.offset {
+                    for offset in nodes.lowerBound.offset...nodes.upperBound.offset {
                         trickleDownMin(Heap.Node(offset: offset, level: level))
                     }
                 } else {
-                    for offset in nodes.lowerBound.offset ... nodes.upperBound.offset {
+                    for offset in nodes.lowerBound.offset...nodes.upperBound.offset {
                         trickleDownMax(Heap.Node(offset: offset, level: level))
                     }
                 }

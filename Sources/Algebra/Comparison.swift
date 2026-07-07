@@ -102,5 +102,5 @@ extension Comparison {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Comparison: Codable {}
+    extension Comparison: Codable {}
 #endif

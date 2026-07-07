@@ -4,7 +4,7 @@
 // Extensions for Swift standard library Mirror
 
 #if !hasFeature(Embedded)
-extension Mirror {
-    // Add utilities here
-}
+    extension Mirror {
+        // Add utilities here
+    }
 #endif

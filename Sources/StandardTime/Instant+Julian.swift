@@ -21,7 +21,8 @@ extension Tagged where Tag == Coordinate.X<Time.Julian.Space>, RawValue == Doubl
     /// Uses the Unix epoch Julian Day (2440587.5) as reference.
     public static func from(_ instant: Instant) -> Self {
         let secondsPerDay: Double = 86400.0
-        let days = Double(instant.secondsSinceUnixEpoch) / secondsPerDay
+        let days =
+            Double(instant.secondsSinceUnixEpoch) / secondsPerDay
             + Double(instant.nanosecondFraction) / (secondsPerDay * 1_000_000_000)
         return Self.unixEpoch + Time.Julian.Offset(days)
     }

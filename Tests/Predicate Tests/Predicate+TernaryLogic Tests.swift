@@ -61,10 +61,14 @@ struct StrongKleeneSemanticsTests {
 
     @Test(arguments: [
         // AND truth table with unknown
-        (lhs: nil as Int?, rhs: 4 as Int?, op: "&&", expected: nil as Bool?),  // unknown && true = unknown
-        (lhs: nil as Int?, rhs: 3 as Int?, op: "&&", expected: nil as Bool?),  // unknown && false = unknown
-        (lhs: 4 as Int?, rhs: nil as Int?, op: "&&", expected: nil as Bool?),  // true && unknown = unknown
-        (lhs: 3 as Int?, rhs: nil as Int?, op: "&&", expected: false as Bool?),  // false && unknown = false
+        // unknown && true = unknown
+        (lhs: nil as Int?, rhs: 4 as Int?, op: "&&", expected: nil as Bool?),
+        // unknown && false = unknown
+        (lhs: nil as Int?, rhs: 3 as Int?, op: "&&", expected: nil as Bool?),
+        // true && unknown = unknown
+        (lhs: 4 as Int?, rhs: nil as Int?, op: "&&", expected: nil as Bool?),
+        // false && unknown = false
+        (lhs: 3 as Int?, rhs: nil as Int?, op: "&&", expected: false as Bool?),
     ])
     func ternaryANDsemantics(lhs: Int?, rhs: Int?, op: String, expected: Bool?) {
         let lhsResult: Bool? = isEven(lhs)
@@ -76,10 +80,14 @@ struct StrongKleeneSemanticsTests {
     @Test(arguments: [
         // OR truth table with unknown (Strong Kleene semantics)
         // isEven: even numbers, isPositive: > 0
-        (lhs: nil as Int?, rhs: 4 as Int?, op: "||", expected: true as Bool?),  // unknown || true = true
-        (lhs: nil as Int?, rhs: -3 as Int?, op: "||", expected: nil as Bool?),  // unknown || false = unknown
-        (lhs: 4 as Int?, rhs: nil as Int?, op: "||", expected: true as Bool?),  // true || unknown = true
-        (lhs: 3 as Int?, rhs: nil as Int?, op: "||", expected: nil as Bool?),  // false || unknown = unknown
+        // unknown || true = true
+        (lhs: nil as Int?, rhs: 4 as Int?, op: "||", expected: true as Bool?),
+        // unknown || false = unknown
+        (lhs: nil as Int?, rhs: -3 as Int?, op: "||", expected: nil as Bool?),
+        // true || unknown = true
+        (lhs: 4 as Int?, rhs: nil as Int?, op: "||", expected: true as Bool?),
+        // false || unknown = unknown
+        (lhs: 3 as Int?, rhs: nil as Int?, op: "||", expected: nil as Bool?),
     ])
     func ternaryORsemantics(lhs: Int?, rhs: Int?, op: String, expected: Bool?) {
         let lhsResult: Bool? = isEven(lhs)

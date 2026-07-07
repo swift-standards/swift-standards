@@ -48,7 +48,9 @@ extension Collections.Array.Fixed {
         precondition(count >= 0, "Count must be non-negative")
 
         if count == 0 {
-            self.storage = UnsafeMutablePointer<Element>(bitPattern: MemoryLayout<Element>.alignment)!
+            self.storage = UnsafeMutablePointer<Element>(
+                bitPattern: MemoryLayout<Element>.alignment
+            )!
             self.count = 0
             return
         }

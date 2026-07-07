@@ -29,7 +29,9 @@ public struct Stack<Element: ~Copyable>: ~Copyable {
         }
 
         if capacity == 0 {
-            self.storage = UnsafeMutablePointer<Element>(bitPattern: MemoryLayout<Element>.alignment)!
+            self.storage = UnsafeMutablePointer<Element>(
+                bitPattern: MemoryLayout<Element>.alignment
+            )!
             self.capacity = 0
             self._count = 0
             return

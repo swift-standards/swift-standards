@@ -40,7 +40,12 @@ extension Interval where Scalar: BinaryFloatingPoint {
         public var rawValue: Scalar { _storage }
 
         /// Deprecated: Use `rawValue` instead.
-        @available(*, deprecated, renamed: "rawValue", message: "Use 'rawValue' instead. '_rawValue' will be removed in a future version.")
+        @available(
+            *,
+            deprecated,
+            renamed: "rawValue",
+            message: "Use 'rawValue' instead. '_rawValue' will be removed in a future version."
+        )
         @inlinable
         public var _rawValue: Scalar { _storage }
 

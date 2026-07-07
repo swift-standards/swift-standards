@@ -132,5 +132,5 @@ extension Phase {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Phase: Codable {}
+    extension Phase: Codable {}
 #endif

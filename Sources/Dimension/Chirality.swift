@@ -73,5 +73,5 @@ extension Chirality {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Chirality: Codable {}
+    extension Chirality: Codable {}
 #endif

@@ -73,5 +73,5 @@ extension Boundary {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Boundary: Codable {}
+    extension Boundary: Codable {}
 #endif

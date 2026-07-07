@@ -10,6 +10,7 @@
 // ===----------------------------------------------------------------------===//
 
 import Testing
+
 @testable import StandardsCollections
 
 @Suite("Deque")
@@ -381,25 +382,27 @@ struct DequeTests {
     @Test("Push 1000 elements with O(log n) buffer copies")
     func pushManyElementsNoCopyExplosion() {
         #if DEBUG
-        // Reset copy counter
-        _DequeBufferDebug._copyCount = 0
+            // Reset copy counter
+            _DequeBufferDebug._copyCount = 0
 
-        var deque = Deque<Int>()
-        for i in 0..<1000 {
-            deque.push.back(i)
-        }
+            var deque = Deque<Int>()
+            for i in 0..<1000 {
+                deque.push.back(i)
+            }
 
-        let copyCount = _DequeBufferDebug._copyCount
+            let copyCount = _DequeBufferDebug._copyCount
 
-        #expect(deque.count == 1000)
-        #expect(deque.capacity >= 1000)
-        #expect(deque.capacity <= 2048)  // Reasonable growth (doubling)
+            #expect(deque.count == 1000)
+            #expect(deque.capacity >= 1000)
+            #expect(deque.capacity <= 2048)  // Reasonable growth (doubling)
 
-        // O(log n) copies: ~10-20 for 1000 elements (4→8→16→...→1024→2048)
-        // The proxy-based _modify may trigger slightly more copies due to double ensureUnique,
-        // but should still be O(log n), not O(n) which would be ~1000 copies.
-        #expect(copyCount <= 25,
-                "Expected O(log n) copies, got \(copyCount)")
+            // O(log n) copies: ~10-20 for 1000 elements (4→8→16→...→1024→2048)
+            // The proxy-based _modify may trigger slightly more copies due to double ensureUnique,
+            // but should still be O(log n), not O(n) which would be ~1000 copies.
+            #expect(
+                copyCount <= 25,
+                "Expected O(log n) copies, got \(copyCount)"
+            )
         #endif
     }
 }

@@ -98,5 +98,5 @@ extension Sign {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Sign: Codable {}
+    extension Sign: Codable {}
 #endif

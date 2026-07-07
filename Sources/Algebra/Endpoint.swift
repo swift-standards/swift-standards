@@ -73,5 +73,5 @@ extension Endpoint {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Endpoint: Codable {}
+    extension Endpoint: Codable {}
 #endif

@@ -92,5 +92,5 @@ extension Depth: CustomStringConvertible {
 // MARK: - Codable
 
 #if !hasFeature(Embedded)
-extension Depth: Codable {}
+    extension Depth: Codable {}
 #endif
