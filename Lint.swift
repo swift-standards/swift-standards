@@ -11,14 +11,14 @@
 // ===----------------------------------------------------------------------===//
 
 import Linter
-import Linter_Institute_Rules
+import Linter_Standards_Rules
 
 Lint.run(dependencies: [
     .package(
-        url: "https://github.com/swift-foundations/swift-institute-linter-rules.git",
+        url: "https://github.com/swift-standards/swift-standards-linter-rules.git",
         branch: "main",
-        products: ["Linter Institute Rules"]
+        products: ["Linter Standards Rules"]
     ),
 ]) {
-    Lint.Rule.Bundle.institute
+    Lint.Rule.Bundle.standards
 }
