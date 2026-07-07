@@ -6,7 +6,6 @@
 //
 
 @_exported import Algebra
-@_exported import Binary
 @_exported import Dimension
 @_exported import Formatting
 @_exported import Geometry
