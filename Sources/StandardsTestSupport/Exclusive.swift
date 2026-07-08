@@ -43,21 +43,23 @@ public import Testing
 /// Without a group, suites use global exclusion and will not overlap with
 /// any other ungrouped suites across all types.
 public struct Exclusive: SuiteTrait, TestScoping {
-    /// The default group used for global exclusion.
-    public static let globalGroup = "__global__"
-
     /// The exclusion group. Suites with the same group are mutually exclusive.
     /// Uses a global default group if not specified.
     public let group: String
-
-    /// Does not propagate to nested suites or tests.
-    public var isRecursive: Bool { false }
 
     /// Creates a trait with the specified exclusion group.
     /// - Parameter group: The group identifier. Defaults to global exclusion.
     public init(group: String = Exclusive.globalGroup) {
         self.group = group
     }
+}
+
+extension Exclusive {
+    /// The default group used for global exclusion.
+    public static let globalGroup = "__global__"
+
+    /// Does not propagate to nested suites or tests.
+    public var isRecursive: Bool { false }
 
     public func provideScope(
         for test: Test,
@@ -80,13 +82,15 @@ public struct Exclusive: SuiteTrait, TestScoping {
 /// Uses a keyed semaphore pattern: suites with the same group key
 /// are mutually exclusive.
 private actor ExclusionController {
-    static let shared = ExclusionController()
-
     /// Tracks which groups are currently running.
     private var runningGroups: Set<String> = []
 
     /// Continuations waiting for access, keyed by group.
     private var waiters: [String: [CheckedContinuation<Void, Never>]] = [:]
+}
+
+extension ExclusionController {
+    static let shared = ExclusionController()
 
     func withExclusiveAccess<T: Sendable>(
         group: String,

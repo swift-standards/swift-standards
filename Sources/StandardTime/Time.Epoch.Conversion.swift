@@ -40,7 +40,7 @@ extension Time.Epoch.Conversion {
     ///
     /// Type-safe version that guarantees all values are pre-validated.
     @inlinable
-    internal static func secondsSinceEpoch(
+    package static func secondsSinceEpoch(
         year: Time.Year,
         month: Time.Month,
         day: Time.Month.Day,
@@ -59,7 +59,7 @@ extension Time.Epoch.Conversion {
     ///
     /// Returns raw tuple with values guaranteed valid by algorithmic construction.
     @inlinable
-    internal static func componentsRaw(
+    package static func componentsRaw(
         fromSecondsSinceEpoch secondsSinceEpoch: Int
     ) -> (year: Int, month: Int, day: Int, hour: Int, minute: Int, second: Int) {
         let totalDays = secondsSinceEpoch / Time.Calendar.Gregorian.TimeConstants.secondsPerDay
@@ -100,7 +100,7 @@ extension Time.Epoch.Conversion {
     ///
     /// O(1) algorithm using Gregorian calendar's 400-year cycle structure (exactly 146,097 days).
     @inlinable
-    internal static func yearAndDays(
+    package static func yearAndDays(
         fromDaysSinceEpoch days: Int
     ) -> (year: Int, remainingDays: Int) {
         // Gregorian calendar has a 400-year cycle with exactly 146097 days
@@ -167,7 +167,7 @@ extension Time.Epoch.Conversion {
     ///
     /// O(1) algorithm using leap year counting formula (no year-by-year iteration).
     @inlinable
-    internal static func daysSinceEpoch(
+    package static func daysSinceEpoch(
         year: Time.Year,
         month: Time.Month,
         day: Time.Month.Day

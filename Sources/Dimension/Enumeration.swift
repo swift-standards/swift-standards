@@ -15,7 +15,9 @@ public struct Enumeration<Element: Enumerable>: Sequence, Sendable {
     /// Creates a sequence over all values of the element type.
     @inlinable
     public init() {}
+}
 
+extension Enumeration {
     /// Returns an iterator over all values.
     @inlinable
     public func makeIterator() -> Iterator {
@@ -28,15 +30,17 @@ public struct Enumeration<Element: Enumerable>: Sequence, Sendable {
         var index: Int = 0
 
         @inlinable
-        init() {}
+        package init() {}
+    }
+}
 
-        /// Returns the next value, or `nil` if exhausted.
-        @inlinable
-        public mutating func next() -> Element? {
-            guard index < Element.caseCount else { return nil }
-            defer { index += 1 }
-            return Element(caseIndex: index)
-        }
+extension Enumeration.Iterator {
+    /// Returns the next value, or `nil` if exhausted.
+    @inlinable
+    public mutating func next() -> Element? {
+        guard index < Element.caseCount else { return nil }
+        defer { index += 1 }
+        return Element(caseIndex: index)
     }
 }
 

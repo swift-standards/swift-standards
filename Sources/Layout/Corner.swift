@@ -46,21 +46,23 @@ extension Horizontal.Alignment {
         case leading
         /// Trailing edge (right in LTR, left in RTL)
         case trailing
+    }
+}
 
-        /// Returns the opposite side.
-        @inlinable
-        public static func opposite(_ side: Side) -> Side {
-            switch side {
-            case .leading: return .trailing
-            case .trailing: return .leading
-            }
+extension Horizontal.Alignment.Side {
+    /// Returns the opposite side.
+    @inlinable
+    public static func opposite(_ side: Self) -> Self {
+        switch side {
+        case .leading: return .trailing
+        case .trailing: return .leading
         }
+    }
 
-        /// Returns the opposite side.
-        @inlinable
-        public var opposite: Side {
-            Self.opposite(self)
-        }
+    /// Returns the opposite side.
+    @inlinable
+    public var opposite: Self {
+        Self.opposite(self)
     }
 }
 
@@ -90,21 +92,23 @@ extension Vertical.Alignment {
         case top
         /// Bottom edge
         case bottom
+    }
+}
 
-        /// Returns the opposite side.
-        @inlinable
-        public static func opposite(_ side: Side) -> Side {
-            switch side {
-            case .top: return .bottom
-            case .bottom: return .top
-            }
+extension Vertical.Alignment.Side {
+    /// Returns the opposite side.
+    @inlinable
+    public static func opposite(_ side: Self) -> Self {
+        switch side {
+        case .top: return .bottom
+        case .bottom: return .top
         }
+    }
 
-        /// Returns the opposite side.
-        @inlinable
-        public var opposite: Side {
-            Self.opposite(self)
-        }
+    /// Returns the opposite side.
+    @inlinable
+    public var opposite: Self {
+        Self.opposite(self)
     }
 }
 

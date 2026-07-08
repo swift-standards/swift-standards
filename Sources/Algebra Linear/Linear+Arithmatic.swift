@@ -138,7 +138,7 @@ extension Linear.Matrix where Rows == 2, Columns == 2, Scalar: FloatingPoint {
 extension Linear.Vector where Scalar: FloatingPoint {
     /// Scales the vector by a scalar multiplier (internal).
     @inlinable
-    internal static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
+    package static func * (lhs: borrowing Self, rhs: Scalar) -> Self {
         var result = lhs.components
         for i in 0..<N {
             result[i] = lhs.components[i] * rhs
@@ -148,7 +148,7 @@ extension Linear.Vector where Scalar: FloatingPoint {
 
     /// Divides the vector by a scalar divisor (internal).
     @inlinable
-    internal static func / (lhs: borrowing Self, rhs: Scalar) -> Self {
+    package static func / (lhs: borrowing Self, rhs: Scalar) -> Self {
         var result = lhs.components
         for i in 0..<N {
             result[i] = lhs.components[i] / rhs

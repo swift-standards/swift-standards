@@ -28,18 +28,20 @@ extension Dictionary.Ordered: Sequence {
             self.keys = keys
             self.values = values
         }
-
-        @inlinable
-        public mutating func next() -> (key: Key, value: Value)? {
-            guard index < keys.count else { return nil }
-            defer { index += 1 }
-            return (keys[index], values[index])
-        }
     }
 
     @inlinable
     public func makeIterator() -> Iterator {
         Iterator(keys: _keys, values: _values)
+    }
+}
+
+extension Dictionary.Ordered.Iterator {
+    @inlinable
+    public mutating func next() -> (key: Key, value: Value)? {
+        guard index < keys.count else { return nil }
+        defer { index += 1 }
+        return (keys[index], values[index])
     }
 }
 

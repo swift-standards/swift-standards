@@ -79,16 +79,18 @@ extension Dictionary.Ordered.Keys: Sequence {
         init(_ keys: Set<Key>.Ordered) {
             self.base = keys.makeIterator()
         }
-
-        @inlinable
-        public mutating func next() -> Key? {
-            base.next()
-        }
     }
 
     @inlinable
     public func makeIterator() -> Iterator {
         Iterator(dict._keys)
+    }
+}
+
+extension Dictionary.Ordered.Keys.Iterator {
+    @inlinable
+    public mutating func next() -> Key? {
+        base.next()
     }
 }
 

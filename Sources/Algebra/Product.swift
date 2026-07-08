@@ -31,7 +31,9 @@ public struct Product<each Element> {
     public init(_ values: repeat each Element) {
         self.values = (repeat each values)
     }
+}
 
+extension Product {
     /// Direct access to tuple elements via key paths.
     ///
     /// Enables `product.0` instead of `product.values.0`.

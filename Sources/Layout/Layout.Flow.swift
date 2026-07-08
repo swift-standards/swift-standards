@@ -199,21 +199,23 @@ extension Layout.Flow {
         init(flow: borrowing Layout<Scalar, Space>.Flow<Content>) {
             self.flow = copy flow
         }
+    }
+}
 
-        /// Transforms the content using the given closure.
-        @inlinable
-        public func content<Result, E: Error>(
-            _ transform: (Content) throws(E) -> Result
-        ) throws(E) -> Layout<Scalar, Space>.Flow<Result> {
-            Layout<Scalar, Space>.Flow<Result>(
-                spacing: Layout<Scalar, Space>.Flow<Result>.Gaps(
-                    item: flow.spacing.item,
-                    line: flow.spacing.line
-                ),
-                alignment: flow.alignment,
-                line: Layout<Scalar, Space>.Flow<Result>.Line(alignment: flow.line.alignment),
-                content: try transform(flow.content)
-            )
-        }
+extension Layout.Flow.Map {
+    /// Transforms the content using the given closure.
+    @inlinable
+    public func content<Result, E: Error>(
+        _ transform: (Content) throws(E) -> Result
+    ) throws(E) -> Layout<Scalar, Space>.Flow<Result> {
+        Layout<Scalar, Space>.Flow<Result>(
+            spacing: Layout<Scalar, Space>.Flow<Result>.Gaps(
+                item: flow.spacing.item,
+                line: flow.spacing.line
+            ),
+            alignment: flow.alignment,
+            line: Layout<Scalar, Space>.Flow<Result>.Line(alignment: flow.line.alignment),
+            content: try transform(flow.content)
+        )
     }
 }

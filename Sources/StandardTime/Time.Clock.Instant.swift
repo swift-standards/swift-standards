@@ -74,7 +74,7 @@ extension Tagged where RawValue == Int64 {
     /// - Parameter duration: The duration to convert.
     @inlinable
     public init(_ duration: Duration) {
-        do {
+        do throws(Time.Clock.InstantError) {
             try self.init(throwing: duration)
         } catch {
             preconditionFailure("Duration overflow when converting to nanoseconds")

@@ -20,16 +20,18 @@ extension Set.Ordered: Sequence {
         init(_ elements: ContiguousArray<Element>) {
             self.base = elements.makeIterator()
         }
-
-        @inlinable
-        public mutating func next() -> Element? {
-            base.next()
-        }
     }
 
     @inlinable
     public func makeIterator() -> Iterator {
         Iterator(storage.elements)
+    }
+}
+
+extension Set.Ordered.Iterator {
+    @inlinable
+    public mutating func next() -> Element? {
+        base.next()
     }
 }
 

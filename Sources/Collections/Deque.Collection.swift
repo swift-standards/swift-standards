@@ -28,18 +28,20 @@ extension Deque: Sequence {
             self.index = 0
             self.count = storage.count
         }
-
-        @inlinable
-        public mutating func next() -> Element? {
-            guard index < count else { return nil }
-            defer { index += 1 }
-            return storage[index]
-        }
     }
 
     @inlinable
     public func makeIterator() -> Iterator {
         Iterator(storage: storage)
+    }
+}
+
+extension Deque.Iterator {
+    @inlinable
+    public mutating func next() -> Element? {
+        guard index < count else { return nil }
+        defer { index += 1 }
+        return storage[index]
     }
 }
 

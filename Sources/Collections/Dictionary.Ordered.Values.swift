@@ -117,16 +117,18 @@ extension Dictionary.Ordered.Values: Sequence {
         init(_ values: ContiguousArray<Value>) {
             self.base = values.makeIterator()
         }
-
-        @inlinable
-        public mutating func next() -> Value? {
-            base.next()
-        }
     }
 
     @inlinable
     public func makeIterator() -> Iterator {
         Iterator(dict._values)
+    }
+}
+
+extension Dictionary.Ordered.Values.Iterator {
+    @inlinable
+    public mutating func next() -> Value? {
+        base.next()
     }
 }
 

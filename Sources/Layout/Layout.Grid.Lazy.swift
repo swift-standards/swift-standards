@@ -181,36 +181,38 @@ extension Layout.Grid.Lazy {
         init(grid: borrowing Layout<Scalar, Space>.Grid<Content>.Lazy) {
             self.grid = copy grid
         }
+    }
+}
 
-        /// Transforms the content using the given closure.
-        @inlinable
-        public func content<Result, E: Error>(
-            _ transform: (Content) throws(E) -> Result
-        ) throws(E) -> Layout<Scalar, Space>.Grid<Result>.Lazy {
-            Layout<Scalar, Space>.Grid<Result>.Lazy(
-                columns: transformColumns(grid.columns),
-                spacing: Layout<Scalar, Space>.Grid<Result>.Gaps(
-                    row: grid.spacing.row,
-                    column: grid.spacing.column
-                ),
-                content: try transform(grid.content)
-            )
-        }
+extension Layout.Grid.Lazy.Map {
+    /// Transforms the content using the given closure.
+    @inlinable
+    public func content<Result, E: Error>(
+        _ transform: (Content) throws(E) -> Result
+    ) throws(E) -> Layout<Scalar, Space>.Grid<Result>.Lazy {
+        Layout<Scalar, Space>.Grid<Result>.Lazy(
+            columns: transformColumns(grid.columns),
+            spacing: Layout<Scalar, Space>.Grid<Result>.Gaps(
+                row: grid.spacing.row,
+                column: grid.spacing.column
+            ),
+            content: try transform(grid.content)
+        )
+    }
 
-        @usableFromInline
-        func transformColumns<R>(
-            _ columns: Layout<Scalar, Space>.Grid<Content>.Lazy.Columns
-        ) -> Layout<Scalar, Space>.Grid<R>.Lazy.Columns {
-            switch columns {
-            case .count(let n):
-                return .count(n)
-            case .fractions(let f):
-                return .fractions(f)
-            case .autoFill(let minWidth):
-                return .autoFill(minWidth: minWidth)
-            case .autoFit(let minWidth):
-                return .autoFit(minWidth: minWidth)
-            }
+    @usableFromInline
+    func transformColumns<R>(
+        _ columns: Layout<Scalar, Space>.Grid<Content>.Lazy.Columns
+    ) -> Layout<Scalar, Space>.Grid<R>.Lazy.Columns {
+        switch columns {
+        case .count(let n):
+            return .count(n)
+        case .fractions(let f):
+            return .fractions(f)
+        case .autoFill(let minWidth):
+            return .autoFill(minWidth: minWidth)
+        case .autoFit(let minWidth):
+            return .autoFit(minWidth: minWidth)
         }
     }
 }

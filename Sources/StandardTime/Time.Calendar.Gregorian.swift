@@ -18,31 +18,33 @@ extension Time.Calendar {
 
 extension Time.Calendar.Gregorian {
     /// Standard time unit conversions.
-    public enum TimeConstants {
-        /// Seconds in one minute (60)
-        public static let secondsPerMinute = 60
+    public enum TimeConstants {}
+}
 
-        /// Seconds in one hour (3,600)
-        public static let secondsPerHour = 3600
+extension Time.Calendar.Gregorian.TimeConstants {
+    /// Seconds in one minute (60)
+    public static let secondsPerMinute = 60
 
-        /// Seconds in one day (86,400)
-        public static let secondsPerDay = 86400
+    /// Seconds in one hour (3,600)
+    public static let secondsPerHour = 3600
 
-        /// Days in a common year (365)
-        public static let daysPerCommonYear = 365
+    /// Seconds in one day (86,400)
+    public static let secondsPerDay = 86400
 
-        /// Days in a leap year (366)
-        public static let daysPerLeapYear = 366
+    /// Days in a common year (365)
+    public static let daysPerCommonYear = 365
 
-        /// Days in a 4-year cycle (1,461)
-        public static let daysPer4Years = 1461
+    /// Days in a leap year (366)
+    public static let daysPerLeapYear = 366
 
-        /// Days in a 100-year cycle (36,524)
-        public static let daysPer100Years = 36524
+    /// Days in a 4-year cycle (1,461)
+    public static let daysPer4Years = 1461
 
-        /// Days in a 400-year cycle (146,097)
-        public static let daysPer400Years = 146_097
-    }
+    /// Days in a 100-year cycle (36,524)
+    public static let daysPer100Years = 36524
+
+    /// Days in a 400-year cycle (146,097)
+    public static let daysPer400Years = 146_097
 }
 
 // MARK: - Leap Year
@@ -107,7 +109,7 @@ extension Time.Calendar.Gregorian {
     ///
     /// - Warning: Caller must guarantee month is 1-12
     @inlinable
-    internal static func daysInMonth(year: Int, month: Int) -> Int {
+    package static func daysInMonth(year: Int, month: Int) -> Int {
         let months = daysInMonths(year: year)
         // UNSAFE: Caller must guarantee month ∈ [1,12]
         return months[month - 1]

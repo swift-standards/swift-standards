@@ -32,6 +32,20 @@ public struct Tagged<Tag, RawValue> {
     @usableFromInline
     package var _storage: RawValue
 
+    /// Creates a tagged value from a raw value.
+    @inlinable
+    public init(_ rawValue: RawValue) {
+        self._storage = rawValue
+    }
+
+    /// Creates a tagged value from a raw value.
+    @inlinable
+    public init(rawValue: RawValue) {
+        self._storage = rawValue
+    }
+}
+
+extension Tagged {
     /// The underlying raw value.
     ///
     /// Use this to access the wrapped value when needed for interop
@@ -53,18 +67,6 @@ public struct Tagged<Tag, RawValue> {
     public var _rawValue: RawValue {
         get { _storage }
         set { _storage = newValue }
-    }
-
-    /// Creates a tagged value from a raw value.
-    @inlinable
-    public init(_ rawValue: RawValue) {
-        self._storage = rawValue
-    }
-
-    /// Creates a tagged value from a raw value.
-    @inlinable
-    public init(rawValue: RawValue) {
-        self._storage = rawValue
     }
 
     /// Mutates the raw value in place (package-internal).

@@ -161,13 +161,15 @@ extension Geometry {
         public init(_ segments: InlineArray<N, Line.Segment>) {
             self.segments = segments
         }
+    }
+}
 
-        /// Access edge by index.
-        @inlinable
-        public subscript(index: Int) -> Line.Segment {
-            get { segments[index] }
-            set { segments[index] = newValue }
-        }
+extension Geometry.Edges {
+    /// Access edge by index.
+    @inlinable
+    public subscript(index: Int) -> Geometry.Line.Segment {
+        get { segments[index] }
+        set { segments[index] = newValue }
     }
 }
 

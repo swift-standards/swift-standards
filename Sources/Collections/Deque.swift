@@ -120,7 +120,7 @@ extension Deque {
 extension Deque {
     /// Internal helper for push operations.
     @inlinable
-    mutating func _push(_ element: Element, to end: End) {
+    package mutating func _push(_ element: Element, to end: End) {
         switch end {
         case .front:
             storage.prepend(element)
@@ -135,7 +135,7 @@ extension Deque {
 extension Deque {
     /// Internal helper for pop operations.
     @inlinable
-    mutating func _pop(from end: End) throws(Error) -> Element {
+    package mutating func _pop(from end: End) throws(Error) -> Element {
         guard !isEmpty else {
             throw .empty(.init())
         }
@@ -153,7 +153,7 @@ extension Deque {
 extension Deque {
     /// Internal helper for peek operations.
     @inlinable
-    func _peek(at end: End) -> Element? {
+    package func _peek(at end: End) -> Element? {
         guard !isEmpty else { return nil }
         switch end {
         case .front:

@@ -61,13 +61,15 @@ extension Region {
 
         /// 11 o'clock (left of north).
         case eleven = 11
-
-        /// All clock positions in clockwise order starting from twelve.
-        public static let allCases: [Clock] = [
-            .twelve, .one, .two, .three, .four, .five,
-            .six, .seven, .eight, .nine, .ten, .eleven,
-        ]
     }
+}
+
+extension Region.Clock {
+    /// All clock positions in clockwise order starting from twelve.
+    public static let allCases: [Region.Clock] = [
+        .twelve, .one, .two, .three, .four, .five,
+        .six, .seven, .eight, .nine, .ten, .eleven,
+    ]
 }
 
 // MARK: - Rotation

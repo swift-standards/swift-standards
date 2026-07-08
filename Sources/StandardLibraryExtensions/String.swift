@@ -24,23 +24,25 @@ extension String {
         public init(_ value: some StringProtocol) {
             self.value = String(value)
         }
-
-        public func hash(into hasher: inout Hasher) {
-            value.lowercased().hash(into: &hasher)
-        }
-
-        public static func == (lhs: Self, rhs: Self) -> Bool {
-            lhs.value.lowercased() == rhs.value.lowercased()
-        }
-
-        public static func < (lhs: Self, rhs: Self) -> Bool {
-            lhs.value.lowercased() < rhs.value.lowercased()
-        }
     }
 
     /// A case-insensitive wrapper for the string.
     public var caseInsensitive: CaseInsensitive {
         CaseInsensitive(self)
+    }
+}
+
+extension String.CaseInsensitive {
+    public func hash(into hasher: inout Hasher) {
+        value.lowercased().hash(into: &hasher)
+    }
+
+    public static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.value.lowercased() == rhs.value.lowercased()
+    }
+
+    public static func < (lhs: Self, rhs: Self) -> Bool {
+        lhs.value.lowercased() < rhs.value.lowercased()
     }
 }
 
@@ -66,30 +68,32 @@ extension String {
         public init(transform: @escaping @Sendable (String) -> String) {
             self.transform = transform
         }
-
-        /// Uppercase transformation (HELLO WORLD).
-        public static let upper = Case { $0.uppercased() }
-
-        /// Lowercase transformation (hello world).
-        public static let lower = Case { $0.lowercased() }
-
-        /// Title case transformation (Hello World).
-        public static let title = Case { string in
-            string.split(separator: " ")
-                .map { word in
-                    guard let first = word.first else { return "" }
-                    return first.uppercased() + word.dropFirst().lowercased()
-                }
-                .joined(separator: " ")
-        }
-
-        /// Sentence case transformation (Hello world).
-        public static let sentence = Case { string in
-            guard let first = string.first else { return string }
-            return first.uppercased() + string.dropFirst().lowercased()
-        }
     }
 
+}
+
+extension String.Case {
+    /// Uppercase transformation (HELLO WORLD).
+    public static let upper = String.Case { $0.uppercased() }
+
+    /// Lowercase transformation (hello world).
+    public static let lower = String.Case { $0.lowercased() }
+
+    /// Title case transformation (Hello World).
+    public static let title = String.Case { string in
+        string.split(separator: " ")
+            .map { word in
+                guard let first = word.first else { return "" }
+                return first.uppercased() + word.dropFirst().lowercased()
+            }
+            .joined(separator: " ")
+    }
+
+    /// Sentence case transformation (Hello world).
+    public static let sentence = String.Case { string in
+        guard let first = string.first else { return string }
+        return first.uppercased() + string.dropFirst().lowercased()
+    }
 }
 
 // StringProtocol extensions have been moved to StringProtocol.swift

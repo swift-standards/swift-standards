@@ -10,7 +10,9 @@ public import SwiftSyntax
 public import SwiftSyntaxBuilder
 public import SwiftSyntaxMacros
 
-public struct TestSuitesMacro: DeclarationMacro {
+public struct TestSuitesMacro: DeclarationMacro {}
+
+extension TestSuitesMacro {
     public static func expansion(
         of node: some FreestandingMacroExpansionSyntax,
         in context: some MacroExpansionContext

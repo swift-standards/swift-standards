@@ -17,12 +17,12 @@ extension Heap {
         var elements: ContiguousArray<Element>
 
         @inlinable
-        init() {
+        package init() {
             self.elements = []
         }
 
         @inlinable
-        init(_ sequence: some Sequence<Element>) {
+        package init(_ sequence: some Sequence<Element>) {
             self.elements = ContiguousArray(sequence)
             guard elements.count > 1 else { return }
             heapify()
@@ -34,22 +34,22 @@ extension Heap {
 
 extension Heap.Storage {
     @inlinable
-    var count: Int { elements.count }
+    package var count: Int { elements.count }
 
     @inlinable
-    var isEmpty: Bool { elements.isEmpty }
+    package var isEmpty: Bool { elements.isEmpty }
 }
 
 // MARK: - Capacity
 
 extension Heap.Storage {
     @inlinable
-    mutating func reserveCapacity(_ minimumCapacity: Int) {
+    package mutating func reserveCapacity(_ minimumCapacity: Int) {
         elements.reserveCapacity(minimumCapacity)
     }
 
     @inlinable
-    mutating func removeAll(keepingCapacity: Bool) {
+    package mutating func removeAll(keepingCapacity: Bool) {
         elements.removeAll(keepingCapacity: keepingCapacity)
     }
 }
@@ -59,7 +59,7 @@ extension Heap.Storage {
 extension Heap.Storage {
     /// Returns the minimum element (at root).
     @inlinable
-    func peekMin() -> Element? {
+    package func peekMin() -> Element? {
         elements.first
     }
 
@@ -68,14 +68,14 @@ extension Heap.Storage {
     /// - If count <= 2, max is the last element
     /// - Otherwise, max is the larger of indices 1 and 2
     @inlinable
-    func peekMax() -> Element? {
+    package func peekMax() -> Element? {
         guard count > 2 else { return elements.last }
         return Swift.max(elements[1], elements[2])
     }
 
     /// Returns the index of the maximum element.
     @inlinable
-    func maxIndex() -> Int? {
+    package func maxIndex() -> Int? {
         switch count {
         case 0: return nil
         case 1: return 0
@@ -90,14 +90,14 @@ extension Heap.Storage {
 extension Heap.Storage {
     /// Inserts an element and restores heap property.
     @inlinable
-    mutating func insert(_ element: Element) {
+    package mutating func insert(_ element: Element) {
         elements.append(element)
         bubbleUp(Heap.Node(offset: count - 1))
     }
 
     /// Inserts multiple elements using heuristic for efficiency.
     @inlinable
-    mutating func insert(contentsOf newElements: some Sequence<Element>) {
+    package mutating func insert(contentsOf newElements: some Sequence<Element>) {
         let origCount = count
         elements.append(contentsOf: newElements)
         let newCount = count
@@ -123,7 +123,7 @@ extension Heap.Storage {
 extension Heap.Storage {
     /// Removes and returns the minimum element.
     @inlinable
-    mutating func removeMin() -> Element? {
+    package mutating func removeMin() -> Element? {
         guard !isEmpty else { return nil }
 
         var removed = elements.removeLast()
@@ -136,7 +136,7 @@ extension Heap.Storage {
 
     /// Removes and returns the maximum element.
     @inlinable
-    mutating func removeMax() -> Element? {
+    package mutating func removeMax() -> Element? {
         guard !isEmpty else { return nil }
         guard count > 2 else { return elements.popLast() }
 
@@ -161,7 +161,7 @@ extension Heap.Storage {
 extension Heap.Storage {
     /// Replaces the minimum and returns the old value.
     @inlinable
-    mutating func replaceMin(with replacement: Element) -> Element {
+    package mutating func replaceMin(with replacement: Element) -> Element {
         var removed = replacement
         swap(&elements[0], &removed)
         trickleDownMin(Heap.Node.root)
@@ -170,7 +170,7 @@ extension Heap.Storage {
 
     /// Replaces the maximum and returns the old value.
     @inlinable
-    mutating func replaceMax(with replacement: Element) -> Element {
+    package mutating func replaceMax(with replacement: Element) -> Element {
         var removed = replacement
 
         switch count {
@@ -195,7 +195,7 @@ extension Heap.Storage {
 extension Heap.Storage {
     /// Restores heap property by moving element up.
     @inlinable
-    mutating func bubbleUp(_ node: Heap.Node) {
+    package mutating func bubbleUp(_ node: Heap.Node) {
         guard !node.isRoot else { return }
 
         let parent = node.parent()
@@ -231,7 +231,7 @@ extension Heap.Storage {
 extension Heap.Storage {
     /// Sinks element at min-level node to correct position.
     @inlinable
-    mutating func trickleDownMin(_ node: Heap.Node) {
+    package mutating func trickleDownMin(_ node: Heap.Node) {
         var node = node
         var value = elements[node.offset]
 
@@ -289,12 +289,12 @@ extension Heap.Storage {
     }
 
     @inlinable
-    func minNode(_ a: Heap.Node, _ b: Heap.Node) -> Heap.Node {
+    package func minNode(_ a: Heap.Node, _ b: Heap.Node) -> Heap.Node {
         elements[b.offset] < elements[a.offset] ? b : a
     }
 
     @inlinable
-    func minDescendant(c0: Heap.Node, gc0: Heap.Node) -> Heap.Node {
+    package func minDescendant(c0: Heap.Node, gc0: Heap.Node) -> Heap.Node {
         let c1 = Heap.Node(offset: c0.offset &+ 1, level: c0.level)
 
         if gc0.offset < count {
@@ -324,7 +324,7 @@ extension Heap.Storage {
 extension Heap.Storage {
     /// Sinks element at max-level node to correct position.
     @inlinable
-    mutating func trickleDownMax(_ node: Heap.Node) {
+    package mutating func trickleDownMax(_ node: Heap.Node) {
         var node = node
         var value = elements[node.offset]
 
@@ -382,12 +382,12 @@ extension Heap.Storage {
     }
 
     @inlinable
-    func maxNode(_ a: Heap.Node, _ b: Heap.Node) -> Heap.Node {
+    package func maxNode(_ a: Heap.Node, _ b: Heap.Node) -> Heap.Node {
         elements[b.offset] >= elements[a.offset] ? b : a
     }
 
     @inlinable
-    func maxDescendant(c0: Heap.Node, gc0: Heap.Node) -> Heap.Node {
+    package func maxDescendant(c0: Heap.Node, gc0: Heap.Node) -> Heap.Node {
         let c1 = Heap.Node(offset: c0.offset &+ 1, level: c0.level)
 
         if gc0.offset < count {
@@ -417,7 +417,7 @@ extension Heap.Storage {
 extension Heap.Storage {
     /// Converts storage to valid min-max heap in O(n).
     @inlinable
-    mutating func heapify() {
+    package mutating func heapify() {
         let limit = count / 2
         var level = Heap.Node.level(forOffset: limit &- 1)
 

@@ -66,7 +66,9 @@ extension Deque.Storage {
     /// Must be outside generic Buffer class since static stored properties
     /// are not supported in generic types.
     @usableFromInline
-    enum _DequeBufferDebug {
+    enum _DequeBufferDebug {}
+
+    extension _DequeBufferDebug {
         @usableFromInline
         nonisolated(unsafe) static var _copyCount: Int = 0
     }

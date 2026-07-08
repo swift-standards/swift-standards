@@ -122,18 +122,20 @@ extension Layout.Stack {
         init(stack: borrowing Layout<Scalar, Space>.Stack<Content>) {
             self.stack = copy stack
         }
+    }
+}
 
-        /// Transforms the content using the given closure.
-        @inlinable
-        public func content<Result, E: Error>(
-            _ transform: (Content) throws(E) -> Result
-        ) throws(E) -> Layout<Scalar, Space>.Stack<Result> {
-            Layout<Scalar, Space>.Stack<Result>(
-                axis: stack.axis,
-                spacing: stack.spacing,
-                alignment: stack.alignment,
-                content: try transform(stack.content)
-            )
-        }
+extension Layout.Stack.Map {
+    /// Transforms the content using the given closure.
+    @inlinable
+    public func content<Result, E: Error>(
+        _ transform: (Content) throws(E) -> Result
+    ) throws(E) -> Layout<Scalar, Space>.Stack<Result> {
+        Layout<Scalar, Space>.Stack<Result>(
+            axis: stack.axis,
+            spacing: stack.spacing,
+            alignment: stack.alignment,
+            content: try transform(stack.content)
+        )
     }
 }

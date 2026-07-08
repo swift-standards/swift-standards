@@ -35,20 +35,6 @@ extension Interval where Scalar: BinaryFloatingPoint {
         /// The underlying value in [0, 1].
         @usableFromInline internal var _storage: Scalar
 
-        /// The underlying value in [0, 1].
-        @inlinable
-        public var rawValue: Scalar { _storage }
-
-        /// Deprecated: Use `rawValue` instead.
-        @available(
-            *,
-            deprecated,
-            renamed: "rawValue",
-            message: "Use 'rawValue' instead. '_rawValue' will be removed in a future version."
-        )
-        @inlinable
-        public var _rawValue: Scalar { _storage }
-
         // MARK: - Initializers
 
         /// Creates a unit value if within bounds and finite.
@@ -109,6 +95,24 @@ extension Interval where Scalar: BinaryFloatingPoint {
             }
         }
     }
+}
+
+// MARK: - Raw Value Access
+
+extension Interval.Unit {
+    /// The underlying value in [0, 1].
+    @inlinable
+    public var rawValue: Scalar { _storage }
+
+    /// Deprecated: Use `rawValue` instead.
+    @available(
+        *,
+        deprecated,
+        renamed: "rawValue",
+        message: "Use 'rawValue' instead. '_rawValue' will be removed in a future version."
+    )
+    @inlinable
+    public var _rawValue: Scalar { _storage }
 }
 
 // MARK: - Sendable

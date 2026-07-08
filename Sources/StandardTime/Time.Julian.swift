@@ -20,8 +20,10 @@ extension Time {
     /// let jd: Time.Julian.Day = 2_451_545.0  // J2000.0 epoch
     /// let mjd = jd - .modified               // Convert to MJD
     /// ```
-    public enum Julian {
-        /// Coordinate space for Julian time.
-        public enum Space {}
-    }
+    public enum Julian {}
+}
+
+extension Time.Julian {
+    /// Coordinate space for Julian time.
+    public enum Space {}
 }

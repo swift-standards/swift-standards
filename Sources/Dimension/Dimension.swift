@@ -32,7 +32,9 @@ public protocol Spatial {
 /// let dx: Displacement.X<MySpace>.Value<Double> = 5.0
 /// let newX = x + dx  // OK: Coordinate + Displacement = Coordinate
 /// ```
-public enum Coordinate {
+public enum Coordinate {}
+
+extension Coordinate {
     /// Horizontal position (1D), parameterized by coordinate system.
     public enum X<Space> {}
 
@@ -69,7 +71,9 @@ public enum Coordinate {
 /// let dx2: Dx = 3.0
 /// let sum = dx1 + dx2  // OK: Displacement + Displacement = Displacement
 /// ```
-public enum Displacement {
+public enum Displacement {}
+
+extension Displacement {
     /// Horizontal offset dx (1D), parameterized by coordinate system.
     public enum X<Space> {}
 
@@ -100,7 +104,9 @@ public enum Displacement {
 /// typealias Height = Extent.Y<MySpace>.Value<Double>
 /// let size = width * height  // Raw scalar (area)
 /// ```
-public enum Extent {
+public enum Extent {}
+
+extension Extent {
     /// Width (1D), parameterized by coordinate system.
     public enum X<Space> {}
 

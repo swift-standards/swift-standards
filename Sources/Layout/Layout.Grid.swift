@@ -163,20 +163,22 @@ extension Layout.Grid {
         init(grid: borrowing Layout<Scalar, Space>.Grid<Content>) {
             self.grid = copy grid
         }
+    }
+}
 
-        /// Transforms the content using the given closure.
-        @inlinable
-        public func content<Result, E: Error>(
-            _ transform: (Content) throws(E) -> Result
-        ) throws(E) -> Layout<Scalar, Space>.Grid<Result> {
-            Layout<Scalar, Space>.Grid<Result>(
-                spacing: Layout<Scalar, Space>.Grid<Result>.Gaps(
-                    row: grid.spacing.row,
-                    column: grid.spacing.column
-                ),
-                alignment: grid.alignment,
-                content: try transform(grid.content)
-            )
-        }
+extension Layout.Grid.Map {
+    /// Transforms the content using the given closure.
+    @inlinable
+    public func content<Result, E: Error>(
+        _ transform: (Content) throws(E) -> Result
+    ) throws(E) -> Layout<Scalar, Space>.Grid<Result> {
+        Layout<Scalar, Space>.Grid<Result>(
+            spacing: Layout<Scalar, Space>.Grid<Result>.Gaps(
+                row: grid.spacing.row,
+                column: grid.spacing.column
+            ),
+            alignment: grid.alignment,
+            content: try transform(grid.content)
+        )
     }
 }
