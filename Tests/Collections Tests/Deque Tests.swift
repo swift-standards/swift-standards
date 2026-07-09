@@ -13,8 +13,8 @@ import Testing
 
 @testable import StandardsCollections
 
-@Suite("Deque")
-struct DequeTests {
+@Suite
+struct `Deque Tests` {
 
     // MARK: - Nested Accessor: Push
 

@@ -13,8 +13,8 @@ import Testing
 
 @testable import StandardsCollections
 
-@Suite("Dictionary.Ordered")
-struct OrderedDictionaryTests {
+@Suite
+struct `Dictionary.Ordered Tests` {
 
     // MARK: - Basic Operations
 

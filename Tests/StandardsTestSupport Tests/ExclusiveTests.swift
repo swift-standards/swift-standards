@@ -77,8 +77,9 @@ enum GroupedExclusiveTests {
 }
 
 /// Verify that the trait properties are correct.
-@Suite
-struct ExclusiveTraitTests {
+extension Exclusive {
+    @Suite
+    struct Test {
 
     @Test
     func `trait Is Not Recursive`() {
@@ -108,5 +109,6 @@ struct ExclusiveTraitTests {
     func `trait Extension With Group`() {
         let trait: Exclusive = .exclusive(group: "TestGroup")
         #expect(trait.group == "TestGroup")
+    }
     }
 }

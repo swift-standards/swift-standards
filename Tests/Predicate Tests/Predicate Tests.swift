@@ -8,7 +8,7 @@ import Testing
 // MARK: - Basic Tests
 
 @Suite
-struct PredicateBasicTests {
+struct `Predicate Basic Tests` {
     @Test
     func `predicate Creation And Evaluation`() {
         let isEven = Predicate<Int> { $0 % 2 == 0 }
@@ -41,7 +41,7 @@ struct PredicateBasicTests {
 // MARK: - AND Tests
 
 @Suite
-struct PredicateANDTests {
+struct `Predicate AND Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
     let isPositive = Predicate<Int> { $0 > 0 }
 
@@ -121,7 +121,7 @@ struct PredicateANDTests {
 // MARK: - OR Tests
 
 @Suite
-struct PredicateORTests {
+struct `Predicate OR Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
     let isNegative = Predicate<Int> { $0 < 0 }
 
@@ -200,7 +200,7 @@ struct PredicateORTests {
 // MARK: - NOT Tests
 
 @Suite
-struct PredicateNOTTests {
+struct `Predicate NOT Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
 
     @Test(arguments: [
@@ -263,7 +263,7 @@ struct PredicateNOTTests {
 // MARK: - XOR Tests
 
 @Suite
-struct PredicateXORTests {
+struct `Predicate XOR Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
     let isPositive = Predicate<Int> { $0 > 0 }
 
@@ -322,7 +322,7 @@ struct PredicateXORTests {
 // MARK: - NAND / NOR Tests
 
 @Suite
-struct PredicateNANDNORTests {
+struct `Predicate NAND NOR Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
     let isPositive = Predicate<Int> { $0 > 0 }
 
@@ -370,7 +370,7 @@ struct PredicateNANDNORTests {
 // MARK: - Implication Tests
 
 @Suite
-struct PredicateImplicationTests {
+struct `Predicate Implication Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
     let isPositive = Predicate<Int> { $0 > 0 }
 
@@ -438,7 +438,7 @@ struct PredicateImplicationTests {
 // MARK: - De Morgan Tests
 
 @Suite
-struct PredicateDeMorganTests {
+struct `Predicate DeMorgan Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
     let isPositive = Predicate<Int> { $0 > 0 }
 
@@ -468,7 +468,7 @@ struct PredicateDeMorganTests {
 // MARK: - Distributivity Tests
 
 @Suite
-struct PredicateDistributivityTests {
+struct `Predicate Distributivity Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
     let isPositive = Predicate<Int> { $0 > 0 }
     let isSmall = Predicate<Int> { abs($0) < 5 }
@@ -499,7 +499,7 @@ struct PredicateDistributivityTests {
 // MARK: - Pullback Tests
 
 @Suite
-struct PredicatePullbackTests {
+struct `Predicate Pullback Tests` {
     @Test
     func `static Pullback With Closure`() {
         let isEven = Predicate<Int> { $0 % 2 == 0 }
@@ -540,7 +540,7 @@ struct PredicatePullbackTests {
 // MARK: - Where Clause Tests
 
 @Suite
-struct PredicateWhereTests {
+struct `Predicate Where Tests` {
     struct Person {
         let age: Int
         let name: String
@@ -583,7 +583,7 @@ struct PredicateWhereTests {
 // MARK: - Optional Tests
 
 @Suite
-struct PredicateOptionalTests {
+struct `Predicate Optional Tests` {
     @Test(arguments: [
         (value: nil as Int?, expected: true),
         (value: 42 as Int?, expected: false),
@@ -634,7 +634,7 @@ struct PredicateOptionalTests {
 // MARK: - Quantifier Tests
 
 @Suite
-struct PredicateQuantifierTests {
+struct `Predicate Quantifier Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
 
     // MARK: Static Methods
@@ -777,7 +777,7 @@ struct PredicateQuantifierTests {
 // MARK: - Count Quantifier Tests
 
 @Suite
-struct PredicateCountQuantifierTests {
+struct `Predicate Count Quantifier Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
 
     @Test(arguments: [
@@ -879,7 +879,7 @@ struct PredicateCountQuantifierTests {
 // MARK: - Fluent Factory Tests
 
 @Suite
-struct PredicateFluentFactoryTests {
+struct `Predicate Fluent Factory Tests` {
     @Test(arguments: [
         (value: 0, expected: true),
         (value: 1, expected: false),
@@ -1032,7 +1032,7 @@ struct PredicateFluentFactoryTests {
 // MARK: - Identifiable Tests
 
 @Suite
-struct PredicateIdentifiableTests {
+struct `Predicate Identifiable Tests` {
     struct Item: Identifiable {
         let id: Int
         let name: String

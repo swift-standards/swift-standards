@@ -34,8 +34,9 @@ extension UnaryTestCase {
 
 // MARK: - AND Tests
 
-@Suite
-struct ThreeValuedLogicANDTests {
+extension TernaryLogic {
+    @Suite
+    struct Test {
     static let andCases: [BinaryTestCase] = [
         // Known values
         .init(lhs: false, rhs: false, expected: false),
@@ -67,12 +68,14 @@ struct ThreeValuedLogicANDTests {
         _ = false && lazyValue()
         #expect(evaluated == false)
     }
+    }
 }
 
 // MARK: - OR Tests
 
-@Suite
-struct ThreeValuedLogicORTests {
+extension TernaryLogic.Test {
+    @Suite
+    struct OR {
     static let orCases: [BinaryTestCase] = [
         // Known values
         .init(lhs: false, rhs: false, expected: false),
@@ -104,12 +107,14 @@ struct ThreeValuedLogicORTests {
         _ = true || lazyValue()
         #expect(evaluated == false)
     }
+    }
 }
 
 // MARK: - NOT Tests
 
-@Suite
-struct ThreeValuedLogicNOTTests {
+extension TernaryLogic.Test {
+    @Suite
+    struct NOT {
     static let notCases: [UnaryTestCase] = [
         .init(input: true, expected: false),
         .init(input: false, expected: true),
@@ -125,12 +130,14 @@ struct ThreeValuedLogicNOTTests {
     func involution(_ value: Bool) {
         #expect((!(!value)) == value)
     }
+    }
 }
 
 // MARK: - XOR Tests
 
-@Suite
-struct ThreeValuedLogicXORTests {
+extension TernaryLogic.Test {
+    @Suite
+    struct XOR {
     static let xorCases: [BinaryTestCase] = [
         // Known values
         .init(lhs: false, rhs: false, expected: false),
@@ -149,12 +156,14 @@ struct ThreeValuedLogicXORTests {
     func xor(_ testCase: BinaryTestCase) {
         #expect((testCase.lhs ^ testCase.rhs) == testCase.expected)
     }
+    }
 }
 
 // MARK: - NAND Tests
 
-@Suite
-struct ThreeValuedLogicNANDTests {
+extension TernaryLogic.Test {
+    @Suite
+    struct NAND {
     static let nandCases: [BinaryTestCase] = [
         // Known values
         .init(lhs: false, rhs: false, expected: true),
@@ -173,12 +182,14 @@ struct ThreeValuedLogicNANDTests {
     func nand(_ testCase: BinaryTestCase) {
         #expect((testCase.lhs !&& testCase.rhs) == testCase.expected)
     }
+    }
 }
 
 // MARK: - NOR Tests
 
-@Suite
-struct ThreeValuedLogicNORTests {
+extension TernaryLogic.Test {
+    @Suite
+    struct NOR {
     static let norCases: [BinaryTestCase] = [
         // Known values
         .init(lhs: false, rhs: false, expected: true),
@@ -197,12 +208,14 @@ struct ThreeValuedLogicNORTests {
     func nor(_ testCase: BinaryTestCase) {
         #expect((testCase.lhs !|| testCase.rhs) == testCase.expected)
     }
+    }
 }
 
 // MARK: - XNOR Tests
 
-@Suite
-struct ThreeValuedLogicXNORTests {
+extension TernaryLogic.Test {
+    @Suite
+    struct XNOR {
     static let xnorCases: [BinaryTestCase] = [
         // Known values
         .init(lhs: false, rhs: false, expected: true),
@@ -221,12 +234,14 @@ struct ThreeValuedLogicXNORTests {
     func xnor(_ testCase: BinaryTestCase) {
         #expect((testCase.lhs !^ testCase.rhs) == testCase.expected)
     }
+    }
 }
 
 // MARK: - De Morgan Tests
 
-@Suite
-struct ThreeValuedLogicDeMorganTests {
+extension TernaryLogic.Test {
+    @Suite
+    struct DeMorgan {
     static let knownPairs: [(Bool, Bool)] = [
         (false, false),
         (false, true),
@@ -258,12 +273,14 @@ struct ThreeValuedLogicDeMorganTests {
         // !true && !nil = false && nil = false ✓
         #expect(!(true || nilValue) == ((!true) && (!nilValue)))
     }
+    }
 }
 
 // MARK: - Implication Tests
 
-@Suite
-struct ThreeValuedLogicImplicationTests {
+extension TernaryLogic.Test {
+    @Suite
+    struct Implication {
     struct ImplicationCase: CustomTestStringConvertible, Sendable {
         let a: Bool?
         let b: Bool?
@@ -289,9 +306,10 @@ struct ThreeValuedLogicImplicationTests {
         let result = !testCase.a || testCase.b
         #expect(result == testCase.expected)
     }
+    }
 }
 
-extension ThreeValuedLogicImplicationTests.ImplicationCase {
+extension TernaryLogic.Test.Implication.ImplicationCase {
     var testDescription: String {
         "\(a.map(String.init(describing:)) ?? "nil") → \(b.map(String.init(describing:)) ?? "nil") = \(expected.map(String.init(describing:)) ?? "nil")"
     }
@@ -299,19 +317,21 @@ extension ThreeValuedLogicImplicationTests.ImplicationCase {
 
 // MARK: - Complex Expression Tests
 
-@Suite
-struct ThreeValuedLogicComplexExpressionTests {
-    @Test
-    func `mixed Values`() {
-        let a: Bool? = true
-        let b: Bool? = false
-        let c: Bool? = nil
+extension TernaryLogic.Test {
+    @Suite
+    struct ComplexExpression {
+        @Test
+        func `mixed Values`() {
+            let a: Bool? = true
+            let b: Bool? = false
+            let c: Bool? = nil
 
-        // (true && false) || nil = false || nil = nil
-        #expect(((a && b) || c) == nil)
-        // true && (false || nil) = true && nil = nil
-        #expect((a && (b || c)) == nil)
-        // (true || nil) && false = true && false = false
-        #expect(((a || c) && b) == false)
+            // (true && false) || nil = false || nil = nil
+            #expect(((a && b) || c) == nil)
+            // true && (false || nil) = true && nil = nil
+            #expect((a && (b || c)) == nil)
+            // (true || nil) && false = true && false = false
+            #expect(((a || c) && b) == false)
+        }
     }
 }

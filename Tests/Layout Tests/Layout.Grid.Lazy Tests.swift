@@ -6,8 +6,8 @@ import Testing
 
 @testable import Layout
 
-@Suite("Layout.Grid.Lazy")
-struct LazyGridTests {
+@Suite
+struct `Layout.Grid.Lazy Tests` {
     typealias TestLayout = Layout<Double, Void>
     typealias TestGrid<C> = TestLayout.Grid<C>
 

@@ -13,8 +13,8 @@ import Testing
 
 @testable import StandardsCollections
 
-@Suite("Deque - Model Tests")
-struct DequeModelTests {
+@Suite
+struct `Deque.Model Tests` {
 
     /// Reference model using Array for comparison.
     struct ArrayModel<Element> {

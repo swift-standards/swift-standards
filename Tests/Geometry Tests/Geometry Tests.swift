@@ -90,7 +90,7 @@ extension TestUnit {
 // MARK: - Geometry Unit Tests
 
 @Suite
-struct GeometryUnitTests {
+struct `Geometry Unit Tests` {
     @Test
     func `Double conforms to Geometry Unit`() {
         let point: Geometry<Double, Void>.Point<2> = .init(x: 10, y: 20)
@@ -107,7 +107,7 @@ struct GeometryUnitTests {
 // MARK: - Point Tests
 
 @Suite
-struct PointTests {
+struct `Point Tests` {
     @Test
     func `Creates point with coordinates`() {
         let point: Geometry<TestUnit, Void>.Point<2> = .init(x: 10, y: 20)
@@ -160,7 +160,7 @@ struct PointTests {
 // MARK: - Vector<2> Tests
 
 @Suite
-struct VectorTests {
+struct `Vector Tests` {
     @Test
     func `Creates vector`() {
         let v: Geo.Vector<2> = .init(dx: 3, dy: 4)
@@ -211,7 +211,7 @@ struct VectorTests {
 // MARK: - Size Tests
 
 @Suite
-struct SizeTests {
+struct `Size Tests` {
     @Test
     func `Creates size with dimensions`() {
         let size: Geometry<TestUnit, Void>.Size<2> = .init(width: 100, height: 200)
@@ -230,7 +230,7 @@ struct SizeTests {
 // MARK: - Rectangle Tests
 
 @Suite
-struct RectangleTests {
+struct `Rectangle Tests` {
     @Test
     func `Creates rectangle from corners`() {
         let rect: Geometry<Double, Void>.Rectangle = .init(llx: 10, lly: 20, urx: 110, ury: 220)
@@ -322,7 +322,7 @@ struct RectangleTests {
 // MARK: - Radian Tests
 
 @Suite
-struct RadianTests {
+struct `Radian Tests` {
     @Test
     func `Radian zero`() {
         let zero: Radian<Double> = .zero
@@ -348,7 +348,7 @@ struct RadianTests {
 // MARK: - Degree Tests
 
 @Suite
-struct DegreeTests {
+struct `Degree Tests` {
     @Test
     func `Degree zero`() {
         let zero: Degree<Double> = .zero
@@ -380,7 +380,7 @@ struct DegreeTests {
 // MARK: - AffineTransform Tests
 
 @Suite
-struct AffineTransformTests {
+struct `AffineTransform Tests` {
     @Test
     func `Identity transform`() {
         let transform: Geometry<Double, Void>.AffineTransform = .identity
@@ -454,7 +454,7 @@ struct AffineTransformTests {
 // MARK: - LineSegment Tests
 
 @Suite
-struct LineSegmentTests {
+struct `LineSegment Tests` {
     @Test
     func `Line segment length`() {
         let segment: Geometry<Double, Void>.LineSegment = .init(
@@ -500,7 +500,7 @@ struct LineSegmentTests {
 // MARK: - Line Tests
 
 @Suite
-struct LineTests {
+struct `Line Tests` {
     @Test
     func `Line from point and direction`() {
         let line: Geometry<Double, Void>.Line = .init(
@@ -582,7 +582,7 @@ struct LineTests {
 // MARK: - EdgeInsets Tests
 
 @Suite
-struct EdgeInsetsTests {
+struct `EdgeInsets Tests` {
     @Test
     func `Creates edge insets`() {
         let insets: Geometry<TestUnit, Void>.EdgeInsets = .init(
@@ -619,7 +619,7 @@ struct EdgeInsetsTests {
 // MARK: - Dimension Tests
 
 @Suite
-struct DimensionTests {
+struct `Dimension Tests` {
     @Test
     func `Width comparison`() {
         let a: Geometry<TestUnit, Void>.Width = .init(10)
@@ -690,7 +690,7 @@ struct DimensionTests {
 // MARK: - AffineTransform Generic Tests
 
 @Suite
-struct AffineTransformGenericTests {
+struct `AffineTransform Generic Tests` {
     @Test
     func `Float AffineTransform`() {
         let transform: Geometry<Float, Void>.AffineTransform = .identity
@@ -715,7 +715,7 @@ struct AffineTransformGenericTests {
 // MARK: - Linear Transform Tests
 
 @Suite
-struct LinearTransformTests {
+struct `LinearTransform Tests` {
     typealias Matrix2x2 = Linear<Double, Void>.Matrix<2, 2>
 
     @Test
@@ -783,7 +783,7 @@ struct LinearTransformTests {
 // MARK: - Scale Tests
 
 @Suite
-struct ScaleTransformTests {
+struct `ScaleTransform Tests` {
     @Test
     func `Scale identity`() {
         let identity = Scale<2, Double>.identity
@@ -819,7 +819,7 @@ struct ScaleTransformTests {
 // MARK: - Rotation Tests
 
 @Suite
-struct RotationTransformTests {
+struct `RotationTransform Tests` {
     @Test
     func `Rotation identity`() {
         let identity = Rotation<2, Double>.identity
@@ -858,7 +858,7 @@ struct RotationTransformTests {
 // MARK: - Shear Tests
 
 @Suite
-struct ShearTransformTests {
+struct `ShearTransform Tests` {
     typealias Matrix2x2 = Linear<Double, Void>.Matrix<2, 2>
 
     @Test

@@ -13,8 +13,8 @@ import Testing
 
 @testable import StandardsCollections
 
-@Suite("Dictionary.Ordered - Model Tests")
-struct OrderedDictionaryModelTests {
+@Suite
+struct `Dictionary.Ordered.Model Tests` {
 
     /// Linear congruential generator for deterministic randomness.
     struct LCG {
@@ -485,7 +485,7 @@ struct OrderedDictionaryModelTests {
     }
 }
 
-extension OrderedDictionaryModelTests.LCG {
+extension `Dictionary.Ordered.Model Tests`.LCG {
     mutating func next() -> UInt64 {
         state = state &* 6_364_136_223_846_793_005 &+ 1_442_695_040_888_963_407
         return state

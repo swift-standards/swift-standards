@@ -9,7 +9,7 @@ import Testing
 // MARK: - Basic Ternary Logic Tests
 
 @Suite
-struct TernaryLogicBasicTests {
+struct `Predicate.TernaryLogic Basic Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
     let isPositive = Predicate<Int> { $0 > 0 }
 
@@ -55,7 +55,7 @@ struct TernaryLogicBasicTests {
 // MARK: - Strong Kleene Semantics Tests
 
 @Suite
-struct StrongKleeneSemanticsTests {
+struct `Predicate.TernaryLogic Strong Kleene Semantics Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
     let isPositive = Predicate<Int> { $0 > 0 }
 
@@ -100,7 +100,7 @@ struct StrongKleeneSemanticsTests {
 // MARK: - Composition with Optional Values
 
 @Suite
-struct OptionalCompositionTests {
+struct `Predicate.TernaryLogic Optional Composition Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
     let isPositive = Predicate<Int> { $0 > 0 }
 
@@ -152,7 +152,7 @@ struct OptionalCompositionTests {
 // MARK: - Type Inference Tests
 
 @Suite
-struct TernaryLogicTypeInferenceTests {
+struct `Predicate.TernaryLogic Type Inference Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
 
     @Test
@@ -180,7 +180,7 @@ struct TernaryLogicTypeInferenceTests {
 // MARK: - Integration with Fluent Methods
 
 @Suite
-struct TernaryLogicFluentMethodTests {
+struct `Predicate.TernaryLogic Fluent Method Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
     let isPositive = Predicate<Int> { $0 > 0 }
 
@@ -221,7 +221,7 @@ struct TernaryLogicFluentMethodTests {
 // MARK: - Edge Cases
 
 @Suite
-struct TernaryLogicEdgeCasesTests {
+struct `Predicate.TernaryLogic Edge Cases Tests` {
     let alwaysTrue = Predicate<Int>.always
     let alwaysFalse = Predicate<Int>.never
 
@@ -265,7 +265,7 @@ struct TernaryLogicEdgeCasesTests {
 // MARK: - Practical Usage Examples
 
 @Suite
-struct TernaryLogicPracticalTests {
+struct `Predicate.TernaryLogic Practical Tests` {
     struct User {
         var age: Int?
         var isActive: Bool
@@ -315,7 +315,7 @@ struct TernaryLogicPracticalTests {
 // MARK: - Comparison with Optional Lifting
 
 @Suite
-struct TernaryLogicVsOptionalLiftingTests {
+struct `Predicate.TernaryLogic Vs Optional Lifting Tests` {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
 
     @Test

@@ -13,8 +13,8 @@ import Testing
 
 @testable import StandardsCollections
 
-@Suite("Heap")
-struct HeapTests {
+@Suite
+struct `Heap Tests` {
     @Test
     func `Min-max heap provides both min and max`() throws {
         var heap: Heap<Int> = [5, 3, 7, 1, 9]

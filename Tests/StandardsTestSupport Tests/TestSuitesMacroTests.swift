@@ -10,8 +10,9 @@ import StandardsTestSupportMacros
 import SwiftSyntaxMacros
 import Testing
 
-@Suite
-struct TestSuitesMacroTests {
+extension TestSuitesMacro {
+    @Suite
+    struct Test {
 
     let macros: [String: any Macro.Type] = [
         "TestSuites": TestSuitesMacro.self
@@ -87,5 +88,6 @@ struct TestSuitesMacroTests {
                 """,
             macros: macros
         )
+    }
     }
 }

@@ -13,8 +13,8 @@ import Testing
 
 @testable import StandardsCollections
 
-@Suite("Set.Ordered")
-struct OrderedSetTests {
+@Suite
+struct `Set.Ordered Tests` {
 
     // MARK: - Basic Operations
 

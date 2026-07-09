@@ -8,8 +8,9 @@ import Testing
 
 @testable import StandardTime
 
-@Suite
-struct JulianTests {
+extension Time.Julian.Day {
+    @Suite
+    struct Test {
 
     // MARK: - Constants
 
@@ -186,5 +187,6 @@ struct JulianTests {
         // Note: precision loss expected due to Double's ~15 significant digits
         // For large JD values, nanosecond precision is limited
         #expect(abs(restored.nanosecondFraction - original.nanosecondFraction) < 100_000)
+    }
     }
 }
