@@ -113,7 +113,6 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/coenttb/swift-testing-performance", from: "0.3.1"),
         .package(url: "https://github.com/apple/swift-numerics", from: "1.0.0"),
         .package(url: "https://github.com/swiftlang/swift-syntax", "600.0.0"..<"603.0.0"),
     ],
@@ -256,7 +255,6 @@ let package = Package(
             name: "StandardsTestSupport",
             dependencies: [
                 "StandardsTestSupportMacros",
-                .product(name: "TestingPerformance", package: "swift-testing-performance"),
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacroExpansion", package: "swift-syntax"),
