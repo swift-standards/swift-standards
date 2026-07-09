@@ -57,10 +57,9 @@ struct `Time Property-Based Tests` {
     // MARK: - Epoch Conversion Property Tests
 
     @Test(
-        "Property: Epoch conversion matches Foundation",
         arguments: generateTestDates()
     )
-    func testEpochConversionPropertyVsFoundation(year: Int, month: Int, day: Int) throws {
+    func `Property: Epoch conversion matches Foundation`(year: Int, month: Int, day: Int) throws {
         let time = try Time(year: year, month: month, day: day, hour: 0, minute: 0, second: 0)
 
         // Get our epoch seconds
@@ -93,10 +92,9 @@ struct `Time Property-Based Tests` {
     }
 
     @Test(
-        "Property: Epoch round-trip matches original",
         arguments: generateTestDates()
     )
-    func testEpochRoundTripProperty(year: Int, month: Int, day: Int) throws {
+    func `Property: Epoch round-trip matches original`(year: Int, month: Int, day: Int) throws {
         let original = try Time(year: year, month: month, day: day, hour: 0, minute: 0, second: 0)
 
         // Convert to epoch and back
@@ -114,10 +112,9 @@ struct `Time Property-Based Tests` {
     // MARK: - Weekday Property Tests
 
     @Test(
-        "Property: Weekday calculation matches Foundation",
         arguments: generateTestDates()
     )
-    func testWeekdayPropertyVsFoundation(year: Int, month: Int, day: Int) throws {
+    func `Property: Weekday calculation matches Foundation`(year: Int, month: Int, day: Int) throws {
         let weekday = try Time.Weekday(year: year, month: month, day: day)
 
         // Get Foundation's weekday
@@ -159,10 +156,9 @@ struct `Time Property-Based Tests` {
     // MARK: - Comprehensive Date-Time Property Tests
 
     @Test(
-        "Property: Full date-time conversion matches Foundation",
         arguments: zip(generateTestDates(), generateTestTimes()).map { ($0.0, $0.1) }
     )
-    func testFullDateTimePropertyVsFoundation(
+    func `Property: Full date-time conversion matches Foundation`(
         date: (year: Int, month: Int, day: Int),
         time: (hour: Int, minute: Int, second: Int)
     ) throws {
@@ -218,12 +214,11 @@ struct `Time Property-Based Tests` {
     // MARK: - Days in Month Property Tests
 
     @Test(
-        "Property: Days in month matches Foundation",
         arguments: Array(1970...2100).flatMap { year in
             (1...12).map { month in (year, month) }
         }
     )
-    func testDaysInMonthPropertyVsFoundation(year: Int, month: Int) {
+    func `Property: Days in month matches Foundation`(year: Int, month: Int) {
         let ourDays = Time.Calendar.Gregorian.daysInMonth(
             Time.Year(year),
             Time.Month(unchecked: month)
@@ -256,10 +251,9 @@ struct `Time Property-Based Tests` {
     // MARK: - Leap Year Property Tests
 
     @Test(
-        "Property: Leap year matches Foundation",
         arguments: Array(1900...2400)
     )
-    func testLeapYearPropertyVsFoundation(year: Int) {
+    func `Property: Leap year matches Foundation`(year: Int) {
         let ourResult = Time.Calendar.Gregorian.isLeapYear(Time.Year(year))
 
         // Foundation check - properly validate Feb 29 exists AND doesn't roll over

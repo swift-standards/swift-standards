@@ -12,7 +12,9 @@ struct BinaryTestCase: CustomTestStringConvertible, Sendable {
     let lhs: Bool?
     let rhs: Bool?
     let expected: Bool?
+}
 
+extension BinaryTestCase {
     var testDescription: String {
         "\(lhs.map(String.init(describing:)) ?? "nil") → \(rhs.map(String.init(describing:)) ?? "nil") = \(expected.map(String.init(describing:)) ?? "nil")"
     }
@@ -22,7 +24,9 @@ struct BinaryTestCase: CustomTestStringConvertible, Sendable {
 struct UnaryTestCase: CustomTestStringConvertible, Sendable {
     let input: Bool?
     let expected: Bool?
+}
 
+extension UnaryTestCase {
     var testDescription: String {
         "\(input.map(String.init(describing:)) ?? "nil") → \(expected.map(String.init(describing:)) ?? "nil")"
     }
@@ -53,7 +57,7 @@ struct ThreeValuedLogicANDTests {
     }
 
     @Test
-    func lazyEvaluation() {
+    func `lazy Evaluation`() {
         var evaluated = false
         let lazyValue: () -> Bool? = {
             evaluated = true
@@ -90,7 +94,7 @@ struct ThreeValuedLogicORTests {
     }
 
     @Test
-    func lazyEvaluation() {
+    func `lazy Evaluation`() {
         var evaluated = false
         let lazyValue: () -> Bool? = {
             evaluated = true
@@ -231,21 +235,21 @@ struct ThreeValuedLogicDeMorganTests {
     ]
 
     @Test(arguments: knownPairs)
-    func deMorganAnd(_ pair: (Bool, Bool)) {
+    func `de Morgan And`(_ pair: (Bool, Bool)) {
         let (a, b) = pair
         // !(a && b) == !a || !b
         #expect(!(a && b) == (!a || !b))
     }
 
     @Test(arguments: knownPairs)
-    func deMorganOr(_ pair: (Bool, Bool)) {
+    func `de Morgan Or`(_ pair: (Bool, Bool)) {
         let (a, b) = pair
         // !(a || b) == !a && !b
         #expect(!(a || b) == (!a && !b))
     }
 
     @Test
-    func deMorganWithNil() {
+    func `de Morgan With Nil`() {
         let nilValue: Bool? = nil
         // !(false && nil) = !false = true
         // !false || !nil = true || nil = true ✓
@@ -264,10 +268,6 @@ struct ThreeValuedLogicImplicationTests {
         let a: Bool?
         let b: Bool?
         let expected: Bool?
-
-        var testDescription: String {
-            "\(a.map(String.init(describing:)) ?? "nil") → \(b.map(String.init(describing:)) ?? "nil") = \(expected.map(String.init(describing:)) ?? "nil")"
-        }
     }
 
     static let implicationCases: [ImplicationCase] = [
@@ -291,12 +291,18 @@ struct ThreeValuedLogicImplicationTests {
     }
 }
 
+extension ThreeValuedLogicImplicationTests.ImplicationCase {
+    var testDescription: String {
+        "\(a.map(String.init(describing:)) ?? "nil") → \(b.map(String.init(describing:)) ?? "nil") = \(expected.map(String.init(describing:)) ?? "nil")"
+    }
+}
+
 // MARK: - Complex Expression Tests
 
 @Suite
 struct ThreeValuedLogicComplexExpressionTests {
     @Test
-    func mixedValues() {
+    func `mixed Values`() {
         let a: Bool? = true
         let b: Bool? = false
         let c: Bool? = nil

@@ -40,7 +40,7 @@ struct `Clock - Rotation` {
     }
 
     @Test
-    func clockwiseSequence() {
+    func `clockwise Sequence`() {
         #expect(Region.Clock.twelve.clockwise == .one)
         #expect(Region.Clock.one.clockwise == .two)
         #expect(Region.Clock.six.clockwise == .seven)
@@ -48,7 +48,7 @@ struct `Clock - Rotation` {
     }
 
     @Test
-    func counterclockwiseSequence() {
+    func `counterclockwise Sequence`() {
         #expect(Region.Clock.twelve.counterclockwise == .eleven)
         #expect(Region.Clock.one.counterclockwise == .twelve)
         #expect(Region.Clock.six.counterclockwise == .five)
@@ -56,7 +56,7 @@ struct `Clock - Rotation` {
     }
 
     @Test
-    func oppositeMapping() {
+    func `opposite Mapping`() {
         #expect(Region.Clock.twelve.opposite == .six)
         #expect(Region.Clock.one.opposite == .seven)
         #expect(Region.Clock.three.opposite == .nine)
@@ -81,7 +81,7 @@ struct `Clock - Quadrant` {
     }
 
     @Test
-    func quadrantMapping() {
+    func `quadrant Mapping`() {
         // Quadrant I: 12, 1, 2
         #expect(Region.Clock.twelve.quadrant == .I)
         #expect(Region.Clock.one.quadrant == .I)
@@ -114,7 +114,7 @@ struct `Clock - Cardinal Direction` {
     }
 
     @Test
-    func nearestCardinalMapping() {
+    func `nearest Cardinal Mapping`() {
         // North: 12, 1, 11
         #expect(Region.Clock.twelve.nearestCardinal == .north)
         #expect(Region.Clock.one.nearestCardinal == .north)
@@ -168,7 +168,7 @@ struct `Clock - Position Properties` {
     }
 
     @Test
-    func cardinalPositions() {
+    func `cardinal Positions`() {
         #expect(Region.Clock.twelve.isCardinal == true)
         #expect(Region.Clock.three.isCardinal == true)
         #expect(Region.Clock.six.isCardinal == true)
@@ -178,7 +178,7 @@ struct `Clock - Position Properties` {
     }
 
     @Test
-    func ordinalPositions() {
+    func `ordinal Positions`() {
         #expect(Region.Clock.one.isOrdinal == true)
         #expect(Region.Clock.two.isOrdinal == true)
         #expect(Region.Clock.four.isOrdinal == true)
@@ -187,7 +187,7 @@ struct `Clock - Position Properties` {
     }
 
     @Test
-    func cardinalAndOrdinalAreMutuallyExclusive() {
+    func `cardinal And Ordinal Are Mutually Exclusive`() {
         for clock in Region.Clock.allCases {
             let isCardinal = clock.isCardinal
             let isOrdinal = clock.isOrdinal
@@ -196,7 +196,7 @@ struct `Clock - Position Properties` {
     }
 
     @Test
-    func upperHalfPositions() {
+    func `upper Half Positions`() {
         #expect(Region.Clock.ten.isUpperHalf == true)
         #expect(Region.Clock.eleven.isUpperHalf == true)
         #expect(Region.Clock.twelve.isUpperHalf == true)
@@ -209,7 +209,7 @@ struct `Clock - Position Properties` {
     }
 
     @Test
-    func rightHalfPositions() {
+    func `right Half Positions`() {
         #expect(Region.Clock.one.isRightHalf == true)
         #expect(Region.Clock.two.isRightHalf == true)
         #expect(Region.Clock.three.isRightHalf == true)

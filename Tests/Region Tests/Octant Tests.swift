@@ -22,7 +22,7 @@ struct `Octant - Opposite` {
     }
 
     @Test
-    func oppositeMapping() {
+    func `opposite Mapping`() {
         #expect(Region.Octant.ppp.opposite == .nnn)
         #expect(Region.Octant.ppn.opposite == .nnp)
         #expect(Region.Octant.pnp.opposite == .npn)
@@ -44,7 +44,7 @@ struct `Octant - X Sign Property` {
     }
 
     @Test
-    func positiveXOctants() {
+    func `positive X Octants`() {
         #expect(Region.Octant.ppp.hasPositiveX == true)
         #expect(Region.Octant.ppn.hasPositiveX == true)
         #expect(Region.Octant.pnp.hasPositiveX == true)
@@ -66,7 +66,7 @@ struct `Octant - Y Sign Property` {
     }
 
     @Test
-    func positiveYOctants() {
+    func `positive Y Octants`() {
         #expect(Region.Octant.ppp.hasPositiveY == true)
         #expect(Region.Octant.ppn.hasPositiveY == true)
         #expect(Region.Octant.pnp.hasPositiveY == false)
@@ -88,7 +88,7 @@ struct `Octant - Z Sign Property` {
     }
 
     @Test
-    func positiveZOctants() {
+    func `positive Z Octants`() {
         #expect(Region.Octant.ppp.hasPositiveZ == true)
         #expect(Region.Octant.ppn.hasPositiveZ == false)
         #expect(Region.Octant.pnp.hasPositiveZ == true)

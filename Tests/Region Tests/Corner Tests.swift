@@ -22,7 +22,7 @@ struct `Corner - Opposite` {
     }
 
     @Test
-    func oppositeMapping() {
+    func `opposite Mapping`() {
         #expect(Region.Corner.topLeft.opposite == .bottomRight)
         #expect(Region.Corner.topRight.opposite == .bottomLeft)
         #expect(Region.Corner.bottomLeft.opposite == .topRight)
@@ -47,7 +47,7 @@ struct `Corner - Vertical Position` {
     }
 
     @Test
-    func topCorners() {
+    func `top Corners`() {
         #expect(Region.Corner.topLeft.isTop == true)
         #expect(Region.Corner.topRight.isTop == true)
         #expect(Region.Corner.bottomLeft.isTop == false)
@@ -55,7 +55,7 @@ struct `Corner - Vertical Position` {
     }
 
     @Test
-    func bottomCorners() {
+    func `bottom Corners`() {
         #expect(Region.Corner.topLeft.isBottom == false)
         #expect(Region.Corner.topRight.isBottom == false)
         #expect(Region.Corner.bottomLeft.isBottom == true)
@@ -87,7 +87,7 @@ struct `Corner - Horizontal Position` {
     }
 
     @Test
-    func leftCorners() {
+    func `left Corners`() {
         #expect(Region.Corner.topLeft.isLeft == true)
         #expect(Region.Corner.topRight.isLeft == false)
         #expect(Region.Corner.bottomLeft.isLeft == true)
@@ -95,7 +95,7 @@ struct `Corner - Horizontal Position` {
     }
 
     @Test
-    func rightCorners() {
+    func `right Corners`() {
         #expect(Region.Corner.topLeft.isRight == false)
         #expect(Region.Corner.topRight.isRight == true)
         #expect(Region.Corner.bottomLeft.isRight == false)
@@ -127,7 +127,7 @@ struct `Corner - Adjacent Corners` {
     }
 
     @Test
-    func horizontalAdjacentMapping() {
+    func `horizontal Adjacent Mapping`() {
         #expect(Region.Corner.topLeft.horizontalAdjacent == .topRight)
         #expect(Region.Corner.topRight.horizontalAdjacent == .topLeft)
         #expect(Region.Corner.bottomLeft.horizontalAdjacent == .bottomRight)
@@ -135,7 +135,7 @@ struct `Corner - Adjacent Corners` {
     }
 
     @Test
-    func verticalAdjacentMapping() {
+    func `vertical Adjacent Mapping`() {
         #expect(Region.Corner.topLeft.verticalAdjacent == .bottomLeft)
         #expect(Region.Corner.topRight.verticalAdjacent == .bottomRight)
         #expect(Region.Corner.bottomLeft.verticalAdjacent == .topLeft)

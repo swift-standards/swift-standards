@@ -18,7 +18,7 @@ struct TernaryLogicBasicTests {
         (value: 3 as Int?, expected: false),
         (value: nil as Int?, expected: nil as Bool?),
     ])
-    func staticCallAsFunction(value: Int?, expected: Bool?) {
+    func `static Call As Function`(value: Int?, expected: Bool?) {
         let result: Bool? = Predicate.callAsFunction(isEven, value)
         #expect(result == expected)
     }
@@ -28,25 +28,25 @@ struct TernaryLogicBasicTests {
         (value: 3 as Int?, expected: false),
         (value: nil as Int?, expected: nil as Bool?),
     ])
-    func instanceCallAsFunction(value: Int?, expected: Bool?) {
+    func `instance Call As Function`(value: Int?, expected: Bool?) {
         let result: Bool? = isEven(value)
         #expect(result == expected)
     }
 
     @Test
-    func returnsUnknownForNil() {
+    func `returns Unknown For Nil`() {
         let result: Bool? = isEven(nil)
         #expect(result == nil)
     }
 
     @Test
-    func returnsTrueForMatchingValue() {
+    func `returns True For Matching Value`() {
         let result: Bool? = isEven(4)
         #expect(result == true)
     }
 
     @Test
-    func returnsFalseForNonMatchingValue() {
+    func `returns False For Non Matching Value`() {
         let result: Bool? = isEven(3)
         #expect(result == false)
     }
@@ -70,7 +70,7 @@ struct StrongKleeneSemanticsTests {
         // false && unknown = false
         (lhs: 3 as Int?, rhs: nil as Int?, op: "&&", expected: false as Bool?),
     ])
-    func ternaryANDsemantics(lhs: Int?, rhs: Int?, op: String, expected: Bool?) {
+    func `ternary AND semantics`(lhs: Int?, rhs: Int?, op: String, expected: Bool?) {
         let lhsResult: Bool? = isEven(lhs)
         let rhsResult: Bool? = isPositive(rhs)
         let result = lhsResult && rhsResult
@@ -89,7 +89,7 @@ struct StrongKleeneSemanticsTests {
         // false || unknown = unknown
         (lhs: 3 as Int?, rhs: nil as Int?, op: "||", expected: nil as Bool?),
     ])
-    func ternaryORsemantics(lhs: Int?, rhs: Int?, op: String, expected: Bool?) {
+    func `ternary OR semantics`(lhs: Int?, rhs: Int?, op: String, expected: Bool?) {
         let lhsResult: Bool? = isEven(lhs)
         let rhsResult: Bool? = isPositive(rhs)
         let result = lhsResult || rhsResult
@@ -105,7 +105,7 @@ struct OptionalCompositionTests {
     let isPositive = Predicate<Int> { $0 > 0 }
 
     @Test
-    func composeWithANDoperator() {
+    func `compose With AND operator`() {
         let combined = isEven && isPositive
 
         let result1: Bool? = combined(4)
@@ -116,7 +116,7 @@ struct OptionalCompositionTests {
     }
 
     @Test
-    func composeWithORoperator() {
+    func `compose With OR operator`() {
         let combined = isEven || isPositive
 
         let result1: Bool? = combined(3)
@@ -127,7 +127,7 @@ struct OptionalCompositionTests {
     }
 
     @Test
-    func composeWithNOToperator() {
+    func `compose With NOT operator`() {
         let isOdd = !isEven
 
         let result1: Bool? = isOdd(3)
@@ -138,7 +138,7 @@ struct OptionalCompositionTests {
     }
 
     @Test
-    func composeWithXORoperator() {
+    func `compose With XOR operator`() {
         let combined = isEven ^ isPositive
 
         let result1: Bool? = combined(3)
@@ -156,21 +156,21 @@ struct TernaryLogicTypeInferenceTests {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
 
     @Test
-    func infersBoolOptional() {
+    func `infers Bool Optional`() {
         let value: Int? = 4
         let result: Bool? = isEven(value)
         #expect(result == true)
     }
 
     @Test
-    func canExplicitlySpecifyType() {
+    func `can Explicitly Specify Type`() {
         let value: Int? = nil
         let result: Bool? = Predicate.callAsFunction(isEven, value)
         #expect(result == nil)
     }
 
     @Test
-    func worksWithChainedOptionals() {
+    func `works With Chained Optionals`() {
         let getValue: () -> Int? = { 4 }
         let result: Bool? = isEven(getValue())
         #expect(result == true)
@@ -185,7 +185,7 @@ struct TernaryLogicFluentMethodTests {
     let isPositive = Predicate<Int> { $0 > 0 }
 
     @Test
-    func fluentANDwithOptional() {
+    func `fluent AND with Optional`() {
         let combined = isEven.and(isPositive)
 
         let result1: Bool? = combined(4)
@@ -196,7 +196,7 @@ struct TernaryLogicFluentMethodTests {
     }
 
     @Test
-    func fluentORwithOptional() {
+    func `fluent OR with Optional`() {
         let combined = isEven.or(isPositive)
 
         let result1: Bool? = combined(3)
@@ -207,7 +207,7 @@ struct TernaryLogicFluentMethodTests {
     }
 
     @Test
-    func fluentNegatedWithOptional() {
+    func `fluent Negated With Optional`() {
         let isOdd = isEven.negated
 
         let result1: Bool? = isOdd(3)
@@ -226,19 +226,19 @@ struct TernaryLogicEdgeCasesTests {
     let alwaysFalse = Predicate<Int>.never
 
     @Test
-    func alwaysTrueWithNil() {
+    func `always True With Nil`() {
         let result: Bool? = alwaysTrue(nil)
         #expect(result == nil)
     }
 
     @Test
-    func alwaysFalseWithNil() {
+    func `always False With Nil`() {
         let result: Bool? = alwaysFalse(nil)
         #expect(result == nil)
     }
 
     @Test
-    func complexPredicateWithNil() {
+    func `complex Predicate With Nil`() {
         let isEven = Predicate<Int> { $0 % 2 == 0 }
         let isPositive = Predicate<Int> { $0 > 0 }
         let isSmall = Predicate<Int> { abs($0) < 10 }
@@ -250,7 +250,7 @@ struct TernaryLogicEdgeCasesTests {
     }
 
     @Test
-    func nullPropagationThroughChain() {
+    func `null Propagation Through Chain`() {
         let isEven = Predicate<Int> { $0 % 2 == 0 }
         let isPositive = Predicate<Int> { $0 > 0 }
         let isSmall = Predicate<Int> { abs($0) < 10 }
@@ -272,7 +272,7 @@ struct TernaryLogicPracticalTests {
     }
 
     @Test
-    func optionalPropertyValidation() {
+    func `optional Property Validation`() {
         let isAdult = Predicate<Int> { $0 >= 18 }
 
         let user1 = User(age: 25, isActive: true)
@@ -290,7 +290,7 @@ struct TernaryLogicPracticalTests {
     }
 
     @Test
-    func optionalChainValidation() {
+    func `optional Chain Validation`() {
         struct Person {
             var name: String?
         }
@@ -319,27 +319,27 @@ struct TernaryLogicVsOptionalLiftingTests {
     let isEven = Predicate<Int> { $0 % 2 == 0 }
 
     @Test
-    func ternaryLogicReturnsNil() {
+    func `ternary Logic Returns Nil`() {
         let result: Bool? = isEven(nil as Int?)
         #expect(result == nil)
     }
 
     @Test
-    func optionalLiftingWithDefaultReturnsFalse() {
+    func `optional Lifting With Default Returns False`() {
         let lifted = isEven.optional(default: false)
         let result = lifted(nil)
         #expect(result == false)
     }
 
     @Test
-    func optionalLiftingWithDefaultReturnsTrue() {
+    func `optional Lifting With Default Returns True`() {
         let lifted = isEven.optional(default: true)
         let result = lifted(nil)
         #expect(result == true)
     }
 
     @Test
-    func bothApproachesAgreeOnNonNilValues() {
+    func `both Approaches Agree On Non Nil Values`() {
         let lifted = isEven.optional(default: false)
 
         let ternaryResult: Bool? = isEven(4 as Int?)

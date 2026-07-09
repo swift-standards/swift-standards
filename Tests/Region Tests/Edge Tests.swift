@@ -22,7 +22,7 @@ struct `Edge - Opposite` {
     }
 
     @Test
-    func oppositeMapping() {
+    func `opposite Mapping`() {
         #expect(Region.Edge.top.opposite == .bottom)
         #expect(Region.Edge.left.opposite == .right)
         #expect(Region.Edge.bottom.opposite == .top)
@@ -47,7 +47,7 @@ struct `Edge - Orientation` {
     }
 
     @Test
-    func horizontalEdges() {
+    func `horizontal Edges`() {
         #expect(Region.Edge.top.isHorizontal == true)
         #expect(Region.Edge.left.isHorizontal == false)
         #expect(Region.Edge.bottom.isHorizontal == true)
@@ -55,7 +55,7 @@ struct `Edge - Orientation` {
     }
 
     @Test
-    func verticalEdges() {
+    func `vertical Edges`() {
         #expect(Region.Edge.top.isVertical == false)
         #expect(Region.Edge.left.isVertical == true)
         #expect(Region.Edge.bottom.isVertical == false)
@@ -73,28 +73,28 @@ struct `Edge - Orientation` {
 @Suite
 struct `Edge - Adjacent Corners` {
     @Test
-    func topCorners() {
+    func `top Corners`() {
         let corners = Region.Edge.corners(of: .top)
         #expect(corners.0 == .topLeft)
         #expect(corners.1 == .topRight)
     }
 
     @Test
-    func leftCorners() {
+    func `left Corners`() {
         let corners = Region.Edge.corners(of: .left)
         #expect(corners.0 == .topLeft)
         #expect(corners.1 == .bottomLeft)
     }
 
     @Test
-    func bottomCorners() {
+    func `bottom Corners`() {
         let corners = Region.Edge.corners(of: .bottom)
         #expect(corners.0 == .bottomLeft)
         #expect(corners.1 == .bottomRight)
     }
 
     @Test
-    func rightCorners() {
+    func `right Corners`() {
         let corners = Region.Edge.corners(of: .right)
         #expect(corners.0 == .topRight)
         #expect(corners.1 == .bottomRight)

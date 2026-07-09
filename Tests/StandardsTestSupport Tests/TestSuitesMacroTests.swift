@@ -18,7 +18,7 @@ struct TestSuitesMacroTests {
     ]
 
     @Test
-    func expansionGeneratesTestEnum() {
+    func `expansion Generates Test Enum`() {
         assertMacroExpansion(
             """
             struct MyType {
@@ -42,7 +42,7 @@ struct TestSuitesMacroTests {
     }
 
     @Test
-    func expansionInExtension() {
+    func `expansion In Extension`() {
         assertMacroExpansion(
             """
             extension SomeType {
@@ -66,7 +66,7 @@ struct TestSuitesMacroTests {
     }
 
     @Test
-    func expansionInEnum() {
+    func `expansion In Enum`() {
         assertMacroExpansion(
             """
             enum MyEnum {

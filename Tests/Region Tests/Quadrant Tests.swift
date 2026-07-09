@@ -40,7 +40,7 @@ struct `Quadrant - Rotation` {
     }
 
     @Test
-    func nextSequence() {
+    func `next Sequence`() {
         #expect(Region.Quadrant.I.next == .II)
         #expect(Region.Quadrant.II.next == .III)
         #expect(Region.Quadrant.III.next == .IV)
@@ -48,7 +48,7 @@ struct `Quadrant - Rotation` {
     }
 
     @Test
-    func previousSequence() {
+    func `previous Sequence`() {
         #expect(Region.Quadrant.I.previous == .IV)
         #expect(Region.Quadrant.II.previous == .I)
         #expect(Region.Quadrant.III.previous == .II)
@@ -56,7 +56,7 @@ struct `Quadrant - Rotation` {
     }
 
     @Test
-    func oppositeMapping() {
+    func `opposite Mapping`() {
         #expect(Region.Quadrant.I.opposite == .III)
         #expect(Region.Quadrant.II.opposite == .IV)
         #expect(Region.Quadrant.III.opposite == .I)
@@ -81,7 +81,7 @@ struct `Quadrant - Sign Properties` {
     }
 
     @Test
-    func positiveXQuadrants() {
+    func `positive X Quadrants`() {
         #expect(Region.Quadrant.I.hasPositiveX == true)
         #expect(Region.Quadrant.II.hasPositiveX == false)
         #expect(Region.Quadrant.III.hasPositiveX == false)
@@ -89,7 +89,7 @@ struct `Quadrant - Sign Properties` {
     }
 
     @Test
-    func positiveYQuadrants() {
+    func `positive Y Quadrants`() {
         #expect(Region.Quadrant.I.hasPositiveY == true)
         #expect(Region.Quadrant.II.hasPositiveY == true)
         #expect(Region.Quadrant.III.hasPositiveY == false)

@@ -15,12 +15,12 @@ enum ExclusiveTests {
     @Suite(.exclusive)
     struct FirstSuite {
         @Test
-        func testInFirstSuite() {
+        func `In First Suite`() {
             #expect(Bool(true))
         }
 
         @Test
-        func anotherTestInFirstSuite() {
+        func `another Test In First Suite`() {
             #expect(Bool(true))
         }
     }
@@ -28,12 +28,12 @@ enum ExclusiveTests {
     @Suite(.exclusive)
     struct SecondSuite {
         @Test
-        func testInSecondSuite() {
+        func `In Second Suite`() {
             #expect(Bool(true))
         }
 
         @Test
-        func anotherTestInSecondSuite() {
+        func `another Test In Second Suite`() {
             #expect(Bool(true))
         }
     }
@@ -41,7 +41,7 @@ enum ExclusiveTests {
     @Suite(.exclusive, .serialized)
     struct ThirdSuite {
         @Test
-        func testInThirdSuite() {
+        func `In Third Suite`() {
             #expect(Bool(true))
         }
     }
@@ -81,31 +81,31 @@ enum GroupedExclusiveTests {
 struct ExclusiveTraitTests {
 
     @Test
-    func traitIsNotRecursive() {
+    func `trait Is Not Recursive`() {
         let trait = Exclusive()
         #expect(trait.isRecursive == false)
     }
 
     @Test
-    func defaultGroupIsGlobal() {
+    func `default Group Is Global`() {
         let trait = Exclusive()
         #expect(trait.group == Exclusive.globalGroup)
     }
 
     @Test
-    func groupCanBeSpecified() {
+    func `group Can Be Specified`() {
         let trait = Exclusive(group: "MyGroup")
         #expect(trait.group == "MyGroup")
     }
 
     @Test
-    func traitExtensionWithoutGroup() {
+    func `trait Extension Without Group`() {
         let trait: Exclusive = .exclusive
         #expect(trait.group == Exclusive.globalGroup)
     }
 
     @Test
-    func traitExtensionWithGroup() {
+    func `trait Extension With Group`() {
         let trait: Exclusive = .exclusive(group: "TestGroup")
         #expect(trait.group == "TestGroup")
     }

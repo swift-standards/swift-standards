@@ -40,7 +40,7 @@ struct `Cardinal - Rotation` {
     }
 
     @Test
-    func clockwiseSequence() {
+    func `clockwise Sequence`() {
         #expect(Region.Cardinal.north.clockwise == .east)
         #expect(Region.Cardinal.east.clockwise == .south)
         #expect(Region.Cardinal.south.clockwise == .west)
@@ -48,7 +48,7 @@ struct `Cardinal - Rotation` {
     }
 
     @Test
-    func counterclockwiseSequence() {
+    func `counterclockwise Sequence`() {
         #expect(Region.Cardinal.north.counterclockwise == .west)
         #expect(Region.Cardinal.east.counterclockwise == .north)
         #expect(Region.Cardinal.south.counterclockwise == .east)
@@ -56,7 +56,7 @@ struct `Cardinal - Rotation` {
     }
 
     @Test
-    func oppositeMapping() {
+    func `opposite Mapping`() {
         #expect(Region.Cardinal.north.opposite == .south)
         #expect(Region.Cardinal.east.opposite == .west)
         #expect(Region.Cardinal.south.opposite == .north)
@@ -81,7 +81,7 @@ struct `Cardinal - Axis Properties` {
     }
 
     @Test
-    func horizontalDirections() {
+    func `horizontal Directions`() {
         #expect(Region.Cardinal.north.isHorizontal == false)
         #expect(Region.Cardinal.east.isHorizontal == true)
         #expect(Region.Cardinal.south.isHorizontal == false)
@@ -89,7 +89,7 @@ struct `Cardinal - Axis Properties` {
     }
 
     @Test
-    func verticalDirections() {
+    func `vertical Directions`() {
         #expect(Region.Cardinal.north.isVertical == true)
         #expect(Region.Cardinal.east.isVertical == false)
         #expect(Region.Cardinal.south.isVertical == true)

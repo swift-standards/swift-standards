@@ -74,7 +74,6 @@ struct `Time vs Foundation Comparison Tests` {
     }
 
     @Test(
-        "Epoch Conversion - Known dates vs Foundation",
         arguments: [
             (2000, 1, 1, 0, 0, 0),  // Y2K
             (2024, 1, 15, 12, 30, 45),  // Random date
@@ -84,7 +83,7 @@ struct `Time vs Foundation Comparison Tests` {
             (1980, 1, 6, 0, 0, 0),  // GPS epoch
         ]
     )
-    func testEpochConversionKnownDates(
+    func `Epoch Conversion - Known dates vs Foundation`(
         year: Int,
         month: Int,
         day: Int,
@@ -168,7 +167,6 @@ struct `Time vs Foundation Comparison Tests` {
     // }
 
     @Test(
-        "Epoch Conversion - Century boundaries",
         arguments: [
             (2000, 1, 1),
             (2100, 1, 1),
@@ -177,7 +175,7 @@ struct `Time vs Foundation Comparison Tests` {
             (2099, 12, 31),
         ]
     )
-    func testEpochConversionCenturyBoundaries(year: Int, month: Int, day: Int) throws {
+    func `Epoch Conversion - Century boundaries`(year: Int, month: Int, day: Int) throws {
         let time = try Time(year: year, month: month, day: day, hour: 0, minute: 0, second: 0)
         let ourSeconds = Time.Epoch.Conversion.secondsSinceEpoch(from: time)
 
@@ -191,7 +189,6 @@ struct `Time vs Foundation Comparison Tests` {
     }
 
     @Test(
-        "Epoch Conversion - Round trip with Foundation",
         arguments: [
             0,  // Unix epoch
             86400,  // One day after epoch
@@ -201,7 +198,7 @@ struct `Time vs Foundation Comparison Tests` {
             2_147_483_647,  // Max 32-bit signed int (2038-01-19)
         ]
     )
-    func testEpochRoundTripWithFoundation(seconds: Int) throws {
+    func `Epoch Conversion - Round trip with Foundation`(seconds: Int) throws {
         // Convert from epoch to Time
         let time = Time(secondsSinceEpoch: seconds)
 
@@ -267,7 +264,6 @@ struct `Time vs Foundation Comparison Tests` {
     // MARK: - Weekday Tests
 
     @Test(
-        "Weekday - Known dates vs Foundation",
         arguments: [
             // Known historical dates
             (1776, 7, 4, Time.Weekday.thursday),  // US Independence Day
@@ -286,7 +282,7 @@ struct `Time vs Foundation Comparison Tests` {
             (2100, 1, 1, Time.Weekday.friday),
         ]
     )
-    func testWeekdayVsFoundation(
+    func `Weekday - Known dates vs Foundation`(
         year: Int,
         month: Int,
         day: Int,
@@ -352,7 +348,6 @@ struct `Time vs Foundation Comparison Tests` {
 
     // NOTE: Weekday calculation works for dates before 1970, so we can test them
     @Test(
-        "Weekday - Dates before epoch vs Foundation",
         arguments: [
             (1969, 12, 31),
             (1969, 1, 1),
@@ -363,7 +358,7 @@ struct `Time vs Foundation Comparison Tests` {
             (1900, 1, 1),
         ]
     )
-    func testWeekdayBeforeEpochVsFoundation(year: Int, month: Int, day: Int) throws {
+    func `Weekday - Dates before epoch vs Foundation`(year: Int, month: Int, day: Int) throws {
         let weekday = try Time.Weekday(year: year, month: month, day: day)
 
         // Compare with Foundation
@@ -387,13 +382,12 @@ struct `Time vs Foundation Comparison Tests` {
     // MARK: - Leap Year Validation Against Foundation
 
     @Test(
-        "Leap Year - Validate against Foundation",
         arguments: [
             1900, 1904, 1996, 1997, 1998, 1999,
             2000, 2001, 2004, 2020, 2024, 2100, 2400,
         ]
     )
-    func testLeapYearVsFoundation(year: Int) {
+    func `Leap Year - Validate against Foundation`(year: Int) {
         let ourResult = Time.Calendar.Gregorian.isLeapYear(Time.Year(year))
 
         // Foundation check - properly validate Feb 29 exists AND doesn't roll over

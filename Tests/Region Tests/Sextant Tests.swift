@@ -40,7 +40,7 @@ struct `Sextant - Rotation` {
     }
 
     @Test
-    func nextSequence() {
+    func `next Sequence`() {
         #expect(Region.Sextant.I.next == .II)
         #expect(Region.Sextant.II.next == .III)
         #expect(Region.Sextant.III.next == .IV)
@@ -50,7 +50,7 @@ struct `Sextant - Rotation` {
     }
 
     @Test
-    func previousSequence() {
+    func `previous Sequence`() {
         #expect(Region.Sextant.I.previous == .VI)
         #expect(Region.Sextant.II.previous == .I)
         #expect(Region.Sextant.III.previous == .II)
@@ -60,7 +60,7 @@ struct `Sextant - Rotation` {
     }
 
     @Test
-    func oppositeMapping() {
+    func `opposite Mapping`() {
         #expect(Region.Sextant.I.opposite == .IV)
         #expect(Region.Sextant.II.opposite == .V)
         #expect(Region.Sextant.III.opposite == .VI)
@@ -80,7 +80,7 @@ struct `Sextant - Quadrant` {
     }
 
     @Test
-    func quadrantMapping() {
+    func `quadrant Mapping`() {
         // Quadrant I: I, II
         #expect(Region.Sextant.I.quadrant == .I)
         #expect(Region.Sextant.II.quadrant == .I)
@@ -114,7 +114,7 @@ struct `Sextant - Half-Plane Properties` {
     }
 
     @Test
-    func upperHalfPositions() {
+    func `upper Half Positions`() {
         #expect(Region.Sextant.I.isUpperHalf == true)
         #expect(Region.Sextant.II.isUpperHalf == true)
         #expect(Region.Sextant.III.isUpperHalf == true)
@@ -124,7 +124,7 @@ struct `Sextant - Half-Plane Properties` {
     }
 
     @Test
-    func rightHalfPositions() {
+    func `right Half Positions`() {
         #expect(Region.Sextant.I.isRightHalf == true)
         #expect(Region.Sextant.II.isRightHalf == true)
         #expect(Region.Sextant.III.isRightHalf == false)
