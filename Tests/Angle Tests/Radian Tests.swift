@@ -50,7 +50,7 @@ struct `Radian - Basic Structure & Arithmetic` {
     }
 
     @Test
-    func scalarMultiplication() {
+    func `scalar Multiplication`() {
         let angle: Radian<Double> = Radian(Double.pi / 4)
         let result = angle * 2.0
         #expect(isApprox(result, Radian(Double.pi / 2)))
@@ -79,13 +79,13 @@ struct `Radian - Basic Structure & Arithmetic` {
     }
 
     @Test
-    func expressibleByFloatLiteral() {
+    func `expressible By Float Literal`() {
         let angle: Radian<Double> = 1.5
         #expect(angle == Radian(1.5))
     }
 
     @Test
-    func expressibleByIntegerLiteral() {
+    func `expressible By Integer Literal`() {
         let angle: Radian<Double> = 2
         #expect(angle == Radian(2.0))
     }
@@ -98,7 +98,7 @@ struct `Radian - Basic Structure & Arithmetic` {
     }
 
     @Test
-    func conversionFromDegrees() {
+    func `conversion From Degrees`() {
         let degrees = Degree<Double>(90)
         let radians = Radian(degrees: degrees)
         #expect(isApprox(radians, Radian(Double.pi / 2)))

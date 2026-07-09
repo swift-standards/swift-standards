@@ -34,35 +34,35 @@ struct `Corner Tests` {
     }
 
     @Test(arguments: Corner.allCases)
-    func isTop(corner: Corner) {
+    func `is Top`(corner: Corner) {
         let result = Corner.isTop(corner)
         #expect(result == corner.isTop)
         #expect(result == (corner.vertical == .top))
     }
 
     @Test(arguments: Corner.allCases)
-    func isBottom(corner: Corner) {
+    func `is Bottom`(corner: Corner) {
         let result = Corner.isBottom(corner)
         #expect(result == corner.isBottom)
         #expect(result == (corner.vertical == .bottom))
     }
 
     @Test(arguments: Corner.allCases)
-    func isLeading(corner: Corner) {
+    func `is Leading`(corner: Corner) {
         let result = Corner.isLeading(corner)
         #expect(result == corner.isLeading)
         #expect(result == (corner.horizontal == .leading))
     }
 
     @Test(arguments: Corner.allCases)
-    func isTrailing(corner: Corner) {
+    func `is Trailing`(corner: Corner) {
         let result = Corner.isTrailing(corner)
         #expect(result == corner.isTrailing)
         #expect(result == (corner.horizontal == .trailing))
     }
 
     @Test(arguments: Corner.allCases)
-    func horizontalAdjacent(corner: Corner) {
+    func `horizontal Adjacent`(corner: Corner) {
         let result = Corner.horizontalAdjacent(corner)
         #expect(result == corner.horizontalAdjacent)
         #expect(result.vertical == corner.vertical)
@@ -70,7 +70,7 @@ struct `Corner Tests` {
     }
 
     @Test(arguments: Corner.allCases)
-    func verticalAdjacent(corner: Corner) {
+    func `vertical Adjacent`(corner: Corner) {
         let result = Corner.verticalAdjacent(corner)
         #expect(result == corner.verticalAdjacent)
         #expect(result.horizontal == corner.horizontal)

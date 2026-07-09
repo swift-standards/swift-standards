@@ -18,8 +18,8 @@ struct OrderedDictionaryTests {
 
     // MARK: - Basic Operations
 
-    @Test("Set and get values")
-    func setAndGetValues() {
+    @Test
+    func `Set and get values`() {
         var dict = [String: Int].Ordered()
 
         dict.values.set("apple", 1)
@@ -32,8 +32,8 @@ struct OrderedDictionaryTests {
         #expect(dict["durian"] == nil)
     }
 
-    @Test("Subscript set and get")
-    func subscriptSetAndGet() {
+    @Test
+    func `Subscript set and get`() {
         var dict = [String: Int].Ordered()
 
         dict["a"] = 1
@@ -52,8 +52,8 @@ struct OrderedDictionaryTests {
         #expect(dict.count == 1)
     }
 
-    @Test("Remove value")
-    func removeValue() {
+    @Test
+    func `Remove value`() {
         var dict = [String: Int].Ordered()
         dict["a"] = 1
         dict["b"] = 2
@@ -68,8 +68,8 @@ struct OrderedDictionaryTests {
         #expect(dict.keys.index("c") == 1)
     }
 
-    @Test("Keys index lookup")
-    func keysIndexLookup() {
+    @Test
+    func `Keys index lookup`() {
         var dict = [String: Int].Ordered()
         dict["first"] = 1
         dict["second"] = 2
@@ -83,8 +83,8 @@ struct OrderedDictionaryTests {
 
     // MARK: - Order Preservation
 
-    @Test("Insertion order preserved")
-    func insertionOrderPreserved() {
+    @Test
+    func `Insertion order preserved`() {
         var dict = [String: Int].Ordered()
         dict["charlie"] = 3
         dict["alpha"] = 1
@@ -94,8 +94,8 @@ struct OrderedDictionaryTests {
         #expect(keys == ["charlie", "alpha", "bravo"])
     }
 
-    @Test("Update does not change order")
-    func updateDoesNotChangeOrder() {
+    @Test
+    func `Update does not change order`() {
         var dict = [String: Int].Ordered()
         dict["a"] = 1
         dict["b"] = 2
@@ -109,8 +109,8 @@ struct OrderedDictionaryTests {
         #expect(dict["b"] == 20)
     }
 
-    @Test("Re-insertion goes to end")
-    func reinsertionGoesToEnd() {
+    @Test
+    func `Re-insertion goes to end`() {
         var dict = [String: Int].Ordered()
         dict["a"] = 1
         dict["b"] = 2
@@ -125,8 +125,8 @@ struct OrderedDictionaryTests {
 
     // MARK: - Nested Accessors
 
-    @Test("Values modify")
-    func valuesModify() {
+    @Test
+    func `Values modify`() {
         var dict = [String: Int].Ordered()
         dict["counter"] = 0
 
@@ -136,8 +136,8 @@ struct OrderedDictionaryTests {
         #expect(dict["counter"] == 2)
     }
 
-    @Test("Merge keep first")
-    func mergeKeepFirst() {
+    @Test
+    func `Merge keep first`() {
         var dict = [String: Int].Ordered()
         dict["a"] = 1
         dict["b"] = 2
@@ -149,8 +149,8 @@ struct OrderedDictionaryTests {
         #expect(dict["c"] == 3)
     }
 
-    @Test("Merge keep last")
-    func mergeKeepLast() {
+    @Test
+    func `Merge keep last`() {
         var dict = [String: Int].Ordered()
         dict["a"] = 1
         dict["b"] = 2
@@ -168,8 +168,8 @@ struct OrderedDictionaryTests {
 
     // MARK: - Initialization
 
-    @Test("Init from pairs")
-    func initFromPairs() throws {
+    @Test
+    func `Init from pairs`() throws {
         let dict = try [String: Int].Ordered([
             ("a", 1),
             ("b", 2),
@@ -182,8 +182,8 @@ struct OrderedDictionaryTests {
         #expect(dict["c"] == 3)
     }
 
-    @Test("Init throws on duplicate")
-    func initThrowsOnDuplicate() {
+    @Test
+    func `Init throws on duplicate`() {
         #expect(throws: [String: Int].Ordered.Error.self) {
             _ = try [String: Int].Ordered([
                 ("a", 1),
@@ -193,8 +193,8 @@ struct OrderedDictionaryTests {
         }
     }
 
-    @Test("Init with uniquing closure")
-    func initWithUniquingClosure() {
+    @Test
+    func `Init with uniquing closure`() {
         let dict = [String: Int].Ordered(
             [("a", 1), ("b", 2), ("a", 10)],
             uniquingKeysWith: { $0 + $1 }
@@ -206,8 +206,8 @@ struct OrderedDictionaryTests {
 
     // MARK: - Collection Conformance
 
-    @Test("Index access")
-    func indexAccess() {
+    @Test
+    func `Index access`() {
         var dict = [String: Int].Ordered()
         dict["a"] = 1
         dict["b"] = 2
@@ -218,8 +218,8 @@ struct OrderedDictionaryTests {
         #expect(pair.value == 2)
     }
 
-    @Test("Iteration")
-    func iteration() {
+    @Test
+    func `Iteration`() {
         var dict = [String: Int].Ordered()
         dict["x"] = 10
         dict["y"] = 20
@@ -236,8 +236,8 @@ struct OrderedDictionaryTests {
         #expect(values == [10, 20, 30])
     }
 
-    @Test("Bidirectional iteration")
-    func bidirectionalIteration() {
+    @Test
+    func `Bidirectional iteration`() {
         var dict = [String: Int].Ordered()
         dict["a"] = 1
         dict["b"] = 2
@@ -249,8 +249,8 @@ struct OrderedDictionaryTests {
 
     // MARK: - Copy-on-Write
 
-    @Test("CoW: copy shares storage")
-    func cowSharesStorage() {
+    @Test
+    func `CoW: copy shares storage`() {
         var dict = [String: Int].Ordered()
         dict["a"] = 1
         let copy = dict
@@ -258,8 +258,8 @@ struct OrderedDictionaryTests {
         #expect(dict._identity == copy._identity)
     }
 
-    @Test("CoW: mutation triggers copy")
-    func cowMutationTriggersCopy() {
+    @Test
+    func `CoW: mutation triggers copy`() {
         var dict = [String: Int].Ordered()
         dict["a"] = 1
         var copy = dict
@@ -275,8 +275,8 @@ struct OrderedDictionaryTests {
 
     // MARK: - Properties
 
-    @Test("Empty dictionary")
-    func emptyDictionary() {
+    @Test
+    func `Empty dictionary`() {
         let dict = [String: Int].Ordered()
 
         #expect(dict.isEmpty)
@@ -293,8 +293,8 @@ struct OrderedDictionaryTests {
         #expect(dict.isEmpty)
     }
 
-    @Test("Contains")
-    func contains() {
+    @Test
+    func `Contains`() {
         var dict = [String: Int].Ordered()
         dict["apple"] = 1
 

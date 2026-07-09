@@ -11,6 +11,9 @@ import Testing
 // MARK: - Test Space
 
 private enum TestSpace: Quantized {
+}
+
+extension TestSpace {
     typealias Scalar = Double
     static var quantum: Double { 0.01 }
 }

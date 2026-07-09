@@ -247,17 +247,17 @@ struct `Radian - Constants` {
     }
 
     @Test
-    func twoPi() {
+    func `two Pi`() {
         #expect(abs(Radian<Double>.twoPi.value - 2 * Double.pi) < 1e-15)
     }
 
     @Test
-    func halfPi() {
+    func `half Pi`() {
         #expect(abs(Radian<Double>.halfPi.value - Double.pi / 2) < 1e-15)
     }
 
     @Test
-    func quarterPi() {
+    func `quarter Pi`() {
         #expect(abs(Radian<Double>.quarterPi.value - Double.pi / 4) < 1e-15)
     }
 

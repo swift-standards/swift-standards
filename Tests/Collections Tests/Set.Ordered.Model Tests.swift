@@ -23,19 +23,6 @@ struct OrderedSetModelTests {
         init(seed: UInt64) {
             self.state = seed
         }
-
-        mutating func next() -> UInt64 {
-            state = state &* 6_364_136_223_846_793_005 &+ 1_442_695_040_888_963_407
-            return state
-        }
-
-        mutating func nextInt(_ bound: Int) -> Int {
-            Int(next() % UInt64(bound))
-        }
-
-        mutating func nextBool() -> Bool {
-            next() % 2 == 0
-        }
     }
 
     /// Reference model using Array + Set for comparison.
@@ -74,8 +61,8 @@ struct OrderedSetModelTests {
 
     // MARK: - Random Operations
 
-    @Test("Random operations match model - 1000 iterations")
-    func randomOperationsMatchModel() {
+    @Test
+    func `Random operations match model - 1000 iterations`() {
         var rng = LCG(seed: 33333)
         var orderedSet = Set<Int>.Ordered()
         var model = ArraySetModel<Int>()
@@ -115,8 +102,8 @@ struct OrderedSetModelTests {
 
     // MARK: - Order Preservation
 
-    @Test("Insertion order strictly preserved")
-    func insertionOrderPreserved() {
+    @Test
+    func `Insertion order strictly preserved`() {
         var rng = LCG(seed: 44444)
         var orderedSet = Set<Int>.Ordered()
         var model = ArraySetModel<Int>()
@@ -135,8 +122,8 @@ struct OrderedSetModelTests {
         #expect(Array(orderedSet) == model.elements)
     }
 
-    @Test("Remove maintains order of remaining elements")
-    func removeMaintainsOrder() {
+    @Test
+    func `Remove maintains order of remaining elements`() {
         var rng = LCG(seed: 55555)
         var orderedSet = Set<Int>.Ordered()
         var model = ArraySetModel<Int>()
@@ -165,8 +152,8 @@ struct OrderedSetModelTests {
 
     // MARK: - Set Algebra
 
-    @Test("Algebra union matches model")
-    func algebraUnionMatchesModel() {
+    @Test
+    func `Algebra union matches model`() {
         var rng = LCG(seed: 66666)
 
         var setA = Set<Int>.Ordered()
@@ -195,8 +182,8 @@ struct OrderedSetModelTests {
         #expect(Array(union) == modelUnion.elements)
     }
 
-    @Test("Algebra intersection matches model")
-    func algebraIntersectionMatchesModel() {
+    @Test
+    func `Algebra intersection matches model`() {
         var rng = LCG(seed: 77777)
 
         var setA = Set<Int>.Ordered()
@@ -215,8 +202,8 @@ struct OrderedSetModelTests {
         #expect(Array(intersection) == modelIntersection)
     }
 
-    @Test("Algebra subtract matches model")
-    func algebraSubtractMatchesModel() {
+    @Test
+    func `Algebra subtract matches model`() {
         var rng = LCG(seed: 88888)
 
         var setA = Set<Int>.Ordered()
@@ -233,8 +220,8 @@ struct OrderedSetModelTests {
         #expect(Array(difference) == modelDifference)
     }
 
-    @Test("Algebra symmetric difference matches model")
-    func algebraSymmetricDifferenceMatchesModel() {
+    @Test
+    func `Algebra symmetric difference matches model`() {
         var rng = LCG(seed: 99999)
 
         var setA = Set<Int>.Ordered()
@@ -257,8 +244,8 @@ struct OrderedSetModelTests {
 
     // MARK: - Index Access
 
-    @Test("Index access matches model")
-    func indexAccessMatchesModel() {
+    @Test
+    func `Index access matches model`() {
         var rng = LCG(seed: 10101)
         var orderedSet = Set<Int>.Ordered()
         var model = ArraySetModel<Int>()
@@ -283,8 +270,8 @@ struct OrderedSetModelTests {
 
     // MARK: - Heavy Operations
 
-    @Test("Heavy insert/remove cycles")
-    func heavyInsertRemoveCycles() {
+    @Test
+    func `Heavy insert/remove cycles`() {
         var rng = LCG(seed: 20202)
         var orderedSet = Set<Int>.Ordered()
         var model = ArraySetModel<Int>()
@@ -310,8 +297,8 @@ struct OrderedSetModelTests {
         }
     }
 
-    @Test("Large set operations")
-    func largeSetOperations() {
+    @Test
+    func `Large set operations`() {
         var setA = Set<Int>.Ordered()
         var setB = Set<Int>.Ordered()
 
@@ -338,8 +325,8 @@ struct OrderedSetModelTests {
 
     // MARK: - Edge Cases
 
-    @Test("Empty set operations")
-    func emptySetOperations() {
+    @Test
+    func `Empty set operations`() {
         let empty = Set<Int>.Ordered()
         var nonEmpty = Set<Int>.Ordered()
         nonEmpty.insert(1)
@@ -361,8 +348,8 @@ struct OrderedSetModelTests {
         #expect(empty.algebra.subtract(nonEmpty).isEmpty)
     }
 
-    @Test("Single element set operations")
-    func singleElementSetOperations() {
+    @Test
+    func `Single element set operations`() {
         var set = Set<Int>.Ordered()
         set.insert(42)
 
@@ -377,8 +364,8 @@ struct OrderedSetModelTests {
         #expect(!set.contains(42))
     }
 
-    @Test("Duplicate insert behavior")
-    func duplicateInsertBehavior() {
+    @Test
+    func `Duplicate insert behavior`() {
         var orderedSet = Set<Int>.Ordered()
         var model = ArraySetModel<Int>()
 
@@ -397,5 +384,20 @@ struct OrderedSetModelTests {
         #expect(second.index == 0)
 
         #expect(orderedSet.count == 1)
+    }
+}
+
+extension OrderedSetModelTests.LCG {
+    mutating func next() -> UInt64 {
+        state = state &* 6_364_136_223_846_793_005 &+ 1_442_695_040_888_963_407
+        return state
+    }
+
+    mutating func nextInt(_ bound: Int) -> Int {
+        Int(next() % UInt64(bound))
+    }
+
+    mutating func nextBool() -> Bool {
+        next() % 2 == 0
     }
 }

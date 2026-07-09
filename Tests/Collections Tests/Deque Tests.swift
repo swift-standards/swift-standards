@@ -18,8 +18,8 @@ struct DequeTests {
 
     // MARK: - Nested Accessor: Push
 
-    @Test("Push back via nested accessor")
-    func pushBack() {
+    @Test
+    func `Push back via nested accessor`() {
         var deque = Deque<Int>()
         deque.push.back(1)
         deque.push.back(2)
@@ -31,8 +31,8 @@ struct DequeTests {
         #expect(deque[2] == 3)
     }
 
-    @Test("Push front via nested accessor")
-    func pushFront() {
+    @Test
+    func `Push front via nested accessor`() {
         var deque = Deque<Int>()
         deque.push.front(1)
         deque.push.front(2)
@@ -44,8 +44,8 @@ struct DequeTests {
         #expect(deque[2] == 1)
     }
 
-    @Test("Push mixed front and back")
-    func pushMixed() {
+    @Test
+    func `Push mixed front and back`() {
         var deque = Deque<Int>()
         deque.push.back(2)
         deque.push.front(1)
@@ -57,8 +57,8 @@ struct DequeTests {
 
     // MARK: - Nested Accessor: Pop
 
-    @Test("Pop back via nested accessor")
-    func popBack() throws {
+    @Test
+    func `Pop back via nested accessor`() throws {
         var deque: Deque<Int> = [1, 2, 3]
 
         #expect(try deque.pop.back() == 3)
@@ -67,8 +67,8 @@ struct DequeTests {
         #expect(deque.isEmpty)
     }
 
-    @Test("Pop front via nested accessor")
-    func popFront() throws {
+    @Test
+    func `Pop front via nested accessor`() throws {
         var deque: Deque<Int> = [1, 2, 3]
 
         #expect(try deque.pop.front() == 1)
@@ -77,8 +77,8 @@ struct DequeTests {
         #expect(deque.isEmpty)
     }
 
-    @Test("Pop from empty deque throws")
-    func popEmptyThrows() {
+    @Test
+    func `Pop from empty deque throws`() {
         var deque = Deque<Int>()
 
         #expect(throws: Deque<Int>.Error.self) {
@@ -92,24 +92,24 @@ struct DequeTests {
 
     // MARK: - Nested Accessor: Peek
 
-    @Test("Peek back via nested accessor")
-    func peekBack() {
+    @Test
+    func `Peek back via nested accessor`() {
         let deque: Deque<Int> = [1, 2, 3]
 
         #expect(deque.peek.back == 3)
         #expect(deque.count == 3)  // Peek doesn't remove
     }
 
-    @Test("Peek front via nested accessor")
-    func peekFront() {
+    @Test
+    func `Peek front via nested accessor`() {
         let deque: Deque<Int> = [1, 2, 3]
 
         #expect(deque.peek.front == 1)
         #expect(deque.count == 3)  // Peek doesn't remove
     }
 
-    @Test("Peek empty deque returns nil")
-    func peekEmptyReturnsNil() {
+    @Test
+    func `Peek empty deque returns nil`() {
         let deque = Deque<Int>()
 
         #expect(deque.peek.back == nil)
@@ -118,8 +118,8 @@ struct DequeTests {
 
     // MARK: - Nested Accessor: Take
 
-    @Test("Take back via nested accessor")
-    func takeBack() {
+    @Test
+    func `Take back via nested accessor`() {
         var deque: Deque<Int> = [1, 2, 3]
 
         #expect(deque.take.back == 3)
@@ -128,8 +128,8 @@ struct DequeTests {
         #expect(deque.isEmpty)
     }
 
-    @Test("Take front via nested accessor")
-    func takeFront() {
+    @Test
+    func `Take front via nested accessor`() {
         var deque: Deque<Int> = [1, 2, 3]
 
         #expect(deque.take.front == 1)
@@ -138,8 +138,8 @@ struct DequeTests {
         #expect(deque.isEmpty)
     }
 
-    @Test("Take from empty deque returns nil")
-    func takeEmptyReturnsNil() {
+    @Test
+    func `Take from empty deque returns nil`() {
         var deque = Deque<Int>()
 
         #expect(deque.take.back == nil)
@@ -147,8 +147,8 @@ struct DequeTests {
         #expect(deque.isEmpty)
     }
 
-    @Test("Take as queue drain loop")
-    func takeQueueDrainLoop() {
+    @Test
+    func `Take as queue drain loop`() {
         var queue: Deque<Int> = [1, 2, 3, 4, 5]
         var result: [Int] = []
 
@@ -160,8 +160,8 @@ struct DequeTests {
         #expect(queue.isEmpty)
     }
 
-    @Test("Take as stack drain loop")
-    func takeStackDrainLoop() {
+    @Test
+    func `Take as stack drain loop`() {
         var stack: Deque<Int> = [1, 2, 3, 4, 5]
         var result: [Int] = []
 
@@ -173,8 +173,8 @@ struct DequeTests {
         #expect(stack.isEmpty)
     }
 
-    @Test("Take maintains CoW semantics")
-    func takeMaintainsCoW() {
+    @Test
+    func `Take maintains CoW semantics`() {
         let original: Deque<Int> = [1, 2, 3]
         var copy = original
 
@@ -189,23 +189,23 @@ struct DequeTests {
 
     // MARK: - Basic Properties
 
-    @Test("Empty deque")
-    func emptyDeque() {
+    @Test
+    func `Empty deque`() {
         let deque = Deque<Int>()
 
         #expect(deque.isEmpty)
     }
 
-    @Test("Initialization from sequence")
-    func initFromSequence() {
+    @Test
+    func `Initialization from sequence`() {
         let deque = Deque([1, 2, 3, 4, 5])
 
         #expect(deque.count == 5)
         #expect(Array(deque) == [1, 2, 3, 4, 5])
     }
 
-    @Test("Array literal initialization")
-    func arrayLiteralInit() {
+    @Test
+    func `Array literal initialization`() {
         let deque: Deque<Int> = [10, 20, 30]
 
         #expect(deque.count == 3)
@@ -216,8 +216,8 @@ struct DequeTests {
 
     // MARK: - Collection Conformance
 
-    @Test("Random access indexing")
-    func randomAccessIndexing() {
+    @Test
+    func `Random access indexing`() {
         var deque: Deque<Int> = [1, 2, 3, 4, 5]
 
         #expect(deque[0] == 1)
@@ -228,8 +228,8 @@ struct DequeTests {
         #expect(deque[2] == 30)
     }
 
-    @Test("Iteration order")
-    func iterationOrder() {
+    @Test
+    func `Iteration order`() {
         var deque = Deque<Int>()
         deque.push.back(1)
         deque.push.back(2)
@@ -242,8 +242,8 @@ struct DequeTests {
         #expect(result == [0, 1, 2])
     }
 
-    @Test("Bidirectional iteration")
-    func bidirectionalIteration() {
+    @Test
+    func `Bidirectional iteration`() {
         let deque: Deque<Int> = [1, 2, 3, 4, 5]
 
         #expect(Array(deque.reversed()) == [5, 4, 3, 2, 1])
@@ -251,16 +251,16 @@ struct DequeTests {
 
     // MARK: - Copy-on-Write
 
-    @Test("CoW: copy shares storage initially")
-    func cowSharesStorage() {
+    @Test
+    func `CoW: copy shares storage initially`() {
         let a: Deque<Int> = [1, 2, 3]
         let b = a
 
         #expect(a._identity == b._identity)
     }
 
-    @Test("CoW: mutation triggers copy")
-    func cowMutationTriggersCopy() {
+    @Test
+    func `CoW: mutation triggers copy`() {
         let a: Deque<Int> = [1, 2, 3]
         var b = a
 
@@ -273,8 +273,8 @@ struct DequeTests {
         #expect(b.count == 4)
     }
 
-    @Test("CoW: original unchanged after copy mutation")
-    func cowOriginalUnchanged() {
+    @Test
+    func `CoW: original unchanged after copy mutation`() {
         let original: Deque<Int> = [1, 2, 3]
         var copy = original
 
@@ -287,8 +287,8 @@ struct DequeTests {
 
     // MARK: - Capacity
 
-    @Test("Reserve capacity")
-    func reserveCapacity() {
+    @Test
+    func `Reserve capacity`() {
         var deque = Deque<Int>()
         let initialCapacity = deque.capacity
 
@@ -298,8 +298,8 @@ struct DequeTests {
         #expect(deque.capacity >= initialCapacity)
     }
 
-    @Test("Remove all")
-    func removeAll() {
+    @Test
+    func `Remove all`() {
         var deque: Deque<Int> = [1, 2, 3, 4, 5]
         #expect(deque.count == 5)
 
@@ -308,8 +308,8 @@ struct DequeTests {
         #expect(deque.isEmpty)
     }
 
-    @Test("Remove all keeping capacity")
-    func removeAllKeepingCapacity() {
+    @Test
+    func `Remove all keeping capacity`() {
         var deque: Deque<Int> = [1, 2, 3, 4, 5]
         deque.reserve(100)
         let capacityBefore = deque.capacity
@@ -332,8 +332,8 @@ struct DequeTests {
         #expect(a != c)
     }
 
-    @Test("Hashable")
-    func hashable() {
+    @Test
+    func `Hashable`() {
         let a: Deque<Int> = [1, 2, 3]
         let b: Deque<Int> = [1, 2, 3]
 
@@ -346,11 +346,11 @@ struct DequeTests {
 
     // MARK: - Error Types
 
-    @Test("Error types are typed")
-    func errorTypesAreTyped() throws {
+    @Test
+    func `Error types are typed`() throws {
         var deque = Deque<Int>()
 
-        do {
+        do throws(Deque<Int>.Error) {
             _ = try deque.pop.back()
             Issue.record("Expected error to be thrown")
         } catch {
@@ -364,8 +364,8 @@ struct DequeTests {
         }
     }
 
-    @Test("Bounds error via element(at:)")
-    func boundsError() {
+    @Test
+    func `Bounds error via element(at:)`() {
         let deque: Deque<Int> = [1, 2, 3]
 
         #expect(throws: Deque<Int>.Error.self) {
@@ -379,8 +379,8 @@ struct DequeTests {
 
     // MARK: - CoW Behavior Regression Test
 
-    @Test("Push 1000 elements with O(log n) buffer copies")
-    func pushManyElementsNoCopyExplosion() {
+    @Test
+    func `Push 1000 elements with O(log n) buffer copies`() {
         #if DEBUG
             // Reset copy counter
             _DequeBufferDebug._copyCount = 0

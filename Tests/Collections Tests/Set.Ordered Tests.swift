@@ -18,8 +18,8 @@ struct OrderedSetTests {
 
     // MARK: - Basic Operations
 
-    @Test("Insert and contains")
-    func insertAndContains() {
+    @Test
+    func `Insert and contains`() {
         var set = Set<String>.Ordered()
 
         let (inserted1, index1) = set.insert("apple")
@@ -40,8 +40,8 @@ struct OrderedSetTests {
         #expect(!set.contains("cherry"))
     }
 
-    @Test("Index lookup")
-    func indexLookup() {
+    @Test
+    func `Index lookup`() {
         var set = Set<Int>.Ordered()
         set.insert(10)
         set.insert(20)
@@ -53,8 +53,8 @@ struct OrderedSetTests {
         #expect(set.index(40) == nil)
     }
 
-    @Test("Remove element")
-    func removeElement() {
+    @Test
+    func `Remove element`() {
         var set: Set<Int>.Ordered = [1, 2, 3, 4, 5]
 
         let removed = set.remove(3)
@@ -73,8 +73,8 @@ struct OrderedSetTests {
 
     // MARK: - Order Preservation
 
-    @Test("Insertion order preserved")
-    func insertionOrderPreserved() {
+    @Test
+    func `Insertion order preserved`() {
         var set = Set<String>.Ordered()
         set.insert("charlie")
         set.insert("alpha")
@@ -83,8 +83,8 @@ struct OrderedSetTests {
         #expect(Array(set) == ["charlie", "alpha", "bravo"])
     }
 
-    @Test("Order after removal")
-    func orderAfterRemoval() {
+    @Test
+    func `Order after removal`() {
         var set: Set<Int>.Ordered = [1, 2, 3, 4, 5]
         set.remove(2)
         set.remove(4)
@@ -92,8 +92,8 @@ struct OrderedSetTests {
         #expect(Array(set) == [1, 3, 5])
     }
 
-    @Test("Re-insertion goes to end")
-    func reinsertionGoesToEnd() {
+    @Test
+    func `Re-insertion goes to end`() {
         var set: Set<String>.Ordered = ["a", "b", "c"]
         set.remove("b")
         set.insert("b")
@@ -133,8 +133,8 @@ struct OrderedSetTests {
         #expect(Array(result) == [1, 3, 5])
     }
 
-    @Test("Symmetric difference")
-    func symmetricDifference() {
+    @Test
+    func `Symmetric difference`() {
         let a: Set<Int>.Ordered = [1, 2, 3]
         let b: Set<Int>.Ordered = [2, 3, 4]
 
@@ -145,8 +145,8 @@ struct OrderedSetTests {
 
     // MARK: - Collection Conformance
 
-    @Test("Subscript access")
-    func subscriptAccess() {
+    @Test
+    func `Subscript access`() {
         let set: Set<String>.Ordered = ["a", "b", "c"]
 
         #expect(set[0] == "a")
@@ -166,8 +166,8 @@ struct OrderedSetTests {
         #expect(result == [10, 20, 30])
     }
 
-    @Test("Bidirectional iteration")
-    func bidirectionalIteration() {
+    @Test
+    func `Bidirectional iteration`() {
         let set: Set<Int>.Ordered = [1, 2, 3, 4, 5]
 
         #expect(Array(set.reversed()) == [5, 4, 3, 2, 1])
@@ -175,16 +175,16 @@ struct OrderedSetTests {
 
     // MARK: - Copy-on-Write
 
-    @Test("CoW: copy shares storage")
-    func cowSharesStorage() {
+    @Test
+    func `CoW: copy shares storage`() {
         let a: Set<Int>.Ordered = [1, 2, 3]
         let b = a
 
         #expect(a._identity == b._identity)
     }
 
-    @Test("CoW: mutation triggers copy")
-    func cowMutationTriggersCopy() {
+    @Test
+    func `CoW: mutation triggers copy`() {
         let a: Set<Int>.Ordered = [1, 2, 3]
         var b = a
 
@@ -197,8 +197,8 @@ struct OrderedSetTests {
         #expect(b.count == 4)
     }
 
-    @Test("CoW: original unchanged")
-    func cowOriginalUnchanged() {
+    @Test
+    func `CoW: original unchanged`() {
         let original: Set<Int>.Ordered = [1, 2, 3]
         var copy = original
 
@@ -211,15 +211,15 @@ struct OrderedSetTests {
 
     // MARK: - Properties
 
-    @Test("Empty set")
-    func emptySet() {
+    @Test
+    func `Empty set`() {
         let set = Set<Int>.Ordered()
 
         #expect(set.isEmpty)
     }
 
-    @Test("Init from sequence")
-    func initFromSequence() {
+    @Test
+    func `Init from sequence`() {
         let set = Set.Ordered([1, 2, 2, 3, 3, 3])
 
         #expect(set.count == 3)
@@ -256,8 +256,8 @@ struct OrderedSetTests {
 
     // MARK: - Error Types
 
-    @Test("Bounds error")
-    func boundsError() {
+    @Test
+    func `Bounds error`() {
         let set: Set<Int>.Ordered = [1, 2, 3]
 
         #expect(throws: Set<Int>.Ordered.Error.self) {

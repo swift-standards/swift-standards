@@ -38,14 +38,14 @@ struct `Degree - Basic Structure & Arithmetic` {
     }
 
     @Test
-    func scalarMultiplication() {
+    func `scalar Multiplication`() {
         let angle: Degree<Double> = Degree(45)
         let result = angle * 2.0
         #expect(result == Degree(90))
     }
 
     @Test
-    func scalarDivision() {
+    func `scalar Division`() {
         let angle: Degree<Double> = Degree(180)
         let result = angle / 2.0
         #expect(result == Degree(90))
@@ -74,13 +74,13 @@ struct `Degree - Basic Structure & Arithmetic` {
     }
 
     @Test
-    func expressibleByFloatLiteral() {
+    func `expressible By Float Literal`() {
         let angle: Degree<Double> = 45.5
         #expect(angle == Degree(45.5))
     }
 
     @Test
-    func expressibleByIntegerLiteral() {
+    func `expressible By Integer Literal`() {
         let angle: Degree<Double> = 90
         #expect(angle == Degree(90.0))
     }
@@ -115,14 +115,14 @@ private func isApprox(_ a: Degree<Double>, _ b: Degree<Double>, tol: Double = 1e
 @Suite
 struct `Degree - Conversion` {
     @Test
-    func conversionToRadians() {
+    func `conversion To Radians`() {
         let degrees: Degree<Double> = 180
         let radians = degrees.radians
         #expect(isApprox(radians, Radian(Double.pi)))
     }
 
     @Test
-    func conversionFromRadians() {
+    func `conversion From Radians`() {
         let radians = Radian(Double.pi / 2)
         let degrees = Degree(radians: radians)
         #expect(isApprox(degrees, Degree(90.0)))
@@ -170,7 +170,7 @@ struct `Degree - Conversion` {
 @Suite
 struct `Degree - Common Angles` {
     @Test
-    func rightAngle() {
+    func `right Angle`() {
         #expect(Degree<Double>.rightAngle == Degree(90))
     }
 
@@ -180,12 +180,12 @@ struct `Degree - Common Angles` {
     }
 
     @Test
-    func fullCircle() {
+    func `full Circle`() {
         #expect(Degree<Double>.fullCircle == Degree(360))
     }
 
     @Test
-    func fortyFive() {
+    func `forty Five`() {
         #expect(Degree<Double>.fortyFive == Degree(45))
     }
 

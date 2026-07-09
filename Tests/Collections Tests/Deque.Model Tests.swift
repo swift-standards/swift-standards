@@ -54,8 +54,8 @@ struct DequeModelTests {
 
     // MARK: - Basic Operations
 
-    @Test("Push back matches model")
-    func pushBackMatchesModel() {
+    @Test
+    func `Push back matches model`() {
         var deque = Deque<Int>()
         var model = ArrayModel<Int>()
 
@@ -68,8 +68,8 @@ struct DequeModelTests {
         #expect(Array(deque) == model.elements)
     }
 
-    @Test("Push front matches model")
-    func pushFrontMatchesModel() {
+    @Test
+    func `Push front matches model`() {
         var deque = Deque<Int>()
         var model = ArrayModel<Int>()
 
@@ -82,8 +82,8 @@ struct DequeModelTests {
         #expect(Array(deque) == model.elements)
     }
 
-    @Test("Pop back matches model")
-    func popBackMatchesModel() throws {
+    @Test
+    func `Pop back matches model`() throws {
         var deque = Deque(0..<500)
         var model = ArrayModel<Int>()
         for i in 0..<500 { model.pushBack(i) }
@@ -98,8 +98,8 @@ struct DequeModelTests {
         #expect(Array(deque) == model.elements)
     }
 
-    @Test("Pop front matches model")
-    func popFrontMatchesModel() throws {
+    @Test
+    func `Pop front matches model`() throws {
         var deque = Deque(0..<500)
         var model = ArrayModel<Int>()
         for i in 0..<500 { model.pushBack(i) }
@@ -116,8 +116,8 @@ struct DequeModelTests {
 
     // MARK: - Mixed Operations
 
-    @Test("Mixed push operations")
-    func mixedPushOperations() {
+    @Test
+    func `Mixed push operations`() {
         var deque = Deque<Int>()
         var model = ArrayModel<Int>()
 
@@ -135,8 +135,8 @@ struct DequeModelTests {
         #expect(Array(deque) == model.elements)
     }
 
-    @Test("Mixed pop operations")
-    func mixedPopOperations() throws {
+    @Test
+    func `Mixed pop operations`() throws {
         var deque = Deque(0..<500)
         var model = ArrayModel<Int>()
         for i in 0..<500 { model.pushBack(i) }
@@ -159,8 +159,8 @@ struct DequeModelTests {
 
     // MARK: - Index Access
 
-    @Test("Index access matches model")
-    func indexAccessMatchesModel() {
+    @Test
+    func `Index access matches model`() {
         let deque = Deque(0..<500)
         var model = ArrayModel<Int>()
         for i in 0..<500 { model.pushBack(i) }
@@ -172,8 +172,8 @@ struct DequeModelTests {
 
     // MARK: - Iteration
 
-    @Test("Forward iteration matches model")
-    func forwardIterationMatchesModel() {
+    @Test
+    func `Forward iteration matches model`() {
         let deque = Deque(0..<500)
         var model = ArrayModel<Int>()
         for i in 0..<500 { model.pushBack(i) }
@@ -186,8 +186,8 @@ struct DequeModelTests {
         #expect(dequeElements == model.elements)
     }
 
-    @Test("Reverse iteration matches model")
-    func reverseIterationMatchesModel() {
+    @Test
+    func `Reverse iteration matches model`() {
         let deque = Deque(0..<500)
         var model = ArrayModel<Int>()
         for i in 0..<500 { model.pushBack(i) }
@@ -200,8 +200,8 @@ struct DequeModelTests {
 
     // MARK: - Edge Cases
 
-    @Test("Empty deque operations")
-    func emptyDequeOperations() {
+    @Test
+    func `Empty deque operations`() {
         let deque = Deque<Int>()
         let model = ArrayModel<Int>()
 
@@ -211,8 +211,8 @@ struct DequeModelTests {
         #expect(deque.peek.back == model.peekBack())
     }
 
-    @Test("Single element operations")
-    func singleElementOperations() throws {
+    @Test
+    func `Single element operations`() throws {
         var deque = Deque<Int>()
         var model = ArrayModel<Int>()
 
@@ -229,8 +229,8 @@ struct DequeModelTests {
         #expect(deque.isEmpty)
     }
 
-    @Test("Ring buffer wraparound via init and pop/push cycle")
-    func ringBufferWraparound() throws {
+    @Test
+    func `Ring buffer wraparound via init and pop/push cycle`() throws {
         // Start with 100 elements
         var deque = Deque(0..<100)
         var model = ArrayModel<Int>()
@@ -250,8 +250,8 @@ struct DequeModelTests {
 
     // MARK: - Large Capacity via Init
 
-    @Test("Large deque via init from sequence")
-    func largeDequeViaInit() {
+    @Test
+    func `Large deque via init from sequence`() {
         let deque = Deque(0..<1000)
         var model = ArrayModel<Int>()
         for i in 0..<1000 { model.pushBack(i) }

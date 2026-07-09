@@ -13,8 +13,8 @@ struct LazyGridTests {
 
     // MARK: - Initialization
 
-    @Test("Lazy grid initializes with count columns")
-    func initWithCount() {
+    @Test
+    func `Lazy grid initializes with count columns`() {
         let grid = TestGrid<[String]>.Lazy(
             columns: .count(3),
             spacing: .init(row: 10, column: 20),
@@ -31,8 +31,8 @@ struct LazyGridTests {
         #expect(grid.content == ["a", "b", "c"])
     }
 
-    @Test("Lazy grid initializes with fractional columns")
-    func initWithFractions() {
+    @Test
+    func `Lazy grid initializes with fractional columns`() {
         let grid = TestGrid<[Int]>.Lazy(
             columns: .fractions([1, 2, 1]),
             spacing: .init(row: 5, column: 5),
@@ -46,8 +46,8 @@ struct LazyGridTests {
         }
     }
 
-    @Test("Lazy grid initializes with autoFill")
-    func initWithAutoFill() {
+    @Test
+    func `Lazy grid initializes with autoFill`() {
         let grid = TestGrid<[String]>.Lazy(
             columns: .autoFill(minWidth: 200),
             spacing: .init(row: 10, column: 10),
@@ -61,8 +61,8 @@ struct LazyGridTests {
         }
     }
 
-    @Test("Lazy grid initializes with autoFit")
-    func initWithAutoFit() {
+    @Test
+    func `Lazy grid initializes with autoFit`() {
         let grid = TestGrid<[String]>.Lazy(
             columns: .autoFit(minWidth: 150),
             spacing: .init(row: 8, column: 8),
@@ -78,8 +78,8 @@ struct LazyGridTests {
 
     // MARK: - Convenience Initializers
 
-    @Test("Lazy grid with uniform spacing")
-    func uniformSpacing() {
+    @Test
+    func `Lazy grid with uniform spacing`() {
         let grid = TestGrid<[String]>.Lazy(
             columns: .count(2),
             spacing: 16.0,
@@ -90,8 +90,8 @@ struct LazyGridTests {
         #expect(grid.spacing.column == 16)
     }
 
-    @Test("Lazy grid factory method")
-    func factoryColumns() {
+    @Test
+    func `Lazy grid factory method`() {
         let grid = TestGrid<[String]>.Lazy.columns(
             4,
             spacing: .init(row: 10, column: 10),
@@ -105,8 +105,8 @@ struct LazyGridTests {
         }
     }
 
-    @Test("Lazy grid uniform factory")
-    func uniformFactory() {
+    @Test
+    func `Lazy grid uniform factory`() {
         let grid = TestGrid<[String]>.Lazy.uniform(
             columns: 3,
             spacing: 12.0,
@@ -124,8 +124,8 @@ struct LazyGridTests {
 
     // MARK: - Functorial Map
 
-    @Test("Lazy grid content map")
-    func contentMap() throws {
+    @Test
+    func `Lazy grid content map`() throws {
         let grid = TestGrid<[Int]>.Lazy(
             columns: .count(2),
             spacing: .init(row: 10, column: 10),
