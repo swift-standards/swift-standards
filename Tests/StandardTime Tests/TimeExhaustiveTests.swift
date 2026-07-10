@@ -290,7 +290,8 @@ struct `Time Exhaustive Tests` {
             (500, 500, 500, 500_500_500),
         ]
     )
-    func `Total Nanoseconds - Calculation accuracy`(ms: Int, us: Int, ns: Int, expected: Int) throws {
+    func `Total Nanoseconds - Calculation accuracy`(ms: Int, us: Int, ns: Int, expected: Int) throws
+    {
         let time = try Time(
             year: 2024,
             month: 1,

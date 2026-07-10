@@ -114,7 +114,8 @@ struct `Time Property-Based Tests` {
     @Test(
         arguments: generateTestDates()
     )
-    func `Property: Weekday calculation matches Foundation`(year: Int, month: Int, day: Int) throws {
+    func `Property: Weekday calculation matches Foundation`(year: Int, month: Int, day: Int) throws
+    {
         let weekday = try Time.Weekday(year: year, month: month, day: day)
 
         // Get Foundation's weekday

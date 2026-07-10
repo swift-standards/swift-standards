@@ -14,80 +14,80 @@ extension TestSuitesMacro {
     @Suite
     struct Test {
 
-    let macros: [String: any Macro.Type] = [
-        "TestSuites": TestSuitesMacro.self
-    ]
+        let macros: [String: any Macro.Type] = [
+            "TestSuites": TestSuitesMacro.self
+        ]
 
-    @Test
-    func `expansion Generates Test Enum`() {
-        assertMacroExpansion(
-            """
-            struct MyType {
-                #TestSuites
-            }
-            """,
-            expandedSource: """
+        @Test
+        func `expansion Generates Test Enum`() {
+            assertMacroExpansion(
+                """
                 struct MyType {
-                    @Suite enum Test {
-                        @Suite(.exclusive(group: "MyType")) struct Unit {
-                        }
-                        @Suite(.exclusive(group: "MyType")) struct EdgeCase {
-                        }
-                        @Suite(.exclusive, .serialized) struct Performance {
-                        }
-                    }
+                    #TestSuites
                 }
                 """,
-            macros: macros
-        )
-    }
+                expandedSource: """
+                    struct MyType {
+                        @Suite enum Test {
+                            @Suite(.exclusive(group: "MyType")) struct Unit {
+                            }
+                            @Suite(.exclusive(group: "MyType")) struct EdgeCase {
+                            }
+                            @Suite(.exclusive, .serialized) struct Performance {
+                            }
+                        }
+                    }
+                    """,
+                macros: macros
+            )
+        }
 
-    @Test
-    func `expansion In Extension`() {
-        assertMacroExpansion(
-            """
-            extension SomeType {
-                #TestSuites
-            }
-            """,
-            expandedSource: """
+        @Test
+        func `expansion In Extension`() {
+            assertMacroExpansion(
+                """
                 extension SomeType {
-                    @Suite enum Test {
-                        @Suite(.exclusive(group: "SomeType")) struct Unit {
-                        }
-                        @Suite(.exclusive(group: "SomeType")) struct EdgeCase {
-                        }
-                        @Suite(.exclusive, .serialized) struct Performance {
-                        }
-                    }
+                    #TestSuites
                 }
                 """,
-            macros: macros
-        )
-    }
+                expandedSource: """
+                    extension SomeType {
+                        @Suite enum Test {
+                            @Suite(.exclusive(group: "SomeType")) struct Unit {
+                            }
+                            @Suite(.exclusive(group: "SomeType")) struct EdgeCase {
+                            }
+                            @Suite(.exclusive, .serialized) struct Performance {
+                            }
+                        }
+                    }
+                    """,
+                macros: macros
+            )
+        }
 
-    @Test
-    func `expansion In Enum`() {
-        assertMacroExpansion(
-            """
-            enum MyEnum {
-                #TestSuites
-            }
-            """,
-            expandedSource: """
+        @Test
+        func `expansion In Enum`() {
+            assertMacroExpansion(
+                """
                 enum MyEnum {
-                    @Suite enum Test {
-                        @Suite(.exclusive(group: "MyEnum")) struct Unit {
-                        }
-                        @Suite(.exclusive(group: "MyEnum")) struct EdgeCase {
-                        }
-                        @Suite(.exclusive, .serialized) struct Performance {
-                        }
-                    }
+                    #TestSuites
                 }
                 """,
-            macros: macros
-        )
-    }
+                expandedSource: """
+                    enum MyEnum {
+                        @Suite enum Test {
+                            @Suite(.exclusive(group: "MyEnum")) struct Unit {
+                            }
+                            @Suite(.exclusive(group: "MyEnum")) struct EdgeCase {
+                            }
+                            @Suite(.exclusive, .serialized) struct Performance {
+                            }
+                        }
+                    }
+                    """,
+                macros: macros
+            )
+        }
     }
 }

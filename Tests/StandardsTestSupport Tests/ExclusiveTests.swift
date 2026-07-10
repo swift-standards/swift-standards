@@ -81,34 +81,34 @@ extension Exclusive {
     @Suite
     struct Test {
 
-    @Test
-    func `trait Is Not Recursive`() {
-        let trait = Exclusive()
-        #expect(trait.isRecursive == false)
-    }
+        @Test
+        func `trait Is Not Recursive`() {
+            let trait = Exclusive()
+            #expect(trait.isRecursive == false)
+        }
 
-    @Test
-    func `default Group Is Global`() {
-        let trait = Exclusive()
-        #expect(trait.group == Exclusive.globalGroup)
-    }
+        @Test
+        func `default Group Is Global`() {
+            let trait = Exclusive()
+            #expect(trait.group == Exclusive.globalGroup)
+        }
 
-    @Test
-    func `group Can Be Specified`() {
-        let trait = Exclusive(group: "MyGroup")
-        #expect(trait.group == "MyGroup")
-    }
+        @Test
+        func `group Can Be Specified`() {
+            let trait = Exclusive(group: "MyGroup")
+            #expect(trait.group == "MyGroup")
+        }
 
-    @Test
-    func `trait Extension Without Group`() {
-        let trait: Exclusive = .exclusive
-        #expect(trait.group == Exclusive.globalGroup)
-    }
+        @Test
+        func `trait Extension Without Group`() {
+            let trait: Exclusive = .exclusive
+            #expect(trait.group == Exclusive.globalGroup)
+        }
 
-    @Test
-    func `trait Extension With Group`() {
-        let trait: Exclusive = .exclusive(group: "TestGroup")
-        #expect(trait.group == "TestGroup")
-    }
+        @Test
+        func `trait Extension With Group`() {
+            let trait: Exclusive = .exclusive(group: "TestGroup")
+            #expect(trait.group == "TestGroup")
+        }
     }
 }
