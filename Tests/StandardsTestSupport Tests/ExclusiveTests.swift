@@ -8,74 +8,6 @@
 import StandardsTestSupport
 import Testing
 
-/// Tests that Exclusive trait can be applied to sibling suites.
-@Suite
-enum ExclusiveTests {
-
-    @Suite(.exclusive)
-    struct FirstSuite {
-        @Test
-        func `In First Suite`() {
-            #expect(Bool(true))
-        }
-
-        @Test
-        func `another Test In First Suite`() {
-            #expect(Bool(true))
-        }
-    }
-
-    @Suite(.exclusive)
-    struct SecondSuite {
-        @Test
-        func `In Second Suite`() {
-            #expect(Bool(true))
-        }
-
-        @Test
-        func `another Test In Second Suite`() {
-            #expect(Bool(true))
-        }
-    }
-
-    @Suite(.exclusive, .serialized)
-    struct ThirdSuite {
-        @Test
-        func `In Third Suite`() {
-            #expect(Bool(true))
-        }
-    }
-}
-
-/// Tests for grouped exclusion.
-@Suite
-enum GroupedExclusiveTests {
-
-    @Suite(.exclusive(group: "GroupA"))
-    struct GroupAFirst {
-        @Test
-        func test() {
-            #expect(Bool(true))
-        }
-    }
-
-    @Suite(.exclusive(group: "GroupA"))
-    struct GroupASecond {
-        @Test
-        func test() {
-            #expect(Bool(true))
-        }
-    }
-
-    @Suite(.exclusive(group: "GroupB"))
-    struct GroupBFirst {
-        @Test
-        func test() {
-            #expect(Bool(true))
-        }
-    }
-}
-
 /// Verify that the trait properties are correct.
 extension Exclusive {
     @Suite
@@ -109,6 +41,75 @@ extension Exclusive {
         func `trait Extension With Group`() {
             let trait: Exclusive = .exclusive(group: "TestGroup")
             #expect(trait.group == "TestGroup")
+        }
+    }
+}
+
+/// Tests that Exclusive trait can be applied to sibling suites.
+extension Exclusive.Test {
+
+    @Suite(.exclusive)
+    struct `First Suite` {
+        @Test
+        func `In First Suite`() {
+            #expect(Bool(true))
+        }
+
+        @Test
+        func `another Test In First Suite`() {
+            #expect(Bool(true))
+        }
+    }
+
+    @Suite(.exclusive)
+    struct `Second Suite` {
+        @Test
+        func `In Second Suite`() {
+            #expect(Bool(true))
+        }
+
+        @Test
+        func `another Test In Second Suite`() {
+            #expect(Bool(true))
+        }
+    }
+
+    @Suite(.exclusive, .serialized)
+    struct `Third Suite` {
+        @Test
+        func `In Third Suite`() {
+            #expect(Bool(true))
+        }
+    }
+}
+
+/// Tests for grouped exclusion.
+extension Exclusive.Test {
+
+    @Suite
+    struct Grouped {
+        @Suite(.exclusive(group: "GroupA"))
+        struct `A First` {
+            @Test
+            func test() {
+                #expect(Bool(true))
+            }
+        }
+
+        @Suite(.exclusive(group: "GroupA"))
+        struct `A Second` {
+            @Test
+            func test() {
+                #expect(Bool(true))
+            }
+        }
+
+        @Suite(.exclusive(group: "GroupB"))
+        struct `B First` {
+            @Test
+            func test() {
+                #expect(Bool(true))
+            }
         }
     }
 }

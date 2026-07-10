@@ -143,39 +143,41 @@ struct `Orientation Tests` {
 
 // MARK: - Sum ↔ Product Duality
 
-@Suite
-struct SumProductDualityTests {
-    @Test
-    func `Enum Direction and struct orientations are isomorphic`() {
-        // Direction is the canonical (initial) orientation
-        // Other types interpret it in domain-specific contexts
+extension `Orientation Tests` {
+    @Suite
+    struct `Sum Product Duality` {
+        @Test
+        func `Enum Direction and struct orientations are isomorphic`() {
+            // Direction is the canonical (initial) orientation
+            // Other types interpret it in domain-specific contexts
 
-        // The isomorphism: Direction ≅ Horizontal ≅ Vertical ≅ Depth ≅ Temporal
-        for dir in Direction.allCases {
-            let h = Horizontal(direction: dir)
-            let v = Vertical(direction: dir)
-            let d = Depth(direction: dir)
-            let t = Temporal(direction: dir)
+            // The isomorphism: Direction ≅ Horizontal ≅ Vertical ≅ Depth ≅ Temporal
+            for dir in Direction.allCases {
+                let h = Horizontal(direction: dir)
+                let v = Vertical(direction: dir)
+                let d = Depth(direction: dir)
+                let t = Temporal(direction: dir)
 
-            // All map back to the same Direction
-            #expect(h.direction == dir)
-            #expect(v.direction == dir)
-            #expect(d.direction == dir)
-            #expect(t.direction == dir)
+                // All map back to the same Direction
+                #expect(h.direction == dir)
+                #expect(v.direction == dir)
+                #expect(d.direction == dir)
+                #expect(t.direction == dir)
+            }
         }
-    }
 
-    @Test
-    func `Struct wrapping enables composition`() {
-        // Because Horizontal wraps Direction, we can compose operations
-        let h: Horizontal = .rightward
+        @Test
+        func `Struct wrapping enables composition`() {
+            // Because Horizontal wraps Direction, we can compose operations
+            let h: Horizontal = .rightward
 
-        // Access the underlying direction
-        let dir = h.direction
-        #expect(dir == .positive)
+            // Access the underlying direction
+            let dir = h.direction
+            #expect(dir == .positive)
 
-        // Use Direction's sign property
-        #expect(h.direction.sign == 1)
-        #expect(Horizontal.leftward.direction.sign == -1)
+            // Use Direction's sign property
+            #expect(h.direction.sign == 1)
+            #expect(Horizontal.leftward.direction.sign == -1)
+        }
     }
 }
